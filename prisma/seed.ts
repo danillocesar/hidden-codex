@@ -180,29 +180,45 @@ type PowerSeed = {
   rules?: Record<string, unknown>;
 };
 
+/**
+ * Lista de arquivos `powers-*.json` agregados. `powers.json` é o catálogo
+ * principal (Lote 3, 19 entradas); `powers-additional.json` (Lote 4f) traz
+ * 13 hijutsus avançados (Kami/Sumi/Kumo/Hebi Ninpou, Dokujutsu, Ototon,
+ * Kibaku Nendo, Futton/Youton-Mei, Shakuton, Shouton, Ranton, Kujaku Myoho).
+ * Adicione novos arquivos em ordem cronológica conforme entregues.
+ */
+const POWER_FILES: ReadonlyArray<string> = [
+  'powers.json', // Lote 3 — 19 poderes
+  'powers-additional.json', // Lote 4f — 13 hijutsus avançados
+];
+
 async function seedPowers(): Promise<void> {
-  const powers = loadSeedData<PowerSeed>('powers.json');
-  for (const p of powers) {
-    const data = {
-      code: p.code,
-      name: p.name,
-      translation: p.translation ?? null,
-      category: p.category,
-      element: p.element ?? null,
-      associatedKekkeiGenkai: p.associatedKekkeiGenkai ?? null,
-      associatedClan: p.associatedClan ?? null,
-      shortDescription: p.shortDescription ?? null,
-      description: p.description,
-      stats: (p.stats ?? {}) as Prisma.InputJsonValue,
-      rules: (p.rules ?? {}) as Prisma.InputJsonValue,
-    };
-    await prisma.power.upsert({
-      where: { code: p.code },
-      create: data,
-      update: data,
-    });
+  let total = 0;
+  for (const file of POWER_FILES) {
+    const powers = loadSeedData<PowerSeed>(file);
+    for (const p of powers) {
+      const data = {
+        code: p.code,
+        name: p.name,
+        translation: p.translation ?? null,
+        category: p.category,
+        element: p.element ?? null,
+        associatedKekkeiGenkai: p.associatedKekkeiGenkai ?? null,
+        associatedClan: p.associatedClan ?? null,
+        shortDescription: p.shortDescription ?? null,
+        description: p.description,
+        stats: (p.stats ?? {}) as Prisma.InputJsonValue,
+        rules: (p.rules ?? {}) as Prisma.InputJsonValue,
+      };
+      await prisma.power.upsert({
+        where: { code: p.code },
+        create: data,
+        update: data,
+      });
+    }
+    total += powers.length;
   }
-  console.info(`  ✓ ${powers.length} poderes`);
+  console.info(`  ✓ ${total} poderes`);
 }
 
 // ──────────────────────────────────────────────────────────────────────

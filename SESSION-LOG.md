@@ -6,6 +6,92 @@
 
 ---
 
+## Seed Lote 4f — Poderes faltantes + validador de dados (16:05, parte 9)
+
+Lote suplementar fora da numeração principal. Resolve as strings dormentes do 4d/4e e integra um validador de dados ao workflow de seed.
+
+### Mudanças
+
+**1. Schema** (`add_hijutsu_power_category`)
+- Adicionei `HIJUTSU` ao enum `PowerCategory` (já tinha COMUM/RESTRITO/RESTRITO_CLA/KEKKEI_GENKAI). Migration aplicada normalmente via `prisma migrate dev` — adicionar valor a enum em Postgres não é destrutivo, sem confirmação interativa exigida.
+- `prisma generate` deu o EPERM habitual no Windows (DLL travada por IDE); tipos `.d.ts` foram atualizados, .dll continua binary-compatible.
+
+**2. Catálogo de poderes (`powers-additional.json` — 13 entradas, todas `HIJUTSU`)**
+- `kami_ninpou`, `sumi_ninpou`, `kumo_ninpou`, `hebi_ninpou`, `kujaku_myoho`, `dokujutsu`, `ototon`, `kibaku_nendo`, `futton_mei`, `youton_mei`, `shakuton`, `shouton`, `ranton`.
+- `prisma/seed.ts`: refatorei `seedPowers()` para iterar `POWER_FILES = ['powers.json', 'powers-additional.json']` (mesmo padrão de `EFFECT_FILES`).
+
+**3. Patches em JSONs do seed**
+- `effects-guia-avancado.json`: `kamijutsu` → `kami_ninpou` (4 ocorrências em `availableFor`); `_meta.unmodeledPowers` reduzido aos 2 codes ainda órfãos (`jiton`, `yonbi_youton`) — os outros 13 viraram entradas reais em `powers-additional.json`.
+- `effects-shintenshin.json`: **typo do Lote 4d corrigido** (`shindenshin` → `shintenshin`, 3 ocorrências em `availableFor`). Decidi resolver agora porque o validador apontou e o JSON já estava sendo tocado neste lote.
+- 7 arquivos do Lote 4c ganharam `_meta.unmodeledPowers` declarando os power codes ainda órfãos (necessário pro validador classificar como `info` ao invés de `error`):
+  - `effects-hachimon.json` → `["hachimon_tonkou"]`
+  - `effects-sabaku.json` → `["sabaku_hijutsu", "jiton"]`
+  - `effects-jiton.json` → `["jiton"]`
+  - `effects-sanbi-suiton.json` → `["sanbi_suiton"]`
+  - `effects-senjutsu.json` → `["senjutsu"]`
+  - `effects-yonbi-youton.json` → `["yonbi_youton"]`
+  - `effects-aoi-katon.json` → `["aoi_katon"]`
+
+**4. Validador integrado**
+- `prisma/seed-data/validate-seed-data.ts` → movido para `scripts/validate-seed-data.ts` (separa script de dados).
+- `package.json` ganhou 3 scripts:
+  - `pnpm seed:validate` — roda o validador (exit 1 em erros)
+  - `pnpm seed:validate:strict` — também falha em warnings
+  - `pnpm seed:apply` — `seed:validate && prisma db seed` (gate atômico)
+- `tests/seed/validate-seed.test.ts` — smoke test em Vitest que invoca `tsx scripts/validate-seed-data.ts` via `execFileSync` e exige "Validation PASSED" no stdout. Pega regressão futura se alguém quebrar referências cruzadas.
+
+### Validação pós-seed
+
+```
+$ pnpm seed:validate
+Summary: 0 errors, 0 warnings, 36 infos.
+✅ Validation PASSED.
+
+$ pnpm seed:apply
+✓ 5 vilas
+✓ 5 kekkei genkais (1 pulado: juuken é poder, não KG)
+✓ 17 clãs
+✓ 32 poderes        ← +13 do 4f
+✓ 138 efeitos de poder
+✓ 20 perícias
+✅ Seed completo.
+```
+
+Spot-checks via psql:
+- `kami_ninpou` — `category: HIJUTSU` ✓
+- `dokujutsu` — `rules.prerequisites: {"skills": {"venefico": 6}, "aptitudes": ["quimico"]}` ✓
+- Contagem total: 19 (Lote 3) + 13 (Lote 4f) = **32 poderes** ✓
+- `power_effects` continua em 138 (Lote 4f não toca efeitos) ✓
+- Idempotência: re-rodar mantém counts ✓
+
+`pnpm lint` ✓ / `pnpm typecheck` ✓ / `pnpm test` 211/211 ✓ (210 anteriores + 1 do validador).
+
+### Mapa de órfãos depois do 4f
+
+De **21 power codes órfãos** antes, restam **7** — todos do Lote 4c esperando lote suplementar/g futuro:
+
+```
+aoi_katon, hachimon_tonkou, jiton, sabaku_hijutsu,
+sanbi_suiton, senjutsu, yonbi_youton
+```
+
+Todos declarados em `_meta.unmodeledPowers` dos arquivos de efeitos correspondentes — o validador agora os classifica como `info` (referências dormentes esperadas), não como `error`.
+
+### Pendências documentadas
+
+1. **Efeitos exclusivos dos 13 hijutsus do 4f** — Anjo de Papel (Kami), Energizar Venenoso (Doku), Pó de Cristal (Shouton), etc. Catálogo do 4f é mínimo (metadados básicos). Ficam para um Lote 4g de efeitos exclusivos de hijutsus avançados quando houver demanda.
+2. **Modelagem mecânica completa de Kujaku Myoho** — `_meta.needsDeepResearch: true` no JSON do 4f. Quando alguém usar, vale revisitar o Livro de Hijutsus 2.
+3. **Motor de validação de regras** — pré-requisitos cruzados em runtime (Espelhos Demoníacos → Imergir, Byakugou no In → Kuchiyose+Iryou+Fuuinjutsu, etc.). Depende de UI de ficha + sessão dedicada de validações no motor.
+4. **Revisões do GAS aos efeitos antigos** (Orbe Nv 7, Onda Explosiva Nv 8, Lança −3 dureza) — ainda pendentes, migration de revisão futura.
+
+### Próximo passo
+
+**Lote 5 — Aptidões (~80 entradas).** Destrava os pré-reqs `aptitudes: [...]` espalhados pelos efeitos 4a-4e e pelos pré-reqs já presentes em alguns poderes do Lote 3 (ex.: `dokujutsu` exige aptidão `quimico`).
+
+Em paralelo, criação de personagem (F2.4 wizard) continua viável.
+
+---
+
 ## Seed Lote 4e — Efeitos novos do Guia Avançado (15:55, parte 8) ✅ LOTE 4 COMPLETO
 
 Última onda do Lote 4. **+7 efeitos** do Guia Avançado do Shinobi (GAS p. 48-51, 55-56). Total no banco: **138 efeitos** (131 + 7).

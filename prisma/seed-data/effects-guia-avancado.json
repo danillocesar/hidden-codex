@@ -7,19 +7,8 @@
     "extractedAt": "2026-05-12",
     "schemaVersion": 1,
     "unmodeledPowers": [
-      "kamijutsu",
-      "kujaku_myoho",
-      "sumi_ninpou",
-      "kumo_ninpou",
-      "hebi_ninpou",
-      "ototon",
-      "kibaku_nendo",
-      "futton_mei",
-      "youton_mei",
-      "shakuton",
-      "shouton",
-      "ranton",
-      "dokujutsu"
+      "jiton",
+      "yonbi_youton"
     ]
   },
   "data": [
@@ -93,7 +82,11 @@
       "rules": {
         "displacementBonus": "ceil(esp/2)",
         "requiresEnvelopedByElement": true,
-        "envelopBy": { "fuuton": "ar", "suiton": "água", "doton": "solo" }
+        "envelopBy": {
+          "fuuton": "ar",
+          "suiton": "água",
+          "doton": "solo"
+        }
       },
       "evolutions": [
         {
@@ -114,7 +107,7 @@
         "suiton",
         "mokuton",
         "hyouton",
-        "kamijutsu",
+        "kami_ninpou",
         "kujaku_myoho",
         "kumo_ninpou",
         "hebi_ninpou",
@@ -189,7 +182,7 @@
         "mokuton",
         "kikai_ninpou",
         "hyouton",
-        "kamijutsu",
+        "kami_ninpou",
         "kujaku_myoho",
         "sumi_ninpou",
         "kumo_ninpou",
@@ -210,7 +203,11 @@
       },
       "rules": {
         "reactive": true,
-        "triggers": ["projetil", "toque", "golpear"],
+        "triggers": [
+          "projetil",
+          "toque",
+          "golpear"
+        ],
         "lmBonus": 1,
         "protectionHardness": "comum_do_poder",
         "repelAdjacentDistance": "1m",
@@ -236,7 +233,7 @@
         "kikai_ninpou",
         "mokuton",
         "hyouton",
-        "kamijutsu",
+        "kami_ninpou",
         "sumi_ninpou",
         "kumo_ninpou",
         "hebi_ninpou",
@@ -304,7 +301,14 @@
         "interruptedDuration": "1 rodada completa adicional sem protecao",
         "oncePerScene": true,
         "noAptidoesDeTecnica": true,
-        "examples": ["tempestade_de_raios", "furacao", "tempestade_de_areia", "deslizamento", "terremoto", "maremoto"]
+        "examples": [
+          "tempestade_de_raios",
+          "furacao",
+          "tempestade_de_areia",
+          "deslizamento",
+          "terremoto",
+          "maremoto"
+        ]
       },
       "evolutions": []
     }

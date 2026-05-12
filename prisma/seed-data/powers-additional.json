@@ -1,0 +1,316 @@
+{
+  "_meta": {
+    "description": "Lote 4f — Poderes Faltantes (catálogo básico). 13 poderes referenciados em availableFor dos efeitos do Lote 4d e 4e mas que ainda não tinham entrada no catálogo principal. Aqui ficam catalogados como entidades existentes com metadados mínimos. EFEITOS EXCLUSIVOS desses poderes (ex: Areia Especial do Dokujutsu como Energizar Venenoso, Bolha de Tinta do Sumi Ninpou) NÃO são modelados aqui — virão em lote suplementar dedicado se for o caso. O catálogo é o mínimo necessário pra que availableFor não tenha mais strings dormentes.",
+    "sources": [
+      "Livro de Hijutsus p. 57-60 (Kamijutsu — Kami Ninpou)",
+      "Livro Básico p. 201-202 (Dokujutsu)",
+      "Livro de Hijutsus 2 (referências a Sumi Ninpou, Kumo Ninpou, Hebi Ninpou, Ototon, Kibaku Nendo, Shouton, Shakuton, Ranton, Futton-Mei, Youton-Mei)",
+      "Guia Avançado p. 48-56 (referências em availableFor dos efeitos novos)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "notes": "Todos esses 13 poderes seguem a estrutura base do Ninpou (alcance Médio 10m+2m/Esp, tamanho 1m/Esp). Os que são variantes elementais (Futton-Mei, Youton-Mei, Shakuton, Shouton, Ranton, Ototon, Kibaku Nendo) herdam Ninpou mas têm desvantagens e vantagens elementais específicas. Os clã-restritos (Kami Ninpou, Sumi Ninpou, Kumo Ninpou, Hebi Ninpou, Kujaku Myoho, Dokujutsu) também herdam Ninpou mas têm efeitos próprios. PATCH IMPORTANTE: o code 'kamijutsu' usado em alguns availableFor do Lote 4e DEVE ser substituído por 'kami_ninpou'. Kamijutsu é o nome do conjunto/hijutsu; Kami Ninpou é o nome do PODER. Script de validação detecta essa inconsistência."
+  },
+  "data": [
+    {
+      "code": "kami_ninpou",
+      "name": "Kami Ninpou",
+      "translation": "Arte Secreta dos Papéis",
+      "category": "HIJUTSU",
+      "element": null,
+      "shortDescription": "Hijutsu do Kamijutsu. Manipula folhas de papel via chakra. Pode endurecer em flechas/shurikens, conter inimigos.",
+      "description": "Habilidade avançada que permite controlar milhares de folhas de papel via chakra. Para ataque, pode endurecer e dobrar os papéis em flechas ou shurikens; também pode conter adversários, sufocando com papel. Comprado como versão do Ninpou (regras do capítulo Poderes do Livro Básico p. 91), com lista reduzida de efeitos permitidos e parâmetros modificados. Hijutsu do clã Fuuma (Shigure Fuuma, Konan). Aptidão restrita: Shikigami no Mai. Fonte: Livro de Hijutsus p. 57-60.",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio", "altUsePericiaArte": true },
+        "sizeFormula": { "perEsp": 1, "unit": "m", "altUsePericiaArte": true },
+        "damageBonusBase": 1,
+        "elementAdvantage": [],
+        "elementDisadvantage": ["katon"]
+      },
+      "rules": {
+        "selosDefault": true,
+        "keySkillOptional": "arte",
+        "allowedEffects": ["canhao", "criar_arma", "raio", "flechas", "sopro_destrutivo", "coluna", "lanca", "missil", "ricochete", "correnteza"],
+        "additionalEffectsWithShikigami": ["algemar", "orbe", "barreira", "prisao_de_agua"],
+        "restrictedAptitude": "shikigami_no_mai",
+        "interpretiveRestriction": "Precisa ter papéis disponíveis em itens; restrição interpretativa removida com Shikigami no Mai (corpo vira papel)."
+      }
+    },
+    {
+      "code": "sumi_ninpou",
+      "name": "Sumi Ninpou",
+      "translation": "Arte da Tinta",
+      "category": "HIJUTSU",
+      "element": null,
+      "shortDescription": "Hijutsu do Sai (clã/ROOT). Desenhos com tinta especial ganham vida e atacam.",
+      "description": "Poder restrito que permite usar tinta especial pra animar desenhos. Comprado como versão de Ninpou. O usuário desenha em pergaminhos ou superfícies, e a tinta se transforma em criaturas/objetos que servem ao usuário. Marca registrada do personagem Sai (ROOT de Konoha). Fonte: Livro de Hijutsus 2 (capítulo Sumi Ninpou).",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio" },
+        "sizeFormula": { "perEsp": 1, "unit": "m" },
+        "elementAdvantage": [],
+        "elementDisadvantage": []
+      },
+      "rules": {
+        "selosDefault": true,
+        "requiresInk": true,
+        "interpretiveDescription": "Usuário desenha em pergaminhos/superfícies; tinta vira animais ou objetos animados."
+      }
+    },
+    {
+      "code": "kumo_ninpou",
+      "name": "Kumo Ninpou",
+      "translation": "Arte das Teias",
+      "category": "HIJUTSU",
+      "element": null,
+      "shortDescription": "Hijutsu do clã de aranhas (Kidoumaru). Cria/manipula teias resistentes via chakra.",
+      "description": "Poder restrito que permite criar e manipular fios e teias de seda extremamente resistentes, semelhantes a aranhas. Usado pelo personagem Kidoumaru (4 Som). Comprado como versão de Ninpou. Fonte: Livro de Hijutsus 2 (capítulo Kumo Ninpou).",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio" },
+        "sizeFormula": { "perEsp": 1, "unit": "m" },
+        "elementAdvantage": [],
+        "elementDisadvantage": []
+      },
+      "rules": {
+        "selosDefault": true,
+        "interpretiveDescription": "Cria teias e fios pra capturar/atacar; pode atirar projéteis de teia condensada."
+      }
+    },
+    {
+      "code": "hebi_ninpou",
+      "name": "Hebi Ninpou",
+      "translation": "Arte das Cobras",
+      "category": "HIJUTSU",
+      "element": null,
+      "shortDescription": "Hijutsu de Orochimaru. Faz cobras saírem do corpo, controla serpentes.",
+      "description": "Poder restrito que permite ao usuário fazer cobras saírem do próprio corpo, usá-las como armas (Kusanagi pode aparecer pela boca) e controlar serpentes. Marca registrada do Sannin Orochimaru. Comprado como versão de Ninpou. Fonte: Livro de Hijutsus 2 (capítulo Hebi Ninpou).",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio" },
+        "sizeFormula": { "perEsp": 1, "unit": "m" },
+        "elementAdvantage": [],
+        "elementDisadvantage": []
+      },
+      "rules": {
+        "selosDefault": true,
+        "interpretiveDescription": "Cobras saem do corpo do usuário; podem morder, agarrar, carregar objetos.",
+        "synergyWithKuchiyose": "cobras"
+      }
+    },
+    {
+      "code": "kujaku_myoho",
+      "name": "Kujaku Myoho",
+      "translation": "Lei Suprema do Pavão",
+      "category": "HIJUTSU",
+      "element": null,
+      "shortDescription": "Hijutsu raro (ainda pouco documentado no nosso banco). Cataloga existência; detalhes seguem o livro.",
+      "description": "Poder restrito. Detalhes mecânicos completos ainda não foram extraídos pro nosso banco — entrada mínima para que availableFor dos efeitos do GAS (Projetar, Repelir) não tenha string dormente. Quando necessário, consultar Livro de Hijutsus 2 capítulo Kujaku Myoho para preencher.",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio" },
+        "sizeFormula": { "perEsp": 1, "unit": "m" }
+      },
+      "rules": {
+        "selosDefault": true,
+        "needsDeepResearch": true
+      }
+    },
+    {
+      "code": "dokujutsu",
+      "name": "Dokujutsu",
+      "translation": "Arte dos Venenos",
+      "category": "HIJUTSU",
+      "element": null,
+      "shortDescription": "Hijutsu do Sasori. Combate com venenos via projéteis, fumaças, agulhas envenenadas.",
+      "description": "Permite combate com venenos das mais variadas formas: agulhas envenenadas, fumaças tóxicas, projéteis. Marca do Sasori (Akatsuki). Comprado como versão de Ninpou. Pré-req: Venefício 6 + aptidão Químico. Atributo-chave: Inteligência (não Espírito). Veneno Melhorado: +2 níveis grátis em Venefício para testes/pré-requisitos de fabricação, +1 na dificuldade de resistência dos venenos, -1 turno pra fazer efeito, acesso a venenos Nível V. Fonte: Livro Básico p. 201-202.",
+      "stats": {
+        "rangeFormula": { "base": 10, "perInt": 2, "category": "Médio" },
+        "sizeFormula": { "perInt": 1, "unit": "m" },
+        "keyAttribute": "int",
+        "elementAdvantage": [],
+        "elementDisadvantage": []
+      },
+      "rules": {
+        "selosDefault": true,
+        "prerequisites": {
+          "skills": { "venefico": 6 },
+          "aptitudes": ["quimico"]
+        },
+        "allowedEffects": ["canhao", "orbe", "raio", "dano_continuo", "purificar", "flechas", "lanca", "ricochete", "coluna", "energizar", "nuvem", "sopro_destrutivo", "missil", "correnteza", "onda_explosiva", "cegante"],
+        "venomBenefits": {
+          "veneficoBonusLevels": 2,
+          "resistanceDifficultyBonus": 1,
+          "turnsToEffectReduction": 1,
+          "accessLevelV": true
+        },
+        "energizarVariant": "Energizar Venenoso (fixa dose de veneno em 1 arma usando chakra)."
+      }
+    },
+    {
+      "code": "ototon",
+      "name": "Ototon",
+      "translation": "Elemento Som",
+      "category": "HIJUTSU",
+      "element": "som",
+      "shortDescription": "Hijutsu de Otogakure (Tayuya, Dosu). Controla ondas sonoras destrutivas via chakra.",
+      "description": "Poder restrito que permite criar e controlar ondas sonoras destrutivas via chakra, usando instrumentos musicais ou amplificadores nos braços (Dosu, Tayuya). Hijutsu característico da Vila do Som. Comprado como versão de Ninpou. Fonte: Livro de Hijutsus 2 (capítulo Ototon).",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio" },
+        "sizeFormula": { "perEsp": 1, "unit": "m" },
+        "elementAdvantage": [],
+        "elementDisadvantage": []
+      },
+      "rules": {
+        "selosDefault": true,
+        "requiresInstrumentOrAmplifier": true,
+        "interpretiveDescription": "Som concentrado em ondas destrutivas; pode danificar tímpanos, causar atordoamento, vibrar órgãos internos."
+      }
+    },
+    {
+      "code": "kibaku_nendo",
+      "name": "Kibaku Nendo",
+      "translation": "Argila Explosiva",
+      "category": "HIJUTSU",
+      "element": null,
+      "shortDescription": "Hijutsu de Deidara (Iwa). Modela argila com chakra e detona. Pode usar bocas nas mãos.",
+      "description": "Poder restrito de Iwagakure. Permite ao usuário modelar argila com chakra (geralmente via 'bocas' nas palmas das mãos) em formas variadas — pássaros, aranhas, peixes — e detonar com palavra de comando ('Katsu!'). Marca registrada de Deidara (Akatsuki). Comprado como versão de Ninpou. Fonte: Livro de Hijutsus 2 (capítulo Kibaku Nendo).",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio" },
+        "sizeFormula": { "perEsp": 1, "unit": "m" },
+        "elementAdvantage": [],
+        "elementDisadvantage": ["raiton"]
+      },
+      "rules": {
+        "selosDefault": false,
+        "requiresClay": true,
+        "interpretiveDescription": "Mãos modelam argila viva; usuário detona com palavra de comando.",
+        "weaknessRaiton": "Raiton neutraliza argila explosiva (curto-circuito do chakra)."
+      }
+    },
+    {
+      "code": "futton_mei",
+      "name": "Futton (Mei)",
+      "translation": "Elemento Vapor (versão Mei)",
+      "category": "HIJUTSU",
+      "element": "vapor",
+      "shortDescription": "KG do clã Terumi (Mei Mizukage). Versão NÃO-Bijuu do Futton. Vapor ácido e quente.",
+      "description": "Linhagem sanguínea avançada formada via Katon + Suiton, criando vapor ácido e altamente corrosivo. Versão da 5ª Mizukage Mei Terumi, distinta da Futton do Bijuu Gobi (Gobi Futton). Comprado como versão de Ninpou. Restrição de Elemento: usuário só pode aprender Futton, Katon e Suiton. Fonte: Livro de Hijutsus 2.",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio" },
+        "sizeFormula": { "perEsp": 1, "unit": "m" },
+        "elementBonus": 2,
+        "elementBonusType": "dano",
+        "elementAdvantage": ["doton"],
+        "elementDisadvantage": []
+      },
+      "rules": {
+        "selosDefault": true,
+        "restrictedElements": ["futton", "katon", "suiton"],
+        "kekkeiGenkai": true,
+        "kekkeiGenkaiSource": "katon + suiton",
+        "freeElementLevels": { "katon": 1, "suiton": 1 },
+        "tensaiAvailable": true
+      }
+    },
+    {
+      "code": "youton_mei",
+      "name": "Youton (Mei)",
+      "translation": "Elemento Lava (versão Mei)",
+      "category": "HIJUTSU",
+      "element": "lava",
+      "shortDescription": "KG do clã Terumi (Mei Mizukage). Versão NÃO-Bijuu do Youton. Lava derretida.",
+      "description": "Linhagem sanguínea avançada formada via Katon + Doton, criando lava derretida. Versão da 5ª Mizukage Mei Terumi, distinta da Youton do Bijuu Yonbi (Yonbi Youton). Comprado como versão de Ninpou. Restrição de Elemento: usuário só pode aprender Youton, Katon e Doton. Fonte: Livro de Hijutsus 2.",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio" },
+        "sizeFormula": { "perEsp": 1, "unit": "m" },
+        "elementBonus": 2,
+        "elementBonusType": "dano",
+        "elementAdvantage": ["suiton"],
+        "elementDisadvantage": []
+      },
+      "rules": {
+        "selosDefault": true,
+        "restrictedElements": ["youton", "katon", "doton"],
+        "kekkeiGenkai": true,
+        "kekkeiGenkaiSource": "katon + doton",
+        "freeElementLevels": { "katon": 1, "doton": 1 },
+        "tensaiAvailable": true
+      }
+    },
+    {
+      "code": "shakuton",
+      "name": "Shakuton",
+      "translation": "Elemento Calor",
+      "category": "HIJUTSU",
+      "element": "calor",
+      "shortDescription": "KG da Pakura (Suna). Calor seco e abrasador, evapora líquidos.",
+      "description": "Linhagem sanguínea avançada via Katon + Fuuton, gerando calor seco extremo capaz de evaporar líquidos. Marca da kunoichi Pakura, falecida ninja de elite de Sunagakure. Restrição de Elemento: usuário só pode aprender Shakuton, Katon e Fuuton. Comprado como versão de Ninpou. Fonte: Livro de Hijutsus 2.",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio" },
+        "sizeFormula": { "perEsp": 1, "unit": "m" },
+        "elementBonus": 2,
+        "elementBonusType": "dano",
+        "elementAdvantage": ["suiton"],
+        "elementDisadvantage": []
+      },
+      "rules": {
+        "selosDefault": true,
+        "restrictedElements": ["shakuton", "katon", "fuuton"],
+        "kekkeiGenkai": true,
+        "kekkeiGenkaiSource": "katon + fuuton",
+        "freeElementLevels": { "katon": 1, "fuuton": 1 },
+        "specialEffect": "Evapora líquidos no ambiente (incluindo Suiton inimigo).",
+        "tensaiAvailable": true
+      }
+    },
+    {
+      "code": "shouton",
+      "name": "Shouton",
+      "translation": "Elemento Cristal",
+      "category": "HIJUTSU",
+      "element": "cristal",
+      "shortDescription": "KG da Guren. Cria estruturas de cristal endurecido — armas, barreiras, prisões.",
+      "description": "Linhagem sanguínea avançada que permite criar e manipular cristais. Pode formar estruturas defensivas, ofensivas e prisões cristalinas. Marca da personagem Guren (filler), exclusiva. Comprado como versão de Ninpou. Restrição de Elemento: usuário só pode aprender Shouton, Doton e Suiton. Fonte: Livro de Hijutsus 2.",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio" },
+        "sizeFormula": { "perEsp": 1, "unit": "m" },
+        "elementBonus": 2,
+        "elementBonusType": "dano",
+        "elementAdvantage": [],
+        "elementDisadvantage": ["raiton"]
+      },
+      "rules": {
+        "selosDefault": true,
+        "restrictedElements": ["shouton", "doton", "suiton"],
+        "kekkeiGenkai": true,
+        "kekkeiGenkaiSource": "doton + suiton",
+        "freeElementLevels": { "doton": 1, "suiton": 1 },
+        "weaknessRaiton": "Raiton estilhaça cristais (vibração)",
+        "tensaiAvailable": true
+      }
+    },
+    {
+      "code": "ranton",
+      "name": "Ranton",
+      "translation": "Elemento Tempestade",
+      "category": "HIJUTSU",
+      "element": "tempestade",
+      "shortDescription": "KG do Darui (Kumo). Raios em forma de água, projéteis curvos.",
+      "description": "Linhagem sanguínea avançada via Raiton + Suiton, criando raios em forma de água que se movem em trajetórias curvas. Marca do Raikage Darui (4º Raikage assistente). Comprado como versão de Ninpou. Restrição de Elemento: usuário só pode aprender Ranton, Raiton e Suiton. Fonte: Livro de Hijutsus 2.",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio" },
+        "sizeFormula": { "perEsp": 1, "unit": "m" },
+        "elementBonus": 2,
+        "elementBonusType": "dano",
+        "elementAdvantage": ["fuuton"],
+        "elementDisadvantage": []
+      },
+      "rules": {
+        "selosDefault": true,
+        "restrictedElements": ["ranton", "raiton", "suiton"],
+        "kekkeiGenkai": true,
+        "kekkeiGenkaiSource": "raiton + suiton",
+        "freeElementLevels": { "raiton": 1, "suiton": 1 },
+        "specialProperty": "Projéteis curvos — podem contornar obstáculos.",
+        "tensaiAvailable": true
+      }
+    }
+  ]
+}

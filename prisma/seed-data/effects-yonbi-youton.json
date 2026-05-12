@@ -13,19 +13,46 @@
       "rangeFormula": "Longo (15m +3m por nível de Espírito)",
       "sizeFormula": "2m por nível de Espírito",
       "elementBonus": 2,
-      "elementDisadvantage": ["suiton"],
-      "freePowerLevelsByElement": { "doton": 1, "katon": 1 },
-      "restrictedElements": ["yonbi_youton", "doton", "katon"],
-      "allowedNinpouEffects": ["canhao", "orbe", "flechas", "coluna", "sopro_destrutivo", "raio", "energizar_punho", "missil", "onda_explosiva", "ricochete"],
-      "crossElementEffects": ["tremor"]
-    }
+      "elementDisadvantage": [
+        "suiton"
+      ],
+      "freePowerLevelsByElement": {
+        "doton": 1,
+        "katon": 1
+      },
+      "restrictedElements": [
+        "yonbi_youton",
+        "doton",
+        "katon"
+      ],
+      "allowedNinpouEffects": [
+        "canhao",
+        "orbe",
+        "flechas",
+        "coluna",
+        "sopro_destrutivo",
+        "raio",
+        "energizar_punho",
+        "missil",
+        "onda_explosiva",
+        "ricochete"
+      ],
+      "crossElementEffects": [
+        "tremor"
+      ]
+    },
+    "unmodeledPowers": [
+      "yonbi_youton"
+    ]
   },
   "data": [
     {
       "code": "manto_de_lava",
       "name": "Manto de Lava",
       "minLevel": 5,
-      "availableFor": ["yonbi_youton"],
+      "availableFor": [
+        "yonbi_youton"
+      ],
       "shortDescription": "Camada de lava no corpo. Queimadura por contato. Ataque com lava letal. Dano indireto. Pré-req: Energizar.",
       "description": "Envolve corpo inteiro em camada de lava que aumenta dano de ataques físicos. Queimadura: criatura/objeto em contato direto sofre queimadura igual ao dano comum do poder com grau 1. Não aplica se inimigo já sofreu outro dano na mesma ação (ex: não se aplica queimadura se atingiu com CC). Ataque com Lava: todos seus ataques corporais são considerados Youton com Energizar OU causam dano comum do poder (escolha). Custa chakra = nível usado. Tentar bloquear com arma comum = falha automática + arma destruída. Tentar bloquear com mãos nuas = falha automática. Dano Indireto: alta temperatura faz inimigo sofrer dano mesmo sem acerto direto. Se defendeu com Esquiva/Antecipar (mesmo bem-sucedido), testa Vigor (Dif padrão -2). Falhando, sofre dano de queimadura. Com Ataque Múltiplo, dano indireto = 1 vez só, e só se errar todos os ataques. Endurecimento: técnica em área Suiton cancela o manto. Pré-requisito: Energizar. Fonte: Guia Avançado p. 97.",
       "stats": {
@@ -36,13 +63,24 @@
         "chakraCost": "nivel_usado_quando_atacar"
       },
       "rules": {
-        "prerequisites": { "effects": ["energizar"] },
-        "queimaduraOnContact": { "damage": "comum_do_poder", "grade": 1, "noStackOtherDamageSameAction": true },
+        "prerequisites": {
+          "effects": [
+            "energizar"
+          ]
+        },
+        "queimaduraOnContact": {
+          "damage": "comum_do_poder",
+          "grade": 1,
+          "noStackOtherDamageSameAction": true
+        },
         "lavaAttack": "todos_ataques_CC_sao_youton_com_energizar",
         "commonWeaponBlockFails": true,
         "bareHandsBlockFails": true,
         "danoIndireto": {
-          "triggerOn": ["esquiva_bem_sucedida", "antecipar_bem_sucedido"],
+          "triggerOn": [
+            "esquiva_bem_sucedida",
+            "antecipar_bem_sucedido"
+          ],
           "vigorTest": "padrao -2"
         },
         "canceledBySuitonArea": true
@@ -59,7 +97,9 @@
       "code": "vulcao",
       "name": "Vulcão",
       "minLevel": 10,
-      "availableFor": ["yonbi_youton"],
+      "availableFor": [
+        "yonbi_youton"
+      ],
       "shortDescription": "Erupção vulcânica massiva. 6 círculos de 10m. Combina com Tremor como ação livre.",
       "description": "Cria um vulcão que explode violentamente, fazendo rochas derretidas voarem em todas direções. Segue regras de Meteoros (Katon), com diferenças. Vulcão tem até seis focos circulares de erupção com 10m de diâmetro cada. Se tiver Tremor Nv 4, pode usá-lo ao mesmo tempo como ação livre, pagando seu custo de chakra. Único teste de acerto, mas alvo tem direito a duas defesas separadas (uma contra Vulcão, outra contra Tremor). Fonte: Guia Avançado p. 97.",
       "stats": {

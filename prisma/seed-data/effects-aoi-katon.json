@@ -13,14 +13,19 @@
       "basedOn": "katon",
       "noDisadvantageVsSuiton": true,
       "freeDominioDoFogoAtLevel5": true
-    }
+    },
+    "unmodeledPowers": [
+      "aoi_katon"
+    ]
   },
   "data": [
     {
       "code": "nekozume",
       "name": "Nekozume (Garras de Gato)",
       "minLevel": 4,
-      "availableFor": ["aoi_katon"],
+      "availableFor": [
+        "aoi_katon"
+      ],
       "shortDescription": "Materializa garras de chakra nas unhas. Dano = arma + ½ Espírito. Crítico Aprimorado grátis.",
       "description": "Materializa garras de chakra a partir das unhas das mãos ou pés. A Garra Felina muda o cálculo de dano pra Dano de Arma + ½ do Espírito. Dano vira tipo corte. Recebe gratuitamente benefícios da aptidão Crítico Aprimorado (se possuir pré-requisitos). Dano de arma da Garra Felina é baseado em chakra gasto e nível do poder: 4 chakra = 2 dano de arma; 5 chakra = 3 dano de arma (requer Aoi Katon 5); 6 chakra = 4 dano de arma (requer Aoi Katon 6). Fonte: Guia Avançado p. 95.",
       "stats": {
@@ -34,9 +39,17 @@
       },
       "rules": {
         "chakraCostTable": {
-          "4": { "weaponDamage": 2 },
-          "5": { "weaponDamage": 3, "requiresPowerLevel": 5 },
-          "6": { "weaponDamage": 4, "requiresPowerLevel": 6 }
+          "4": {
+            "weaponDamage": 2
+          },
+          "5": {
+            "weaponDamage": 3,
+            "requiresPowerLevel": 5
+          },
+          "6": {
+            "weaponDamage": 4,
+            "requiresPowerLevel": 6
+          }
         },
         "grantsAptitude": "critico_aprimorado",
         "ifPrerequisitesMet": true

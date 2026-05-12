@@ -201,6 +201,15 @@ model Aptitude {
 
   prerequisites Json @default("{}")
   restrictions  Json @default("{}")
+  /// Efeitos mecânicos da aptidão. Sempre tem campo `type` discriminador
+  /// (precision_bonus, skill_bonus, damage_bonus, manuever, stat_substitution,
+  /// permission, etc.) — vocabulário completo em `aptitudes-common-combat.json`
+  /// e no README do Lote 5a. Motor de regras lê `type` pra escolher a lógica.
+  /// Pode conter `gasReview` aninhado com revisões opcionais do Guia Avançado.
+  effects       Json @default("{}")
+  /// Array de evoluções progressivas: `[{ atLevel, name, description,
+  /// prerequisites?, effects? }]`. Ex.: Diligente Nv 2, Lutar às Cegas Nv 2.
+  evolutions    Json @default("[]")
 
   isFree Boolean @default(false) @map("is_free")
 
@@ -212,12 +221,24 @@ model Aptitude {
   @@map("aptitudes")
 }
 
+/// Categorias do livro + lotes 5a-5d:
+///   - HABILIDADE : habilidades gerais (Acuidade, Diligente, Velocista, ...)
+///   - COMBATE    : aptidões de combate (Ambidestria, Crítico Aprimorado, ...)
+///   - MANOBRA    : manobras (Ataque Múltiplo, Ataque Poderoso, ...)
+///   - GERAL      : utility (Ninja Médico, Químico, Sensor, Engenheiro, ...)
+///   - RESTRITA   : ligadas a clã/KG (Lote 5b — Byakugan, Corpulência, ...)
+///   - META       : meta-aptidões de poder (Lote 5d — Maximizar, ...)
+///   - PODER      : LEGADO do schema antigo, sem uso atual mas mantido por compat
+///   - PERICIA    : LEGADO do schema antigo, sem uso atual mas mantido por compat
 enum AptitudeCategory {
+  HABILIDADE
   COMBATE
-  PODER
-  PERICIA
+  MANOBRA
   GERAL
   RESTRITA
+  META
+  PODER
+  PERICIA
 }
 
 model CharacterAptitude {

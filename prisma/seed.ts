@@ -315,6 +315,65 @@ async function seedPowerEffects(): Promise<void> {
 }
 
 // ──────────────────────────────────────────────────────────────────────
+// Aptidões (Lote 5 — entregue em ondas 5a-5d)
+// ──────────────────────────────────────────────────────────────────────
+// Estrutura espelha PowerEffect: arquivos `aptitudes-*.json` agregados via
+// `APTITUDE_FILES`. Cada aptidão tem `effects` com `type` discriminador
+// (precision_bonus, skill_bonus, manuever, stat_substitution, permission,
+// etc.) consumido pelo motor de regras. `evolutions` é array com versões
+// progressivas (Nv 2 e além).
+
+type AptitudeSeed = {
+  code: string;
+  name: string;
+  category:
+    | 'HABILIDADE'
+    | 'COMBATE'
+    | 'MANOBRA'
+    | 'GERAL'
+    | 'RESTRITA'
+    | 'META'
+    | 'PODER'
+    | 'PERICIA';
+  shortDescription?: string;
+  description: string;
+  prerequisites?: Record<string, unknown>;
+  effects: Record<string, unknown>;
+  evolutions?: Array<Record<string, unknown>>;
+};
+
+const APTITUDE_FILES: ReadonlyArray<string> = [
+  'aptitudes-common-combat.json', // 5a — 51 aptidões (12 HAB + 22 COM + 7 MAN + 10 GER)
+  // Próximas ondas (5b restritas de clã, 5c manobras avançadas, 5d meta) entram aqui.
+];
+
+async function seedAptitudes(): Promise<void> {
+  let total = 0;
+  for (const file of APTITUDE_FILES) {
+    const aptitudes = loadSeedData<AptitudeSeed>(file);
+    for (const a of aptitudes) {
+      const data = {
+        code: a.code,
+        name: a.name,
+        category: a.category,
+        shortDescription: a.shortDescription ?? null,
+        description: a.description,
+        prerequisites: (a.prerequisites ?? {}) as Prisma.InputJsonValue,
+        effects: a.effects as Prisma.InputJsonValue,
+        evolutions: (a.evolutions ?? []) as Prisma.InputJsonValue,
+      };
+      await prisma.aptitude.upsert({
+        where: { code: a.code },
+        create: data,
+        update: data,
+      });
+    }
+    total += aptitudes.length;
+  }
+  console.info(`  ✓ ${total} aptidões`);
+}
+
+// ──────────────────────────────────────────────────────────────────────
 // Perícias (Leva 1)
 // ──────────────────────────────────────────────────────────────────────
 
@@ -365,6 +424,7 @@ async function main(): Promise<void> {
   await seedClans();
   await seedPowers();
   await seedPowerEffects();
+  await seedAptitudes();
   await seedPericias();
   console.info('✅ Seed completo.');
 }

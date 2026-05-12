@@ -102,6 +102,7 @@ function buildIndices(files: SeedFile[]): Indices {
     // Detecta tipo de arquivo pelo nome (heurística simples)
     const isPowerFile = filename === 'powers.json' || filename === 'powers-additional.json';
     const isEffectFile = filename.startsWith('effects-');
+    const isAptitudeFile = filename.startsWith('aptitudes-');
     const isClanFile = filename === 'clans.json';
     const isVillageFile = filename === 'villages.json';
     const isKgFile = filename === 'kekkei-genkais.json';
@@ -121,6 +122,7 @@ function buildIndices(files: SeedFile[]): Indices {
       // Index by file type
       if (isPowerFile) powerCodes.add(code);
       if (isEffectFile) effectCodes.add(code);
+      if (isAptitudeFile) aptitudeCodes.add(code);
       if (isClanFile) clanCodes.add(code);
       if (isVillageFile) villageCodes.add(code);
       if (isKgFile) kekkeiGenkaiCodes.add(code);
@@ -164,6 +166,7 @@ function buildIndices(files: SeedFile[]): Indices {
 function getEntityType(filename: string): string {
   if (filename === 'powers.json' || filename === 'powers-additional.json') return 'power';
   if (filename.startsWith('effects-')) return 'effect';
+  if (filename.startsWith('aptitudes-')) return 'aptitude';
   if (filename === 'clans.json') return 'clan';
   if (filename === 'villages.json') return 'village';
   if (filename === 'kekkei-genkais.json') return 'kg';

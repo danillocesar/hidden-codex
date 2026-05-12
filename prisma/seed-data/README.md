@@ -1,227 +1,182 @@
-# Seed Data — Lote 3
+# Seed Data — Lote 4e (Efeitos Novos do Guia Avançado) 🎉 **FECHA O LOTE 4**
 
-Terceira entrega: **Poderes** — destrava a lista de poderes selecionáveis na criação de personagem.
+Última onda do **Lote 4 (Efeitos)**. Cobre os 7 efeitos novos introduzidos pelo Guia Avançado do Shinobi (GAS) — adições à lista padrão de efeitos universais.
 
-## 📦 Conteúdo
+## 📦 Conteúdo desta onda (1 arquivo, 7 efeitos)
 
-| Arquivo | Itens | Observação |
-|---|:---:|---|
-| `powers.json` | 19 | 13 comuns/restritos + 6 elementais (Ninpou + 5 básicos + Hyouton) |
+| Efeito | Nível | Tipo | Poderes Compatíveis |
+|---|:---:|---|---|
+| **Dano Contínuo** | 2 | Projétil (DoT) | Katon, Raiton + 10 outros |
+| **Deslocamento de Vácuo** | 2 | Suporte (mobilidade) | Doton, Fuuton, Suiton + 4 outros |
+| **Purificar** | 2 | Ambiente | Fuuton, Suiton + 4 outros |
+| **Repelir** | 2 | Reação defensiva | Ninpou + 15 outros |
+| **Projetar** | 3 | Projétil (desloca) | Ninpou + 14 outros |
+| **Cegante** | 5 | Projétil (camuflagem no inimigo) | Ninpou + 13 outros |
+| **Desastre** | 9 | Concentração épica | Ninpou + 7 elementais |
 
-## 🎯 Categorias incluídas
-
-### Elementais básicos (6)
-- **Ninpou** — base genérica, sem elemento
-- **Katon** — Fogo (forte vs Fuuton, fraco vs Suiton)
-- **Suiton** — Água (forte vs Katon, fraco vs Doton)
-- **Fuuton** — Vento (forte vs Raiton, fraco vs Katon)
-- **Doton** — Terra (forte vs Suiton, fraco vs Raiton)
-- **Raiton** — Trovão (forte vs Doton, fraco vs Fuuton)
-
-### Kekkei Genkai (2)
-- **Hyouton** — Gelo (clã Yuki) — combina Fuuton + Suiton ✨ **Satsuki**
-- **Mokuton** — Madeira (clã Senju) — combina Doton + Suiton
-
-### Comuns especiais (4)
-- **Magen** — Genjutsu avançado
-- **Iryou Ninjutsu** — Cura
-- **Fuuinjutsu** — Selamento
-- **Rasengan** — Bola de chakra
-- **Kuchiyose** — Invocação
-
-### Restritos de clã (6)
-- **Juuken** (Hyuuga)
-- **Kagejutsu** (Nara)
-- **Baika Ninpou** (Akimichi)
-- **Kikai Ninpou** (Aburame)
-- **Shintenshin** (Yamanaka)
-- **Shikakyu** (Inuzuka)
+Total: **7 efeitos** novos.
 
 ## 🔑 Pontos importantes
 
-### 1. Limite de nível (motor de regras)
+### 1. Repelir é a única ação REATIVA da onda
 
-Limite máximo de qualquer poder = **NC ÷ 2 (round DOWN)**.
+Junto com Espelho D'Água do Sanbi Suiton (Lote 4c), Repelir é dos poucos efeitos que funcionam como reação defensiva — usa LM com +1 precisão. **Motor precisa entender o trigger reativo** (projétil/toque/golpear chegando contra você ou alguém no alcance).
 
-Exemplo: NC 6 → poder máximo nível 3. NC 11 → poder máximo nível 5.
+### 2. Dano Contínuo tem mecânica DoT
 
-Esse é o **único caso de arredondamento para baixo no sistema** — todos os outros são para cima.
+Diferente de quase todos os outros efeitos do livro, Dano Contínuo aplica dano **fixo por turno** (não modificável por bônus de dano). É damage-over-time clássico. Vítima pode se livrar com ação completa + Vigor (Dif comum -3) ou esperar 3 turnos sofrendo 3 danos no total.
 
-### 2. Restrições de elemento (Hyouton/Mokuton)
+### 3. Desastre é "limite quebrado"
 
-Personagens com Hyouton **não podem aprender** Katon, Raiton, Doton.
-Personagens com Mokuton **não podem aprender** Katon, Raiton, Fuuton.
+Nv 9, área 3x comum, dano 3x nível, custo 3x nível, **1x por cena**, NÃO aceita aptidões de técnica. Modelado pra ser um ult cinematográfico de jinchuuriki/lendário. Sinalizei tudo isso em `rules`.
 
-Campo `rules.restrictedElements` lista quais elementos são permitidos. Motor precisa validar quando o usuário tentar comprar um novo poder elemental.
+### 4. Poderes ainda NÃO modelados no catálogo
 
-### 3. Níveis grátis em outros poderes
-
-Hyouton e Mokuton dão **1 nível grátis** em poderes elementais associados:
-- Hyouton: 1 grátis em Fuuton + 1 grátis em Suiton
-- Mokuton: 1 grátis em Doton + 1 grátis em Suiton
-
-Esses níveis grátis **não contam pro budget de pontos**. Permite usar o efeito Canhão dos elementos secundários usando o nível do poder principal como parâmetro.
-
-### 4. Efeitos exclusivos não estão neste lote
-
-Cada poder tem efeitos exclusivos (ex: Hyouton tem Espelhos Demoníacos, Suiton tem Névoa, Doton tem Imergir). **Os efeitos estão no Lote 4.**
-
-O campo `rules.exclusiveEffects` lista os códigos por enquanto — referencia futura.
-
-### 5. Categorias de poder
-
-Três categorias usadas no campo `category`:
-
-| Categoria | Significado |
-|---|---|
-| `COMUM` | Qualquer personagem pode comprar |
-| `RESTRITO_CLA` | Precisa do clã específico (campo `associatedClan`) |
-| `KEKKEI_GENKAI` | KG vinculada a um clã específico (campos `associatedKekkeiGenkai` + `associatedClan`) |
-| `RESTRITO` | Restrito por pré-requisitos (Magen requer Int 6 + 3 aptidões) |
-
-### 6. Confronto de elementos
-
-Vantagens elementais (campo `stats.elementAdvantage` e `elementDisadvantage`):
+Vários efeitos listam poderes que **ainda não estão no nosso catálogo** (Lote 3):
 
 ```
-Katon → Fuuton → Raiton → Doton → Suiton → Katon (ciclo)
+kamijutsu, kujaku_myoho, sumi_ninpou, kumo_ninpou,
+hebi_ninpou, ototon, kibaku_nendo, futton_mei,
+youton_mei, shakuton, shouton, ranton, dokujutsu
 ```
 
-Quando elementos rivais se confrontam, o elemento de desvantagem tem **dureza e dano cortados pela metade**. Motor precisa aplicar isso em confrontos de jutsus.
+Documentei a lista em `_meta.unmodeledPowers`. Quando você adicionar esses poderes no catálogo depois (Lote 4f suplementar ou outro), o seeder vai resolver automaticamente via `availableFor`. Por enquanto, o motor só vai conseguir aplicar Dano Contínuo em Katon/Raiton/Kikai/Mokuton/Dokujutsu/Hyouton (os que JÁ existem no catálogo).
 
-Ninpou e KGs (Mokuton, Hyouton) **não têm vantagem nem desvantagem** contra ninguém — exceto onde explicitamente especificado.
+**Não é bug** — é trade-off consciente: cataloguei o efeito completo do livro pra não perder informação, mesmo sabendo que parte das opções fica dormente até catalogarmos os poderes faltantes.
 
-### 7. Combo de elementos (NC alto)
+### 5. Não dupliquei efeitos revisados
 
-Em Espírito 12 ou Inteligência 12, personagem pode unir 2 elementos diferentes em uma técnica única (Técnica Acelerada). Não modelado no MVP — virá em lote futuro/v2.
+O GAS também REVISA alguns efeitos universais que já estão no Lote 4a (Orbe Nv 7, Onda Explosiva Nv 8, Inflamável modo contínuo, Correnteza Nv 8, Lança ignora 3 dureza). **Decidi não incluir esses no 4e** porque significaria dois caminhos:
+- (a) duplicar entradas no banco (ruim — fica inconsistente)
+- (b) sobrescrever os JSONs do 4a (ruim — perde rastreabilidade)
 
-## 📋 Shape do `Power.stats`
+A solução correta é uma **migration de revisão** que atualiza os efeitos existentes pelos novos valores do GAS. Isso fica pra **sessão futura quando você quiser aplicar as revisões oficiais**. Por enquanto, o jogo roda com os valores do Livro Básico, que ainda são canônicos.
 
-JSONB com formato variável por poder. Estrutura comum:
-
-```typescript
-type PowerStats = {
-  rangeFormula?: {
-    base: number;          // metros base (ex: 10)
-    perEsp?: number;       // metros adicionais por nível de Espírito
-    perPowerLevel?: number; // alternativa: metros por nível do poder
-    category: 'Toque' | 'Curto' | 'Médio' | 'Longo';
-  } | 'pessoal' | 'toque' | 'corpo_a_corpo';
-
-  sizeFormula?: {
-    perEsp: number;        // metros de área por nível de Espírito
-    unit: 'm';
-  };
-
-  defaultDamageFormula?: string;       // ex: "nivel_usado + ceil(esp / 2)"
-  defaultDifficultyFormula?: string;
-  defaultHardnessFormula?: string;
-  chakraCostFormula?: string;
-
-  elementBonus?: number;               // bônus de dano extra (Katon: +2)
-  elementBonusType?: 'dano' | 'alcance';
-  elementAdvantage?: string[];         // códigos de elementos contra os quais tem vantagem
-  elementDisadvantage?: string[];
-
-  additionalHardness?: number;         // Hyouton: +2 em criações
-  resistanceDifficultyBonus?: number;  // Hyouton: +1 na Dif dos testes
-
-  damageFormula?: string;              // override pra poderes com fórmula única (Rasengan)
-  healFormula?: string;                // Iryou
-  rollType?: 'CC' | 'CD' | 'sem_teste';
-};
-```
-
-## 📋 Shape do `Power.rules`
-
-```typescript
-type PowerRules = {
-  selosDefault?: boolean;              // Requer selos de mão por padrão?
-  canBeBoughtMultipleTimes?: boolean;  // Apenas Ninpou
-  secondPurchaseNote?: string;
-  freePowerLevelsByElement?: {         // Hyouton/Mokuton
-    [powerCode: string]: number;
-  };
-  restrictedElements?: string[];       // Hyouton só pode aprender Hyouton/Suiton/Fuuton
-  permanentDurationsMelt?: string;     // Hyouton: criações derretem 1h por nível
-  allowedEffects?: string[];           // Códigos de efeitos permitidos
-  exclusiveEffects?: string[];         // Efeitos exclusivos (Espelhos Demoníacos, etc.)
-  prerequisites?: {
-    attributes?: { [attr: string]: number };
-    skills?: { [skill: string]: number };
-    aptitudes?: string[];
-    clan?: string;
-  };
-  requiresContract?: boolean;          // Kuchiyose
-  keySkill?: string;                   // Kikai Ninpou usa Lidar com Animais
-  illusionTypes?: string[];            // Magen
-  noPrecisionTest?: boolean;           // Magen (não usa teste de acerto)
-};
-```
-
-## 🚨 AÇÕES REQUERIDAS no schema
-
-Verifique se a tabela `Power` no schema atual tem:
-
-| Campo | Tipo | Observação |
-|---|---|---|
-| `code` | string unique | ✓ Provavelmente já tem |
-| `name` | string | ✓ |
-| `translation` | string opcional | Adicionar se faltar |
-| `category` | enum (PowerCategory) | Verificar se tem todos os valores: `COMUM`, `RESTRITO`, `RESTRITO_CLA`, `KEKKEI_GENKAI` |
-| `element` | string opcional | Pra poderes elementais |
-| `associatedKekkeiGenkai` | FK string opcional | Pra KGs |
-| `associatedClan` | FK string opcional | Pra poderes restritos de clã |
-| `shortDescription` | string | |
-| `description` | text | |
-| `stats` | Json | JSONB shape acima |
-| `rules` | Json | JSONB shape acima |
-
-**Migration sugerida se faltar campos:** `pnpm prisma migrate dev --name extend_power_table`
-
-## 🔧 Padrão de seed (continuação)
-
-```typescript
-async function seedPowers() {
-  const powers = loadSeedFile('powers.json');
-  for (const p of powers) {
-    await prisma.power.upsert({
-      where: { code: p.code },
-      create: p,
-      update: p,
-    });
-  }
-  console.log(`✓ ${powers.length} poderes`);
-}
-
-async function main() {
-  console.log('🌱 Iniciando seed...');
-  // Ordem: vilas → KGs → clãs → poderes → perícias
-  await seedVillages();
-  await seedKekkeiGenkais();
-  await seedClans();
-  await seedPowers();      // ← novo
-  await seedPericias();
-  console.log('✅ Seed completo.');
-}
-```
+Se quiser as revisões aplicadas agora, me sinaliza — eu produzo um JSON `effects-revisions-gas.json` no formato de patch que o seeder consome via upsert.
 
 ## ✅ Validação pós-seed
 
-Depois de `pnpm prisma db seed`:
+Total no banco depois de aplicar **4a + 4b + 4c + 4d + 4e = 131 + 7 = 138 efeitos**.
 
-1. `pnpm prisma studio`
-2. Tabela `powers` tem 19 linhas
-3. Verifique entradas críticas:
-   - **Ninpou**: `category: "COMUM"`, sem element, `rules.canBeBoughtMultipleTimes: true`
-   - **Hyouton**: `category: "KEKKEI_GENKAI"`, `associatedKekkeiGenkai: "hyouton"`, `associatedClan: "yuki"`, `rules.freePowerLevelsByElement: {fuuton: 1, suiton: 1}`, `rules.restrictedElements: ["hyouton", "suiton", "fuuton"]`
-   - **Katon**: `category: "COMUM"`, `element: "fogo"`, `stats.elementBonus: 2`, `stats.elementAdvantage: ["fuuton"]`, `stats.elementDisadvantage: ["suiton"]`
-   - **Juuken**: `category: "RESTRITO_CLA"`, `associatedClan: "hyuuga"`, `rules.prerequisites.aptitudes: ["byakugan"]`
+Verifique:
+- **Dano Contínuo**: `code: "dano_continuo"`, `minLevel: 2`, `rules.damagePerTurn: "nivel_do_poder"`, `availableFor` com 12 poderes
+- **Repelir**: `code: "repelir"`, `rules.reactive: true`, `rules.triggers: ["projetil", "toque", "golpear"]`
+- **Desastre**: `code: "desastre"`, `minLevel: 9`, `rules.oncePerScene: true`, `rules.noAptidoesDeTecnica: true`
+- **Cegante**: `rules.appliesCondition: "camuflagem_parcial_no_inimigo"` (NÃO no usuário — é diferente de Falsa Posição do Magen)
+- Tabela `power_effects` tem 138 linhas totais
 
-## 🔮 Próximos lotes
+---
 
-| Lote | Conteúdo | Status |
-|---|---|---|
-| **Lote 4** | Efeitos de poder (~150): Canhão, Orbe, Barreira, Sopro Destrutivo, Raio, Energizar, Criar Arma, Névoa, etc. | Próximo |
-| Lote 5 | Aptidões (~80) | Pendente |
-| Lote 6 | Equipamentos (~50) | Pendente |
+# 🎊 FECHAMENTO DO LOTE 4
+
+Com este zip, **o Lote 4 está completo**. Resumo cumulativo:
+
+| Onda | Tema | Arquivos | Efeitos |
+|---|---|:---:|:---:|
+| 4a | Universais de Ninpou | 1 | 18 |
+| 4b | Elementais (Suiton/Doton/Katon/Fuuton/Raiton) | 5 | 14 |
+| 4c | KGs e Hijutsus complexos (Hyouton/Mokuton/Sabaku/Jiton/Bijuus/Senjutsu/Hachimon) | 9 | 33 |
+| 4d | Poderes restritos de clã (Magen/Iryou/Fuuinjutsu/Rasengan/Kuchiyose/Juuken/Kagejutsu/Baika/Kikai/Shikakyu/Shintenshin) | 11 | 66 |
+| 4e | Novos do Guia Avançado | 1 | 7 |
+| **TOTAL** | | **27** | **138** |
+
+138 efeitos catalogados, 27 arquivos JSON estruturados, ~5000+ linhas de seed data. **Fica só faltando aplicar.**
+
+---
+
+# 📁 Estrutura de pasta esperada
+
+```
+arcana-forge/
+├── prisma/
+│   ├── seed.ts                                  ← atualizar lista (última vez)
+│   ├── seed-data/
+│   │   ├── (arquivos anteriores 1, 2, 3, 4a, 4b, 4c, 4d)
+│   │   └── effects-guia-avancado.json           ← NOVO (4e)
+```
+
+---
+
+# 🛠️ Comandos manuais seus
+
+```bash
+cd ~/projects/arcana-forge
+
+# 1. Confirma lote 4d aplicado
+pnpm prisma studio &
+# power_effects deve ter 131 linhas
+# Ctrl+C
+
+# 2. Descompacta lote 4e
+unzip ~/Downloads/seed-data-lote-4e.zip -d /tmp/
+
+# 3. Copia o JSON novo
+cp /tmp/seed-data-lote-4e/effects-guia-avancado.json prisma/seed-data/
+
+# 4. Guarda README
+cp /tmp/seed-data-lote-4e/README.md /tmp/lote-4e-README.md
+
+# 5. Confere
+ls prisma/seed-data/effects-*.json
+# Esperado: 27 arquivos
+```
+
+---
+
+# 💬 Prompt pro Claude Code
+
+```
+# Aplicar Lote 4e do Seed: Efeitos Novos do Guia Avançado (FECHA O LOTE 4)
+
+Última onda do Lote 4. 1 arquivo novo com 7 efeitos do Guia Avançado do Shinobi (GAS).
+
+## Arquivos novos
+
+- `effects-guia-avancado.json` (7 efeitos):
+  - Dano Contínuo (Nv 2) — projétil DoT
+  - Deslocamento de Vácuo (Nv 2) — suporte mobilidade
+  - Purificar (Nv 2) — ambiente
+  - Repelir (Nv 2) — reação defensiva
+  - Projetar (Nv 3) — projétil desloca alvo
+  - Cegante (Nv 5) — projétil aplica camuflagem
+  - Desastre (Nv 9) — concentração épica
+
+## Antes de codar
+
+1. **Leia `/tmp/lote-4e-README.md`** — pontos importantes:
+   - Repelir é REATIVO (trigger: projétil/toque/golpear contra você ou alguém no alcance)
+   - Dano Contínuo aplica dano FIXO por turno (não modificável por bônus)
+   - Desastre tem `rules.oncePerScene: true` + `noAptidoesDeTecnica: true`
+   - Cegante aplica camuflagem NO INIMIGO (não no usuário) — comportamento inverso de Falsa Posição/Magen
+   - Vários poderes em `availableFor` não existem no catálogo ainda (Kamijutsu, Sumi, Kumo, Hebi, Ototon, Shouton etc.) — está documentado em `_meta.unmodeledPowers`. **Comportamento esperado**: seeder grava o efeito mesmo assim; quando o poder for catalogado depois, vínculo automático. Não tente validar/filtrar isso agora.
+
+2. **Schema não muda** — sem migration.
+
+3. **NÃO incluir revisões** dos efeitos existentes (Orbe Nv 7, Onda Explosiva Nv 8, Lança ignora 3 dureza etc.) — isso fica pra migration de revisão futura.
+
+## Tarefas
+
+1. Atualizar `seedPowerEffects()` em `prisma/seed.ts` pra incluir o arquivo novo
+2. Rodar `pnpm prisma db seed`
+3. Validar no Prisma Studio:
+   - Tabela `power_effects` tem 138 linhas totais (131 anteriores + 7 novos)
+   - **Dano Contínuo**: `availableFor` com 12 entradas, `rules.damagePerTurn: "nivel_do_poder"`
+   - **Repelir**: `rules.reactive: true`, `rules.triggers` com 3 itens
+   - **Desastre**: `minLevel: 9`, `rules.oncePerScene: true`
+
+## ⛔ Limites
+
+- **NÃO modele** poderes faltantes (Kamijutsu, Sumi Ninpou, Kumo Ninpou etc.) ainda
+- **NÃO crie** migration de revisão dos efeitos antigos do 4a
+- **NÃO toque** em outros JSONs
+- **NÃO faça** `git push`
+
+## Após aplicar
+
+Documente no `SESSION-LOG.md`:
+- Total final de efeitos no banco: **138**
+- LOTE 4 (Efeitos) está COMPLETO
+- Poderes mencionados em `availableFor` que ainda não existem no banco (lista em `_meta.unmodeledPowers`)
+- Revisões do GAS aos efeitos existentes (Orbe Nv 7, Onda Explosiva Nv 8 etc.) ainda PENDENTES — vão em migration de revisão
+- Próximo passo sugerido: **Lote 5 (Aptidões ~80)** — Comuns, de Combate, de Manobra, Restritas (Byakugan, Sharingan, Tenketsu Byakugan, Hakken no Jutsu, Companheiro Animal, Corpulência, Resiliência, Kikaichuu, etc.)
+```

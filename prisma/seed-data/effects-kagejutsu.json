@@ -1,0 +1,94 @@
+{
+  "_meta": {
+    "description": "Kagejutsu (Arte das Sombras) — Poder restrito do clã Nara. Manipulação de sombras. Pré-req: nenhum específico (clã Nara). Técnicas evolutivas baseadas em Kage Shibari.",
+    "sources": [
+      "Livro Básico p. 168-172 (Kagejutsu)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "powerNotes": {
+      "code": "kagejutsu",
+      "category": "HIJUTSU_CLAN",
+      "clan": "nara",
+      "rangeFormula": "Curto (5m +2m por nível do poder)",
+      "victimResistanceFormula": "Força Dif 9 + Nível Poder + ceil(Int/2)",
+      "noPureDarkness": true
+    }
+  },
+  "data": [
+    {
+      "code": "kage_shibari",
+      "name": "Kage Shibari no Jutsu (Prisão das Sombras)",
+      "minLevel": 1,
+      "availableFor": ["kagejutsu"],
+      "shortDescription": "Estende sombra. Conecta com sombra do alvo. Alvo paralisado. Concentração.",
+      "description": "Estende sua sombra sobre qualquer superfície (inclusive água) até o limite do alcance. Quando entra em contato com sombra do alvo, ambas conectam e alvo fica paralisado. CD vs defesa. Você é obrigado a se manter imóvel e concentrado. Técnica silenciosa: sob camuflagem/cobertura/furtiva, alvo recebe -3 em Esquiva/Antecipar e não tem outras defesas. Técnica lenta: -3 de CD ao usar às vistas do alvo. Resistir: ação padrão + Força (Dif 9 + Nível + Int/2). Alcance amplificado +1m/nível ao sol nascente/poente ou bomba luminosa; -1m/nível ao sol do meio-dia. Impossível no escuro total. Duração: até 1 + 1 por nível turnos (máx 6). Reuso na cena reduz turnos em 1 (mín 2). Múltiplos alvos: 1 por 2 níveis, duração mínima. Capangas: dobra duração. Fonte: Livro Básico p. 168-169.",
+      "stats": { "action": "PADRAO", "range": "curto", "damage": "nenhum", "duration": "CONCENTRACAO", "rollType": "CD", "chakraCost": "1 por nível do poder" },
+      "rules": {
+        "appliesCondition": "paralisado",
+        "userMustStayStill": true,
+        "tecnica_silenciosa": true,
+        "tecnica_lenta": "-3 CD nas vistas do alvo",
+        "rangeModifiers": { "sunrise_sunset": "+1m por nível", "noon": "-1m por nível" },
+        "noUseInDarkness": true,
+        "maxDurationTurns": "1 + nível (max 6)",
+        "multiTargetFormula": "1 por 2 níveis"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "kage_mane",
+      "name": "Kage Mane no Jutsu (Imitação das Sombras)",
+      "minLevel": 3,
+      "availableFor": ["kagejutsu"],
+      "shortDescription": "Kage Shibari + alvo imita movimentos. Pode se deslocar. Pode forçar pegar objeto.",
+      "description": "Segue regras do Kage Shibari, com diferenças. Imitação de Deslocamento: pode se deslocar normalmente; vítima é obrigada a se deslocar na mesma direção/distância/velocidade. Técnica desfeita se afastar além do alcance. Imitação de Gestos: alvo capturado imita movimentos perfeitamente (só se humanoide). Se não humanoide, só imitação de deslocamento. Imitações NÃO gastam ações da vítima. Criatura voadora cai do céu. Sombra Preparada (requer Nv 7): após errar, mantém preparado sustentado, reutilizável uma vez sem selo. Reutilizar a 1m = técnica silenciosa, alvo com -3 Esquiva. Sombra Guiada (requer Nv 8): usa em aliado com conexão fraca. Quando sombra do aliado encostar em sombra de inimigo (1m), libera pra prendê-lo. Sombra Perfeita (requer Nv 9): duração sustentada. Fonte: Livro Básico p. 169-170.",
+      "stats": { "action": "PADRAO", "range": "curto", "duration": "CONCENTRACAO", "rollType": "CD", "chakraCost": "1 por nível do poder" },
+      "rules": {
+        "basedOn": "kage_shibari",
+        "forcedMovementImitation": true,
+        "forcedGestureImitation": "apenas humanoide",
+        "flyingFalls": true,
+        "evolutions_inline": ["sombra_preparada_nv7", "sombra_guiada_nv8", "sombra_perfeita_nv9"]
+      },
+      "evolutions": [
+        { "atLevel": 7, "name": "Sombra Preparada", "description": "Após errar, mantém sustentado e reutiliza uma vez sem selo." },
+        { "atLevel": 8, "name": "Sombra Guiada", "description": "Usa em aliado com conexão fraca; ativa quando sombras se tocam." },
+        { "atLevel": 9, "name": "Sombra Perfeita", "description": "Duração sustentada." }
+      ]
+    },
+    {
+      "code": "kage_mane_shuriken",
+      "name": "Kage Mane Shuriken no Jutsu (Imitação da Shuriken das Sombras)",
+      "minLevel": 4,
+      "availableFor": ["kagejutsu"],
+      "shortDescription": "Transfere Kage Mane pra projétil (Aian Nakkuru). Mira sombra. Concentração máx 2 turnos.",
+      "description": "Requer arma projétil de material especial pra conduzir chakra (Aian Nakkuru). Ação parcial (+ ação sacar arma) pra preparar Kage Mane e transferir pra arma. Arremessa com ação padrão mirando sombra do alvo, perfurando solo onde está. Se alvo não conhece intenção, -2 Esquiva/Antecipar. Sucesso = paralisado pelo tempo da técnica (concentração, máx 2 turnos). Kage Mane Livre: enquanto paralisado por esta, pode usar Kage Mane no mesmo como ação livre (paga chakra). Fonte: Livro Básico p. 170-171.",
+      "stats": { "action": "PARCIAL + PADRAO", "range": "curto", "duration": "CONCENTRACAO (max 2 turnos)", "chakraCost": "1 por nível do poder" },
+      "rules": { "requiresWeapon": "aian_nakkuru ou material condutor", "unawareTargetPenalty": -2, "allowsFreeKageMane": true },
+      "evolutions": []
+    },
+    {
+      "code": "kage_kubishibari",
+      "name": "Kage Kubishibari no Jutsu (Estrangulamento das Sombras)",
+      "minLevel": 5,
+      "availableFor": ["kagejutsu"],
+      "shortDescription": "Sufoca capturados via Kage Mane/Shibari. Dano fixo de sufocamento.",
+      "description": "Elimina criaturas capturadas pelo Kage Mane. Escolhe 1 alvo por 6 pontos de Espírito, estende sombra até pescoços e aperta. Ação de movimento naquele turno transforma Kage Mane (ou Shibari) em Kubishibari, mantém duração e concentração. Final do turno: dano fixo de sufocamento = Nível Poder + Int/2 (mesmo se prender respiração). Resistindo: ação padrão + Força. Sucesso = sai do Kubishibari mas continua preso pelo Kage Mane (precisa libertar dele). Após totalmente livre: fatigado até fim do próximo turno dela. Fonte: Livro Básico p. 171.",
+      "stats": { "action": "MOVIMENTO", "range": "toque (via Kage Mane)", "damage": "Nível + Int/2 (sufocamento)", "duration": "mesma do Kage Mane/Shibari", "chakraCost": "1 por nível do poder" },
+      "rules": { "targetsPerEsp": "1 por 6 Esp", "damageType": "sufocamento", "resistTest": "for_padrao" },
+      "evolutions": []
+    },
+    {
+      "code": "kageyose",
+      "name": "Kageyose no Jutsu (Coleção das Sombras)",
+      "minLevel": 6,
+      "availableFor": ["kagejutsu"],
+      "shortDescription": "Filamentos de sombra que carregam objetos ou prendem alvos. 2 por nível.",
+      "description": "Materializa sombra em filamentos negros que seguram/apanham objetos pequenos. Cria 2 filamentos por nível usado. Ação padrão pra reunir todos num único ponto trazendo objetos (útil pra kunais, tarjas). Lançar Projétil: arremessar com sombra usa CD. Algema de Sombra: prende alvo enrolando como efeito Algemar Nv 6. 1 alvo por 2 filamentos. Dif do teste pra libertar = mesma do Kage Mane. Dureza dos filamentos = Nível Poder + Int/2. Fonte: Livro Básico p. 171-172.",
+      "stats": { "action": "MOVIMENTO", "range": "curto", "duration": "SUSTENTADA ou CONCENTRACAO (algemar)", "chakraCost": "1 por nível do poder" },
+      "rules": { "filamentsPerLevel": 2, "targetsPerFilamentPair": 1, "filamentHardness": "Nível + Int/2" },
+      "evolutions": []
+    }
+  ]
+}

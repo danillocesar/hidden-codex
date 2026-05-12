@@ -6,6 +6,89 @@
 
 ---
 
+## Seed Lote 4d — Poderes restritos de clã e Hijutsus de Genjutsu/Cura/Selo (15:50, parte 7)
+
+Quarta onda do Lote 4. **+66 efeitos** (16 Magen + 4 Iryou + 10 Fuuinjutsu + 4 Rasengan + 2 Kuchiyose + 8 Juuken + 5 Kagejutsu + 4 Baika + 4 Kikai + 6 Shikakyu + 3 Shintenshin). Total no banco: **131 efeitos** (65 + 66).
+
+### Mudança
+
+- **Sem migration.** Shape de `PowerEffect` continua atendendo. Cada arquivo usa estrutura própria dentro de `rules` (Magen tem `ilusionType`, Juuken tem `requiresByakuganActive`, etc.) — JSONB acomoda.
+- **`prisma/seed.ts`**: 11 arquivos novos adicionados em `EFFECT_FILES`.
+
+### Validação pós-seed
+
+Counts finais: 5 vilas · 5 KGs · 17 clãs · 19 poderes · **131 efeitos** · 20 perícias (idempotente).
+
+Spot-checks via psql:
+
+- **Magen** — 16 efeitos com `availableFor: {magen}` ✓
+- **Fuuinjutsu** — 10 efeitos (1 selo por nível 1-9) ✓
+- **Juuken** — 8 efeitos com `rules.requiresByakuganActive: true` ✓
+- **`paralisar_magen`** — code com sufixo `_magen` preservado (evita colisão com hipotético `paralisar` futuro) ✓
+- **`rasengan_elemental`** — `rules.variants` com 3 chaves: `katon`, `fuuton`, `raiton` ✓
+
+`pnpm lint` ✓ / `pnpm typecheck` ✓ / `pnpm test` 210/210 ✓.
+
+### Checagem de power_codes referenciados em `availableFor`
+
+Dos 11 poderes referenciados pelos efeitos 4d, **10 já existem na tabela `powers`** (Lote 3):
+
+| Power code | Existe em `powers`? |
+|---|:---:|
+| `magen` | ✅ |
+| `iryou_ninjutsu` | ✅ |
+| `fuuinjutsu` | ✅ |
+| `rasengan` | ✅ |
+| `kuchiyose` | ✅ |
+| `juuken` | ✅ |
+| `kagejutsu` | ✅ |
+| `baika_ninpou` | ✅ |
+| `kikai_ninpou` | ✅ |
+| `shikakyu` | ✅ |
+| `shindenshin` | ❌ **typo no JSON** |
+
+**⚠ Achado: typo em `effects-shintenshin.json`** — todos os 3 efeitos (shintenshin, shinten_bunshin, shinranshin) referenciam `availableFor: ["shindenshin"]` (com D), mas o poder real no banco é `shintenshin` (com T, transliteração correta de 心転身). Como `availableFor` é FK lógica sem constraint Prisma, o seed aceita. Como corrigir (opções):
+
+1. Renomear `availableFor` no JSON do efeito (`shindenshin` → `shintenshin`) e reseedar — mais simples.
+2. Renomear o `code` do poder na tabela (não recomendado, quebra outras referências futuras).
+
+Deixei como está para você decidir — registrei a inconsistência aqui.
+
+### Mapa geral de `availableFor` órfão no banco (todos os lotes)
+
+Total de 8 power_codes referenciados que ainda não estão na tabela `powers`:
+
+```
+aoi_katon, hachimon_tonkou, jiton, sabaku_hijutsu,
+sanbi_suiton, senjutsu, yonbi_youton  ← Lote 4c (esperando powers-additional.json)
+shindenshin                            ← typo do Lote 4d (deveria ser shintenshin)
+```
+
+Os 7 primeiros entram quando o usuário pedir pra seedar `powers-additional.json` (já dropado em `prisma/seed-data/`). O 8º depende da decisão sobre o typo.
+
+### Pré-requisitos cruzados desta onda (motor de regras — sessão dedicada futura)
+
+Acumulados com os 7 do Lote 4c, agora temos:
+
+| Efeito | Pré-requisitos cruzados | Tipo |
+|---|---|---|
+| **Byakugou no In** (Iryou Nv 8) | Kuchiyose Nv 6 (Lesmas) + Iryou Nv 8 + Fuuinjutsu Nv 5 | cross-power |
+| **Rasengan Elemental** | Katon/Raiton/Fuuton Nv 2 (elemento escolhido) | cross-power |
+| **Senpou Rasengan** (se houver) | Senjutsu | cross-power |
+| **Mushi Bunshin** (Kikai) | Aptidão Clone + Kikaichuu | aptitudes |
+| **Juujin Bunshin** (Shikakyu) | Aptidão Companheiro Animal | aptitudes |
+| **Shinranshin** | Evolução de Shintenshin | effect (same power) |
+
+Tudo isso fica para a sessão dedicada de validações no motor, quando todos os lotes 4 + Lote 5 (aptidões) estiverem aplicados.
+
+### Próximo passo
+
+**Lote 4e** — efeitos novos do Guia Avançado (Dano Contínuo, Deslocamento de Vácuo, Purificar, Repelir, Flutuar, Desastre). Última onda do Lote 4.
+
+Em seguida, **Lote 5 (Aptidões)** destrava as ~80 aptidões que estão referenciadas como pré-reqs ao longo de todos os efeitos 4a-4d.
+
+---
+
 ## Seed Lote 4c — KGs e Hijutsus complexos (15:40, parte 6)
 
 Terceira onda do Lote 4. **+33 efeitos** (1 Hyouton + 2 Mokuton + 6 Sabaku + 2 Jiton + 2 Yonbi Youton + 1 Aoi Katon + 2 Sanbi Suiton + 2 Senjutsu + 15 Hachimon). Total no banco: **65 efeitos** (18 4a + 14 4b + 33 4c).

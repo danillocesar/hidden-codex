@@ -1,0 +1,70 @@
+{
+  "_meta": {
+    "description": "Kikai Ninpou — Poder restrito do clã Aburame. Manipulação de insetos kikaichuu. Funciona como Ninpou mas só com insetos. Pré-req: aptidão Kikaichuu. Perícia-chave: Lidar com Animais.",
+    "sources": [
+      "Livro Básico p. 148-150 (Kikai Ninpou)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "powerNotes": {
+      "code": "kikai_ninpou",
+      "category": "HIJUTSU_CLAN",
+      "clan": "aburame",
+      "prerequisites": { "aptitudes": ["kikaichuu"] },
+      "keySkill": "lidar_com_animais",
+      "basedOn": "ninpou"
+    }
+  },
+  "data": [
+    {
+      "code": "mushi_bunshin",
+      "name": "Mushi Bunshin (Clone de Insetos)",
+      "minLevel": 1,
+      "availableFor": ["kikai_ninpou"],
+      "shortDescription": "Clone de insetos. Drena chakra ao atacar/ser atacado. Cada CC destrói 1 kikaichuu.",
+      "description": "Segue regras das aptidões de Clone, com efeitos diferenciados. Requer no mínimo 1 kikaichuu, mas pode colocar até metade dos que possui. Quando ataca CC ou é alvo de desarmado, drena chakra do inimigo pela quantidade de insetos no interior, além do dano normal de Clone. Permanece inteiro enquanto tiver kikaichuu. Cada ataque CC destrói 1 kikaichuu por vez. Técnicas destroem todos (qualquer dano). Dano não-letal NÃO destrói. Pré-req: aptidão Clone + Kikaichuu. Fonte: Livro Básico p. 148-149.",
+      "stats": { "action": "PADRAO", "range": "pessoal", "duration": "CONTINUA", "chakraCost": "1 por clone" },
+      "rules": {
+        "prerequisites": { "aptitudes": ["clone", "kikaichuu"] },
+        "drainsChakraOnContact": "quantidade igual aos insetos",
+        "destroyPerCCAttack": 1,
+        "destroyedByTechniques": "todos",
+        "nonLethalImmune": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "mushi_kame",
+      "name": "Mushi Kame no Jutsu (Jarro de Insetos)",
+      "minLevel": 3,
+      "availableFor": ["kikai_ninpou"],
+      "shortDescription": "Insetos giram ao redor protegendo (efeito Barreira). Redoma total no Nv 6.",
+      "description": "Faz insetos voarem ao redor em grande velocidade pra proteger. Ninja avançado (Barreira Nv 6) cria redoma de proteção total sem aberturas. Segue regras do efeito Barreira do Ninpou. Pré-req: Kikaichuu + Kikai Ninpou 3. Fonte: Livro Básico p. 149.",
+      "stats": { "action": "MOVIMENTO", "range": "comum_do_poder", "duration": "SUSTENTADA", "chakraCost": "nivel_usado" },
+      "rules": { "prerequisites": { "aptitudes": ["kikaichuu"], "powers": { "kikai_ninpou": 3 } }, "basedOn": "barreira_ninpou", "fullDomeAtLevel6": true },
+      "evolutions": []
+    },
+    {
+      "code": "mushidama",
+      "name": "Mushidama (Esfera de Insetos)",
+      "minLevel": 4,
+      "availableFor": ["kikai_ninpou"],
+      "shortDescription": "Insetos espalham e se juntam em esfera ao redor do alvo. Sopro Destrutivo + drena.",
+      "description": "Envia insetos espalhados; quando localizam o alvo, juntam-se de uma vez em esfera ao redor do inimigo, causando dano e drenando chakra. Segue regras de Sopro Destrutivo do Ninpou. Pré-req: Kikaichuu + Kikai Ninpou 4. Fonte: Livro Básico p. 150.",
+      "stats": { "action": "PADRAO", "range": "comum_do_poder", "duration": "INSTANTANEA", "chakraCost": "nivel_usado" },
+      "rules": { "prerequisites": { "aptitudes": ["kikaichuu"], "powers": { "kikai_ninpou": 4 } }, "basedOn": "sopro_destrutivo_ninpou", "drainsChakra": true },
+      "evolutions": []
+    },
+    {
+      "code": "senro",
+      "name": "Senro (Rastreamento)",
+      "minLevel": 1,
+      "availableFor": ["kikai_ninpou"],
+      "shortDescription": "Kikaichuu fêmea no alvo emite odor que macho rastreia. 50m.",
+      "description": "Faz pequeno kikaichuu fêmea se prender à roupa do alvo emitindo odor característico pra macho rastrear. Toca alvo (que tem defesa, mesmo sem saber a intenção). Macho sente odor a até 50m. Personagem segue inseto que voa 15m por turno. Fonte: Livro Básico p. 150.",
+      "stats": { "action": "PADRAO", "range": "toque", "duration": "CONTINUA", "chakraCost": 1 },
+      "rules": { "prerequisites": { "aptitudes": ["kikaichuu"] }, "trackingRange": 50, "insectFlight": 15 },
+      "evolutions": []
+    }
+  ]
+}

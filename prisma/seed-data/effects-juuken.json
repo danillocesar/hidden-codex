@@ -1,0 +1,132 @@
+{
+  "_meta": {
+    "description": "Juuken (Punho Gentil) — Poder restrito do clã Hyuuga. Postura de luta única com chakra direto nos órgãos. Cálculo de dano usa Destreza/2 + dano de arma. Pré-req: Esp 1 + Byakugan + Acuidade.",
+    "sources": [
+      "Livro Básico p. 159-163 (Juuken)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "powerNotes": {
+      "code": "juuken",
+      "category": "HIJUTSU_CLAN",
+      "clan": "hyuuga",
+      "prerequisites": { "attributes": { "esp": 1 }, "aptitudes": ["byakugan", "acuidade"] },
+      "damageFormula": "(Destreza/2) + 1 dano de arma",
+      "requiresByakuganActive": true
+    }
+  },
+  "data": [
+    {
+      "code": "juuken_nv1",
+      "name": "Juuken (Punho Gentil)",
+      "minLevel": 1,
+      "availableFor": ["juuken"],
+      "shortDescription": "Postura. Ataques desarmados com chakra nos órgãos. Dano letal. Dano de arma cresce com nível.",
+      "description": "Postura única do Hyuuga. Precisa de Byakugan ativo pra enxergar circulação interna de chakra do oponente. Cada ataque é desarmado de dano letal — concentra chakra nas mãos e envia ao corpo. Sempre com as mãos. Cálculo: Dano Base = (Des/2) + dano de arma. Dano de arma: Nv 4 = 2, Nv 5 = 3, Nv 6 = 4 (máx). Bônus/penalidades normais. Ignora metade da dureza de corpo passiva (Resiliência), máx 2 pontos ignorados. Pode usar aptidões de manobra com golpes Nv 1, mas não com outras técnicas do poder (a menos que explícito). Fonte: Livro Básico p. 159-160.",
+      "stats": { "action": "LIVRE", "range": "pessoal", "damage": "(Des/2) + dano de arma", "duration": "CONTINUA", "chakraCost": 0 },
+      "rules": {
+        "requiresByakuganActive": true,
+        "weaponDamageByLevel": { "1": 1, "4": 2, "5": 3, "6": 4 },
+        "ignoresPassiveBodyHardness": "metade até 2",
+        "supportsManobras": "apenas no Nv 1"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "jukenpou_ichigekishin",
+      "name": "Jūkenpō Ichigekishin (Estilo Punho Gentil: Explosão do Corpo)",
+      "minLevel": 2,
+      "availableFor": ["juuken"],
+      "shortDescription": "Explosão de chakra dos tenketsu. Afasta inimigos a 3m. Destrói amarras.",
+      "description": "Expele chakra de cada tenketsu, criando explosão que não causa dano mas afasta inimigos em CC, prisões e amarras. Atinge todos a 3m. CD vs defesas. Técnica feita de puro chakra, invisível a olhos comuns — criaturas sem visão/sensor de chakra ficam desprevenidas. Atingidos testam Acrobacia (Dif 13) ou ficam caídos. Criaturas agarrando o usuário NÃO têm defesa (Sucesso Auto), a menos que desistam da manobra. Não afeta criaturas Enormes ou maiores. Causa 2 de dano base por nível do poder a amarras/prisões diretamente sobre o corpo. Repele elementos imateriais sobre o corpo se poder ou chakra forem inferiores ao nível usado. Fonte: Livro Básico p. 160.",
+      "stats": { "action": "PADRAO", "range": "3m", "duration": "INSTANTANEA", "chakraCost": 2, "rollType": "CD" },
+      "rules": {
+        "acrobaciaTest": "Dif 13",
+        "noChakraVisionDesprevenido": true,
+        "ignoresAgarrar": true,
+        "noEffectOnEnormeOrLarger": true,
+        "breaksAmarrasFormula": "2 por nível",
+        "repelsImaterial": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "hakkeshou_kaiten",
+      "name": "Hakkeshou Kaiten (Rotação Divina do Octograma)",
+      "minLevel": 3,
+      "availableFor": ["juuken"],
+      "shortDescription": "Gira liberando chakra. Ofensivo (2m) ou defensivo (barreira). Não funciona impedido.",
+      "description": "Gira o corpo liberando chakra pelos poros, criando meia-esfera de chakra em rotação. Requer movimentos livres — não usa impedido ou com restrição. Ofensivo (custa 2 chakra): atinge todos a 2m, dano comum de Juuken. Atingidos testam Acrobacia ou Vigor (Dif 7 + 2x Nível) pra não cair. Defensivo (custa 1 chakra por nível): manobra de Defender com Técnica usando CC desarmado. Funciona contra CC e à distância. Barreira de chakra com dureza 3 + 2x Nível Poder. Dureza NÃO pode ser ignorada. Se superada, Kaiten interrompido e sofre dano excedente. Se ninguém ferido no uso defensivo, só ação parcial. Nv 6: alcance 5m. Fonte: Livro Básico p. 160-161.",
+      "stats": { "action": "PADRAO (ou parcial defensivo sem dano)", "range": "pessoal (2m ofensivo)", "damage": "comum_juuken", "duration": "INSTANTANEA", "chakraCost": "2 ofensivo OU 1 por nível defensivo" },
+      "rules": {
+        "noWhileImpaired": true,
+        "offensiveMode": { "range": 2, "vigorOrAcrobaciaTest": "Dif 7 + 2x Nível" },
+        "defensiveMode": { "useCC": true, "barrierHardness": "3 + 2x Nível Poder", "unignoreableHardness": true }
+      },
+      "evolutions": [
+        { "atLevel": 6, "name": "Kaiten Nv 6", "description": "Alcance ofensivo aumenta para 5m." }
+      ]
+    },
+    {
+      "code": "hakke_sanjuni_shou",
+      "name": "Hakke Sanjuuni Shou (32 Pontos do Octograma)",
+      "minLevel": 4,
+      "availableFor": ["juuken"],
+      "shortDescription": "32 golpes selando tenketsus. Ataque Múltiplo + 3 dano. Pré-req: Tenketsu Byakugan.",
+      "description": "Versão menor do Hakke Rokujuuyon Shou. 32 golpes selando 32 tenketsus. 3 ataques juuken pelas regras de Ataque Múltiplo, com +3 dano (antes da divisão). Aptidões aplicáveis ao Ataque Múltiplo também aplicam aqui (Crítico Aprimorado, Ataque em Movimento). Acerto Crítico em qualquer golpe = golpes seguintes Sucesso Auto. Cada golpe bem-sucedido: vítima perde 3 chakra. Se retirar chakra nos 3 golpes: Vigor (Dif 7 + 2x Nível Juuken) ou atordoado até fim do próximo turno. Pré-req: Tenketsu Byakugan + Ataque Múltiplo. Fonte: Livro Básico p. 161.",
+      "stats": { "action": "PADRAO", "range": "toque", "damage": "comum_juuken + 3", "duration": "INSTANTANEA", "chakraCost": 4, "rollType": "CC" },
+      "rules": {
+        "prerequisites": { "aptitudes": ["tenketsu_byakugan", "ataque_multiplo"] },
+        "usesAtaqueMultiplo": true,
+        "multipleHits": 3,
+        "criticalChainsAutoSuccess": true,
+        "chakraDrainPerHit": 3
+      },
+      "evolutions": []
+    },
+    {
+      "code": "hakke_kuushou",
+      "name": "Hakke Kuushou (Palma Aérea do Octograma)",
+      "minLevel": 5,
+      "availableFor": ["juuken"],
+      "shortDescription": "Juuken projetado à distância. 20m. Acrobacia/Força ou caído.",
+      "description": "Foca pontos vitais com Byakugan e libera impulso de chakra pela palma. Atinge inimigos a 20m como ataque corporal juuken projetado. Usa CC pra teste de ataque. Dano normal de ataque juuken. Ao ser atingido, Acrobacia ou Força (Dif 9 + 2x Nível Juuken) ou é jogado 3m pra trás, caído. Fonte: Livro Básico p. 161.",
+      "stats": { "action": "PADRAO", "range": "20m", "damage": "comum_juuken", "duration": "INSTANTANEA", "chakraCost": 5, "rollType": "CC" },
+      "rules": { "knockbackDistance": 3, "leavesTargetCaido": true },
+      "evolutions": []
+    },
+    {
+      "code": "hakke_rokujuuyon_shou",
+      "name": "Hakke Rokujuuyon Shou (64 Pontos do Octograma)",
+      "minLevel": 6,
+      "availableFor": ["juuken"],
+      "shortDescription": "64 golpes selando tenketsus. Ataque Múltiplo + 4 dano. Pré-req: Tenketsu Byakugan.",
+      "description": "Versão famosa. 64 golpes, 64 tenketsus. 3 ataques pela regra de Ataque Múltiplo com +4 dano (antes da divisão). Acerto Crítico em qualquer golpe = golpes seguintes Sucesso Auto. Cada golpe: vítima perde 4 chakra. Se retirar nos 3 golpes: Vigor (Dif 7 + 2x Nível Juuken) ou atordoado até fim do próximo turno + fatigado até fim da cena. Pré-req: Tenketsu Byakugan + Ataque Múltiplo. Fonte: Livro Básico p. 161-162.",
+      "stats": { "action": "PADRAO", "range": "toque", "damage": "comum_juuken + 4", "duration": "INSTANTANEA", "chakraCost": 6, "rollType": "CC" },
+      "rules": { "prerequisites": { "aptitudes": ["tenketsu_byakugan", "ataque_multiplo"] }, "chakraDrainPerHit": 4 },
+      "evolutions": []
+    },
+    {
+      "code": "juuho_soushiken",
+      "name": "Juuho Soushiken (Punho dos Leões Gêmeos)",
+      "minLevel": 7,
+      "availableFor": ["juuken"],
+      "shortDescription": "Cabeças de leão nas mãos. Dano base = nível usado. 2 (padrão) ou 3 (completa) golpes.",
+      "description": "Concentra chakra em ambas as mãos formando cabeças de leão. Após usar, pode usar Ataque Múltiplo como regra especial. 2 ou 3 ataques com novo cálculo: dano base individual = nível usado. Ação padrão pra 2 golpes, completa pra 3. NÃO pode usar com Selamento de Tenketsu nem outras aptidões de manobra. Pré-req: Ataque Múltiplo. Fonte: Livro Básico p. 162.",
+      "stats": { "action": "MOVIMENTO (ativação) + PADRAO/COMPLETA (atacar)", "range": "toque", "damage": "nivel_usado por golpe", "duration": "SUSTENTADA", "chakraCost": "metade do nível por turno" },
+      "rules": { "prerequisites": { "aptitudes": ["ataque_multiplo"] }, "attacksPerAction": { "PADRAO": 2, "COMPLETA": 3 }, "noSealingTenketsu": true, "noOtherManobras": true },
+      "evolutions": []
+    },
+    {
+      "code": "hakke_hyakunijuuhachi_shou",
+      "name": "Hakke Hyakunijuuhachi Shou (128 Pontos do Octograma)",
+      "minLevel": 8,
+      "availableFor": ["juuken"],
+      "shortDescription": "128 golpes. Ataque Múltiplo + 1 dano por nível. 5 chakra/golpe. Pré-req: Tenketsu Byakugan.",
+      "description": "Versão ampliada. 128 golpes, 128 tenketsus. 3 ataques pela regra de Ataque Múltiplo com +1 dano por nível do poder (antes da divisão). Acerto Crítico = sucessos auto. Cada golpe: vítima perde 5 chakra (+1 a cada 3 níveis acima de 8). Se retirar nos 3 golpes: Vigor (Dif 7 + 2x Nível Juuken) ou atordoado até fim do próximo turno + fatigado até fim da cena. Pré-req: Tenketsu Byakugan + Ataque Múltiplo. Fonte: Livro Básico p. 162-163.",
+      "stats": { "action": "PADRAO", "range": "toque", "damage": "comum_juuken + 1 por nível", "duration": "INSTANTANEA", "chakraCost": "nível_usado", "rollType": "CC" },
+      "rules": { "prerequisites": { "aptitudes": ["tenketsu_byakugan", "ataque_multiplo"] }, "chakraDrainPerHit": "5 + 1 a cada 3 níveis acima de 8" },
+      "evolutions": []
+    }
+  ]
+}

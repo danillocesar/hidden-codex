@@ -1,0 +1,89 @@
+{
+  "_meta": {
+    "description": "Rasengan (Explosão Espiral) — poder de bola giratória de chakra na palma. Técnica de toque, sem selos. CC contra defesa. Pré-req: Esp 8. 4 evoluções (Básico → Completo → Oodama → Elemental).",
+    "sources": [
+      "Livro Básico p. 121-123 (Rasengan)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "powerNotes": {
+      "code": "rasengan",
+      "category": "PODER_COMUM",
+      "prerequisites": { "attributes": { "esp": 8 } },
+      "rangeFormula": "Toque",
+      "rollType": "CC",
+      "selos": false,
+      "type": "tecnica_de_toque"
+    }
+  },
+  "data": [
+    {
+      "code": "rasengan_basico",
+      "name": "Rasengan Básico",
+      "minLevel": 1,
+      "availableFor": ["rasengan"],
+      "shortDescription": "Forma incompleta. Ação completa. Dano = 2 + Nível + Esp/2. Kage Bunshin reduz pra padrão.",
+      "description": "Primeiro nível: forma incompleta. Ação completa pra preparar e atacar. Pode usar Kage Bunshin ou outra pessoa pra ajudar na rotação: clone gasta ação de movimento, você ataca com padrão. Mesmo Kage Bunshin comum (sem Clone Verdadeiro) consegue ajudar. Dano: 2 + Nível Poder + ceil(Esp/2). Se não atacar no mesmo turno, mantém Rasengan na mão com ação parcial (sustentada). Alvo é jogado 3m de distância. Vigor (Dif 7 + Nível + ceil(Esp/2)) ou Acrobacia (+2 dif) pra não cair. Destrói qualquer arma comum usada em bloqueio (mesmo com Energizar). NÃO pode usar meta-aptidões. Fonte: Livro Básico p. 121-122.",
+      "stats": { "action": "COMPLETA", "range": "toque", "damage": "2 + Nível Poder + ceil(Esp/2)", "duration": "INSTANTANEA ou SUSTENTADA", "chakraCost": "1 por nível do poder" },
+      "rules": {
+        "throwDistance": 3,
+        "vigorDifficulty": "7 + Nível Poder + ceil(Esp/2)",
+        "destroysCommonBlockingWeapons": true,
+        "destroysEvenWithEnergizar": true,
+        "noMetaAptitudes": true,
+        "kageBunshinSupport": { "clone_action": "movimento", "user_action": "padrao" }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "rasengan_completo",
+      "name": "Rasengan Completo",
+      "minLevel": 6,
+      "availableFor": ["rasengan"],
+      "shortDescription": "Ação padrão. Dano = Nível + Esp. Pré-req: Esp 14 (ou 12 + Chakra Expandido).",
+      "description": "Mesmo funcionamento do Básico, com diferenças. Ação padrão pra preparar e atacar. Opcionalmente ainda pode usar Kage Bunshin (clone gasta só ação livre). Maior controle do fluxo de chakra. Dano: Nível Poder + Esp (integral, não dividido). Pré-req: Rasengan 6, Esp 14 (ou 12 + Chakra Expandido). Fonte: Livro Básico p. 122.",
+      "stats": { "action": "PADRAO", "range": "toque", "damage": "Nível + Esp", "duration": "INSTANTANEA", "chakraCost": "1 por nível do poder" },
+      "rules": {
+        "prerequisites": { "powers": { "rasengan": 6 }, "attributes": { "esp": 14 }, "alternatives": "Esp 12 + Chakra Expandido" },
+        "basedOn": "rasengan_basico",
+        "kageBunshinAction": "livre"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "oodama_rasengan",
+      "name": "Oodama Rasengan",
+      "minLevel": 7,
+      "availableFor": ["rasengan"],
+      "shortDescription": "Versão grande (~0,5m diâmetro). Ação completa + Técnica Poderosa. Pré-req: Esp 16.",
+      "description": "Amplia o dano consumindo mais tempo na preparação. Esfera de tamanho surreal (~0,5m diâmetro). Funcionamento igual ao Completo, mas aplicando meta-aptidão Técnica Poderosa pra aumentar dano. Teste pra se manter de pé: +1 nível de dificuldade. Pré-req: Rasengan 7, Esp 16 (ou 14 + Chakra Expandido), Técnica Poderosa. Fonte: Livro Básico p. 122-123.",
+      "stats": { "action": "COMPLETA (Padrão + Meta-aptidão)", "range": "toque", "damage": "Nível + Esp (com Técnica Poderosa)", "duration": "INSTANTANEA", "chakraCost": "1 por nível do poder" },
+      "rules": {
+        "prerequisites": { "powers": { "rasengan": 7 }, "attributes": { "esp": 16 }, "aptitudes": ["tecnica_poderosa"], "alternatives": "Esp 14 + Chakra Expandido" },
+        "basedOn": "rasengan_completo",
+        "appliesMetaAptitude": "tecnica_poderosa",
+        "vigorDifficultyBonus": 1
+      },
+      "evolutions": []
+    },
+    {
+      "code": "rasengan_elemental",
+      "name": "Rasengan Elemental",
+      "minLevel": 9,
+      "availableFor": ["rasengan"],
+      "shortDescription": "Adiciona elemento (Enka/Raiou/Rasen Shuriken). Dano irresistível grau 2. Área 10m. Dano colateral.",
+      "description": "Forma verdadeira — originalmente concebido com elemento. Pré-req: Rasengan 9 + Elemento Nv 2 (Katon pra Enka Rasengan, Raiton pra Raiöu, Fuuton pra Rasen Shuriken). Usa regras do Completo, com diferenças. Efeito Elemental: vantagens/desvantagens do elemento mas SEM bônus de dano elemental. Dano Irresistível: sempre min grau 2 no alvo direto. Área: explode atingindo todos a 10m do alvo direto (não aplica Dano Irresistível). Dano Colateral: usuário sofre o dano base com grau 1. Senpou Rasengan: com Senjutsu, gasta 1 Chakra Senjutsu adicional pra transformar em ataque à distância (CD vs defesa, alcance comum do elemento). Não causa dano colateral. Fonte: Livro Básico p. 123.",
+      "stats": { "action": "COMPLETA", "range": "toque", "damage": "Nível + Esp", "duration": "INSTANTANEA", "chakraCost": "2 + 1 por nível do poder" },
+      "rules": {
+        "prerequisites": { "powers": { "rasengan": 9 }, "elementLevel2": ["katon", "raiton", "fuuton"] },
+        "basedOn": "rasengan_completo",
+        "minimumDamageGrade": 2,
+        "areaExplosion": "10m raio do alvo",
+        "selfDamage": "dano base com grau 1",
+        "senpouMode": { "requires": "senjutsu", "extraCost": "1 Chakra Senjutsu", "transformsToRanged": true, "noSelfDamage": true },
+        "variants": { "katon": "Enka Rasengan", "raiton": "Raiou Rasengan", "fuuton": "Rasen Shuriken" }
+      },
+      "evolutions": []
+    }
+  ]
+}

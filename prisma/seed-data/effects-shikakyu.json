@@ -1,0 +1,86 @@
+{
+  "_meta": {
+    "description": "Shikakyu (Quadrúpede) — Poder restrito do clã Inuzuka. Transformação animalesca com companheiro animal. Pré-req: aptidão Hakken no Jutsu.",
+    "sources": [
+      "Livro Básico p. 165-168 (Shikakyu)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "powerNotes": {
+      "code": "shikakyu",
+      "category": "HIJUTSU_CLAN",
+      "clan": "inuzuka",
+      "prerequisites": { "aptitudes": ["hakken_no_jutsu"] },
+      "damageFormula": "(Força/2) + dano de arma",
+      "weaponDamageByLevel": { "1": 1, "4": 2, "5": 3, "6": 4 }
+    }
+  },
+  "data": [
+    {
+      "code": "shikakyu_no_jutsu",
+      "name": "Shikakyu no Jutsu (Técnica Quadrúpede)",
+      "minLevel": 1,
+      "availableFor": ["shikakyu"],
+      "shortDescription": "Postura quadrúpede com armas naturais (garra/mordida). Dano letal. +1 intimidação +2 iniciativa.",
+      "description": "Envolve corpo com chakra e apoia mãos/joelhos ao chão como animal quadrúpede, com instinto e movimentos rápidos. Ganha armas naturais de garra e mordida com dano letal. Cálculo: (For/2) + dano de arma. Dano de arma: Nv 4 = 2, Nv 5 = 3, Nv 6 = 4 (máx). +1 precisão em Intimidação. +2 iniciativa. Pode ser usada pelo Companheiro Animal. Pré-req: aptidão Hakken no Jutsu. Fonte: Livro Básico p. 165.",
+      "stats": { "action": "PARCIAL", "range": "pessoal", "damage": "(For/2) + dano de arma", "duration": "CONTINUA", "chakraCost": 1 },
+      "rules": { "prerequisites": { "aptitudes": ["hakken_no_jutsu"] }, "intimidacao_bonus": 1, "iniciativa_bonus": 2, "usableByAnimalPartner": true },
+      "evolutions": []
+    },
+    {
+      "code": "juujin_bunshin",
+      "name": "Juujin Bunshin no Jutsu (Clone do Homem-Besta)",
+      "minLevel": 2,
+      "availableFor": ["shikakyu"],
+      "shortDescription": "Transforma companheiro animal em cópia perfeita do usuário.",
+      "description": "Permite transformar companheiro animal em cópia perfeita. Envia chakra pro animal e o transforma. Animal vira categoria de tamanho original do usuário, com atributos/habilidades/perícias idênticas. Perícias/aptidões/poderes ainda seguem regras de permissão da aptidão Companheiro Animal. Pré-req: Companheiro Animal. Fonte: Livro Básico p. 165.",
+      "stats": { "action": "MOVIMENTO", "range": "toque", "target": "1 cao_companheiro_animal", "duration": "CONTINUA", "chakraCost": 2 },
+      "rules": { "prerequisites": { "aptitudes": ["companheiro_animal"] }, "transformsAnimalIntoUserClone": true },
+      "evolutions": []
+    },
+    {
+      "code": "gatsuuga",
+      "name": "Gatsuuga (Presa Dupla Giratória)",
+      "minLevel": 3,
+      "availableFor": ["shikakyu"],
+      "shortDescription": "Inuzuka + companheiro giram em alta velocidade como brocas. Ataque conjunto.",
+      "description": "Inuzuka e seu companheiro animal giram em alta velocidade em direção ao alvo, como duas brocas. Ataque em conjunto que causa grande dano. Funciona como atropelar duplo. Detalhes específicos seguem regras descritas no Livro Básico p. 166-167.",
+      "stats": { "action": "COMPLETA", "range": "toque", "damage": "comum + bônus duplo", "duration": "INSTANTANEA", "chakraCost": 3, "rollType": "CC" },
+      "rules": { "requiresCompanion": true, "actsAsDoubleAtropelar": true },
+      "evolutions": []
+    },
+    {
+      "code": "soutourou",
+      "name": "Soutourou (Lobo de Duas Cabeças)",
+      "minLevel": 5,
+      "availableFor": ["shikakyu"],
+      "shortDescription": "Fusão Inuzuka + companheiro em criatura de duas cabeças. Categoria Grande+.",
+      "description": "Fusão entre Inuzuka e companheiro num lobo de duas cabeças. Aumento de tamanho. Detalhes seguem o Livro Básico p. 167.",
+      "stats": { "action": "COMPLETA", "range": "pessoal", "duration": "CONTINUA", "chakraCost": 5 },
+      "rules": { "fusionWithCompanion": true, "sizeIncrease": "grande" },
+      "evolutions": []
+    },
+    {
+      "code": "santorou",
+      "name": "Santorou (Lobo de Três Cabeças)",
+      "minLevel": 7,
+      "availableFor": ["shikakyu"],
+      "shortDescription": "Fusão com 2 companheiros. Tamanho Imenso. Ataque extra em CC ou agarrado.",
+      "description": "Fusão envolvendo um segundo companheiro animal. Caso possua mais de um companheiro, pode usar no lugar do clone. Tratada como criatura única (inclusive contra ataques mentais). Mesma ficha do usuário, categoria Imenso (com bônus/penalidades). Todos os danos/chakra retirados do Inuzuka. CC básico (Golpear) ou se agarrando: recebe ataque corporal extra contra mesmo alvo, com metade do dano base normal. Sem manobras/aptidões no extra. Fonte: Livro Básico p. 167-168.",
+      "stats": { "action": "COMPLETA", "range": "pessoal", "duration": "CONTINUA", "chakraCost": 7 },
+      "rules": { "fusionWithTwoCompanions": true, "sizeIncrease": "imenso", "extraAttack": "metade do dano em CC ou agarrando" },
+      "evolutions": []
+    },
+    {
+      "code": "ooiga_gatenga",
+      "name": "Ooiga Gatenga (Perseguição da Presa Giratória)",
+      "minLevel": 8,
+      "availableFor": ["shikakyu"],
+      "shortDescription": "Tsuuga em forma Santorou. Linha 5m largura. Dano + nível do poder.",
+      "description": "Na forma Lobo de Três Cabeças, gira verticalmente como esfera feroz avançando. Usa regras de Tsuuga, com modificadores pra tamanho Imenso. Bônus de dano = nível do poder. Por causa do tamanho, é considerado ataque em área de linha com 5m de largura. Fonte: Livro Básico p. 168.",
+      "stats": { "action": "COMPLETA", "duration": "INSTANTANEA", "chakraCost": 3, "areaOfEffect": "linha 5m largura" },
+      "rules": { "requiresSantorou": true, "damageBonus": "nivel_usado" },
+      "evolutions": []
+    }
+  ]
+}

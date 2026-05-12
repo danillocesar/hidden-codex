@@ -1,0 +1,79 @@
+{
+  "_meta": {
+    "description": "Baika Ninpou — Poder restrito do clã Akimichi. Manipulação de tamanho corporal. Pré-req: Vig 6 + Corpulência.",
+    "sources": [
+      "Livro Básico p. 152-155 (Baika Ninpou)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "powerNotes": {
+      "code": "baika_ninpou",
+      "category": "HIJUTSU_CLAN",
+      "clan": "akimichi",
+      "prerequisites": { "attributes": { "vig": 6 }, "aptitudes": ["corpulencia"] }
+    }
+  },
+  "data": [
+    {
+      "code": "baika_no_jutsu",
+      "name": "Baika no Jutsu (Técnica de Expansão)",
+      "minLevel": 1,
+      "availableFor": ["baika_ninpou"],
+      "shortDescription": "Aumenta tamanho do corpo. Nv 1 = roliço; Nv 4 = Grande; Nv 5 = Enorme; Nv 6 = Imenso.",
+      "description": "Altera livremente seu tamanho. Nível baixo: aumenta abdômen (roliço, ideal pra Nikudan Sensha). Nível alto: corpo inteiro proporcionalmente, ficando gigante. A partir do Nv 4 do poder, itens/armas aumentam junto (danos não alteram). Nv 1: 1 chakra, fica roliço; uso pra Nikudan = parcial + instantânea. Nv 4: 3 chakra, tamanho Grande. Nv 5: 4 chakra, Enorme. Nv 6: 5 chakra, Imenso. Pode usar com aptidões de manobra. NÃO pode usar Clone enquanto expandido. Aplica bônus/penalidades de tamanho. Fonte: Livro Básico p. 152.",
+      "stats": { "action": "MOVIMENTO", "range": "pessoal", "duration": "CONTINUA", "chakraCost": "1 (Nv 1), 3 (Nv 4), 4 (Nv 5), 5 (Nv 6)" },
+      "rules": {
+        "sizeByLevel": { "1": "roliço", "4": "grande", "5": "enorme", "6": "imenso" },
+        "itemsScaleAtLevel4": true,
+        "noCloneWhileExpanded": true,
+        "supportsManobras": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "nikudan_sensha",
+      "name": "Nikudan Sensha (Tanque Humano)",
+      "minLevel": 2,
+      "availableFor": ["baika_ninpou"],
+      "shortDescription": "Atropela girando em bola. Vigor ou derrubado. Variante: Nikudan Hari Sensha (com kunais).",
+      "description": "Usa Baika no Jutsu pra ficar roliço, depois se impulsiona como rolo compressor. Alta rotação queima a palma de quem tocar. Imune a efeitos sonoros enquanto executa. Funciona como atropelar com investida, dano comum de ataque corporal. Vigor (Dif 2 + CC) ou derrubado. Variante Nikudan Hari Sensha: saca corrente de kunais (ação parcial) e enrola pra adicionar tipo corte ao dano. Opcionalmente: 1 chakra faz cabelos crescerem afiados, reduzindo prep pra ação livre. Pré-req: Lutador. Fonte: Livro Básico p. 152-153.",
+      "stats": { "action": "COMPLETA", "duration": "INSTANTANEA", "chakraCost": 1, "rollType": "CC" },
+      "rules": {
+        "prerequisites": { "aptitudes": ["lutador"] },
+        "basedOn": "baika_no_jutsu",
+        "vigorDifficulty": "2 + CC",
+        "leavesTargetDerrubado": true,
+        "variants": { "hari_sensha": "+kunais (corte)" }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "bunbun_baika",
+      "name": "Bunbun Baika no Jutsu (Expansão Parcial)",
+      "minLevel": 3,
+      "availableFor": ["baika_ninpou"],
+      "shortDescription": "Expande braço/perna específico. Tamanho Grande naquela parte. +1 For + bônus manobras.",
+      "description": "Aplicação prática do Baika no Jutsu: expande um ou ambos braços/pernas pra ampliar ataques físicos. Velocidade súbita = ataque difícil de evitar. Usado ANTES do ataque/manobra/aptidão. Membro fica Grande (alcance CC 2m, +1 For). +1 precisão em atropelar/empurrar/agarrar/derrubar (não cumulativo com outras manobras). Pré-req: Lutador. Fonte: Livro Básico p. 153.",
+      "stats": { "action": "LIVRE", "range": "pessoal", "duration": "INSTANTANEA", "chakraCost": 0 },
+      "rules": { "prerequisites": { "aptitudes": ["lutador"] }, "limbSize": "grande", "bonusForce": 1, "manobraPrecisionBonus": 1 },
+      "evolutions": []
+    },
+    {
+      "code": "choudan_bakugeki",
+      "name": "Choudan Bakugeki (Bombardeio do Míssil Borboleta)",
+      "minLevel": 4,
+      "availableFor": ["baika_ninpou"],
+      "shortDescription": "Soco devastador no Modo Chou. +3 dano. Pré-req: Corpulência + Resiliência + Modo Chou.",
+      "description": "Requer Modo Chou ativo (Controle de Caloria nível 3 — pílula vermelha). Foca chakra no punho e desfere soco poderoso em alvo único. Dano comum CC com +3 dano base. NÃO pode usar com aumento de tamanho do Baika (até Nv 7). Nv 7: pode usar com aumento de tamanho. Nv 8+: +1 bônus de dano adicional por nível acima de 8 (se usado com tamanho). Pré-req: Corpulência + Resiliência. Fonte: Livro Básico p. 153.",
+      "stats": { "action": "PADRAO", "range": "toque", "damage": "comum_CC + 3", "duration": "INSTANTANEA", "chakraCost": 3 },
+      "rules": {
+        "prerequisites": { "aptitudes": ["corpulencia", "resiliencia"], "requiresModoChou": true },
+        "noBaikaSizeUntilLv7": true
+      },
+      "evolutions": [
+        { "atLevel": 7, "name": "Choudan Bakugeki Nv 7", "description": "Pode usar com aumento de tamanho." },
+        { "atLevel": 8, "name": "Choudan Bakugeki Nv 8+", "description": "+1 dano por nível acima de 8 (total +4 no Nv 8, +5 no Nv 9 etc.) se usado com aumento de tamanho." }
+      ]
+    }
+  ]
+}

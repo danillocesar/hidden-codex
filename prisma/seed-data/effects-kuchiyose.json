@@ -1,0 +1,45 @@
+{
+  "_meta": {
+    "description": "Kuchiyose (Invocação) — Poder comum (variantes restritas como Sapos, Cobras, Lesmas). Permite invocar criaturas. Cada vertente tem suas regras (numerosa, unitária etc). Modelado aqui o efeito base + algumas técnicas notáveis (Henge Kongōnyoi, Pó de Prata associados). A maior parte do poder é tabela de criaturas no Livro Básico p. 224-232 — modelar invocações como entidades virá em lote suplementar de Kuchiyose.",
+    "sources": [
+      "Livro Básico p. 224-232 (Kuchiyose)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "powerNotes": {
+      "code": "kuchiyose",
+      "category": "PODER_COMUM_OU_RESTRITO",
+      "variants": ["comum", "sapos", "cobras", "lesmas", "caes", "macacos", "tubaroes"],
+      "keySkill": "lidar_com_animais"
+    },
+    "todoNotes": "Invocações específicas (Gamabunta, Manda, Katsuyu, Bull, Enma) precisarão ser modeladas como entidades de invocação em outro lote, com fichas próprias. Aqui só efeitos genéricos do poder."
+  },
+  "data": [
+    {
+      "code": "kuchiyose_no_jutsu",
+      "name": "Kuchiyose no Jutsu (Técnica de Invocação)",
+      "minLevel": 1,
+      "availableFor": ["kuchiyose"],
+      "shortDescription": "Invoca criatura contratada. Selo de mão + sangue. Criatura vem da dimensão das invocações.",
+      "description": "Técnica base do poder. Realiza selos de mão, libera chakra e marca com sangue (geralmente do polegar). Cria selos no chão e invoca a criatura. Pra usar, é necessário ter um contrato de invocação prévio. Categorias de invocação variam: numerosa (até 8 ao mesmo tempo, como tubarões/cães/sapos pequenos), unitária (uma única, como Katsuyu/Gamabunta no nível máximo). Cada vertente tem regras próprias detalhadas no Livro Básico p. 224-232. Algumas invocações são consideradas Poderes Restritos (Sapos, Cobras, Lesmas, Tubarões, Cães, Macacos). Fonte: Livro Básico p. 224.",
+      "stats": { "action": "PADRAO", "range": "pessoal (selo no chão)", "duration": "CONTINUA (até dispersão ou fim da cena)", "chakraCost": "nivel_usado" },
+      "rules": {
+        "requiresContract": true,
+        "requiresBloodSeal": true,
+        "categories": ["numerosa", "unitaria"]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "gyaku_kuchiyose",
+      "name": "Gyaku Kuchiyose (Invocação Reversa)",
+      "minLevel": 6,
+      "availableFor": ["kuchiyose"],
+      "shortDescription": "Invocação reversa pra Monte Myōboku ou Caverna Ryūchi. NÃO usável em combate.",
+      "description": "Permite ao usuário ser invocado pelas criaturas pra seu lugar sagrado (Monte Myōboku pros Sapos, Caverna Ryūchi pras Cobras). NÃO pode ser feito dentro de combate. Permite criar pergaminhos de fuuinjutsu que façam a invocação reversa (útil pra Senjutsu — manter Kage Bunshin lá absorvendo energia da natureza). Mesmo sem Fuuinjutsu, pode pedir que um sapo/cobra anciã o crie. Usar pergaminho de invocação reversa pra trazer um clone: ação padrão, 1 chakra por clone. Pré-req: contrato Sapos ou Cobras. Fonte: Livro Básico p. 240-241.",
+      "stats": { "action": "PADRAO", "range": "pessoal", "duration": "PERMANENTE (até voltar)", "chakraCost": "1 por clone trazido" },
+      "rules": { "noInCombat": true, "destinations": ["monte_myoboku", "caverna_ryuchi"], "supportsFuuinjutsuScrolls": true },
+      "evolutions": []
+    }
+  ]
+}

@@ -1,0 +1,235 @@
+{
+  "_meta": {
+    "description": "Magen (Ilusão Demoníaca) — Poder Restrito. Funciona como Ninpou mas só com efeitos próprios (Fantasma/Compulsão/Aflição). Sem teste de precisão; alvo testa Inteligência (Dif 9 + Nível Poder + Int/2 do usuário). Custo de chakra = nível do efeito (não do poder). Toque modifica Dif pra 8 + 2x Nível Poder. Pré-req: Int 6 + Fascinar + Miragem + Ilusão Profunda. Tipos: Fantasma (ilusão externa sobre o usuário), Compulsão (mental contínua até libertação), Aflição (mental instantânea, 2 turnos).",
+    "sources": [
+      "Livro Básico p. 233-238 (Magen)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "powerNotes": {
+      "code": "magen",
+      "category": "HIJUTSU_RESTRITO",
+      "prerequisites": { "attributes": { "int": 6 }, "aptitudes": ["fascinar", "miragem", "ilusao_profunda"] },
+      "rangeFormula": "Curto (5m +1m por nível de Int)",
+      "sizeFormula": "1m por nível de Int (mental)",
+      "noPrecisionTest": true,
+      "victimResistanceFormula": "Int Dif 9 + Nível Poder + Int/2 usuário",
+      "touchModifier": "Dif 8 + 2x Nível Poder",
+      "chakraCostByEffectLevel": true,
+      "ilusionTypes": ["fantasma", "compulsao", "afliccao"]
+    }
+  },
+  "data": [
+    {
+      "code": "extase",
+      "name": "Êxtase",
+      "minLevel": 1,
+      "availableFor": ["magen"],
+      "shortDescription": "[Compulsão] Captura mente do alvo em ilusão. Deixa fascinado.",
+      "description": "Por meio desse Efeito, o usuário captura a mente do alvo em uma ilusão de sua escolha, deixando-o fascinado. Pode ser repetido na mesma cena contra o mesmo alvo, mas alvo tem 1 turno de imunidade após se libertar desta ilusão ou da aptidão Fascinar. Fonte: Livro Básico p. 235.",
+      "stats": { "action": "PADRAO", "range": "magen_padrao", "duration": "CONTINUA_ATE_LIBERTAR", "chakraCost": 1 },
+      "rules": { "ilusionType": "compulsao", "appliesCondition": "fascinado", "repeatable": true, "immunityAfter": "1 turno" },
+      "evolutions": []
+    },
+    {
+      "code": "amedrontar",
+      "name": "Amedrontar",
+      "minLevel": 2,
+      "availableFor": ["magen"],
+      "shortDescription": "[Aflição] Mostra pesadelo/cena grotesca. Vítima assustada.",
+      "description": "O usuário causa temor no inimigo, mostrando imagem do pior pesadelo, cena grotesca ou monstro invencível. Alvo fica assustado. Fonte: Livro Básico p. 235.",
+      "stats": { "action": "PADRAO", "range": "magen_padrao", "duration": "2 turnos (aflicção)", "chakraCost": 2 },
+      "rules": { "ilusionType": "afliccao", "appliesCondition": "assustado" },
+      "evolutions": [
+        { "atLevel": 5, "name": "Amedrontar Nv 5", "description": "Vítima fica amedrontada." },
+        { "atLevel": 8, "name": "Amedrontar Nv 8", "description": "Vítima fica aterrorizada." }
+      ]
+    },
+    {
+      "code": "confundir",
+      "name": "Confundir",
+      "minLevel": 2,
+      "availableFor": ["magen"],
+      "shortDescription": "[Compulsão] Alucinações aleatórias. Vítima confusa.",
+      "description": "Gera alucinações no alvo ou ilusões aleatórias que mudam a cada rodada. Vítima fica confusa. Fonte: Livro Básico p. 236.",
+      "stats": { "action": "PADRAO", "range": "magen_padrao", "duration": "CONTINUA_ATE_LIBERTAR", "chakraCost": 2 },
+      "rules": { "ilusionType": "compulsao", "appliesCondition": "confuso" },
+      "evolutions": []
+    },
+    {
+      "code": "fadigar",
+      "name": "Fadigar",
+      "minLevel": 2,
+      "availableFor": ["magen"],
+      "shortDescription": "[Aflição] Faz alvo acreditar que está cansado. Fatigado.",
+      "description": "Faz o alvo acreditar que está ligeiramente cansado, devido a mal súbito ou falta de ar. Vítima fica fatigada. NÃO acumula pra deixar exausto/inconsciente. Fonte: Livro Básico p. 236.",
+      "stats": { "action": "PADRAO", "range": "magen_padrao", "duration": "2 turnos (aflicção)", "chakraCost": 2 },
+      "rules": { "ilusionType": "afliccao", "appliesCondition": "fatigado", "noStack": true },
+      "evolutions": [
+        { "atLevel": 5, "name": "Fadigar Nv 5", "description": "Vítima fica exausta." }
+      ]
+    },
+    {
+      "code": "segurar",
+      "name": "Segurar",
+      "minLevel": 2,
+      "availableFor": ["magen"],
+      "shortDescription": "[Compulsão] Ilusão de ser agarrado. Vítima agarrada. Lutador imune (até Nv 6).",
+      "description": "Faz alvo acreditar que está sendo agarrado por animal/monstro/pessoa. Vítima sofre efeitos de Agarrado. Alvos com aptidão Lutador são imunes (até Nv 6). Fonte: Livro Básico p. 236.",
+      "stats": { "action": "PADRAO", "range": "magen_padrao", "duration": "CONTINUA_ATE_LIBERTAR", "chakraCost": 2 },
+      "rules": { "ilusionType": "compulsao", "appliesCondition": "agarrado", "lutadorImune": true },
+      "evolutions": [
+        { "atLevel": 6, "name": "Segurar Nv 6", "description": "Alvos com Lutador não são mais imunes." },
+        { "atLevel": 10, "name": "Segurar Nv 10", "description": "Animal/monstro/pessoa é muito maior. Vítima fica indefesa." }
+      ]
+    },
+    {
+      "code": "adormecer",
+      "name": "Adormecer",
+      "minLevel": 3,
+      "availableFor": ["magen"],
+      "shortDescription": "[Compulsão] Sonolência. Fatigado por 5 turnos, depois inconsciente.",
+      "description": "Faz alvo entrar em sonolência e dormir após alguns instantes. Vítima fica fatigada por 5 turnos e cai inconsciente no fim do quinto. Permanece assim enquanto efeito durar ou ser cancelado. Fonte: Livro Básico p. 236.",
+      "stats": { "action": "PADRAO", "range": "magen_padrao", "duration": "CONTINUA_ATE_LIBERTAR", "chakraCost": 3 },
+      "rules": { "ilusionType": "compulsao", "fatigueTurns": 5, "unconsciousAfter": true },
+      "evolutions": [
+        { "atLevel": 6, "name": "Adormecer Nv 6", "description": "Tempo até inconsciência cai pra 4 turnos." },
+        { "atLevel": 9, "name": "Adormecer Nv 9", "description": "Tempo até inconsciência cai pra 3 turnos." }
+      ]
+    },
+    {
+      "code": "anular_sentido",
+      "name": "Anular Sentido",
+      "minLevel": 3,
+      "availableFor": ["magen"],
+      "shortDescription": "[Compulsão] Prejudica audição/olfato/visão à escolha.",
+      "description": "Prejudica ou anula um sentido à sua escolha. Audição: -2 em Procurar/Prontidão auditivos. Olfato: perde capacidade de sentir cheiro. Visão: penalidades de camuflagem parcial. Se sentido prejudicado está ligado a habilidade de sensor, também é afetado. Fonte: Livro Básico p. 236-237.",
+      "stats": { "action": "PADRAO", "range": "magen_padrao", "duration": "CONTINUA_ATE_LIBERTAR", "chakraCost": 3 },
+      "rules": { "ilusionType": "compulsao", "sensesAffected": ["audicao", "olfato", "visao"] },
+      "evolutions": [
+        { "atLevel": 6, "name": "Anular Sentido Nv 6", "description": "Visão: camuflagem total. Audição: surda." },
+        { "atLevel": 9, "name": "Anular Sentido Nv 9", "description": "Visão: cega. Pode anular sentido especial (sensor de chakra etc.)." }
+      ]
+    },
+    {
+      "code": "desequilibrar",
+      "name": "Desequilibrar",
+      "minLevel": 3,
+      "availableFor": ["magen"],
+      "shortDescription": "[Aflição] Ilusão de algo atrapalhando equilíbrio. Caído.",
+      "description": "Ilusão de ventos fortes/tremor/doença atrapalhando equilíbrio. Vítima fica caída e não pode se levantar até o final do próximo turno dela. Fonte: Livro Básico p. 237.",
+      "stats": { "action": "PADRAO", "range": "magen_padrao", "duration": "2 turnos (aflicção)", "chakraCost": 3 },
+      "rules": { "ilusionType": "afliccao", "appliesCondition": "caido" },
+      "evolutions": [
+        { "atLevel": 6, "name": "Desequilibrar Nv 6", "description": "Vítima não pode se levantar pelos próximos 2 turnos dela." }
+      ]
+    },
+    {
+      "code": "desorientar",
+      "name": "Desorientar",
+      "minLevel": 3,
+      "availableFor": ["magen"],
+      "shortDescription": "[Compulsão] Perde senso de direção. Fracasso auto em Rastrear.",
+      "description": "Faz alvo perder senso de direção. Fracasso automático em Rastrear, anda em círculos. Sensores também afetados, mas com +2 pra identificar o genjutsu. Fonte: Livro Básico p. 237.",
+      "stats": { "action": "PADRAO", "range": "magen_padrao", "duration": "CONTINUA_ATE_LIBERTAR", "chakraCost": 3 },
+      "rules": { "ilusionType": "compulsao", "autoFailRastrear": true },
+      "evolutions": [
+        { "atLevel": 6, "name": "Desorientar Nv 6", "description": "Pode usar contra múltiplos alvos sem penalidade na resistência." },
+        { "atLevel": 9, "name": "Desorientar Nv 9", "description": "Pode usar como Aflição." }
+      ]
+    },
+    {
+      "code": "falsa_velocidade",
+      "name": "Falsa Velocidade",
+      "minLevel": 3,
+      "availableFor": ["magen"],
+      "shortDescription": "[Fantasma] Parece mais rápido. Usado como finta. Alvo fintado se falhar.",
+      "description": "Ilusão sobre si mesmo que o faz parecer mais rápido. Usado como manobra fintar (ação padrão, ou movimento se Ponto Cego). Custa 2 chakra. Alvo testa notar genjutsu — falha = fintado contra seu ataque (CC ou CD). Dura até fim do seu turno. Fonte: Livro Básico p. 237.",
+      "stats": { "action": "PADRAO_OU_MOVIMENTO", "range": "pessoal", "duration": "ate_fim_do_turno", "chakraCost": 2 },
+      "rules": { "ilusionType": "fantasma", "actsAsFinta": true, "appliesCondition": "fintado" },
+      "evolutions": []
+    },
+    {
+      "code": "aliviamento",
+      "name": "Aliviamento",
+      "minLevel": 4,
+      "availableFor": ["magen"],
+      "shortDescription": "[Aflição] Vê o que deseja (reforço, vitória). Desprevenido.",
+      "description": "Vítima vê o que mais deseja em combate (reforço, aliado matando você). Falsa sensação de alívio. Vítima fica desprevenida pelo tempo do efeito. Ao ser atacada, percebe ilusão imediatamente, mas penalidades permanecem. Fonte: Livro Básico p. 237.",
+      "stats": { "action": "PADRAO", "range": "magen_padrao", "duration": "2 turnos (aflicção)", "chakraCost": 4 },
+      "rules": { "ilusionType": "afliccao", "appliesCondition": "desprevenido", "noticedOnAttack": true },
+      "evolutions": [
+        { "atLevel": 7, "name": "Aliviamento Nv 7", "description": "Efeito dura 3 turnos." },
+        { "atLevel": 10, "name": "Aliviamento Nv 10", "description": "Efeito não pode ser resistido." }
+      ]
+    },
+    {
+      "code": "falsa_posicao",
+      "name": "Falsa Posição",
+      "minLevel": 4,
+      "availableFor": ["magen"],
+      "shortDescription": "[Fantasma] Inimigos ignoram sua presença. Camuflagem parcial. Sustentada.",
+      "description": "Ilusão sobre si mesmo que força inimigos a ignorarem sua presença. Quando atacado, inimigo testa notar genjutsu — falha = você recebe camuflagem parcial pelo restante da cena. Sempre que conseguir te acertar passando pela camuflagem, novo teste. Sucesso = efeito não funciona mais contra esse inimigo pela cena. Sustentada. Fonte: Livro Básico p. 237-238.",
+      "stats": { "action": "PADRAO", "range": "pessoal", "duration": "SUSTENTADA", "chakraCost": 4 },
+      "rules": { "ilusionType": "fantasma", "grantsCamouflage": "parcial" },
+      "evolutions": [
+        { "atLevel": 7, "name": "Falsa Posição Nv 7", "description": "Camuflagem total." },
+        { "atLevel": 10, "name": "Falsa Posição Nv 10", "description": "Pode forçar inimigo a atacar direção de sua escolha se errar." }
+      ]
+    },
+    {
+      "code": "petrificar",
+      "name": "Petrificar",
+      "minLevel": 4,
+      "availableFor": ["magen"],
+      "shortDescription": "[Compulsão] Ilusão de petrificação. Lento + impedido no 2º turno.",
+      "description": "Faz alvo pensar que corpo não se movimenta (petrificação, distúrbio muscular). Vítima fica lenta, e a partir do início do 2º turno fica impedida. Fonte: Livro Básico p. 238.",
+      "stats": { "action": "PADRAO", "range": "magen_padrao", "duration": "CONTINUA_ATE_LIBERTAR", "chakraCost": 4 },
+      "rules": { "ilusionType": "compulsao", "appliesConditions": ["lento", "impedido_no_turno_2"] },
+      "evolutions": [
+        { "atLevel": 7, "name": "Petrificar Nv 7", "description": "Vítima fica imediatamente impedida quando sofre o efeito." },
+        { "atLevel": 10, "name": "Petrificar Nv 10", "description": "Vítima fica paralisada." }
+      ]
+    },
+    {
+      "code": "adoecer",
+      "name": "Adoecer",
+      "minLevel": 5,
+      "availableFor": ["magen"],
+      "shortDescription": "[Compulsão] Doença ilusória. Vítima tonta.",
+      "description": "Faz alvo acreditar que está doente (dor de cabeça, gripe, náusea — escolha do usuário). Vítima fica tonta pela duração da ilusão. Fonte: Livro Básico p. 238.",
+      "stats": { "action": "PADRAO", "range": "magen_padrao", "duration": "CONTINUA_ATE_LIBERTAR", "chakraCost": 5 },
+      "rules": { "ilusionType": "compulsao", "appliesCondition": "tonto" },
+      "evolutions": [
+        { "atLevel": 8, "name": "Adoecer Nv 8", "description": "Adicionalmente, vítima fica fatigada." },
+        { "atLevel": 10, "name": "Adoecer Nv 10", "description": "Adicionalmente, vítima fica exausta." }
+      ]
+    },
+    {
+      "code": "atordoar",
+      "name": "Atordoar",
+      "minLevel": 5,
+      "availableFor": ["magen"],
+      "shortDescription": "[Aflição] Confunde sentidos. Atordoado até fim do próximo turno.",
+      "description": "Confunde sentidos do alvo, retirando capacidade de agir. Vítima fica atordoada até o final do próximo turno. Pode ser repetido contra mesmo alvo na cena. Fonte: Livro Básico p. 238.",
+      "stats": { "action": "PADRAO", "range": "magen_padrao", "duration": "ate_fim_proximo_turno", "chakraCost": 5 },
+      "rules": { "ilusionType": "afliccao", "appliesCondition": "atordoado", "repeatable": true },
+      "evolutions": [
+        { "atLevel": 8, "name": "Atordoar Nv 8", "description": "Adicionalmente, vítima fica desprevenida pela duração." }
+      ]
+    },
+    {
+      "code": "paralisar_magen",
+      "name": "Paralisar (Magen)",
+      "minLevel": 5,
+      "availableFor": ["magen"],
+      "shortDescription": "[Compulsão] Algemas/cordas ilusórias. Indefesa. Golpe de misericórdia quebra ilusão.",
+      "description": "Faz alvo acreditar que braços e pernas estão presos por algemas, cordas, braços mortos. Vítima fica imóvel, não pode fazer ações que dependam de movimentos (exceto falar). Considerada indefesa. Golpe de misericórdia quebra a ilusão (vítima pode defender normalmente). Fonte: Livro Básico p. 238.",
+      "stats": { "action": "PADRAO", "range": "magen_padrao", "duration": "CONTINUA_ATE_LIBERTAR", "chakraCost": 5 },
+      "rules": { "ilusionType": "compulsao", "appliesConditions": ["imovel", "indefesa"], "coupDeGraceBreaksIllusion": true },
+      "evolutions": [
+        { "atLevel": 9, "name": "Paralisar Nv 9", "description": "Tentar golpe de misericórdia NÃO quebra a ilusão." }
+      ]
+    }
+  ]
+}

@@ -248,7 +248,22 @@ const EFFECT_FILES: ReadonlyArray<string> = [
   'effects-sanbi-suiton.json', // 2: Sangoshō, Espelho D'Água
   'effects-senjutsu.json', // 2: Modo Eremita Bonus (9 bônus selecionáveis), Senpou Ryōsei
   'effects-hachimon.json', // 15: 8 portões individuais + 7 Taijutsus avançados
-  // Próximas ondas (4d/4e) entram aqui conforme chegarem.
+  // 4d — poderes restritos de clã + hijutsus de Genjutsu/Cura/Selo. Todos os
+  // power_codes referenciados via `availableFor` já existem em `powers` (Lote
+  // 3), EXCETO `shindenshin` (typo do JSON, deveria ser `shintenshin`) —
+  // referência fica órfã até alguém renomear.
+  'effects-magen.json', // 16: ilusões fantasma/compulsão/aflição
+  'effects-iryou.json', // 4: Chakra no Mesu, In'Yu, Shousen, Byakugou
+  'effects-fuuinjutsu.json', // 10: 1 selo por nível (1-9)
+  'effects-rasengan.json', // 4: Básico, Completo, Oodama, Elemental
+  'effects-kuchiyose.json', // 2: kuchiyose_no_jutsu, gyaku_kuchiyose
+  'effects-juuken.json', // 8: Juuken Nv1-8 + variações (requer Byakugan ativo)
+  'effects-kagejutsu.json', // 5: Kage Shibari, Kage Mane (com evoluções inline), ...
+  'effects-baika.json', // 4: Baika no Jutsu, Nikudan Sensha, Bunbun Baika, Choudan
+  'effects-kikai.json', // 4: Mushi Bunshin, Mushi Kame, Mushidama, Senro
+  'effects-shikakyu.json', // 6: Shikakyu Nv1, Juujin Bunshin, Gatsuuga, ...
+  'effects-shintenshin.json', // 3: Shintenshin, Shinten Bunshin, Shinranshin
+  // Próxima onda (4e — Guia Avançado) entra aqui.
 ];
 
 async function seedPowerEffects(): Promise<void> {

@@ -1,0 +1,13 @@
+node_modules
+.next
+out
+dist
+build
+coverage
+playwright-report
+test-results
+public/uploads
+books
+arcana-forge-spec/reference
+pnpm-lock.yaml
+prisma/migrations

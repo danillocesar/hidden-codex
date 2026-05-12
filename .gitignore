@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+
+# Build artifacts
+dist/
+build/
+*.tsbuildinfo
+
+# Test / Coverage
+coverage/
+playwright-report/
+playwright/.cache/
+test-results/
+
+# Env (NEVER commit these)
+.env
+.env.local
+.env*.local
+
+# Uploads (local-only filesystem storage) — keep the folder, ignore contents
+public/uploads/*
+!public/uploads/.gitkeep
+
+# Books (copyright — never commit)
+books/*.pdf
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp

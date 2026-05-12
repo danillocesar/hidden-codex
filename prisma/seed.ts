@@ -226,8 +226,16 @@ type PowerEffectSeed = {
 };
 
 const EFFECT_FILES: ReadonlyArray<string> = [
-  'effects-ninpou-universal.json',
-  // Próximas ondas (4b–4e) entram aqui conforme chegarem.
+  'effects-ninpou-universal.json', // 4a — 18 universais
+  // 4b — efeitos exclusivos dos 5 elementos básicos. Efeitos cross-element
+  // (Imergir, Inflamável) aparecem no JSON do elemento "dono" mas listam
+  // outros poderes no próprio `availableFor`.
+  'effects-suiton.json', // 3: Névoa, Prisão de Água, Colisão de Ondas
+  'effects-doton.json', // 3: Imergir (cross), Tremor, Pele de Pedra
+  'effects-katon.json', // 1: Inflamável (cross via Guia Avançado)
+  'effects-fuuton.json', // 4: Venenoso, Afiar, Lâmina de Vento, Flutuar
+  'effects-raiton.json', // 3: Lâmina de Raios, Arma Elétrica, Descarga
+  // Próximas ondas (4c/4d/4e) entram aqui conforme chegarem.
 ];
 
 async function seedPowerEffects(): Promise<void> {

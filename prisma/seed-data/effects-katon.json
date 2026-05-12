@@ -1,0 +1,56 @@
+{
+  "_meta": {
+    "description": "Efeitos exclusivos do poder Katon (Elemento Fogo). Katon tem a maior área de efeito de todos os elementos, e o maior dano (ao lado do Fuuton: +2 dano base). Não pode usar Algemar, Restringente, Barreira, Lança, Criar Arma, Nuvem, Correnteza (fogo é imaterial).",
+    "sources": [
+      "Livro Básico p. 107-109 (Katon)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "powerNotes": {
+      "code": "katon",
+      "rangeFormula": "Médio (10m +2m por nível de Espírito)",
+      "sizeFormula": "2m por nível de Espírito (maior área!)",
+      "elementBonus": 2,
+      "elementBonusType": "dano",
+      "elementAdvantage": ["fuuton"],
+      "elementDisadvantage": ["suiton"],
+      "allEffectsFromNinpou": false,
+      "allowedNinpouEffects": ["canhao", "orbe", "flechas", "coluna", "sopro_destrutivo", "raio", "energizar", "missil", "onda_explosiva", "ricochete", "meteoros"],
+      "blockedNinpouEffects": ["algemar", "restringente", "barreira", "lanca", "criar_arma", "nuvem", "correnteza"]
+    }
+  },
+  "data": [
+    {
+      "code": "inflamavel",
+      "name": "Inflamável",
+      "minLevel": 5,
+      "availableFor": ["katon", "fuuton", "suiton"],
+      "shortDescription": "Cria líquido/gás inflamável. Combustão com Canhão Katon/Raiton adiciona +2 dano à explosão.",
+      "description": "Cria um líquido, névoa ou gás altamente inflamável que se espalha em área circular de diâmetro comum do poder. Não causa dano por si só, mas potencializa dano de técnicas Katon/Raiton usadas depois. Com ação padrão, usa Canhão (Katon ou Raiton) pra criar uma faísca e gerar combustão instantânea/explosão. A explosão tem a área deste efeito, dano tipo fogo, valor do dano = Canhão usado +2 bônus. Não pode usar meta-aptidões com Inflamável. Guia Avançado adiciona Modo Contínuo: cobre região, qualquer Katon/Raiton dentro causa combustão à queima-roupa no usuário (dano comum do poder + teste de Concentração pra não fracassar). Suiton e Fuuton também têm acesso (cross-element via Guia Avançado). Fonte: Livro Básico p. 108 + Guia Avançado p. 53-54.",
+      "stats": {
+        "action": "MOVIMENTO",
+        "range": "comum_do_poder",
+        "areaOfEffect": "circulo_diametro_comum",
+        "damage": "bônus +2 ao Canhão",
+        "duration": "INSTANTANEA",
+        "chakraCost": "3 + chakra_canhao",
+        "type": "suporte"
+      },
+      "rules": {
+        "noMetaAptitudes": true,
+        "boostsCombustionFromKatonOrRaiton": true,
+        "boostBonus": 2,
+        "guiaAvancadoContinuousMode": {
+          "description": "Pode usar como duração contínua. Qualquer Katon/Raiton dentro da área causa combustão à queima-roupa. Custo: nível do poder. Identificar = teste Ciências Naturais Dif comum do poder."
+        }
+      },
+      "evolutions": [
+        {
+          "atLevel": 8,
+          "name": "Inflamável Nv 8",
+          "description": "Modo Meta-Aptidão: pode usar QUALQUER efeito Katon/Raiton (não só Canhão) pra combustão, desde que seja duração instantânea e alcance comum do poder. O efeito mantém suas propriedades originais. Modo Contínuo (GA): qualquer faísca (golpe com arma de metal, disparo de fogo) também causa ignição."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "_meta": {
+    "description": "Efeitos exclusivos do poder Suiton (Elemento Água). Suiton tem acesso a TODOS os efeitos universais de Ninpou (ver effects-ninpou-universal.json) MAIS estes efeitos exclusivos. Suiton também pode usar Inflamável (Katon), Venenoso (Fuuton) e Imergir (Doton).",
+    "sources": [
+      "Livro Básico p. 111-114 (Suiton)",
+      "Livro de Hijutsus p. 8-9 (efeitos para Hoshigaki)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "powerNotes": {
+      "code": "suiton",
+      "rangeFormula": "Médio (10m +2m por nível de Espírito)",
+      "sizeFormula": "1m por nível de Espírito",
+      "elementBonus": 0,
+      "elementAdvantage": ["katon"],
+      "elementDisadvantage": ["doton"],
+      "allEffectsFromNinpou": true,
+      "crossElementEffects": ["inflamavel", "venenoso", "imergir"]
+    }
+  },
+  "data": [
+    {
+      "code": "nevoa",
+      "name": "Névoa",
+      "minLevel": 2,
+      "availableFor": ["suiton"],
+      "shortDescription": "Cria um nevoeiro denso. Camuflagem parcial além de 1m. Requer Lutar às Cegas ou sensor.",
+      "description": "Um nevoeiro se forma a partir do ponto de origem escolhido. Somente é possível enxergar perfeitamente criaturas a até 1m de distância. Qualquer criatura além de 1m possui camuflagem parcial (ataques sofrem 25% de chance de falha). A névoa possui dureza imaginária de valor padrão do poder. Ataques em área de explosão (Katon) ou vento (Fuuton) reduzem a dureza; se zerar, a névoa se dissipa. A dureza imaginária não protege contra danos. A Névoa não tem desvantagem elemental contra Doton, mas tem desvantagem contra Fuuton. Regra Opcional: com permissão do mestre, pode ser comprada para Ninpou (mas nunca para outro elemento), sem possibilidade de evoluir. Fonte: Livro Básico p. 112.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "1m",
+        "target": "ambiente",
+        "areaOfEffect": "circulo_30m_diametro + 3m_por_esp",
+        "areaHeight": "comum_do_poder",
+        "damage": "nenhum",
+        "duration": "SUSTENTADA",
+        "chakraCost": "nivel_usado"
+      },
+      "rules": {
+        "prerequisites": { "aptitudes": ["lutar_as_cegas"], "alternatives": ["habilidade_de_sensor"] },
+        "imaginaryHardness": true,
+        "hardnessValue": "padrao_do_poder",
+        "destroyableByAreaAttacks": ["katon", "fuuton"],
+        "noDisadvantageVsDoton": true,
+        "disadvantageVsFuuton": true,
+        "concealmentBeyond1m": "parcial_25%"
+      },
+      "evolutions": [
+        {
+          "atLevel": 5,
+          "name": "Névoa Nv 5",
+          "description": "Criaturas até 1m possuem camuflagem parcial; além dessa distância recebem camuflagem total (50% de chance de falha e atacante não pode usar visão para localizá-las)."
+        }
+      ]
+    },
+    {
+      "code": "prisao_de_agua",
+      "name": "Prisão de Água",
+      "minLevel": 3,
+      "availableFor": ["suiton"],
+      "shortDescription": "Redoma de água ao redor do alvo. Vítima paralisada. Concentração. Não acumula meta-aptidões.",
+      "description": "Conjura uma redoma de água corrente ao redor do alvo, aprisionando-o. Usar requer teste de CD a 1m (penalidade -3 por proximidade OU teste de Concentração por combate próximo). É necessário estar sempre em contato com a prisão para mantê-la. A espessura e densidade impedem a vítima de se mover livremente, deixando-a paralisada. O espaço interior não tem água — vítima pode respirar e falar normalmente. A prisão tem metade da dureza comum do poder. Pode reutilizar a técnica pra restaurar dureza (gasta chakra/ação, sem refazer teste). Pode ser usado contra múltiplos alvos via Mizu Bunshin (1 alvo por clone). Mesmo paralisada, vítima pode usar ação padrão pra testar Força (Dif padrão) ou Vigor (Dif padrão -2). Sucesso = ganha mobilidade pra atacar a prisão por dentro. Golpe de misericórdia: prisão absorve e se desfaz, mas vítima sofre dano remanescente (Sucesso Automático, rola 2 dados pro grau de dano). Não pode ser usado com meta-aptidões. Fonte: Livro Básico p. 112-113.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "1m",
+        "target": "uma_criatura",
+        "damage": "nenhum",
+        "duration": "CONCENTRACAO",
+        "rollType": "CD",
+        "rollPenalty": -3,
+        "chakraCost": "nivel_usado"
+      },
+      "rules": {
+        "appliesCondition": "paralisado",
+        "hardnessValue": "metade_dureza_padrao",
+        "noMetaAptitudes": true,
+        "canBeRestored": true,
+        "mizuBunshinSupport": true,
+        "escapeOptions": ["for_padrao", "vig_padrao_-2"],
+        "coupDeGraceMechanic": "prisao_absorve_e_se_desfaz"
+      },
+      "evolutions": [
+        {
+          "atLevel": 9,
+          "name": "Prisão de Água Nv 9",
+          "description": "Prisão se torna sufocante: preenchida por água, impede respiração, vítima sofre sufocamento (testes com Dif padrão -2). Se usado via Mizu Bunshin, passa a duração sustentada."
+        }
+      ]
+    },
+    {
+      "code": "colisao_de_ondas",
+      "name": "Colisão de Ondas",
+      "minLevel": 6,
+      "availableFor": ["suiton"],
+      "shortDescription": "Tsunami devastador. 10 dano base. Captura vítimas em ondas. Concentração.",
+      "description": "Conjura uma grande quantidade de água e a faz avançar violentamente sobre uma área. Atingidos sofrem 10 de dano base. Construções recebem dano dobrado. Pode ser mantida por concentração, pagando metade do custo a cada turno. Mantida assim, quem falhar na defesa é capturado pelas ondas: no início do turno deve testar Atletismo (ação movimento) pra voltar à superfície ou sofre sufocamento (dano fixo = dano base do efeito). Alvos submersos não podem ser alvo de ataques físicos. Vítima pode gastar ação padrão pra nadar sem teste, OU prender respiração (Vigor Dif padrão -2). Pode continuar atacando enquanto mantém concentração (rola teste de acerto de novo). Submersos não são afetados de novo. Move a área de efeito livremente dentro do alcance. Fonte: Livro Básico p. 113-114.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "areaOfEffect": "onda_tamanho_comum",
+        "damage": 10,
+        "duration": "CONCENTRACAO",
+        "rollType": "CD",
+        "chakraCost": "nivel_usado",
+        "concentrationCost": "metade_por_turno",
+        "type": "ataque_em_area"
+      },
+      "rules": {
+        "doubleDamageVsConstructions": true,
+        "capturesOnFailedDefense": true,
+        "submergedVictimsCantBeAttackedPhysically": true,
+        "movableAreaWhileConcentrating": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 8,
+          "name": "Colisão de Ondas Nv 8",
+          "description": "Aumenta para Dano Base 14."
+        },
+        {
+          "atLevel": 10,
+          "name": "Colisão de Ondas Nv 10",
+          "description": "Aumenta para Dano Base 18. Vítima não tem mais direito a usar ação padrão pra nadar sem testes."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "_meta": {
+    "description": "Efeitos exclusivos do poder Fuuton (Elemento Vento). Fuuton tem o maior dano (ao lado do Katon: +2 dano base). Não pode usar Algemar, Restringente, Lança, Criar Arma (vento é imaterial).",
+    "sources": [
+      "Livro Básico p. 105-107 (Fuuton)",
+      "Guia Avançado p. 54 (Flutuar)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "powerNotes": {
+      "code": "fuuton",
+      "rangeFormula": "Médio (10m +2m por nível de Espírito)",
+      "sizeFormula": "1m por nível de Espírito",
+      "elementBonus": 2,
+      "elementBonusType": "dano",
+      "elementAdvantage": ["raiton"],
+      "elementDisadvantage": ["katon"],
+      "allEffectsFromNinpou": false,
+      "allowedNinpouEffects": ["canhao", "orbe", "barreira", "coluna", "flechas", "sopro_destrutivo", "raio", "nuvem", "energizar", "missil", "onda_explosiva", "ricochete", "correnteza"],
+      "crossElementEffects": ["inflamavel"]
+    }
+  },
+  "data": [
+    {
+      "code": "venenoso",
+      "name": "Venenoso",
+      "minLevel": 5,
+      "availableFor": ["fuuton"],
+      "shortDescription": "Cria névoa/fumaça venenosa com veneno da perícia Venefício. Veneno é consumido.",
+      "description": "Com este efeito, o personagem cria uma névoa ou fumaça venenosa usando um de seus venenos produzidos com a perícia Venefício. Somente é possível usar venenos de até nível II com este efeito. Uma técnica Venenosa não causa dano, mas garante a injeção do veneno no corpo do alvo, que deverá fazer os devidos testes de resistência. O veneno usado é consumido. Fonte: Livro Básico p. 106.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "areaOfEffect": "cone_tamanho_comum",
+        "damage": "nenhum",
+        "duration": "INSTANTANEA",
+        "chakraCost": "nivel_usado",
+        "type": "ataque_em_area"
+      },
+      "rules": {
+        "prerequisites": { "skills": ["venefico"] },
+        "maxPoisonLevel": "II",
+        "consumesPoison": true,
+        "injectsPoison": true,
+        "victimMakesResistanceTest": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "afiar",
+      "name": "Afiar",
+      "minLevel": 6,
+      "availableFor": ["fuuton"],
+      "shortDescription": "Afia armas cortantes/perfurantes. Energizar + ignora dureza + destrói armas bloqueadas + crítico melhor + lâmina estendida.",
+      "description": "Torna uma arma afiada, aumentando sua habilidade para desferir golpes eficazes. Somente em armas reais cortantes ou perfurantes — nunca em armas naturais ou criadas por Criar Arma. Concede os mesmos benefícios de Energizar, com os seguintes adicionais (aplique todos os possíveis). Fio melhorado: ignora 1 ponto de dureza do alvo. Qualquer arma comum que bloquear ou for bloqueada é destruída (exceto se sob Energizar, com exceção de Energizar Raiton); ataque vira Sucesso Automático. Crítico Melhorado: margem de crítico +1 (ex: 15-16 vira 14-15-16). Não cumulativo com outros bônus do tipo. Lâmina Estendida: cria lâmina de chakra de até 30cm a mais. Não aumenta alcance CC, mas dificulta defesa. Teste resistido Espírito vs Prontidão do alvo; sucesso = -1 nas reações (Esquivar, Antecipar, Bloquear). Shuriken Estendida: funciona em shurikens simples. Um único uso estende até 3 shurikens; dano base de todas vira dano comum do poder. Pré-requisito: Energizar. Fonte: Livro Básico p. 106-107.",
+      "stats": {
+        "action": "PARCIAL",
+        "range": "pessoal",
+        "target": "arma_cortante_ou_perfurante",
+        "damage": "ver_texto",
+        "duration": "SUSTENTADA",
+        "selos": false,
+        "chakraCost": "nivel_usado"
+      },
+      "rules": {
+        "prerequisites": { "effects": ["energizar"] },
+        "noNaturalWeapons": true,
+        "noCreatedWeapons": true,
+        "energizar_benefits": true,
+        "ignoresHardness": 1,
+        "destroysBlockedWeapons": true,
+        "destroysException": ["energizar (exceto raiton)"],
+        "criticoMelhorado": "+1 na margem de crítico",
+        "laminaEstendida": {
+          "extraLength": "30cm",
+          "noRangeBonus": true,
+          "testResistido": "Espírito vs Prontidão",
+          "defensePenalty": -1
+        },
+        "shurikenEstendida": {
+          "maxShurikens": 3,
+          "damageBaseChange": "comum_do_poder"
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "lamina_de_vento",
+      "name": "Lâmina de Vento",
+      "minLevel": 7,
+      "availableFor": ["fuuton"],
+      "shortDescription": "Múltiplas lâminas de vento invisíveis. 1 lâmina por nível, 1 dano cada. Prontidão antes da defesa.",
+      "description": "Emite chakra das pontas dos dedos, criando lâmina de vento quase invisível em alta rotação, arremessada contra o alvo. Repete repetidamente, criando e arremessando novas lâminas. Cria 1 lâmina por nível usado, cada uma causando 1 de dano base (total 3 com bônus de Fuuton). Não recebe outros bônus de dano além do elemento. Um único teste de acerto pra todas; alvo faz única defesa. Antes da defesa, alvo testa Prontidão pra enxergar o ataque — falha = fintado. Criaturas com visão de chakra ou Kagura Shingan: sucesso automático. Outros sensores de chakra: -2 na dificuldade. Pré-requisito: Energizar. Fonte: Livro Básico p. 106-107.",
+      "stats": {
+        "action": "COMPLETA",
+        "range": "5m",
+        "target": "uma_criatura",
+        "damage": "1 por lâmina (1 lâmina por nível usado)",
+        "duration": "INSTANTANEA",
+        "selos": false,
+        "chakraCost": "nivel_usado",
+        "rollType": "CD"
+      },
+      "rules": {
+        "prerequisites": { "effects": ["energizar"] },
+        "prontidaoBeforeDefense": true,
+        "fintadoOnProntidaoFail": true,
+        "chakraVisionAutoSuccess": true,
+        "otherSensorsPenalty": -2,
+        "noOtherDamageBonus": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 10,
+          "name": "Lâmina de Vento Nv 10",
+          "description": "Alvo que falha no teste de Prontidão fica desprevenido (em vez de fintado)."
+        }
+      ]
+    },
+    {
+      "code": "flutuar",
+      "name": "Flutuar",
+      "minLevel": 5,
+      "availableFor": ["fuuton"],
+      "shortDescription": "[Guia Avançado] Flutua sobre Leque Gigante. Adquire perícia Voo. Pré-req: Maestria + Usar Arma: Leque Gigante.",
+      "description": "[Efeito do Guia Avançado] Bate o Leque Gigante e se posiciona sobre ele usando Kinobori (Jutsu Comum, custo já incluso). Adquire perícia Voo com precisão igual ao nível de Espírito e condição 'Alado'. É necessário estar com Leque Gigante empunhado e sem obstáculos/inimigos adjacentes. Caso tenha ação de movimento disponível, pode usar como reação a uma queda (descer suavemente ou ficar alado). Leque Gigante fica inutilizável enquanto técnica sustentada. Pré-requisitos: Maestria (Fuuton) + Usar Arma: Leque Gigante. Fonte: Guia Avançado p. 54.",
+      "stats": {
+        "action": "MOVIMENTO",
+        "range": "pessoal",
+        "damage": "nenhum",
+        "duration": "SUSTENTADA",
+        "chakraCost": 5
+      },
+      "rules": {
+        "prerequisites": {
+          "aptitudes": ["maestria_fuuton", "usar_arma_leque_gigante"],
+          "weaponEquipped": "leque_gigante",
+          "noAdjacentObstaclesOrEnemies": true
+        },
+        "grantsSkill": "voo",
+        "grantsCondition": "alado",
+        "voodPrecision": "nivel_espirito",
+        "reactionToFall": true,
+        "leqGiganteUnusableWhileSustained": true
+      },
+      "evolutions": []
+    }
+  ]
+}

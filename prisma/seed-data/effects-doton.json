@@ -1,0 +1,116 @@
+{
+  "_meta": {
+    "description": "Efeitos exclusivos do poder Doton (Elemento Terra). Doton tem acesso a TODOS os efeitos universais de Ninpou MAIS estes efeitos exclusivos. Doton tem +2 de dureza em todas as criações (barreiras etc.) e menor alcance (Curto: 5m + 1m por Espírito).",
+    "sources": [
+      "Livro Básico p. 103-105 (Doton)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "powerNotes": {
+      "code": "doton",
+      "rangeFormula": "Curto (5m +1m por nível de Espírito)",
+      "sizeFormula": "1m por nível de Espírito",
+      "elementBonus": 0,
+      "additionalHardness": 2,
+      "elementAdvantage": ["suiton"],
+      "elementDisadvantage": ["raiton"],
+      "allEffectsFromNinpou": true,
+      "crossElementEffects": []
+    }
+  },
+  "data": [
+    {
+      "code": "imergir",
+      "name": "Imergir",
+      "minLevel": 2,
+      "availableFor": ["doton", "hyouton", "suiton"],
+      "shortDescription": "Funde-se com terra/pedra/barreira. Recebe Perito em Furtividade. Pode atacar furtivamente (Falsa Decapitação).",
+      "description": "Você torna-se capaz de se fundir com o seu elemento ou submergir totalmente nele. Somente é possível usar para se fundir a elementos soltos na natureza (chão, parede de caverna) ou objetos construídos com poderes (Criação Livre ou efeito Barreira). O local deve ser grande o suficiente. Enquanto imerso, recebe benefícios da aptidão Perito para Furtividade, não pode se mover, visão limitada a 10m. Bônus de furtividade dura enquanto permanecer oculto. Atacar ou usar técnicas revela posição (a menos que técnica não use você como origem). Sair = ação de movimento. Mesmo com corpo totalmente imerso, fica a poucos centímetros da superfície. Dureza do elemento NÃO protege contra ataques. Suiton e Hyouton também têm acesso (cross-element). Fonte: Livro Básico p. 103-104.",
+      "stats": {
+        "action": "COMPLETA",
+        "range": "pessoal",
+        "damage": "nenhum",
+        "duration": "CONTINUA",
+        "chakraCost": "nivel_usado"
+      },
+      "rules": {
+        "grantsFurtividadeAptitude": "perito",
+        "visionRange": 10,
+        "cantMoveWhileImmersed": true,
+        "exitAction": "movimento",
+        "noProtectionFromElement": true,
+        "falsaDecapitacao": {
+          "description": "Imerso no solo + Furtividade bem-sucedida: pode usar Agarrar como ataque furtivo em alvo acima. Puxa o alvo para a terra e salta. Ação completa. Vítima fica só com cabeça pra fora, com condição 'impedido'. Libertação: ação de movimento + teste Força ou Escapar Dif 10."
+        }
+      },
+      "evolutions": [
+        {
+          "atLevel": 4,
+          "name": "Imergir Nv 4",
+          "description": "Pode se mover livremente dentro do meio imerso com metade do deslocamento, mantendo furtividade. Sentidos não são atrapalhados pelo efeito."
+        }
+      ]
+    },
+    {
+      "code": "tremor",
+      "name": "Tremor",
+      "minLevel": 2,
+      "availableFor": ["doton"],
+      "shortDescription": "Faz o chão tremer numa área. Vítimas testam defesa ou ficam caídas.",
+      "description": "O personagem envia chakra pela terra até uma área dentro do alcance, fazendo o chão daquela área tremer. Criaturas na área têm direito a ação defensiva, e se falharem, ficarão caídas. Opcionalmente, podem gastar ação de movimento pra testar Acrobacia imediatamente e se manter de pé. Fonte: Livro Básico p. 104.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "areaOfEffect": "circulo_2m_diametro",
+        "damage": "nenhum",
+        "duration": "INSTANTANEA",
+        "rollType": "CD",
+        "chakraCost": "nivel_usado",
+        "type": "ataque_em_area"
+      },
+      "rules": {
+        "appliesCondition": "caido_se_falhar_defesa",
+        "acrobaciaAlternative": "ação de movimento pra teste de Acrobacia pra se manter de pé"
+      },
+      "evolutions": [
+        {
+          "atLevel": 4,
+          "name": "Tremor Nv 4",
+          "description": "Círculo aumenta para diâmetro comum do poder."
+        }
+      ]
+    },
+    {
+      "code": "pele_de_pedra",
+      "name": "Pele de Pedra",
+      "minLevel": 6,
+      "availableFor": ["doton"],
+      "shortDescription": "Pele dura como pedra. Dureza de corpo = dureza padrão do poder (+2 Doton). Sustentada com -dureza.",
+      "description": "Manipula o elemento pra tornar a pele tão dura quanto o mais resistente minério. Recebe dureza de corpo igual à dureza padrão do poder (+2 de dureza extra do Doton), até o final do turno em que usou. Pode ser mantido de forma sustentada, mas dureza cai pra apenas 1 (sem bônus de elemento). Dureza de corpo não é cumulativa (só a maior conta). Defesa: pode usar como técnica defensiva via teste de LM (precisa de ação de movimento mesmo se já estiver sustentando). Soco de Pedra: pode usar Energizar (Doton) junto com Pele de Pedra como ação livre. Socos passam a causar dano letal, com 4 de dano de arma. Fonte: Livro Básico p. 104-105.",
+      "stats": {
+        "action": "MOVIMENTO",
+        "range": "pessoal",
+        "damage": "nenhum",
+        "duration": "INSTANTANEA_OU_SUSTENTADA",
+        "chakraCost": "nivel_usado",
+        "selos": false
+      },
+      "rules": {
+        "bodyHardness": "padrao_do_poder + 2 (Doton)",
+        "sustainedBodyHardness": 1,
+        "notCumulativeHardness": true,
+        "defensiveUse": "teste_LM_acao_movimento",
+        "socoDePedra": {
+          "description": "Energizar (Doton) + Pele de Pedra como ação livre. Socos causam dano letal, 4 de dano de arma."
+        }
+      },
+      "evolutions": [
+        {
+          "atLevel": 9,
+          "name": "Pele de Pedra Nv 9",
+          "description": "Dureza de corpo sustentada aumenta para 2 pontos. Não é possível usar Bloqueio contra o Soco de Pedra."
+        }
+      ]
+    }
+  ]
+}

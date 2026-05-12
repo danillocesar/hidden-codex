@@ -1,0 +1,125 @@
+{
+  "_meta": {
+    "description": "Efeitos exclusivos do poder Raiton (Elemento Trovão/Raio). Raiton tem o MAIOR alcance (Longo: 15m + 3m por Espírito) e MENOR área de efeito (0,5m por Espírito). +1 dano base. Não pode usar Algemar, Restringente, Barreira, Lança, Criar Arma (raio é imaterial). Pode usar Meteoros (do Katon) como exceção.",
+    "sources": [
+      "Livro Básico p. 109-111 (Raiton)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "powerNotes": {
+      "code": "raiton",
+      "rangeFormula": "Longo (15m +3m por nível de Espírito)",
+      "sizeFormula": "0,5m por nível de Espírito (ceil — menor área)",
+      "elementBonus": 1,
+      "elementBonusType": "dano",
+      "elementAdvantage": ["doton"],
+      "elementDisadvantage": ["fuuton"],
+      "allEffectsFromNinpou": false,
+      "allowedNinpouEffects": ["canhao", "orbe", "coluna", "flechas", "sopro_destrutivo", "raio", "energizar", "missil", "onda_explosiva", "ricochete", "meteoros"],
+      "crossElementEffects": ["meteoros (do Katon)"]
+    }
+  },
+  "data": [
+    {
+      "code": "lamina_de_raios",
+      "name": "Lâmina de Raios",
+      "minLevel": 2,
+      "availableFor": ["raiton"],
+      "shortDescription": "Concentra chakra Raiton na mão. Ataque corporal toque com som de pássaros. Ignora 1 dureza. Destrói armas comuns. Pré-req: Esp 8.",
+      "description": "Concentra grande quantidade de chakra na mão, altera natureza pra Raiton, depois muda forma pra descarga elétrica. A grande concentração produz chiado agudo que lembra som de pássaros. Ação de movimento pra preparar. Atacar = ação padrão + teste de CC + tocar o alvo. Causa dano comum do poder, ignora 1 ponto de dureza. Destrói qualquer arma comum usada em bloqueio = falha na defesa, mesmo sob Energizar (exceto Fuuton e Raiton). Pode manter sustentada, mas só pode executar UM ataque (sucesso ou não). Se abater capanga, pode manter por ataque adicional. Ataque surpresa contra desprevenido: mínimo grau 2 de dano. Alvo testa Prontidão pra notar (devido ao ruído) — adicional a qualquer outro teste. Pré-requisito: Espírito 8. Fonte: Livro Básico p. 109-110.",
+      "stats": {
+        "action": "MOVIMENTO (preparar) + PADRAO (atacar)",
+        "range": "toque",
+        "damage": "comum_do_poder",
+        "duration": "SUSTENTADA_UM_ATAQUE",
+        "rollType": "CC",
+        "chakraCost": "nivel_usado",
+        "type": "tecnica_de_toque"
+      },
+      "rules": {
+        "prerequisites": { "attributes": { "esp": 8 } },
+        "ignoresHardness": 1,
+        "destroysCommonBlockingWeapons": true,
+        "destroyExceptions": ["energizar_fuuton", "energizar_raiton"],
+        "surpriseAttackMinimumDamageGrade": 2,
+        "audibleProntidaoTest": true,
+        "canExtendOnCapangaKill": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 5,
+          "name": "Lâmina de Raios Nv 5",
+          "description": "Preparar passa a ser Ação Parcial. Pode atacar com Investida pra receber +2 de bônus de dano (+1 a cada nível seguinte). Atacar assim deixa guarda aberta — permite ataque oportuno se alvo Esquivar/Antecipar. Não sofre essa penalidade se Acelerado ou com Nidan Sharingan. Mobilidade pode ser usada contra esse ataque oportuno."
+        },
+        {
+          "atLevel": 7,
+          "name": "Lâmina de Raios Nv 7",
+          "description": "Além dos benefícios anteriores, ignora qualquer nível de dureza, exceto Fuuton. Metade da dureza de Raiton."
+        },
+        {
+          "atLevel": 9,
+          "name": "Lâmina de Raios Nv 9",
+          "description": "Além dos benefícios anteriores, recebe benefício da aptidão Crítico Aprimorado pra este efeito. Bônus cumulativo com Domínio do Raio."
+        }
+      ]
+    },
+    {
+      "code": "arma_eletrica",
+      "name": "Arma Elétrica",
+      "minLevel": 4,
+      "availableFor": ["raiton"],
+      "shortDescription": "Variante de Criar Arma/Energizar exclusiva de Raiton. Cria projéteis ou lâmina, ou energiza armas de corte/perfuração.",
+      "description": "Funciona como Criar Arma e Energizar com restrições. Energizar [custo 3]: pode usar Energizar, mas só pra armas de corte e perfuração. Criar Projéteis [custo 1]: cria armas simples de arremesso feitas de eletricidade. Após arremessar, projéteis duram no ambiente até início do próximo turno. Criar Lâmina [custo 4]: cria lâmina de espada curta (ou outra espada leve) a partir da mão, que causa dano pelo Energizar e ignora 1 ponto de dureza. Pode estendê-la até 5m em direção ao inimigo pra atacar. Atacar assim: ação padrão + CC ou CD (escolha do personagem) + arma volta ao tamanho normal após. Não paga chakra extra pra estender. Pré-requisito: Lâmina de Raios. Fonte: Livro Básico p. 110.",
+      "stats": {
+        "action": "PARCIAL",
+        "range": "pessoal",
+        "damage": "ver_texto",
+        "duration": "SUSTENTADA",
+        "selos": false,
+        "chakraCost": "1, 3 ou 4 dependendo do modo"
+      },
+      "rules": {
+        "prerequisites": { "effects": ["lamina_de_raios"] },
+        "modes": {
+          "energizar": { "chakraCost": 3, "restriction": "armas_corte_e_perfuracao" },
+          "criar_projeteis": { "chakraCost": 1, "duration": "ate_proximo_turno" },
+          "criar_lamina": { "chakraCost": 4, "ignoresHardness": 1, "extensibleUpTo": "5m" }
+        }
+      },
+      "evolutions": [
+        {
+          "atLevel": 8,
+          "name": "Arma Elétrica Nv 8",
+          "description": "Qualquer arma comum que você bloqueie, ou que bloqueie um ataque seu, é imediatamente destruída. Exceto sob Energizar (com exceção de Energizar Doton). Nesse caso, seu ataque é Sucesso Automático."
+        }
+      ]
+    },
+    {
+      "code": "descarga",
+      "name": "Descarga",
+      "minLevel": 6,
+      "availableFor": ["raiton"],
+      "shortDescription": "Corrente elétrica em meia-esfera/círculo. Metade do dano comum. Vítima testa Vigor ou fica atordoada.",
+      "description": "Cria uma corrente elétrica e dispara ao seu redor, causando metade do dano comum do poder. Se causar qualquer dano, inimigo testa Vigor (Dif padrão -3). Falhando, fica atordoado até o final do próximo turno dele. Pode também concentrar a corrente em um único ataque projétil contra o inimigo, OU descarregá-la durante ataque corporal com Energizar-Raiton (ou Arma Elétrica: Energizar). Neste caso, Dif do Vigor aumenta em +1 e causa metade do dano comum do poder (desconsiderando dano do ataque corporal com Energizar). Se Descarga via Energizar = não requer selos de mão. Fonte: Livro Básico p. 110-111.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder_ou_toque",
+        "areaOfEffect": "meia_esfera_ou_circulo",
+        "damage": "metade_do_dano_comum",
+        "duration": "INSTANTANEA",
+        "chakraCost": "padrao_do_poder",
+        "rollType": "CD",
+        "type": "ataque_em_area"
+      },
+      "rules": {
+        "vigorOnHit": { "difficulty": "padrao -3", "failureCondition": "atordoado" },
+        "concentratedMode": {
+          "description": "Projétil único ou via Energizar-Raiton/Arma Elétrica",
+          "vigorDifficultyBonus": 1,
+          "noSelosIfViaEnergizar": true
+        }
+      },
+      "evolutions": []
+    }
+  ]
+}

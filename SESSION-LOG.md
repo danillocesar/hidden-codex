@@ -6,6 +6,46 @@
 
 ---
 
+## Seed Lote 4b — Efeitos exclusivos dos 5 elementos básicos (15:00, parte 5)
+
+Segunda onda do Lote 4. **+14 efeitos** (3 Suiton + 3 Doton + 1 Katon + 4 Fuuton + 3 Raiton). Total no banco: **32 efeitos** (18 do 4a + 14 do 4b).
+
+### Mudança
+
+- **Sem migration.** Shape de `PowerEffect` do 4a serve sem ajustes (`availableFor: string[]`, `rules Json?`, `evolutions Json` cobrem todos os casos do 4b).
+- **`prisma/seed.ts`**: única alteração foi adicionar os 5 novos arquivos em `EFFECT_FILES` na ordem do README, com comentários inline marcando os cross-element (Imergir, Inflamável).
+
+### Validação pós-seed
+
+Counts finais: 5 vilas · 5 KGs · 17 clãs · 19 poderes · **32 efeitos** · 20 perícias (idempotente — 2ª execução manteve counts).
+
+Spot-checks via psql:
+
+- **Névoa** — `availableFor: {suiton}`, `minLevel: 2`, `rules.prerequisites.aptitudes: ["lutar_as_cegas"]` ✓
+- **Imergir** — `availableFor: {doton, hyouton, suiton}` (3 poderes, cross-element) ✓
+- **Inflamável** — `availableFor: {katon, fuuton, suiton}` (3 poderes, cross via Guia Avançado) ✓
+- **Lâmina de Raios** — `availableFor: {raiton}`, `rules.prerequisites.attributes.esp: 8` ✓
+
+`pnpm lint` ✓ / `pnpm typecheck` ✓ / `pnpm test` 210/210 ✓.
+
+### Observações
+
+- **`_meta.powerNotes.blockedNinpouEffects`** de cada arquivo lista, por elemento, quais efeitos universais ficam bloqueados (Katon/Fuuton/Raiton imateriais não podem usar Algemar, Lança, etc.). Isto não vai pro banco — é metadado pro motor de regras consultar quando validar compras de efeito por poder (sessão dedicada futura).
+- **Parâmetros customizados por elemento** (alcance, tamanho, bônus de dano) **já estão modelados no `Power.stats`** do Lote 3 — não duplicar nos efeitos.
+- **Hyouton/Mokuton** herdam efeitos universais + dos elementos componentes (Suiton/Fuuton/Doton conforme regras de cada KG). Efeitos exclusivos das KGs (Espelhos Demoníacos, Soushinki) chegam na onda 4c.
+
+### Próximo passo
+
+**Aguardando ondas 4c, 4d, 4e:**
+
+- **4c** — KGs/Hijutsus complexos (Hyouton, Mokuton, Sabaku, Jiton, Yonbi Youton, Aoi Katon, Sanbi Suiton, Senjutsu, Hachimon). Arquivos já dropados em `prisma/seed-data/` pelo usuário; aguardando README/aprovação pra incluir em `EFFECT_FILES`.
+- **4d** — Poderes restritos de clã (Magen, Iryou, Fuuinjutsu, Rasengan, Kuchiyose, Juuken, Kagejutsu, Baika, Kikai, Shikakyu, Shintenshin). Também já dropados.
+- **4e** — Efeitos novos do Guia Avançado.
+
+Em paralelo, próxima sessão de produto pode ser **criação de personagem (F2.4 wizard)** — catálogos base já estão completos.
+
+---
+
 ## Seed Lote 4a — Efeitos universais de Ninpou (14:50, parte 4)
 
 Primeira onda do Lote 4. 18 efeitos universais (Canhão, Orbe, Criar Arma, Energizar, Raio, Restringente, Flechas, Ricochete, Barreira, Lança, Sopro Destrutivo, Coluna, Nuvem, Míssil, Onda Explosiva, Correnteza, Algemar, Meteoros) seedados.

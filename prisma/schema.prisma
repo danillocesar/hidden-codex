@@ -272,7 +272,9 @@ model Power {
 
   createdAt DateTime @default(now()) @map("created_at")
 
-  effects         PowerEffect[]
+  // PowerEffect virou entidade global (relação M:N via `effect.availableFor`),
+  // então não há mais um array `effects` aqui — queries usam where in/array
+  // contains. Ver `prisma/seed.ts` § seedPowerEffects.
   characterPowers CharacterPower[]
 
   @@map("powers")
@@ -290,21 +292,41 @@ enum PowerCategory {
   KEKKEI_GENKAI
 }
 
+/// Efeitos de poder (Ninpou universal + variantes por elemento + hijutsus).
+/// Cada efeito é uma entidade GLOBAL (não pertence a um poder único) — a
+/// relação com poderes é modelada via `availableFor` (lista de `Power.code`).
+/// Isto reflete a regra do livro: por exemplo, "Canhão" está disponível para
+/// Ninpou + todos os elementos + KGs elementais, com restrições próprias por
+/// poder modeladas dentro de `rules` ou implícitas no `availableFor`.
+///
+/// Seedado em ondas via `prisma/seed-data/effects-*.json`. Mantenha
+/// compatibilidade com o shape definido no README do Lote 4a.
 model PowerEffect {
-  id               String  @id @default(uuid()) @db.Uuid
-  powerId          String  @map("power_id") @db.Uuid
-  power            Power   @relation(fields: [powerId], references: [id], onDelete: Cascade)
-  code             String
+  id               String   @id @default(uuid()) @db.Uuid
+  code             String   @unique
   name             String
-  minLevel         Int     @map("min_level")
-  description      String  @db.Text
-  shortDescription String? @map("short_description")
+  /// Nível mínimo do poder para que o personagem possa comprar este efeito.
+  minLevel         Int      @map("min_level")
+  /// Códigos de `Power.code` que podem comprar este efeito (FK lógica, sem
+  /// constraint Prisma — segue o padrão de `Clan.village` / `CharacterPericia`).
+  availableFor     String[] @map("available_for")
+  shortDescription String?  @map("short_description")
+  description      String   @db.Text
 
-  stats Json
+  /// Stats numéricos/estruturais (action, range, target, damage, duration,
+  /// rollType, chakraCost, etc.). Shape detalhado no README do Lote 4a.
+  stats      Json
+  /// Regras específicas do efeito (ex.: `halfChakraOption` no Canhão,
+  /// `weaponTypes` em Criar Arma). Opcional.
+  rules      Json?
+  /// Lista de evoluções `[{ atLevel, name, description }]`. Não-skippable:
+  /// pra usar a evolução N o personagem deve ter passado pelos níveis
+  /// anteriores. Validação no motor (próxima fase).
+  evolutions Json  @default("[]")
 
-  tags String[] @default([])
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@unique([powerId, code])
   @@map("power_effects")
 }
 

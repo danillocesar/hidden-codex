@@ -1,0 +1,37 @@
+/**
+ * Design tokens — Arcana Forge (dark+ice theme)
+ *
+ * Fonte de verdade visual: arcana-forge-spec/reference/satsuki-ficha-reference.html
+ * Documentação: arcana-forge-spec/08-VISUAL-REFERENCE.md
+ *
+ * Branco puro (#fff) é PROIBIDO em texto. Use --ink ou --ink-muted.
+ * Cores hardcoded em components são code smell — sempre referencie estas vars.
+ */
+
+:root {
+  /* ── Surfaces ───────────────────────────────────────── */
+  --bg-deep: #0a0b0e;
+  --bg-paper: #14161c;
+  --bg-card: #1a1d25;
+  --bg-card-2: #1f2330;
+
+  /* ── Ink (text) ─────────────────────────────────────── */
+  --ink: #e8e4dc;
+  --ink-muted: #8a8b94;
+  --ink-faint: #4a4d57;
+
+  /* ── Ice accents ────────────────────────────────────── */
+  --ice: #9bb8d1;
+  --ice-bright: #c8dcea;
+  --ice-deep: #5b7a96;
+
+  /* ── Chromatic touch (selo 忍) ──────────────────────── */
+  --seal: #8a1f1f;
+
+  /* ── Borders ────────────────────────────────────────── */
+  --border: rgba(155, 184, 209, 0.15);
+  --border-strong: rgba(155, 184, 209, 0.4);
+
+  /* ── Shadows ────────────────────────────────────────── */
+  --shadow-hero: 0 30px 80px -20px rgba(0, 0, 0, 0.8);
+}

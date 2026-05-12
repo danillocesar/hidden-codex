@@ -1,0 +1,49 @@
+@import '../styles/tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    background-color: var(--bg-deep);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: var(--font-eb-garamond), Georgia, serif;
+    font-feature-settings: 'liga' 1, 'kern' 1;
+  }
+
+  /* Selecionado em alto contraste, mas dentro da paleta */
+  ::selection {
+    background-color: var(--ice-deep);
+    color: var(--ink);
+  }
+
+  /* Foco visível mas sutil — usa accent ice */
+  :focus-visible {
+    outline: 1px solid var(--ice);
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  /**
+   * Camada atmosférica fixa (08-VISUAL-REFERENCE §"Efeitos visuais críticos" #1).
+   * Aplicada em ficha quando há imagem de fundo. Mantém sutileza no scroll.
+   */
+  .atmosphere-layer {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.08;
+    filter: grayscale(1) blur(2px);
+    pointer-events: none;
+  }
+}

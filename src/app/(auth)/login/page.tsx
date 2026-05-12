@@ -1,13 +1,13 @@
 import Link from 'next/link';
+import { Suspense } from 'react';
+import { LoginButton } from '@/components/auth/LoginButton';
 
 /**
- * Placeholder estilizado de login. O fluxo OAuth com Firebase entra em F1:
- *   - Server Action `signInWithGoogle` (cliente abre popup, troca ID token)
- *   - Route handler `POST /api/auth/session` cria session cookie e upsert do User
- *   - Middleware protege `(app)/*` checando o cookie
+ * Tela de login. O middleware redireciona direto pra `/dashboard` quando já há
+ * cookie de sessão, então essa tela só é renderizada para visitantes anônimos.
  *
- * Por enquanto a página existe para que o link no home não quebre e para
- * confirmar que a estética dark+ice está aplicada nos layouts internos.
+ * `LoginButton` é client component — usa Firebase Client SDK pra abrir o popup
+ * do Google e Server Action `loginWithGoogle` pra criar a sessão.
  */
 export default function LoginPage() {
   return (
@@ -20,18 +20,14 @@ export default function LoginPage() {
           Entre na <span className="italic text-ice-bright">Forja</span>
         </h1>
         <p className="mt-6 font-body text-sm leading-relaxed text-ink-muted">
-          O login com Google será habilitado na Fase F1.
-          <br />
-          Até lá a Forja segue em preparação.
+          Use sua conta Google. A sessão dura 7 dias.
         </p>
 
-        <button
-          type="button"
-          disabled
-          className="mt-8 w-full cursor-not-allowed border border-border bg-bg-card-2 px-6 py-3 font-display text-xs uppercase tracking-[0.3em] text-ink-faint"
-        >
-          Entrar com Google
-        </button>
+        <div className="mt-8">
+          <Suspense fallback={null}>
+            <LoginButton />
+          </Suspense>
+        </div>
 
         <Link
           href="/"

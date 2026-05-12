@@ -6,6 +6,102 @@
 
 ---
 
+## Seed Lote 4e — Efeitos novos do Guia Avançado (15:55, parte 8) ✅ LOTE 4 COMPLETO
+
+Última onda do Lote 4. **+7 efeitos** do Guia Avançado do Shinobi (GAS p. 48-51, 55-56). Total no banco: **138 efeitos** (131 + 7).
+
+### Efeitos adicionados
+
+| Code | Nv | Tipo |
+|---|:-:|---|
+| `dano_continuo` | 2 | projétil DoT — dano fixo por turno |
+| `deslocamento_de_vacuo` | 2 | suporte de mobilidade |
+| `purificar` | 2 | ambiente |
+| `repelir` | 2 | reação defensiva (3 triggers) |
+| `projetar` | 3 | projétil desloca alvo |
+| `cegante` | 5 | aplica camuflagem no INIMIGO |
+| `desastre` | 9 | concentração épica, 1x/cena |
+
+### Mudança
+
+- **Sem migration.** Shape do `PowerEffect` continua atendendo.
+- **`prisma/seed.ts`**: `effects-guia-avancado.json` adicionado em `EFFECT_FILES`.
+
+### Validação pós-seed
+
+Counts finais: 5 vilas · 5 KGs · 17 clãs · 19 poderes · **138 efeitos** · 20 perícias (idempotente).
+
+Spot-checks via psql:
+
+- **Dano Contínuo** — 12 poderes em `availableFor`, `rules.damagePerTurn: "nivel_do_poder"` ✓
+- **Repelir** — `rules.reactive: true`, `rules.triggers` com 3 itens ✓
+- **Desastre** — `minLevel: 9`, `rules.oncePerScene: true` ✓
+
+`pnpm lint` ✓ / `pnpm typecheck` ✓ / `pnpm test` 210/210 ✓.
+
+### Achados desta onda
+
+**1. 13 poderes não modelados (em `_meta.unmodeledPowers` do JSON):**
+
+`kamijutsu, kujaku_myoho, sumi_ninpou, kumo_ninpou, hebi_ninpou, ototon, kibaku_nendo, futton_mei, youton_mei, shakuton, shouton, ranton, dokujutsu`
+
+São poderes regionais/especiais do Guia Avançado que ainda não foram catalogados em `powers`. Os efeitos 4e referenciam esses códigos em `availableFor`, mas como é FK lógica sem constraint, o seed aceita — vínculo automático quando o catálogo de poderes for ampliado.
+
+**2. Mapa total de power_codes órfãos no banco hoje:**
+
+21 códigos referenciados em `power_effects.available_for` mas ausentes em `powers`:
+
+| Grupo | Códigos órfãos |
+|---|---|
+| **Lote 4c** (esperando `powers-additional.json`) | `aoi_katon, hachimon_tonkou, jiton, sabaku_hijutsu, sanbi_suiton, senjutsu, yonbi_youton` (7) |
+| **Lote 4d** (typo no JSON) | `shindenshin` (deveria ser `shintenshin`) (1) |
+| **Lote 4e** (`_meta.unmodeledPowers`) | `dokujutsu, futton_mei, hebi_ninpou, kamijutsu, kibaku_nendo, kujaku_myoho, kumo_ninpou, ototon, ranton, shakuton, shouton, sumi_ninpou, youton_mei` (13) |
+| **Total** | **21** |
+
+**3. Revisões do GAS aos efeitos antigos PENDENTES (não aplicadas):**
+
+O Guia Avançado revisa alguns efeitos do Lote 4a com nuances adicionais:
+- **Orbe Nv 7** — versão revisada
+- **Onda Explosiva Nv 8** — versão revisada
+- **Lança** — passa a ignorar 3 de dureza (em vez de 2)
+
+Estas NÃO foram aplicadas nesta sessão (conforme limite do prompt). Vão entrar numa migration/sessão de revisão dedicada quando o usuário priorizar.
+
+### 🎯 LOTE 4 (Efeitos) está COMPLETO
+
+138 efeitos totais distribuídos entre:
+
+| Onda | Conteúdo | Efeitos |
+|:-:|---|:-:|
+| 4a | Universais de Ninpou | 18 |
+| 4b | 5 elementos básicos | 14 |
+| 4c | KGs/Hijutsus complexos | 33 |
+| 4d | Poderes restritos de clã/genjutsu/cura/selo | 66 |
+| 4e | Guia Avançado | 7 |
+| **Total** | | **138** |
+
+### Próximo passo
+
+**Lote 5 — Aptidões (~80 entradas).** Categorias esperadas:
+
+- **Comuns** (Ataque Poderoso, Ambidestria, Esquiva Total, Reflexos, Velocista, etc.)
+- **de Combate** (Especialista, Maestria, Lutar às Cegas, Ataque em Movimento, etc.)
+- **de Manobra** (Derrubar Agressivo, Desarmar Agressivo, etc.)
+- **Restritas** (Byakugan, Sharingan, Tenketsu Byakugan, Mangekyou, Hakken no Jutsu, Companheiro Animal, Corpulência, Resiliência, Kikaichuu, Acuidade, Maximizar, etc.)
+
+O Lote 5 destrava os **dezenas de pré-requisitos `aptitudes: [...]`** espalhados pelos efeitos 4a-4e (Espelhos Demoníacos exige `ataque_em_movimento`, Hell Stab exige `armadura_de_raios`, Manto de Lava exige aptidão energizar, Mushi Bunshin exige `clone`+`kikaichuu`, Juujin Bunshin exige `companheiro_animal`, etc.).
+
+Após Lote 5, sessão dedicada de **validações no motor** consolida tudo:
+- `availableFor` na compra de efeito por personagem
+- evoluções não-skippable
+- pré-reqs cruzados (Imergir → Espelhos Demoníacos; Energizar → Manto de Lava; etc.)
+- `blockedNinpouEffects` por elemento (Katon/Fuuton/Raiton imateriais)
+- Pré-reqs de aptidões (Mushi Bunshin, Hell Stab, etc.) — destravado pelo Lote 5
+
+Em paralelo, **criação de personagem (F2.4 wizard)** segue viável com os catálogos atuais.
+
+---
+
 ## Seed Lote 4d — Poderes restritos de clã e Hijutsus de Genjutsu/Cura/Selo (15:50, parte 7)
 
 Quarta onda do Lote 4. **+66 efeitos** (16 Magen + 4 Iryou + 10 Fuuinjutsu + 4 Rasengan + 2 Kuchiyose + 8 Juuken + 5 Kagejutsu + 4 Baika + 4 Kikai + 6 Shikakyu + 3 Shintenshin). Total no banco: **131 efeitos** (65 + 66).

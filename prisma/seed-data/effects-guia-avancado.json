@@ -1,0 +1,312 @@
+{
+  "_meta": {
+    "description": "Efeitos novos do Guia Avançado do Shinobi (GAS) — adições à lista padrão de efeitos universais de Ninpou. Lista oficial de novos: Dano Contínuo (Nv 2), Deslocamento de Vácuo (Nv 2), Purificar (Nv 2), Repelir (Nv 2), Projetar (Nv 3), Cegante (Nv 5), Desastre (Nv 9). Cada um com lista própria de poderes compatíveis. Inclui pré-reqs e variações regional de algumas poderes restritos do Guia (Kamijutsu, Sumi, Kumo, Hebi, Ototon etc.) que aparecem na disponibilidade — esses ainda NÃO foram modelados no catálogo de poderes mas ficam pré-cadastrados aqui.",
+    "sources": [
+      "Guia Avançado do Shinobi p. 48-51 + p. 55-56 (Revisões e Novos Efeitos Ninpou)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "unmodeledPowers": [
+      "kamijutsu",
+      "kujaku_myoho",
+      "sumi_ninpou",
+      "kumo_ninpou",
+      "hebi_ninpou",
+      "ototon",
+      "kibaku_nendo",
+      "futton_mei",
+      "youton_mei",
+      "shakuton",
+      "shouton",
+      "ranton",
+      "dokujutsu"
+    ]
+  },
+  "data": [
+    {
+      "code": "dano_continuo",
+      "name": "Dano Contínuo",
+      "minLevel": 2,
+      "availableFor": [
+        "katon",
+        "raiton",
+        "kikai_ninpou",
+        "mokuton",
+        "dokujutsu",
+        "hyouton",
+        "hebi_ninpou",
+        "ototon",
+        "futton_mei",
+        "youton_mei",
+        "shakuton",
+        "shouton"
+      ],
+      "shortDescription": "Projétil cria ferimentos contínuos (fogo/eletricidade/etc.). Dano fixo = nível por turno. Vigor pra remover ou 3 turnos.",
+      "description": "Atira projétil pra criar condição de ferimentos contínuos no alvo — atear fogo com Katon, carga elétrica com Raiton, etc. Se acerta, vítima sofre dano fixo igual ao nível do poder imediatamente E a partir do segundo turno. Dura até que retire a condição (ex: se jogar na água contra Katon) — ação completa + teste Vigor (Dif comum -3) OU passem 3 turnos (vítima sofre 3 danos no total). Pré-req: nenhum específico além do poder. Fonte: GAS p. 48.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "target": "uma_criatura",
+        "damage": "nivel_do_poder (fixo, por turno)",
+        "duration": "INSTANTANEA (efeito persiste por 3 turnos)",
+        "chakraCost": "nivel_usado",
+        "type": "projetil"
+      },
+      "rules": {
+        "damagePerTurn": "nivel_do_poder",
+        "totalTurns": 3,
+        "removalOptions": {
+          "vigorTest": "Dif comum -3 (acao completa)",
+          "automaticAfter": "3 turnos"
+        }
+      },
+      "evolutions": [
+        {
+          "atLevel": 7,
+          "name": "Dano Contínuo Nv 7",
+          "description": "Duração máxima sobe pra 5 turnos. Dif do teste passa a ser comum (não -3). Sem teste, fogo só se extingue se vítima passar 1 turno completo submersa em água/substância anuladora (Katon) ou carga elétrica seja retirada (Raiton)."
+        }
+      ]
+    },
+    {
+      "code": "deslocamento_de_vacuo",
+      "name": "Deslocamento de Vácuo",
+      "minLevel": 2,
+      "availableFor": [
+        "doton",
+        "fuuton",
+        "suiton",
+        "mokuton",
+        "hyouton",
+        "jiton",
+        "shouton"
+      ],
+      "shortDescription": "Manipula elemento ambiente. +Esp/2 desloc até início próximo turno. Requer estar envolto no elemento.",
+      "description": "Manipula o elemento à volta pra diminuir resistência atmosférica ou ajudar movimento. Alvo ganha bônus no deslocamento = ceil(Esp/2) até início do próximo turno. Pra usar é necessário estar envolto pelo seu elemento: padrão Fuuton (ar), Suiton (nado debaixo d'água), Doton (deslizando pelo solo). Pré-req: nenhum específico. Fonte: GAS p. 48-49.",
+      "stats": {
+        "action": "PARCIAL",
+        "range": "comum_do_poder",
+        "target": "uma_criatura",
+        "duration": "1_rodada",
+        "chakraCost": 2
+      },
+      "rules": {
+        "displacementBonus": "ceil(esp/2)",
+        "requiresEnvelopedByElement": true,
+        "envelopBy": { "fuuton": "ar", "suiton": "água", "doton": "solo" }
+      },
+      "evolutions": [
+        {
+          "atLevel": 7,
+          "name": "Deslocamento de Vácuo Nv 7",
+          "description": "Número de alvos sobe pra até 5 (que desejem receber benefício). Custo sobe pra 3, pago uma única vez pra todos."
+        }
+      ]
+    },
+    {
+      "code": "projetar",
+      "name": "Projetar",
+      "minLevel": 3,
+      "availableFor": [
+        "ninpou",
+        "doton",
+        "fuuton",
+        "suiton",
+        "mokuton",
+        "hyouton",
+        "kamijutsu",
+        "kujaku_myoho",
+        "kumo_ninpou",
+        "hebi_ninpou",
+        "ototon",
+        "jiton",
+        "kibaku_nendo",
+        "futton_mei",
+        "shouton"
+      ],
+      "shortDescription": "Projétil que desloca alvo metros em qualquer direção. NÃO derruba. Vigor pra resistir.",
+      "description": "Acerta inimigo com projétil. Alvo testa Vigor (Dif comum -2) ou é deslocado em linha reta uma quantidade de metros igual ao grau de dano causado, em qualquer direção/sentido. NÃO derruba. Fonte: GAS p. 49.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "meio_comum_do_poder",
+        "target": "uma_criatura",
+        "damage": "comum_do_poder -1",
+        "duration": "INSTANTANEA",
+        "chakraCost": "nivel_usado",
+        "type": "projetil"
+      },
+      "rules": {
+        "vigorTest": "Dif comum -2",
+        "displacementFormula": "metros = grau de dano",
+        "noKnockdown": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 7,
+          "name": "Projetar Nv 7",
+          "description": "Não pode mais ser bloqueada. Dano sobe pra comum do poder. Deslocamento = metade do tamanho comum do poder. Falha crítica no Vigor = alvo Caído."
+        }
+      ]
+    },
+    {
+      "code": "purificar",
+      "name": "Purificar",
+      "minLevel": 2,
+      "availableFor": [
+        "fuuton",
+        "suiton",
+        "kikai_ninpou",
+        "dokujutsu",
+        "kumo_ninpou",
+        "hebi_ninpou"
+      ],
+      "shortDescription": "Purifica área de veneno/impureza/substância. Pra venenos: nível x2 > Venefício do produtor.",
+      "description": "Purifica área do seu elemento de veneno, impureza ou substância perigosa. Pra que funcione, nível usado precisa ser forte o bastante. Casos mundanos: critério do Mestre. Se a substância é de um poder, nível usado precisa ser MAIOR que o efeito no ambiente (ex: Purificar Nv 7 vs Dokujutsu Nv 6). Pra venenos: nível usado x2 > Venefício do produtor. Empate (Purificar Nv 4 vs Nuvem Nv 4): teste de Espírito contra dif da substância. Sem dif explícita: usa dif comum do poder que criou ou definida pelo Mestre. Fonte: GAS p. 49-50.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "areaOfEffect": "circulo_diametro_comum_do_poder",
+        "target": "ambiente",
+        "duration": "INSTANTANEA",
+        "chakraCost": "nivel_usado"
+      },
+      "rules": {
+        "powerCompareRule": "nivel_purificar > nivel_efeito_alvo",
+        "venomFormula": "nivel_purificar x2 > venefico_produtor",
+        "tieBreakTest": "espirito_vs_dif_substancia"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "repelir",
+      "name": "Repelir",
+      "minLevel": 2,
+      "availableFor": [
+        "ninpou",
+        "doton",
+        "fuuton",
+        "suiton",
+        "mokuton",
+        "kikai_ninpou",
+        "hyouton",
+        "kamijutsu",
+        "kujaku_myoho",
+        "sumi_ninpou",
+        "kumo_ninpou",
+        "hebi_ninpou",
+        "ototon",
+        "jiton",
+        "kibaku_nendo",
+        "shouton"
+      ],
+      "shortDescription": "Reativa a projétil/toque/golpe. LM +1 cria proteção dureza comum. Repele adjacentes 1m.",
+      "description": "Repele ataque inimigo. Reativa a ataque de projétil (técnica ou arma), técnica de toque ou Golpear — contra você ou alguém no alcance comum do poder. Teste LM com +1 precisão; custo pago antes do teste. Cria proteção instantânea de Dureza Comum do Poder pra absorver o ataque, desfaz instantaneamente. Se absorve completamente: repele todos adjacentes 1m pra trás. Se dureza destruída: ataque atravessa, causa dano remanescente, ninguém repelido. Se você é o alvo da técnica de toque/golpear (inimigo adjacente): precisa teste de concentração pra executar. Pré-req: nenhum específico. Fonte: GAS p. 50.",
+      "stats": {
+        "action": "MOVIMENTO",
+        "range": "comum_do_poder",
+        "duration": "INSTANTANEA",
+        "chakraCost": "nivel_usado",
+        "rollType": "LM"
+      },
+      "rules": {
+        "reactive": true,
+        "triggers": ["projetil", "toque", "golpear"],
+        "lmBonus": 1,
+        "protectionHardness": "comum_do_poder",
+        "repelAdjacentDistance": "1m",
+        "concentrationTestIfAdjacent": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 7,
+          "name": "Repelir Nv 7",
+          "description": "Após uso inicial, usos subsequentes até início do próximo turno = ação livre + metade do custo. NÃO precisa mais de teste de concentração com inimigos adjacentes."
+        }
+      ]
+    },
+    {
+      "code": "cegante",
+      "name": "Cegante",
+      "minLevel": 5,
+      "availableFor": [
+        "ninpou",
+        "doton",
+        "fuuton",
+        "suiton",
+        "kikai_ninpou",
+        "mokuton",
+        "hyouton",
+        "kamijutsu",
+        "sumi_ninpou",
+        "kumo_ninpou",
+        "hebi_ninpou",
+        "futton_mei",
+        "ranton",
+        "shouton"
+      ],
+      "shortDescription": "Projétil mirando rosto. Dano + camuflagem parcial até limpar ou 3 turnos.",
+      "description": "Dispara projétil mirando especificamente o rosto do alvo. Além de causar dano, leva à perda de visão — golpe de lama, líquido ardente, lufada de poeira, etc. Se acerta, vítima sofre penalidades de camuflagem parcial até que limpe o rosto OU passe 3 turnos, o que ocorrer primeiro. Pra limpar: ação padrão sem teste OU ação de movimento + teste Força ou Destreza (Dif comum do poder). Fonte: GAS p. 51-52.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "meio_comum_do_poder",
+        "target": "uma_criatura",
+        "damage": "comum_do_poder",
+        "duration": "INSTANTANEA (camuflagem até 3 turnos)",
+        "chakraCost": "nivel_usado",
+        "type": "projetil"
+      },
+      "rules": {
+        "appliesCondition": "camuflagem_parcial_no_inimigo",
+        "maxTurns": 3,
+        "cleanOptions": {
+          "action_padrao": "sem teste",
+          "action_movimento": "for_ou_des Dif comum"
+        }
+      },
+      "evolutions": [
+        {
+          "atLevel": 8,
+          "name": "Cegante Nv 8",
+          "description": "Vítima passa a sofrer penalidades de camuflagem total. Tempo automático sobe pra 5 turnos."
+        }
+      ]
+    },
+    {
+      "code": "desastre",
+      "name": "Desastre",
+      "minLevel": 9,
+      "availableFor": [
+        "ninpou",
+        "doton",
+        "fuuton",
+        "raiton",
+        "suiton",
+        "hyouton",
+        "jiton",
+        "yonbi_youton"
+      ],
+      "shortDescription": "Desastre natural (tempestade/furacão/terremoto). Área 3x. Dano 3x nível. Concentração. 1x por cena.",
+      "description": "Canaliza chakra no ambiente pra causar desastre natural e manipular seus efeitos por longos períodos. Pode ser tempestade de raios, furacão, tempestade de areia, deslizamento, terremoto, maremoto, etc. Epicentro até 2x distância comum do poder. Área 3x comum do poder. Dano 3x nível do poder. NÃO pode usar nível do poder como parâmetro de tamanho. Duração: concentração até turnos = Concentração. Todos na área (exceto você) ficam Lentos e, no início de seus turnos, sofrem ataque de CD do usuário (representando o desastre). Estruturas/construções sofrem dano no início do turno de cada pessoa — pessoas podem ser afetadas pela destruição, mas não como ataque direto contra alvo específico. Pra proteger alguém: como ação livre no início do turno daquela pessoa, teste de Concentração (Dif 2x Nível + 9) — sucesso = não é atacada. Se concentração for interrompida (voluntária ou não), técnica fica ativa por mais 1 rodada completa, mas sem direito a proteger. NÃO pode usar mais de 1x por cena. NÃO pode usar aptidões de técnica com Desastre. Fonte: GAS p. 55-56.",
+      "stats": {
+        "action": "CONCENTRACAO",
+        "range": "epicentro_ate_2x_comum",
+        "areaOfEffect": "area_3x_comum_do_poder",
+        "damage": "3x nivel do poder",
+        "duration": "concentracao_ate_turnos_igual_concentracao",
+        "chakraCost": "3x nivel do poder"
+      },
+      "rules": {
+        "noPowerLevelAsSizeParam": true,
+        "appliesCondition": "lento",
+        "perTurnAttack": "CD do usuario representando o desastre",
+        "structuresDamaged": true,
+        "protectionTest": "concentracao_vs_2x_nivel_poder_mais_9",
+        "interruptedDuration": "1 rodada completa adicional sem protecao",
+        "oncePerScene": true,
+        "noAptidoesDeTecnica": true,
+        "examples": ["tempestade_de_raios", "furacao", "tempestade_de_areia", "deslizamento", "terremoto", "maremoto"]
+      },
+      "evolutions": []
+    }
+  ]
+}

@@ -263,7 +263,12 @@ const EFFECT_FILES: ReadonlyArray<string> = [
   'effects-kikai.json', // 4: Mushi Bunshin, Mushi Kame, Mushidama, Senro
   'effects-shikakyu.json', // 6: Shikakyu Nv1, Juujin Bunshin, Gatsuuga, ...
   'effects-shintenshin.json', // 3: Shintenshin, Shinten Bunshin, Shinranshin
-  // Próxima onda (4e — Guia Avançado) entra aqui.
+  // 4e — efeitos novos do Guia Avançado do Shinobi (GAS p. 48-51, 55-56).
+  // Fecha o Lote 4. Vários `availableFor` apontam pra poderes ainda não
+  // modelados (kamijutsu, sumi_ninpou, hebi_ninpou, futton_mei, etc.) —
+  // listados em `_meta.unmodeledPowers` do JSON. FK lógica aceita; vínculo
+  // automático quando esses poderes entrarem no catálogo.
+  'effects-guia-avancado.json', // 7: Dano Contínuo, Deslocamento de Vácuo, Purificar, Repelir, Projetar, Cegante, Desastre
 ];
 
 async function seedPowerEffects(): Promise<void> {

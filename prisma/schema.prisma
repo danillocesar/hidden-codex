@@ -50,12 +50,16 @@ model Character {
   size          CharacterSize @default(MEDIUM)
 
   // Referencial (FK opcionais para catálogos)
-  clanId         String?       @map("clan_id") @db.Uuid
-  clan           Clan?         @relation(fields: [clanId], references: [id])
-  villageId      String?       @map("village_id") @db.Uuid
-  village        Village?      @relation(fields: [villageId], references: [id])
-  kekkeiGenkaiId String?       @map("kekkei_genkai_id") @db.Uuid
-  kekkeiGenkai   KekkeiGenkai? @relation(fields: [kekkeiGenkaiId], references: [id])
+  clanId            String?       @map("clan_id") @db.Uuid
+  clan              Clan?         @relation(fields: [clanId], references: [id])
+  villageId         String?       @map("village_id") @db.Uuid
+  village           Village?      @relation(fields: [villageId], references: [id])
+  // Vila customizada (texto livre) — usada quando o personagem é de uma vila
+  // não-canônica. Excludente com `villageId` na UI, mas o banco permite ambos
+  // para flexibilidade (validação fica no domínio).
+  customVillageName String?       @map("custom_village_name")
+  kekkeiGenkaiId    String?       @map("kekkei_genkai_id") @db.Uuid
+  kekkeiGenkai      KekkeiGenkai? @relation(fields: [kekkeiGenkaiId], references: [id])
 
   // Atributos primários (7)
   attrFor Int @default(1) @map("attr_for")
@@ -131,8 +135,41 @@ enum CharacterSize {
 }
 
 // ══════════════════════════════════════════════════════════════════════
-// PERÍCIAS (associativa Character ↔ Pericia hardcoded no domínio)
+// PERÍCIAS
+// ──────────────────────────────────────────────────────────────────────
+// Catálogo seedado a partir de `prisma/seed-data/pericias.json` (20 entradas
+// do Livro Básico 4.1b). Não há FK Prisma entre `CharacterPericia.periciaCode`
+// e `Pericia.code` por decisão da spec (03-DATA-MODEL.md §"Por que perícias têm
+// periciaCode string em vez de FK?"): a lista é fechada e o domínio garante
+// consistência. A tabela serve para UI/admin lookups e source-of-truth do seed.
 // ══════════════════════════════════════════════════════════════════════
+
+model Pericia {
+  id               String  @id @default(uuid()) @db.Uuid
+  code             String  @unique
+  name             String
+  /// Atributo ligado. Aceita os 7 primários (`for`, `des`, `agi`, `per`, `int`,
+  /// `vig`, `esp`) e também atributos sociais (`car` — Obter Informação).
+  /// Não é enum porque a regra do livro permite extensão futura.
+  attribute        String
+  /// `true` quando a perícia é marcada com [x] no livro — não pode ser usada
+  /// sem ao menos 1 ponto investido.
+  trained          Boolean @default(false)
+  /// `true` quando marcada com [x][x] — requer aptidão especial para comprar
+  /// (ex.: Venefício requer Químico).
+  doubleTrained    Boolean @default(false) @map("double_trained")
+  /// Acrobacia, Atletismo e Furtividade sofrem penalidade quando o
+  /// personagem usa armadura.
+  armorPenalty     Boolean @default(false) @map("armor_penalty")
+  /// Ordem de exibição na ficha (1..20).
+  order            Int
+  shortDescription String? @map("short_description")
+  description      String  @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("pericias")
+}
 
 model CharacterPericia {
   id          String    @id @default(uuid()) @db.Uuid
@@ -357,10 +394,20 @@ model Village {
   id               String  @id @default(uuid()) @db.Uuid
   code             String  @unique
   name             String
+  /// Nome completo em romaji (ex.: "Konohagakure no Sato").
   fullName         String? @map("full_name")
+  /// Tradução em português (ex.: "Vila Oculta da Folha").
+  translation      String?
+  /// País onde a vila está localizada (ex.: "País do Fogo").
+  country          String?
+  /// Título do líder (ex.: "Hokage", "Kazekage").
+  leaderTitle      String? @map("leader_title")
   description      String  @db.Text
   shortDescription String? @map("short_description")
 
+  /// Estrutura livre — ver `arcana-forge-spec/03-DATA-MODEL.md`. Inclui pelo
+  /// menos `freeAptitudes`; opcionalmente `iconography`, `tendencies`,
+  /// `associatedClans`.
   benefits Json @default("{}")
 
   createdAt  DateTime    @default(now()) @map("created_at")

@@ -16,18 +16,41 @@ export type CCOptions = {
 };
 
 /**
- * Armas finesse: aceitam Acuidade mesmo fora das categorias "leve" e
- * "arremesso". Inclui katana e variantes Daisho (wakizashi, tanto), espadas
- * curtas e perfurantes leves. Tratado como conjunto fechado pelo motor —
- * armas custom não estão aqui (ficam regidas pela categoria).
+ * Armas com permissão EXPLÍCITA do Livro Básico 4.1b para receber o benefício
+ * da aptidão Acuidade — ALÉM das armas de categoria "leve", que recebem
+ * automaticamente pela própria definição da categoria (Livro Básico, cap.
+ * Equipamentos: "Toda arma leve pode receber o benefício da aptidão Acuidade").
+ *
+ * A lista abaixo é taxativa: vem de cada entrada de arma do livro que carrega
+ * a frase "A aptidão Acuidade se aplica a X". Inferência por similaridade
+ * (ex.: tanto, rapier) **NÃO** é RAW e está fora.
+ *
+ * Páginas de origem aproximadas (Livro Básico 4.1b):
+ *   - Aian Nakkuru, Bastão, Chicote, Chokutō, Florete, Katana, Leque Gigante,
+ *     Ninja-Tō, Wakizashi → capítulo Equipamentos (p. ~130-135)
+ *   - Espada de Chakra Branco → capítulo Aptidões Especiais (p. ~160)
+ *   - Braço de Chakra → poder ninpou específico (p. ~220)
+ *
+ * Quando o seed de equipments (F2.3) entregar a tabela `equipments`, mover
+ * essa lista para uma flag `acceptsAcuidade: boolean` no JSONB do equipment e
+ * remover daqui — o motor passa a consultar o equipamento em vez de um set
+ * estático. Até lá, código nominal serve como única fonte de verdade local.
+ *
+ * Daisho rule (Especialista (Katana) também aplica em Wakizashi) é tratada
+ * separadamente abaixo, não nesta lista.
  */
-const ACUIDADE_ELIGIBLE_KINDS: ReadonlySet<string> = new Set([
-  'katana',
-  'wakizashi',
-  'tanto',
-  'rapier',
+const ACUIDADE_NAMED_WEAPONS: ReadonlySet<string> = new Set([
+  'aian_nakkuru',
+  'bastao',
+  'chicote', // mediana
+  'chokuto', // longa
   'florete',
-  'kunai',
+  'katana', // mediana
+  'leque_gigante', // longa
+  'ninja_to',
+  'wakizashi',
+  'espada_chakra_branco',
+  'braco_chakra',
 ]);
 
 /**
@@ -43,16 +66,18 @@ export function calculateCC(input: CombatSkillInput, opts: CCOptions = {}): numb
   const { weaponCategory, weaponKind } = opts;
 
   const hasAcuidade = aptitudeCodes.includes('acuidade');
-  // Acuidade aceita:
-  //   - sem opts (assume leve no editor)
-  //   - categoria leve ou arremesso
-  //   - armas finesse específicas (katana, wakizashi, tanto, ...) independente
-  //     da categoria — Livro Básico marca essas como finesse.
+  // RAW (Livro Básico 4.1b, aptidão Acuidade):
+  //   - Toda arma de categoria "leve" recebe Acuidade automaticamente.
+  //   - Armas além de leve só recebem se o texto da arma disser explicitamente
+  //     ("A aptidão Acuidade se aplica a X") — codificado em ACUIDADE_NAMED_WEAPONS.
+  //   - Sem opts assumimos a default do editor (arma leve genérica).
+  // "Arremesso" como categoria-blanket NÃO é RAW: o livro fala apenas em
+  // "armas de arremesso que podem ser usadas no corpo-a-corpo (como kunai)",
+  // que devem ser marcadas como leves no equipment.
   const allowsAcuidade =
     weaponCategory == null ||
     weaponCategory === 'leve' ||
-    weaponCategory === 'arremesso' ||
-    (weaponKind != null && ACUIDADE_ELIGIBLE_KINDS.has(weaponKind));
+    (weaponKind != null && ACUIDADE_NAMED_WEAPONS.has(weaponKind));
 
   const attribute = hasAcuidade && allowsAcuidade ? attributes.des : attributes.for;
 

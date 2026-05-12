@@ -24,6 +24,34 @@
 - 01:29 — Validação final: `pnpm typecheck` ✓, `pnpm lint` ✓ (zero warnings), `pnpm build` ✓ (após mover `themeColor` para export viewport — deprecated em metadata no Next 14.2), `pnpm test:coverage` ✓.
 - 01:32 — 6 commits feitos em ordem lógica: bootstrap → theme → db → domain → tests → auth/storage/pages. SESSION-LOG e README pendentes no commit final de docs.
 
+## CORREÇÃO: Acuidade implementada conforme RAW (pós-revisão humana)
+
+Após review, foi identificado que minha implementação inicial inventou um conjunto "finesse" de armas (`tanto`, `rapier`, `katana`, `wakizashi`, `florete`, `kunai`) — isto não é RAW. Consultei `books/Naruto ''Shinobi no Sho'' - Livro Básico - 4.1.b.pdf` via `pdftotext` e localizei a definição canônica:
+
+> ACUIDADE (cap. Aptidões, p. ~60). Pré-req: Destreza 3. Benefício: Você é capaz de utilizar sua Destreza para calcular seu nível de Combate Corporal. Ataques: Esta aptidão somente pode ser usada para: ataques desarmados, técnicas com alcance de toque, **armas leves** e **qualquer outra arma na qual o texto diga que esta aptidão é aplicável**. Também pode ser usada para armas de arremesso que podem ser usadas no corpo-a-corpo (como kunai). Dano: O dano do ataque não é alterado por esta aptidão.
+
+Regra RAW resumida em dois eixos:
+
+1. **Categoria `leve`** → recebe Acuidade automaticamente (definição da própria categoria, cap. Equipamentos: "Toda arma leve pode receber o benefício da aptidão Acuidade").
+2. **Demais categorias** → só com permissão **explícita** no texto da arma ("A aptidão Acuidade se aplica a X"). Buscando essa frase no PDF: Aian Nakkuru, Bastão, Chicote (mediana), Chokutō (longa), Florete, Katana (mediana), Leque Gigante (longa), Ninja-Tō, Wakizashi, Espada de Chakra Branco, Braço de Chakra, Bastão Afinado (invocação).
+
+### Mudanças aplicadas
+
+- **`src/domain/rules/derivedStats.ts`**: `ACUIDADE_ELIGIBLE_KINDS` (inventado) substituído por `ACUIDADE_NAMED_WEAPONS` (taxativo do livro). Removidos `tanto` e `rapier` (não existem no livro), adicionados `aian_nakkuru`, `bastao`, `chicote`, `chokuto`, `leque_gigante`, `ninja_to`, `espada_chakra_branco`, `braco_chakra`. Comentário cita a regra e marca migração futura (F2.3 move para flag `acceptsAcuidade` no equipment).
+- **Lógica `allowsAcuidade`**: removida a categoria `'arremesso'` como blanket — RAW só fala em "armas de arremesso usáveis em CC (como kunai)", que devem ser modeladas como leves no equipment.
+- **`tests/unit/domain/derivedStats.test.ts`**: 5 novos casos travando a regra corrigida:
+  - arma mediana com nome desconhecido **não** recebe Acuidade
+  - florete, chicote, chokutō (medianas/longas nominais) recebem
+  - categoria `'arremesso'` sozinha não dispara mais Acuidade (regression test)
+- **Sem mudanças** na fixture `satsuki-nc6.ts` — ela já usava `katana`, que está na lista RAW.
+
+### Resultado
+
+- 185 testes (180 → 185), 13/13 arquivos passando
+- `derivedStats.ts` com cobertura 100% (statements/branches/funcs/lines)
+- Cobertura global: 95.73% statements / 94.8% branches / 98% funcs
+- `pnpm lint`, `pnpm typecheck`, `pnpm test` todos ✓
+
 ## Decisões autônomas — REVISAR
 
 1. **Node 24.14.0 em runtime, mas `.nvmrc` = `20`.** O ambiente local tem Node 24, mas a spec/prompt pede Node 20 LTS. Como mudar o Node em sessão autônoma é arriscado, vou rodar com 24 e deixar `.nvmrc` pinado em 20 conforme spec. Next.js 14 funciona em ambos.

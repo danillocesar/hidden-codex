@@ -71,6 +71,48 @@ describe('derivedStats — Satsuki NC 6', () => {
       };
       expect(calculateCC(input, { weaponCategory: 'leve' })).toBe(6); // 5 + 1 For
     });
+
+    // ── RAW (Livro Básico 4.1b — Acuidade) ───────────────────────────────
+    // Arma mediana sem entrada explícita no livro NÃO recebe Acuidade.
+    it('arma mediana com nome desconhecido usa Força (não-RAW NÃO entra)', () => {
+      // weaponKind='espada_qualquer' não está em ACUIDADE_NAMED_WEAPONS
+      // → cai fora da exceção, usa Força. 5 + 1 = 6.
+      expect(
+        calculateCC(satsukiInput, { weaponCategory: 'mediana', weaponKind: 'espada_qualquer' }),
+      ).toBe(6);
+    });
+
+    it('florete (mediana, mas nominal no livro) ganha Acuidade', () => {
+      // 5 + 6 Des = 11 (sem Especialista_florete na Satsuki).
+      expect(
+        calculateCC(satsukiInput, { weaponCategory: 'mediana', weaponKind: 'florete' }),
+      ).toBe(11);
+    });
+
+    it('chicote (mediana nominal) ganha Acuidade', () => {
+      expect(
+        calculateCC(satsukiInput, { weaponCategory: 'mediana', weaponKind: 'chicote' }),
+      ).toBe(11);
+    });
+
+    it('chokutō (longa nominal) ganha Acuidade', () => {
+      expect(
+        calculateCC(satsukiInput, { weaponCategory: 'longa', weaponKind: 'chokuto' }),
+      ).toBe(11);
+    });
+
+    it('categoria "arremesso" SOZINHA não dispara mais Acuidade (regression)', () => {
+      // Antes da correção, 'arremesso' habilitava Acuidade como blanket.
+      // RAW só fala em "armas de arremesso usáveis em CC (como kunai)" — que
+      // devem ser modeladas como leves, não como categoria arremesso pura.
+      // Aqui passamos um weaponKind genérico não-nominal pra travar a regra.
+      expect(
+        calculateCC(satsukiInput, {
+          weaponCategory: 'arremesso',
+          weaponKind: 'pedra_qualquer',
+        }),
+      ).toBe(6); // usa Força
+    });
   });
 
   describe('CD, ESQ, LM', () => {

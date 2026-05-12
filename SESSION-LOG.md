@@ -6,6 +6,52 @@
 
 ---
 
+## Seed Lote 4a — Efeitos universais de Ninpou (14:50, parte 4)
+
+Primeira onda do Lote 4. 18 efeitos universais (Canhão, Orbe, Criar Arma, Energizar, Raio, Restringente, Flechas, Ricochete, Barreira, Lança, Sopro Destrutivo, Coluna, Nuvem, Míssil, Onda Explosiva, Correnteza, Algemar, Meteoros) seedados.
+
+### Refatoração de schema obrigatória
+
+O `PowerEffect` antigo era 1:N por FK (`powerId` → Power) com `@@unique([powerId, code])`. O shape exigido pelo README do lote (campo `availableFor: string[]` listando códigos de poder) precisa ser M:N. Refatorei o model:
+
+- **Dropados:** `powerId` (FK), `power` (relation), `tags`, `@@unique([powerId, code])`
+- **Adicionados:** `code` agora `@unique` global, `availableFor String[]`, `rules Json?` (opcional), `evolutions Json @default("[]")`, `updatedAt`
+- **Removida** referência `effects PowerEffect[]` em `Power` (não há mais o array — queries usam `where: { availableFor: { has: 'codigo' } }`)
+- **FK lógica sem constraint Prisma** em `availableFor` segue o padrão já estabelecido (`CharacterPericia.periciaCode`, `Clan.village`, `Power.associatedClan` etc.)
+
+Migration: `20260512114043_add_power_effects_table` — gerada via `prisma migrate diff` + pasta manual, mesmo motivo de antes (Prisma CLI exige confirmação interativa quando há warning de unique constraint nova; ambiente vitest/sandbox é não-interativo). Tabela `power_effects` estava vazia, sem perda de dados.
+
+### `prisma/seed.ts` extendido
+
+- `seedPowerEffects()` consolida múltiplos arquivos `effects-*.json` via constante `EFFECT_FILES`. Hoje só `effects-ninpou-universal.json`; ondas 4b–4e entram na lista quando chegarem.
+- `main()` reordenado: villages → KGs → clans → powers → **powerEffects** → pericias.
+
+### Validação pós-seed
+
+- Counts finais: **5 vilas, 5 KGs, 17 clãs, 19 poderes, 18 efeitos, 20 perícias** (idempotente — 2ª execução não duplicou).
+- Spot-checks via psql:
+  - **Canhão** — `min_level: 1`, `available_for: {ninpou,doton,fuuton,katon,raiton,suiton,hyouton,mokuton}` ✓
+  - **Criar Arma** — `available_for: {ninpou,doton,suiton,hyouton,mokuton}` (sem Fuuton/Katon/Raiton, conforme regra de imaterial) ✓
+  - **Meteoros** — `available_for: {katon,raiton}` (única exceção não-universal do lote 4a) ✓
+  - **Raio** — 2 evoluções ✓
+  - **Algemar** — 2 evoluções ✓
+  - **Barreira** — `stats.rollType: LM`, `stats.rollBonus: 2` ✓
+- `pnpm lint` ✓ / `pnpm typecheck` ✓ / `pnpm test` 210/210 ✓
+
+### Notas operacionais
+
+- **`prisma generate` deu EPERM no Windows** ao tentar renomear o `query_engine-windows.dll.node` (algum node.exe da IDE/dev server segurando o arquivo). Limpei os `.tmp*` órfãos; os tipos TypeScript no `.d.ts` foram atualizados normalmente (o que importa pra typecheck/build), e a DLL antiga continua binary-compatible com o cliente 5.22.0 — sem prejuízo prático. Se o problema voltar, fechar IDE/dev server antes de gerar resolve.
+- **Não toquei no motor de regras** (conforme limite). Validações de `availableFor` e ordem de evoluções (não-skippable) ficam para a sessão dedicada após as ondas 4b–4e chegarem.
+- **Não criei `CharacterPowerEffect`** (também conforme limite). O modelo de junção entra quando o wizard de criação de personagem precisar.
+
+### Próximo passo
+
+**Aguardando ondas 4b/4c/4d/4e do seed** (efeitos exclusivos por elemento, KGs/Hijutsus complexos, poderes restritos de clã, novos do Guia Avançado). A pasta `prisma/seed-data/` já tem os JSONs futuros — basta adicionar cada nome em `EFFECT_FILES` em `prisma/seed.ts` conforme cada README confirmar a estabilidade do shape.
+
+Em paralelo, a próxima sessão de produto pode ser **criação de personagem (F2.4 wizard)** — todos os catálogos necessários já estão no banco.
+
+---
+
 ## Login com Google funcional (10:00 do dia seguinte, parte 3)
 
 Fechado o flow completo de auth que o bootstrap havia deixado como placeholder:

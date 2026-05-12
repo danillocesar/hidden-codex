@@ -1,0 +1,591 @@
+{
+  "_meta": {
+    "description": "Efeitos universais do poder Ninpou. Serve como base pra Ninpou e todos os elementos básicos (Doton, Fuuton, Katon, Raiton, Suiton), com restrições próprias por elemento. Cada efeito tem nível mínimo (campo `minLevel`) e pode ter evoluções (campos `evolutions`).",
+    "sources": [
+      "Livro Básico p. 95-103 (Efeitos do Ninpou)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "rules": {
+      "chakraCostFormula": "nivel_usado_do_efeito",
+      "damageDefault": "nivel_usado + ceil(esp / 2)",
+      "difficultyDefault": "9 + nivel_usado + ceil(esp / 2)",
+      "hardnessDefault": "nivel_usado + ceil(esp / 2)",
+      "rangeDefault": "10m + 2m por nível de Espírito (Médio)",
+      "sizeDefault": "1m por nível de Espírito",
+      "evolutionsRule": "Para usar uma evolução, você precisa primeiro escolher os níveis anteriores (não pode pular evoluções)"
+    },
+    "notes": "Campo `availableFor` lista os códigos dos poderes que podem comprar este efeito. Campo `evolutions` lista as evoluções nos níveis seguintes do efeito base."
+  },
+  "data": [
+    {
+      "code": "canhao",
+      "name": "Canhão",
+      "minLevel": 1,
+      "availableFor": ["ninpou", "doton", "fuuton", "katon", "raiton", "suiton", "hyouton", "mokuton"],
+      "shortDescription": "Disparo de projétil único contra um alvo. Efeito básico, gratuito ao comprar o poder.",
+      "description": "Permite ao personagem disparar um ataque em jato contra um alvo usando seu elemento — jato d'água (Suiton), projétil de fogo (Katon), etc. O alvo atingido sofre 2 pontos de dano para cada nível usado do poder. A partir do nível 2 do poder, opção de usar sem custo de chakra com dano dividido pela metade (bônus de dano também divididos). Usar sem custo não permite acumulação com aptidões/outros efeitos. Fonte: Livro Básico p. 95.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "target": "uma_criatura",
+        "damage": "2 por nível do poder usado",
+        "damageFormula": "2 * nivel_usado",
+        "duration": "INSTANTANEA",
+        "rollType": "CD",
+        "chakraCost": "nivel_usado",
+        "type": "projetil"
+      },
+      "rules": {
+        "halfChakraOption": {
+          "available": true,
+          "requiresPowerLevel": 2,
+          "effect": "Custa metade do chakra, mas dano (e bônus) dividido pela metade. Não acumula com aptidões/outros efeitos."
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "orbe",
+      "name": "Orbe",
+      "minLevel": 2,
+      "availableFor": ["ninpou", "doton", "fuuton", "katon", "raiton", "suiton", "hyouton", "mokuton"],
+      "shortDescription": "Cria um projétil esférico de 0,5m que atinge um alvo. Dano comum do poder.",
+      "description": "Você cria um projétil esférico de 0,5m de diâmetro e dispara contra o alvo. A técnica causa dano comum do poder. Fonte: Livro Básico p. 96.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "target": "uma_criatura",
+        "damage": "comum_do_poder",
+        "damageFormula": "nivel_usado + ceil(esp / 2)",
+        "duration": "INSTANTANEA",
+        "rollType": "CD",
+        "chakraCost": "nivel_usado",
+        "type": "projetil",
+        "projectileDiameter": 0.5
+      },
+      "evolutions": [
+        {
+          "atLevel": 7,
+          "name": "Orbe Nv 7",
+          "description": "Usar Orbe em nível 7+ custa apenas metade do chakra. Em compensação, não recebe benefícios de outros efeitos, aptidões de técnica ou poderes."
+        }
+      ]
+    },
+    {
+      "code": "criar_arma",
+      "name": "Criar Arma",
+      "minLevel": 2,
+      "availableFor": ["ninpou", "doton", "suiton", "hyouton", "mokuton"],
+      "shortDescription": "Cria uma arma com o elemento. Leve/longa/mediana/arremesso. Custo: 1 chakra fixo.",
+      "description": "Você cria uma arma simples ou marcial do tipo leve, longa, mediana ou de arremesso (exceto Kage Fushä, Lâmina Reta e Leque Gigante). As armas criadas têm o mesmo dano de sua versão comum e podem ser feitas para personagens de tamanho médio ou menor. Com um único uso pode criar armas/munição suficientes para preencher um compartimento. Você ainda precisa cumprir pré-requisitos de atributo e saber usar a arma criada. Armas sólidas e rígidas têm duração permanente; não-sólidas duração sustentada. As armas recebem vantagens/fraquezas do elemento (mas não o bônus de dano dele). Permitem reação de Bloqueio contra projéteis (Canhão, Flechas). Podem ser bloqueadas normalmente. Fonte: Livro Básico p. 95-96.",
+      "stats": {
+        "action": "PARCIAL",
+        "range": "pessoal",
+        "damage": "ver_descricao",
+        "duration": "SUSTENTADA_OU_PERMANENTE",
+        "chakraCost": "1 fixo (criação)",
+        "selos": false
+      },
+      "rules": {
+        "weaponTypes": ["leve", "longa", "mediana", "arremesso"],
+        "excludedWeapons": ["kage_fusha", "lamina_reta", "leque_gigante"],
+        "inheritsElementProperties": true,
+        "inheritsElementDamageBonus": false
+      },
+      "evolutions": [
+        {
+          "atLevel": 6,
+          "name": "Criar Arma Nv 6",
+          "description": "Você é capaz de criar armas pesadas. Também pode criar armas para personagens de tamanho acima de médio."
+        }
+      ]
+    },
+    {
+      "code": "energizar",
+      "name": "Energizar",
+      "minLevel": 2,
+      "availableFor": ["ninpou", "doton", "fuuton", "katon", "raiton", "suiton", "hyouton", "mokuton"],
+      "shortDescription": "Energiza punho, arma ou projéteis com seu elemento. Permite trocar For/Des por Esp no dano.",
+      "description": "Você energiza o próprio punho, uma arma que esteja segurando ou um compartimento inteiro de armas/projéteis. Quando ataca com arma energizada, pode substituir For/Des por Espírito no cálculo de dano (opcional). Armas energizadas recebem vantagens/fraquezas do elemento (mas não bônus de dano nem dureza). Com Ambidestria, pode energizar ambas as armas com uma única ação, pagando o custo pra cada. Termina ao guardar a arma. Pra projéteis, termina no final do turno após arremesso. Permite Bloqueio contra técnicas projétil. Punhos/armas energizadas podem ser usadas em aptidões de manobra. Pode ser usado imediatamente depois de Criar Arma (mesmo elemento) como ação livre. Não acumula com outras técnicas de suporte de CC (Juuken, Bisturi de Chakra). Armas Especiais (Bastão Adamantino) não podem ser energizadas (a menos que texto permita). Fonte: Livro Básico p. 100.",
+      "stats": {
+        "action": "PARCIAL",
+        "range": "pessoal",
+        "target": "arma_ou_compartimento_projeteis",
+        "damage": "ver_descricao",
+        "duration": "SUSTENTADA",
+        "chakraCost": 3,
+        "selos": false
+      },
+      "rules": {
+        "allowsForDexSwapToSpirit": true,
+        "inheritsElementProperties": true,
+        "inheritsElementDamageBonus": false,
+        "blocksProjectiles": true,
+        "stacksWithManobras": true,
+        "incompatibleWith": ["juuken", "bisturi_chakra"],
+        "ambidextrousNote": "Com Ambidestria, energiza ambas armas em 1 ação, mas paga custo de chakra por arma."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "raio",
+      "name": "Raio",
+      "minLevel": 2,
+      "availableFor": ["ninpou", "doton", "fuuton", "katon", "raiton", "suiton", "hyouton", "mokuton"],
+      "shortDescription": "Acerta inimigo com um raio elemental. Não pode ser bloqueado por arma comum.",
+      "description": "Você acerta o inimigo com um raio que não pode ser defendido com Bloqueio (a menos que seja arma especial capaz de bloquear técnicas). Causa dano base igual a 2 por nível usado do poder. Fonte: Livro Básico p. 96.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "target": "uma_ou_mais_criaturas",
+        "damage": "2 por nível do poder usado",
+        "damageFormula": "2 * nivel_usado",
+        "duration": "INSTANTANEA",
+        "rollType": "CD",
+        "chakraCost": "nivel_usado",
+        "type": "projetil"
+      },
+      "rules": {
+        "noNormalBlock": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 5,
+          "name": "Raio Nv 5",
+          "description": "Você pode atirar um Raio para cada 2 níveis no poder, um Raio por alvo. Os alvos devem estar a no máximo 4m de distância entre si."
+        },
+        {
+          "atLevel": 8,
+          "name": "Raio Nv 8",
+          "description": "Com ação completa, dispara um Raio mais poderoso contra um único alvo, causando +2 de dano base adicional."
+        }
+      ]
+    },
+    {
+      "code": "flechas",
+      "name": "Flechas",
+      "minLevel": 3,
+      "availableFor": ["ninpou", "doton", "fuuton", "katon", "raiton", "suiton", "hyouton", "mokuton"],
+      "shortDescription": "Lança múltiplos projéteis (flechas, agulhas, kunais, bolas de fogo). 1 projétil por nível usado.",
+      "description": "Você lança vários projéteis feitos com seu poder, em qualquer formato (flechas, agulhas, shurikens, kunais, bolas de fogo). Cada projétil causa 2 de dano base. Pode criar 1 projétil por nível usado do poder. Pode concentrar todos num alvo ou em múltiplos. Cada alvo faz uma única defesa, qualquer que seja a quantidade de projéteis. Bônus de dano (inclusive de elemento) é aplicado uma única vez por alvo. Por 2 chakra adicionais, pode usar como Finta pra encobrir próximo ataque à distância — usa Prestidigitação no lugar de Agilidade no teste de Finta. Sem dano quando usado como Finta. Fonte: Livro Básico p. 96-97.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "target": "uma_ou_mais_criaturas",
+        "damage": "2 por projétil",
+        "damageFormula": "2 fixo, multiplicado por número de projéteis em alvo",
+        "projectilesFormula": "nivel_usado",
+        "duration": "INSTANTANEA",
+        "rollType": "CD",
+        "chakraCost": "nivel_usado",
+        "type": "projetil"
+      },
+      "rules": {
+        "feintOption": {
+          "chakraExtra": 2,
+          "usesSkill": "prestidigitacao",
+          "noDamage": true
+        }
+      },
+      "evolutions": [
+        {
+          "atLevel": 6,
+          "name": "Flechas Nv 6",
+          "description": "Quando mira em um só alvo e ele esquiva/antecipa com sucesso, pode refazer o teste (causa metade do dano base, alvo não refaz a defesa)."
+        },
+        {
+          "atLevel": 9,
+          "name": "Flechas Nv 9",
+          "description": "Causa dano integral ao refazer o teste de ataque (em vez de metade)."
+        }
+      ]
+    },
+    {
+      "code": "ricochete",
+      "name": "Ricochete",
+      "minLevel": 3,
+      "availableFor": ["ninpou", "doton", "fuuton", "katon", "raiton", "suiton", "hyouton", "mokuton"],
+      "shortDescription": "Raio que salta de alvo em alvo até alguém defender com sucesso.",
+      "description": "Você dispara um raio que salta de alvo em alvo, atingindo diversos inimigos. Escolha um alvo. Atingirá até 1 inimigo diferente a mais para cada 2 níveis no poder, à sua escolha, dentro de 10m de distância do alvo original. O efeito prossegue na ordem escolhida. Quando algum se defende com sucesso, o Ricochete é interrompido. Fonte: Livro Básico p. 99.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "target": "uma_ou_mais_criaturas",
+        "damage": "comum_do_poder + bônus",
+        "duration": "INSTANTANEA",
+        "rollType": "CD",
+        "chakraCost": "nivel_usado",
+        "type": "projetil"
+      },
+      "rules": {
+        "additionalTargetsFormula": "floor(nivel_poder / 2)",
+        "maxDistanceBetweenTargets": 10,
+        "interruptsOnSuccessfulDefense": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 9,
+          "name": "Ricochete Nv 9",
+          "description": "A cada novo alvo atingido, dano base aumenta em +1, até limite de +5."
+        }
+      ]
+    },
+    {
+      "code": "restringente",
+      "name": "Restringente",
+      "minLevel": 2,
+      "availableFor": ["ninpou", "doton", "suiton", "hyouton", "mokuton"],
+      "shortDescription": "Cria uma camada grudenta no chão. Inimigos na área ficam lentos (a menos que tenham Voo).",
+      "description": "Cria uma camada grudenta e grossa no chão que restringe o movimento. Criaturas na área ficam lentas (exceto se tiverem perícia Voo). Se usado em área já com criaturas, elas têm direito a ação defensiva. Em caso de sucesso, ainda precisam sair da área no próximo turno ou sofrerão as penalidades. Durante seu turno, com ação livre, a vítima pode testar Escapar ou Força pra se livrar da condição lento até o fim do turno. Ainda precisa se deslocar pra sair da área. Ataque em área sobre o Restringente o retira imediatamente. Fonte: Livro Básico p. 97.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "areaOfEffect": "circulo",
+        "damage": "nenhum",
+        "duration": "CONTINUA",
+        "rollType": "CD",
+        "chakraCost": "nivel_usado"
+      },
+      "rules": {
+        "appliesCondition": "lento",
+        "voadoresImunes": true,
+        "removableByAreaAttack": true,
+        "escapeOptions": ["escapar", "for"]
+      },
+      "evolutions": [
+        {
+          "atLevel": 6,
+          "name": "Restringente Nv 6",
+          "description": "Em vez de lentas, vítimas ficarão impedidas (incapazes de qualquer ação que precise mobilidade dos pés)."
+        }
+      ]
+    },
+    {
+      "code": "barreira",
+      "name": "Barreira",
+      "minLevel": 3,
+      "availableFor": ["ninpou", "doton", "fuuton", "suiton", "hyouton", "mokuton"],
+      "shortDescription": "Conjura uma barreira defensiva. Reação com LM+2. Sólidas duram permanente, outras sustentadas.",
+      "description": "Conjura uma barreira de seu elemento pra se proteger de um ataque. Dureza padrão e formato de muro ou semicilindro de metade do tamanho comum do poder. Deve haver espaço entre você e o inimigo pra criar (não funciona contra inimigos adjacentes). Usar como defesa requer teste de LM +2 de precisão, custo de chakra pago antes do teste. Quando destruída, protegidos sofrem diferença de dano após redução pela dureza. Barreiras sólidas (pedra, madeira) duram permanente; outras (água, vento) sustentadas. Gelo derrete em 1h por nível usado. Fonte: Livro Básico p. 97-98.",
+      "stats": {
+        "action": "MOVIMENTO",
+        "range": "comum_do_poder",
+        "damage": "nenhum",
+        "duration": "VER_DESCRICAO",
+        "rollType": "LM",
+        "rollBonus": 2,
+        "chakraCost": "nivel_usado"
+      },
+      "rules": {
+        "shape": "muro_ou_semicilindro_metade_tamanho_comum",
+        "noAgainstAdjacent": true,
+        "hardness": "padrao_do_poder",
+        "solidDurationPermanent": true,
+        "nonSolidDurationSustained": true,
+        "iceMeltsAt": "1h por nível usado"
+      },
+      "evolutions": [
+        {
+          "atLevel": 6,
+          "name": "Barreira Nv 6",
+          "description": "Vira semiesfera completa rodeando o usuário, protegendo sem aberturas. Também pode enjaular inimigos (ação padrão, teste de CD -2)."
+        },
+        {
+          "atLevel": 9,
+          "name": "Barreira Nv 9",
+          "description": "Dureza +2."
+        }
+      ]
+    },
+    {
+      "code": "lanca",
+      "name": "Lança",
+      "minLevel": 3,
+      "availableFor": ["ninpou", "doton", "suiton", "hyouton", "mokuton"],
+      "shortDescription": "Espinho pontiagudo. Atravessa proteções: ignora 2 (Livro Básico) ou 3 (Guia Avançado) de dureza.",
+      "description": "Cria um espinho pontiagudo que surge a até 2m de distância e se estica contra o inimigo. Especialmente bom em atravessar proteções, ignorando 2 pontos de dureza de barreiras e objetos (3 pontos no Guia Avançado, mais 1 de Dureza de Corpo). Pode criar uma lança pra atingir um só alvo ou várias pra múltiplos alvos, dividindo dano base entre os atingidos. Fonte: Livro Básico p. 99 + Guia Avançado p. 51.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "target": "uma_ou_mais_criaturas",
+        "damage": "comum_do_poder",
+        "duration": "INSTANTANEA",
+        "rollType": "CD",
+        "chakraCost": "nivel_usado",
+        "type": "projetil"
+      },
+      "rules": {
+        "ignoresHardness": 2,
+        "ignoresHardnessGuiaAvancado": 3,
+        "ignoresBodyHardnessGuiaAvancado": 1,
+        "multipleTargetsDividesDamage": true,
+        "appearsAt2mDistance": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 6,
+          "name": "Lança Nv 6",
+          "description": "Surge diretamente abaixo do inimigo como espinho. Ignora coberturas preexistentes e anula bônus de defesa de caídos. (Guia Avançado: também ignora até 2 de Dureza de Corpo.)"
+        },
+        {
+          "atLevel": 9,
+          "name": "Lança Nv 9",
+          "description": "Alvo deve testar Prontidão antes da defesa. Falhando, fica desprevenido. (Guia Avançado: ignora toda Dureza e Dureza de Corpo.)"
+        }
+      ]
+    },
+    {
+      "code": "sopro_destrutivo",
+      "name": "Sopro Destrutivo",
+      "minLevel": 3,
+      "availableFor": ["ninpou", "doton", "fuuton", "katon", "raiton", "suiton", "hyouton", "mokuton"],
+      "shortDescription": "Ataque em cone (sopro, jato, explosão) atingindo todos na área. Dano comum do poder.",
+      "description": "Você projeta um ataque contra seus alvos semelhante a um sopro, que se espalha para frente e para os lados, em formato de cone, causando dano comum do poder em todos na área. Fonte: Livro Básico p. 101.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "areaOfEffect": "cone",
+        "damage": "comum_do_poder",
+        "duration": "INSTANTANEA",
+        "rollType": "CD",
+        "chakraCost": "nivel_usado",
+        "type": "ataque_em_area"
+      },
+      "evolutions": [
+        {
+          "atLevel": 7,
+          "name": "Sopro Nv 7",
+          "description": "Sopro se alastra mais intensamente. Se alvo defendeu com Esquiva/Antecipar (mesmo bem-sucedido), deve testar Acrobacia. Falhando, sofre dano com grau 1 como remanescente. Acelerados têm sucesso automático."
+        },
+        {
+          "atLevel": 10,
+          "name": "Sopro Nv 10",
+          "description": "Dano remanescente passa a grau 2, mas só se seu teste de ataque teve grau 2+."
+        }
+      ]
+    },
+    {
+      "code": "coluna",
+      "name": "Coluna",
+      "minLevel": 4,
+      "availableFor": ["ninpou", "doton", "fuuton", "katon", "raiton", "suiton", "hyouton", "mokuton"],
+      "shortDescription": "Explosão em cilindro vertical. Dano fixo igual a 2× nível do poder.",
+      "description": "Escolha uma área. Você cria uma explosão em formato de cilindro vertical, com diâmetro e altura comuns do poder. Alvo na área atingida sofre dano base igual a 2 por nível usado. Fonte: Livro Básico p. 99-100.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "areaOfEffect": "cilindro",
+        "damage": "2 por nível do poder usado",
+        "damageFormula": "2 * nivel_usado",
+        "duration": "INSTANTANEA",
+        "rollType": "CD",
+        "chakraCost": "nivel_usado",
+        "type": "ataque_em_area"
+      },
+      "evolutions": [
+        {
+          "atLevel": 7,
+          "name": "Coluna Nv 7",
+          "description": "Pode dividir a área original em mini-colunas de 1m de diâmetro, escolhendo quais áreas serão atingidas. Mini-colunas ainda dentro da área de tamanho comum."
+        },
+        {
+          "atLevel": 10,
+          "name": "Coluna Nv 10",
+          "description": "Mini-colunas cercam alvos em várias direções. Alvos testam Prontidão; falhando, ficam com defesa debilitada (-2)."
+        }
+      ]
+    },
+    {
+      "code": "nuvem",
+      "name": "Nuvem",
+      "minLevel": 4,
+      "availableFor": ["ninpou", "doton", "fuuton", "suiton", "hyouton", "mokuton"],
+      "shortDescription": "Cria uma nuvem corrosiva/quente/etc. Vítimas testam Vigor; falhando, sofrem dano fixo e ficam lentas.",
+      "description": "Cria uma nuvem quente, corrosiva ou outra propriedade. Disparada em formato de cone, depois se assenta no ambiente em círculo com diâmetro igual ao dobro do tamanho comum. Permanece enquanto manter concentração. No início de cada um de seus turnos, criaturas vivas na nuvem testam Vigor (Dif padrão -2). Falhando, sofrem 1 de dano fixo por nível usado e ficam lentas. Usuário não é afetado. Se criatura não tem contato com a nuvem entre turnos, não sofre efeito naquele turno. Nuvem tem dureza imaginária (valor padrão). Ataques em área de explosão/vento reduzem a dureza; se chegar a zero, nuvem se dissipa. Dureza imaginária não protege contra danos. Fonte: Livro Básico p. 100-101.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "areaOfEffect": "circulo_dobro_do_tamanho",
+        "damage": "1 fixo por nível usado",
+        "duration": "CONCENTRACAO",
+        "rollType": "Vigor (Dif padrão -2)",
+        "chakraCost": "nivel_usado"
+      },
+      "rules": {
+        "imaginaryHardness": true,
+        "appliesCondition": "lento",
+        "userImmune": true,
+        "destroyableByAreaAttacks": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 7,
+          "name": "Nuvem Nv 7",
+          "description": "Capaz de manter sua nuvem com duração sustentada (sem concentração)."
+        },
+        {
+          "atLevel": 10,
+          "name": "Nuvem Nv 10",
+          "description": "Nuvem ganha +3 de dureza e dano fixo é dobrado."
+        }
+      ]
+    },
+    {
+      "code": "missil",
+      "name": "Míssil",
+      "minLevel": 5,
+      "availableFor": ["ninpou", "doton", "fuuton", "katon", "raiton", "suiton", "hyouton", "mokuton"],
+      "shortDescription": "Libera mísseis em linha. Após acertar, rola ataque de novo: se acertar, +1 dano.",
+      "description": "Libera um ou mais mísseis contra o oponente, como projéteis de lama cuspidos por cabeça de dragão ou rajada de fogo em sequência. Dano comum do poder. Após acertar e atingir o alvo, role o teste de ataque mais uma vez (alvo não refaz defesa). Se acertar, efeito causa +1 de dano base. Dragão de Fogo (Katon): pode usar Míssil contra alvo amarrado por kousen no mesmo turno; ação parcial, kousen é destruído. Fonte: Livro Básico p. 101-102.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "areaOfEffect": "linha",
+        "damage": "comum_do_poder + bônus",
+        "duration": "INSTANTANEA",
+        "rollType": "CD",
+        "chakraCost": "nivel_usado",
+        "type": "ataque_em_area"
+      },
+      "rules": {
+        "rerollOnHit": true,
+        "rerollDamageBonus": 1,
+        "dragaoDeFogoKaton": "Pode usar contra alvo amarrado por kousen como ação parcial"
+      },
+      "evolutions": [
+        {
+          "atLevel": 8,
+          "name": "Míssil Nv 8",
+          "description": "Após acertar o alvo, role o teste duas vezes (em vez de uma), recebendo +1 de dano por cada acerto."
+        },
+        {
+          "atLevel": 10,
+          "name": "Míssil Nv 10",
+          "description": "Após acertar, role o teste de ataque quatro vezes."
+        }
+      ]
+    },
+    {
+      "code": "onda_explosiva",
+      "name": "Onda Explosiva",
+      "minLevel": 5,
+      "availableFor": ["ninpou", "doton", "fuuton", "katon", "raiton", "suiton", "hyouton", "mokuton"],
+      "shortDescription": "Onda em meia-esfera ao redor do usuário. Vítimas testam Vigor ou são empurradas. Não aceita Potencializar.",
+      "description": "Você projeta uma onda de choque ao seu redor, em meia-esfera ou círculo com dobro do diâmetro, centrada em si. Apesar do nome, pode adotar formas variadas (explosão de fogo, tornado de água, etc.). Atingidos sofrem dano comum do poder e testam Vigor (Dif padrão -2) ou são empurrados até o limite da área. Não acumula com Potencializar. Guia Avançado adiciona variante 'Padrão + Movimento' pra anular penalidade de -3 em CD contra inimigos próximos. Fonte: Livro Básico p. 102 + Guia Avançado p. 54-55.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "pessoal",
+        "areaOfEffect": "meia_esfera_ou_circulo_dobro_diametro",
+        "damage": "comum_do_poder",
+        "duration": "INSTANTANEA",
+        "rollType": "CD",
+        "chakraCost": "nivel_usado",
+        "type": "ataque_em_area"
+      },
+      "rules": {
+        "pushOnVigorFail": true,
+        "vigorDifficulty": "padrao -2",
+        "noPotencializar": true,
+        "guiaAvancadoVariant": "Padrão+Movimento anula penalidade -3 CD contra inimigos próximos (não pode receber Aptidões de Técnica)"
+      },
+      "evolutions": [
+        {
+          "atLevel": 8,
+          "name": "Onda Explosiva Nv 8",
+          "description": "Vítima que falha no teste de Vigor também fica caída."
+        }
+      ]
+    },
+    {
+      "code": "correnteza",
+      "name": "Correnteza",
+      "minLevel": 5,
+      "availableFor": ["ninpou", "doton", "fuuton", "suiton", "hyouton", "mokuton"],
+      "shortDescription": "Onda de água/lama/vento. Empurra inimigos. Colisão com obstáculo: +1 dano concussão.",
+      "description": "Conjura uma correnteza de água, lama, ventos ou outro fluido, varrendo oponentes. Disparada em onda, inicia na sua frente. Inimigo pego testa Vigor (Dif padrão -2) ou é empurrado até o fim da distância. Colidir com obstáculo capaz de reter movimento causa +1 de dano de concussão. Fonte: Livro Básico p. 101.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "areaOfEffect": "onda",
+        "damage": "comum_do_poder",
+        "duration": "INSTANTANEA",
+        "rollType": "CD",
+        "chakraCost": "nivel_usado",
+        "type": "ataque_em_area"
+      },
+      "rules": {
+        "pushOnVigorFail": true,
+        "vigorDifficulty": "padrao -2",
+        "collisionExtraDamage": 1
+      },
+      "evolutions": [
+        {
+          "atLevel": 8,
+          "name": "Correnteza Nv 8",
+          "description": "Inimigo que falha no Vigor e colide com obstáculo é também atordoado até o fim do próximo turno dele."
+        }
+      ]
+    },
+    {
+      "code": "algemar",
+      "name": "Algemar",
+      "minLevel": 6,
+      "availableFor": ["ninpou", "doton", "suiton", "hyouton", "mokuton"],
+      "shortDescription": "Prende as pernas do alvo. Vítima fica impedida. Duração: concentração.",
+      "description": "Permite prender uma ou ambas as pernas do inimigo com amarras/cordas/estruturas do material do poder. Se bem-sucedido, ataque não causa dano e alvo fica impedido. Em seu turno, vítima pode destruir as algemas (dureza comum do poder) ou se libertar testando Força ou Escapar (qualquer escolha = ação padrão). Pode se libertar via outro efeito que não precise mobilidade dos pés. Se vítima presa for alvo de ataque em área, algemas também sofrem dano (reduzindo dureza). Fonte: Livro Básico p. 102.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "target": "uma_criatura",
+        "damage": "nenhum",
+        "duration": "CONCENTRACAO",
+        "rollType": "CD",
+        "chakraCost": "nivel_usado"
+      },
+      "rules": {
+        "appliesCondition": "impedido",
+        "shacklesHardness": "padrao_do_poder",
+        "escapeOptions": ["for_acao_padrao", "escapar_acao_padrao", "destruir_algemas"]
+      },
+      "evolutions": [
+        {
+          "atLevel": 8,
+          "name": "Algemar Nv 8",
+          "description": "Efeito passa a ter duração Sustentada (sem necessidade de concentração)."
+        },
+        {
+          "atLevel": 10,
+          "name": "Algemar Nv 10",
+          "description": "Pode atingir até 3 alvos a 5m um do outro. Usar duas vezes nos mesmos alvos os deixa indefesos (corpo todo algemado)."
+        }
+      ]
+    },
+    {
+      "code": "meteoros",
+      "name": "Meteoros",
+      "minLevel": 9,
+      "availableFor": ["katon", "raiton"],
+      "shortDescription": "Seis meteoros voam para um ponto, explodindo. 1 dano fixo por nível por meteoro.",
+      "description": "Produz seis meteoros que voam até um ponto à sua escolha. Ao atingirem o ponto, explodem. Cada meteoro causa 1 de dano fixo por nível usado do poder (sem dano base nem bônus). Criatura no alcance de múltiplos meteoros recebe o dano de cada. Pode mirar em criaturas específicas ao custo de -3 de precisão; se fizer isso, alvo não pode defender com Esquiva ou Antecipar. Fonte: Livro Básico p. 108.",
+      "stats": {
+        "action": "COMPLETA",
+        "range": "comum_do_poder",
+        "areaOfEffect": "seis_esferas_5m",
+        "damage": "1 fixo por nível usado por meteoro",
+        "duration": "INSTANTANEA",
+        "rollType": "CD",
+        "chakraCost": "nivel_usado",
+        "type": "ataque_em_area"
+      },
+      "rules": {
+        "multipleMeteorsCanHitSameTarget": true,
+        "targetedAttackOption": {
+          "precisionPenalty": -3,
+          "preventsEsquivaOrAntecipar": true
+        }
+      },
+      "evolutions": []
+    }
+  ]
+}

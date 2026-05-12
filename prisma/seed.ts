@@ -206,6 +206,58 @@ async function seedPowers(): Promise<void> {
 }
 
 // ──────────────────────────────────────────────────────────────────────
+// Efeitos de poder (Lote 4 — entregue em ondas 4a-4e)
+// ──────────────────────────────────────────────────────────────────────
+// Cada arquivo `effects-*.json` traz efeitos compartilhados via `availableFor`
+// (lista de `Power.code`). Esta função consolida todos os arquivos disponíveis
+// em uma única passagem. Adicione novos arquivos à lista `EFFECT_FILES`
+// conforme as ondas chegarem.
+
+type PowerEffectSeed = {
+  code: string;
+  name: string;
+  minLevel: number;
+  availableFor: string[];
+  shortDescription?: string;
+  description: string;
+  stats: Record<string, unknown>;
+  rules?: Record<string, unknown>;
+  evolutions?: Array<{ atLevel: number; name: string; description: string }>;
+};
+
+const EFFECT_FILES: ReadonlyArray<string> = [
+  'effects-ninpou-universal.json',
+  // Próximas ondas (4b–4e) entram aqui conforme chegarem.
+];
+
+async function seedPowerEffects(): Promise<void> {
+  let total = 0;
+  for (const file of EFFECT_FILES) {
+    const effects = loadSeedData<PowerEffectSeed>(file);
+    for (const e of effects) {
+      const data = {
+        code: e.code,
+        name: e.name,
+        minLevel: e.minLevel,
+        availableFor: e.availableFor,
+        shortDescription: e.shortDescription ?? null,
+        description: e.description,
+        stats: e.stats as Prisma.InputJsonValue,
+        rules: (e.rules ?? null) as Prisma.InputJsonValue | null,
+        evolutions: (e.evolutions ?? []) as Prisma.InputJsonValue,
+      };
+      await prisma.powerEffect.upsert({
+        where: { code: e.code },
+        create: data,
+        update: data,
+      });
+    }
+    total += effects.length;
+  }
+  console.info(`  ✓ ${total} efeitos de poder`);
+}
+
+// ──────────────────────────────────────────────────────────────────────
 // Perícias (Leva 1)
 // ──────────────────────────────────────────────────────────────────────
 
@@ -248,13 +300,14 @@ async function seedPericias(): Promise<void> {
 
 async function main(): Promise<void> {
   console.info('🌱 Seed iniciado…');
-  // Ordem importa: clãs referenciam vilas e KGs (via `village` e `benefits.kekkeiGenkai`),
-  // poderes referenciam clãs e KGs (via `associatedClan` / `associatedKekkeiGenkai`).
-  // Perícias são independentes — vão por último.
+  // Ordem importa: clãs referenciam vilas e KGs; poderes referenciam clãs e
+  // KGs; efeitos referenciam códigos de poder via `availableFor`. Perícias
+  // são independentes — vão por último.
   await seedVillages();
   await seedKekkeiGenkais();
   await seedClans();
   await seedPowers();
+  await seedPowerEffects();
   await seedPericias();
   console.info('✅ Seed completo.');
 }

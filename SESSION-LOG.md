@@ -6,6 +6,99 @@
 
 ---
 
+## Login com Google funcional (10:00 do dia seguinte, parte 3)
+
+Fechado o flow completo de auth que o bootstrap havia deixado como placeholder:
+
+### Implementação
+
+- **Variáveis de ambiente** novas em `.env.local` e `.env.example`:
+  - `ADMIN_EMAIL` (singular, igualdade case-insensitive)
+  - `ALLOWED_EMAILS` (CSV; vazio = aberto)
+  - `SESSION_COOKIE_NAME` (default `arcana_session`)
+  - `SESSION_MAX_AGE_DAYS` (default 7)
+
+  **⚠ AÇÃO DO USUÁRIO:** preencher `ADMIN_EMAIL=` em `.env.local` com seu e-mail Google antes do smoke test. Deixei vazio (não tenho seu e-mail).
+
+- **Backend de auth (`src/lib/auth/`)**:
+  - `admin.ts`: `isAdminEmail`, `isEmailAllowed` (puros, sem deps).
+  - `session.ts`: `getCurrentUser()` agora devolve `{ user, isAdmin } | null`. Lê env `SESSION_COOKIE_NAME` e `SESSION_MAX_AGE_DAYS`. **Sem `React.cache`** — react@18.3 trata como experimental e o import quebra em vitest puro Node; deixei comentário marcando como TODO de otimização futura.
+  - `actions.ts` (Server Actions): `loginWithGoogle(idToken)` valida via `verifyIdToken`, checa `isEmailAllowed`, upserta `User`, cria session cookie via `createSessionCookie(idToken, { expiresIn })`. `logout()` revoga refresh tokens e deleta cookie.
+
+- **Middleware (`src/middleware.ts`)**: check leve de presença do cookie (Edge runtime não suporta `firebase-admin` cheio). `/login` com cookie → redirect `/dashboard`. Rotas privadas sem cookie → `/login?from=<path>`. Validação criptográfica completa fica em `getCurrentUser()` no layout `(app)`. Matcher ignora `_next`, `uploads`, arquivos com extensão.
+
+- **UI**:
+  - `components/ui/button.tsx` + `components/ui/dropdown-menu.tsx`: shadcn-style adaptados pra paleta dark+ice. Usam `@radix-ui/react-dropdown-menu` e `@radix-ui/react-slot` (novas deps).
+  - `components/auth/LoginButton.tsx`: client component. `signInWithPopup(GoogleAuthProvider)` → `idToken` → Server Action. Suporta `?from=` (volta pra rota original após login). Logo Google oficial em SVG inline (4 cores hex do guia da Google — sem grayscale).
+  - `components/auth/UserMenu.tsx`: avatar do Google (`next/image` + `lh3.googleusercontent.com` whitelisted em `next.config.mjs`) com fallback de iniciais. Dropdown shadcn com cabeçalho (nome + email + "admin" tag se aplicável), separadores e itens "Configurações" / "Sair". Sair chama Server Action `logout` + `signOut(getFirebaseAuth())` no cliente.
+
+- **Páginas**:
+  - `/login`: placeholder substituído pelo card real com `<LoginButton />` (wrap em `Suspense` por causa de `useSearchParams`).
+  - `/dashboard`: saudação "Olá, {primeiroNome}", badge `(admin)` quando aplicável, estado vazio de personagens com CTA desabilitado.
+  - `(app)/layout.tsx`: ganhou header global com logo "Arcana Forge" à esquerda e `<UserMenu />` à direita. Layout continua chamando `getCurrentUser()` e fazendo redirect — middleware é só UX cedo.
+
+- **Testes (Firebase Admin + Prisma + cookies mockados via `vi.mock`)**: 25 novos casos.
+  - `admin.test.ts` (10): isAdminEmail/isEmailAllowed nas variações (case, vazio, CSV, espaços).
+  - `actions.test.ts` (11): loginWithGoogle (cria User, atualiza User, ALLOWED_EMAILS aceita/rejeita, idToken curto/throw, sem email, createSessionCookie throw). logout (com sessão / sem sessão / revoke throw).
+  - `session.test.ts` (5): null em ausência/inválido/sem User; isAdmin true/false; reset de módulos entre testes (`vi.resetModules`).
+
+### Validação
+
+- `pnpm lint` ✓ / `pnpm typecheck` ✓ / `pnpm test` 210/210 ✓ / `pnpm build` ✓ (middleware sai com 25.2 kB)
+- Build de `/login` chega a 143 kB First Load JS — vem do Firebase Client SDK (esperado para a tela de entrada).
+- Smoke test ainda **não rodado** porque depende de o usuário preencher `ADMIN_EMAIL` e abrir o popup do Google na sessão Docker rodando.
+
+### Caminhos novos
+
+```
+src/middleware.ts
+src/lib/auth/admin.ts
+src/lib/auth/actions.ts
+src/lib/auth/session.ts                  (reescrito)
+src/components/ui/button.tsx
+src/components/ui/dropdown-menu.tsx
+src/components/auth/LoginButton.tsx
+src/components/auth/UserMenu.tsx
+src/app/(auth)/login/page.tsx            (reescrito)
+src/app/(app)/layout.tsx                 (reescrito)
+src/app/(app)/dashboard/page.tsx         (reescrito)
+tests/unit/lib/auth/admin.test.ts
+tests/unit/lib/auth/actions.test.ts
+tests/unit/lib/auth/session.test.ts
+```
+
+### Smoke test manual
+
+1. Preencha `ADMIN_EMAIL` em `.env.local` com seu e-mail Google.
+2. `pnpm dev` → http://localhost:3000
+3. Sem cookie: clicar em "Entrar" no home leva pra `/login`.
+4. Tentar acessar `/dashboard` direto: middleware redireciona pra `/login?from=/dashboard`.
+5. Clicar "Continuar com Google" → popup Google → seleciona conta → cookie setado → redireciona pra `/dashboard`.
+6. Dashboard mostra "Olá, {primeiroNome} (admin)".
+7. Avatar (top right) abre dropdown com nome + email + "Configurações" + "Sair".
+8. "Sair" → volta pra `/login` (cookie limpo + refresh tokens revogados no Firebase).
+9. Verifique no `pnpm prisma studio` que `users` tem 1 linha com seus dados do Google.
+10. Reabrir `/login` enquanto autenticado: middleware redireciona pra `/dashboard`.
+
+### Decisões implementadas
+
+- **Sem `role` no User.** Admin é checagem por e-mail. Player/GM são capabilities de mesa (Campaign futuro).
+- **Auth aberta por default.** `ALLOWED_EMAILS` vazio permite qualquer Google account.
+- **Session cookie via `createSessionCookie`** em vez de armazenar `idToken` cru (Firebase recomenda). 7 dias de validade.
+- **Logout revoga refresh tokens** — invalida sessão em todos os devices.
+- **Middleware leve** — Edge runtime, só check de presença. Verificação criptográfica fica no layout `(app)`.
+
+### Próximo passo sugerido
+
+**Tela de personagens + criar personagem (F2.4 wizard).** Pré-requisitos no banco já estão (catálogos de perícias/poderes/clãs/vilas/KGs todos seedados). Sugiro:
+
+1. Server query `listMyCharacters(userId)` em `src/server/queries/characters.ts`.
+2. Atualizar `/dashboard` pra renderizar a lista (CTA "Criar personagem" habilitado quando vazio).
+3. Rota `/characters/new` com wizard de 3-4 passos (identidade → vila/clã → atributos+perícias → revisão).
+4. Server Action `createCharacter(input)` que aplica benefícios automáticos do clã/KG (níveis grátis de poder, aptidões grátis).
+
+---
+
 ## Seed Lote 3 — Poderes + fechamento do Lote 2 pendente (09:30 do dia seguinte, parte 2)
 
 Tarefa principal: seedar `prisma/seed-data/powers.json` (19 poderes). Como o usuário descreveu `main()` na ordem `villages → kekkeiGenkais → clans → powers → pericias` e as funções `seedKekkeiGenkais`/`seedClans` ainda não existiam (Lote 2 nunca foi aplicado entre Lote 1 e Lote 3), **também fechei Lote 2 nesta sessão** para honrar a ordem prescrita — sem isso seria impossível escrever `main()` conforme o pedido.

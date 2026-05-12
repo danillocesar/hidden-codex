@@ -3,8 +3,10 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     remotePatterns: [
-      // Future: storage cloud domain goes here. Local filesystem in public/uploads
-      // is served by Next directly without extra config.
+      // Avatares do Google (Firebase Auth retorna URLs lh3.googleusercontent.com).
+      { protocol: 'https', hostname: 'lh3.googleusercontent.com' },
+      // Future: cloud storage para imagens de personagem. Local filesystem em
+      // public/uploads é servido pelo Next direto, sem config extra.
     ],
   },
   experimental: {

@@ -1,0 +1,377 @@
+{
+  "_meta": {
+    "description": "Poderes do Shinobi no Sho 4.1b. Cada poder é comprado por nível (1 ponto = 1 nível). Poderes elementais e Hijutsus usam Ninpou como base — só listam diferenças. Efeitos de poder virão no Lote 4.",
+    "sources": [
+      "Livro Básico p. 84-122 (Poderes comuns)",
+      "Livro de Hijutsus p. 19-21 (Hyouton)",
+      "Livro Básico p. 142-200 (Poderes restritos de clã)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "notes": "Poderes têm 3 categorias: COMUM (qualquer um pode comprar), RESTRITO_CLA (precisa do clã correspondente), HIJUTSU (técnica secreta, sem clã). Custo padrão: 1 ponto de poder por nível. Limite de nível = NC ÷ 2 (round down). Efeitos exclusivos de cada poder virão no lote 4."
+  },
+  "data": [
+    {
+      "code": "ninpou",
+      "name": "Ninpou",
+      "translation": "Arte Ninja",
+      "category": "COMUM",
+      "element": null,
+      "shortDescription": "Poder genérico não-elemental. Base para todos os poderes elementais. Personalizável pelo jogador.",
+      "description": "Representa o domínio do personagem em uma arte ninja única, geralmente passada de geração em geração dentro de uma família ou desenvolvida pelo próprio personagem. Ao comprar, o jogador escolhe como funciona o uso — pode ser um material específico (como o cabelo do Sannin Jiraiya), uma manifestação de chakra puro, etc. No confronto de ninjutsu, não tem vantagem nem desvantagem contra ninjutsus elementais. Serve como base de regras para todos os poderes elementais. Ao comprar, dê um nome ao poder (ex: 'Ninpou: Hari Jizou'). Fonte: Livro Básico p. 91-103.",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio" },
+        "sizeFormula": { "perEsp": 1, "unit": "m" },
+        "defaultDamageFormula": "nivel_usado + ceil(esp / 2)",
+        "defaultDifficultyFormula": "9 + nivel_usado + ceil(esp / 2)",
+        "defaultHardnessFormula": "nivel_usado + ceil(esp / 2)",
+        "chakraCostFormula": "nivel_usado",
+        "elementBonus": 0
+      },
+      "rules": {
+        "canBeBoughtMultipleTimes": true,
+        "secondPurchaseNote": "Comprando uma segunda vez: nível 1 é gratuito. Usa o maior nível como parâmetro pra todos os efeitos.",
+        "selosDefault": true
+      }
+    },
+    {
+      "code": "katon",
+      "name": "Katon",
+      "translation": "Elemento Fogo",
+      "category": "COMUM",
+      "element": "fogo",
+      "shortDescription": "Elemento Fogo. Conjura e controla fogo. Forte contra Fuuton, fraco contra Suiton.",
+      "description": "Permite ao personagem conjurar e controlar fogo. Em níveis elevados, pode criar dragões de chamas e infernos ambulantes. Segue as regras de Ninpou, com efeitos próprios e exclusivos. Vantagem elemental contra Fuuton; desvantagem contra Suiton. Fonte: Livro Básico p. 107-109.",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio" },
+        "sizeFormula": { "perEsp": 1, "unit": "m" },
+        "elementBonus": 2,
+        "elementBonusType": "dano",
+        "elementAdvantage": ["fuuton"],
+        "elementDisadvantage": ["suiton"]
+      },
+      "rules": {
+        "selosDefault": true
+      }
+    },
+    {
+      "code": "suiton",
+      "name": "Suiton",
+      "translation": "Elemento Água",
+      "category": "COMUM",
+      "element": "agua",
+      "shortDescription": "Elemento Água. Cria e controla água, do gole ao tsunami. Forte contra Katon, fraco contra Doton.",
+      "description": "Permite ao personagem conjurar e controlar porções de água à vontade, moldando-as em qualquer formato ou movendo-as sem dificuldade. Em níveis elevados, cria tsunamis que podem alterar a paisagem natural. Segundo elemento mais versátil, ficando atrás apenas de Doton. Vantagem contra Katon; desvantagem contra Doton. Fonte: Livro Básico p. 111-114.",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio" },
+        "sizeFormula": { "perEsp": 1, "unit": "m" },
+        "elementBonus": 0,
+        "elementAdvantage": ["katon"],
+        "elementDisadvantage": ["doton"]
+      },
+      "rules": {
+        "selosDefault": true,
+        "additionalEffects": ["nevoa", "prisao_de_agua", "colisao_de_ondas"]
+      }
+    },
+    {
+      "code": "fuuton",
+      "name": "Fuuton",
+      "translation": "Elemento Vento",
+      "category": "COMUM",
+      "element": "vento",
+      "shortDescription": "Elemento Vento. Cria correntes de ar cortantes. Forte contra Raiton, fraco contra Katon.",
+      "description": "Permite ao personagem conjurar e controlar correntes de ar, lâminas de vento e vácuos. Tem ataques afiados e versáteis. Vantagem contra Raiton; desvantagem contra Katon. Fonte: Livro Básico p. 105-107.",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio" },
+        "sizeFormula": { "perEsp": 1, "unit": "m" },
+        "elementBonus": 0,
+        "elementAdvantage": ["raiton"],
+        "elementDisadvantage": ["katon"]
+      },
+      "rules": {
+        "selosDefault": true
+      }
+    },
+    {
+      "code": "doton",
+      "name": "Doton",
+      "translation": "Elemento Terra",
+      "category": "COMUM",
+      "element": "terra",
+      "shortDescription": "Elemento Terra. Manipula terra, pedra, lama. O elemento mais versátil. Forte contra Suiton, fraco contra Raiton.",
+      "description": "Permite ao personagem manipular terra, pedras, lama e demais materiais terrestres. Elemento mais versátil do jogo. Excelente para defesa (barreiras, muralhas) e para criar terreno. Vantagem contra Suiton; desvantagem contra Raiton. Fonte: Livro Básico p. 103-105.",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio" },
+        "sizeFormula": { "perEsp": 1, "unit": "m" },
+        "elementBonus": 0,
+        "elementAdvantage": ["suiton"],
+        "elementDisadvantage": ["raiton"]
+      },
+      "rules": {
+        "selosDefault": true,
+        "additionalEffects": ["imergir", "tremor"]
+      }
+    },
+    {
+      "code": "raiton",
+      "name": "Raiton",
+      "translation": "Elemento Trovão",
+      "category": "COMUM",
+      "element": "raio",
+      "shortDescription": "Elemento Trovão/Raio. Manipula eletricidade. Forte contra Doton, fraco contra Fuuton.",
+      "description": "Permite ao personagem manipular eletricidade e energia elétrica. Conhecido por velocidade e poder de penetração. Vantagem contra Doton; desvantagem contra Fuuton. Fonte: Livro Básico p. 109-111.",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio" },
+        "sizeFormula": { "perEsp": 1, "unit": "m" },
+        "elementBonus": 0,
+        "elementAdvantage": ["doton"],
+        "elementDisadvantage": ["fuuton"]
+      },
+      "rules": {
+        "selosDefault": true,
+        "additionalEffects": ["descarga", "energizar_raiton", "lamina_de_raios"]
+      }
+    },
+    {
+      "code": "hyouton",
+      "name": "Hyouton",
+      "translation": "Elemento Gelo",
+      "category": "KEKKEI_GENKAI",
+      "element": "gelo",
+      "associatedKekkeiGenkai": "hyouton",
+      "associatedClan": "yuki",
+      "shortDescription": "KG do clã Yuki. Combina Fuuton e Suiton para criar gelo. Restringe acesso a outros elementos.",
+      "description": "Linhagem sanguínea avançada formada pelo uso simultâneo de Vento e Água para criar gelo. Quando o usuário libera chakra, o lugar ao redor fica tão frio que chega a nevar. O gelo produzido suporta até ataques de fogo, derretendo apenas minimamente. Compra-se como versão padrão de ninjutsu elemental, seguindo regras de Ninpou. Recebe gratuitamente 1 nível em Fuuton e Suiton. Pode usar efeito Canhão de Fuuton e Suiton usando o nível de Hyouton como parâmetro. Personagem restrito a Hyouton/Suiton/Fuuton — não pode aprender outros elementos. Fonte: Livro de Hijutsus p. 19-21.",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio" },
+        "sizeFormula": { "perEsp": 1, "unit": "m" },
+        "elementBonus": 0,
+        "additionalHardness": 2,
+        "resistanceDifficultyBonus": 1
+      },
+      "rules": {
+        "selosDefault": true,
+        "freePowerLevelsByElement": { "fuuton": 1, "suiton": 1 },
+        "restrictedElements": ["hyouton", "suiton", "fuuton"],
+        "permanentDurationsMelt": "1h por nível usado",
+        "allowedEffects": ["all_ninpou", "imergir"],
+        "exclusiveEffects": ["espelhos_demoniacos"]
+      }
+    },
+    {
+      "code": "mokuton",
+      "name": "Mokuton",
+      "translation": "Elemento Madeira",
+      "category": "KEKKEI_GENKAI",
+      "element": "madeira",
+      "associatedKekkeiGenkai": "mokuton",
+      "associatedClan": "senju",
+      "shortDescription": "KG do clã Senju. Combina Doton e Suiton para criar madeira viva. KG histórica do Primeiro Hokage.",
+      "description": "Linhagem sanguínea avançada pela combinação de Doton e Suiton. Permite criar e manipular madeira viva: árvores, raízes, lanças, prisões, clones de madeira (Moku Bunshin). KG histórica de Hashirama Senju. Extremamente rara após sua morte. Personagem restrito a Mokuton/Doton/Suiton. Fonte: Livro Básico (Senju).",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio" },
+        "sizeFormula": { "perEsp": 1, "unit": "m" },
+        "elementBonus": 0
+      },
+      "rules": {
+        "selosDefault": true,
+        "freePowerLevelsByElement": { "doton": 1, "suiton": 1 },
+        "restrictedElements": ["mokuton", "doton", "suiton"]
+      }
+    },
+    {
+      "code": "magen",
+      "name": "Magen",
+      "translation": "Ilusão Demoníaca",
+      "category": "RESTRITO",
+      "element": null,
+      "shortDescription": "Poder restrito de Genjutsu avançado. Cria ilusões (fantasma, compulsão, aflição) que confundem com a realidade.",
+      "description": "Habilidade extraordinária com genjutsus. O personagem cria ilusões à vontade — sobre si mesmo (fantasma), mentais (compulsão, alterando o comportamento da vítima) ou instantâneas (aflição, alterando o estado psicológico). Não requer teste de precisão — o observador interage com a ilusão para descobrir se é real. Pré-requisito: Inteligência 6 + aptidões Fascinar, Miragem e Ilusão Profunda. Fonte: Livro Básico p. 233.",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio" },
+        "chakraCostFormula": "nivel_do_efeito_usado"
+      },
+      "rules": {
+        "selosDefault": true,
+        "prerequisites": { "attributes": { "int": 6 }, "aptitudes": ["fascinar", "miragem", "ilusao_profunda"] },
+        "illusionTypes": ["fantasma", "compulsao", "aflicao"],
+        "noPrecisionTest": true
+      }
+    },
+    {
+      "code": "iryou_ninjutsu",
+      "name": "Iryou Ninjutsu",
+      "translation": "Ninjutsu Médico",
+      "category": "COMUM",
+      "element": null,
+      "shortDescription": "Poder de cura. Restaura Vitalidade. Pré-requisito: Medicina treinada.",
+      "description": "Poder de cura através de chakra. Restaura Vitalidade do alvo via toque. Inclui técnicas como Shousen no Jutsu (mão mística) e In'Yu Shōmetsu (recuperação secreta defensiva). Em níveis altos, permite cirurgia de chakra, regeneração celular e até reparo de membros. Combina com Medicina (perícia) e poder Senjutsu/Mokuton em casos extremos. Pré-requisito: Medicina nível 1 treinada. Fonte: Livro Básico p. 120-121.",
+      "stats": {
+        "healFormula": "ver_descricao_por_nivel",
+        "chakraCostFormula": "1 chakra a cada 2 Vit curada"
+      },
+      "rules": {
+        "selosDefault": true,
+        "prerequisites": { "skills": { "medicina": 1 } }
+      }
+    },
+    {
+      "code": "fuuinjutsu",
+      "name": "Fuuinjutsu",
+      "translation": "Selamento",
+      "category": "COMUM",
+      "element": null,
+      "shortDescription": "Técnicas de selamento. Sela objetos, chakra, jutsus, criaturas em pergaminhos ou tatuagens.",
+      "description": "Poder de selamento. Permite selar objetos em pergaminhos (selos de armazenamento), prender chakra em alvos (selos de supressão), aprisionar jutsus inteiros (selos de bloqueio). Tradicionalmente associado ao clã Uzumaki, mas pode ser comprado por qualquer um. Em níveis altos, permite selos complexos como o Selo de Oito Trigramas. Pré-requisito: Inteligência 6. Fonte: Livro Básico p. 114-120.",
+      "stats": {
+        "rangeFormula": "toque",
+        "chakraCostFormula": "variavel_por_selo"
+      },
+      "rules": {
+        "selosDefault": true,
+        "prerequisites": { "attributes": { "int": 6 } }
+      }
+    },
+    {
+      "code": "rasengan",
+      "name": "Rasengan",
+      "translation": "Explosão Espiral",
+      "category": "COMUM",
+      "element": null,
+      "shortDescription": "Bola giratória de chakra na palma. Ataque corpo-a-corpo de toque, dano alto.",
+      "description": "Bola giratória de chakra criada e mantida na palma da mão. Atacar com Rasengan é teste de CC contra a defesa do alvo, causando grande dano. Pré-requisito: Espírito 8. Tem evoluções: Rasengan Completo, Oodama Rasengan (ampliado), Rasengan Elemental (combinado com Katon/Raiton/Fuuton). Fonte: Livro Básico p. 121-123.",
+      "stats": {
+        "rangeFormula": "toque",
+        "damageFormula": "nivel_do_poder + esp",
+        "rollType": "CC"
+      },
+      "rules": {
+        "selosDefault": false,
+        "prerequisites": { "attributes": { "esp": 8 } }
+      }
+    },
+    {
+      "code": "kuchiyose",
+      "name": "Kuchiyose",
+      "translation": "Invocação",
+      "category": "COMUM",
+      "element": null,
+      "shortDescription": "Invoca criaturas aliadas em batalha através de contrato sanguíneo. Sapos, cobras, lesmas, cães, etc.",
+      "description": "Permite ao usuário invocar criaturas aliadas com as quais tem contrato sanguíneo. As criaturas mais comuns são Sapos (Monte Myōboku), Cobras (Caverna Ryūchi), e Lesmas. Cada criatura tem ficha própria, sua ação como Parceiro do invocador, e custo de chakra na invocação. Versões restritas (Kuchiyose Restrito) são exclusivas de clãs: Macacos (Sarutobi), Cães (Hatake), Tubarões (Hoshigaki). Fonte: Livro Básico p. 224.",
+      "stats": {
+        "chakraCostFormula": "variavel_por_criatura"
+      },
+      "rules": {
+        "selosDefault": true,
+        "requiresContract": true
+      }
+    },
+    {
+      "code": "juuken",
+      "name": "Juuken",
+      "translation": "Punho Suave",
+      "category": "RESTRITO_CLA",
+      "element": null,
+      "associatedClan": "hyuuga",
+      "shortDescription": "Taijutsu restrito do clã Hyuuga. Ataca tenketsus do oponente para selar chakra.",
+      "description": "Taijutsu mais forte de Konoha, exclusivo do clã Hyuuga. Requer Byakugan ativo para ver os tenketsus (pontos de circulação de chakra) do oponente. Cada golpe bem-sucedido sela um tenketsu, drenando chakra e paralisando uma região. Variantes lendárias: Hakke Rokujuuyon Shou (64 Palmas), Hakke Hyakunijuuhasshou (128 Palmas). Pré-requisito: clã Hyuuga + Byakugan. Fonte: Livro Básico p. 157-163.",
+      "stats": {
+        "rangeFormula": "corpo_a_corpo",
+        "rollType": "CC"
+      },
+      "rules": {
+        "selosDefault": false,
+        "prerequisites": { "clan": "hyuuga", "aptitudes": ["byakugan"] }
+      }
+    },
+    {
+      "code": "kagejutsu",
+      "name": "Kagejutsu",
+      "translation": "Arte das Sombras",
+      "category": "RESTRITO_CLA",
+      "element": null,
+      "associatedClan": "nara",
+      "shortDescription": "Poder restrito do clã Nara. Manipula sombras para imobilizar e controlar inimigos.",
+      "description": "Permite estender a própria sombra sobre qualquer superfície (incluindo água). Quando a sombra entra em contato com a sombra de um alvo, ambas ficam conectadas e o alvo fica instantaneamente paralisado. Em níveis altos, permite Kage Mane Shuriken (sombras com forma de armas) e Kage Kubishibari (sombras que estrangulam). Fonte: Livro Básico p. 168-173.",
+      "stats": {
+        "rangeFormula": { "base": 5, "perPowerLevel": 2, "category": "Curto" },
+        "rollType": "CD"
+      },
+      "rules": {
+        "selosDefault": true,
+        "prerequisites": { "clan": "nara" }
+      }
+    },
+    {
+      "code": "baika_ninpou",
+      "name": "Baika Ninpou",
+      "translation": "Arte Ninja da Expansão",
+      "category": "RESTRITO_CLA",
+      "element": null,
+      "associatedClan": "akimichi",
+      "shortDescription": "Poder restrito do clã Akimichi. Expande o tamanho do corpo, parcial ou total.",
+      "description": "Permite expandir o tamanho do corpo, parcial (braços/pernas) ou total (corpo inteiro gigante). Inclui Baika no Jutsu (expansão básica), Nikudan Sensha (tanque humano rolando), Bunbun Baika no Jutsu (expansão parcial pra socos), e Choudan Bakugeki (bombardeio do míssil borboleta). Pré-requisitos: Vigor 6, aptidão Corpulência. Fonte: Livro Básico p. 150-155.",
+      "stats": {
+        "rangeFormula": "pessoal_ou_toque"
+      },
+      "rules": {
+        "selosDefault": true,
+        "prerequisites": { "clan": "akimichi", "attributes": { "vig": 6 }, "aptitudes": ["corpulencia"] }
+      }
+    },
+    {
+      "code": "kikai_ninpou",
+      "name": "Kikai Ninpou",
+      "translation": "Arte Ninja dos Insetos",
+      "category": "RESTRITO_CLA",
+      "element": null,
+      "associatedClan": "aburame",
+      "shortDescription": "Poder restrito do clã Aburame. Manipula insetos kikai usando os mesmos efeitos de Ninpou.",
+      "description": "Permite manipular os kikaichuu (insetos kikai) que vivem no corpo do Aburame para realizar técnicas. Utiliza as mesmas regras e efeitos do Ninpou, mas somente com os kikaichuu (não outros tipos de inseto). Perícia chave: Lidar com Animais. Pré-requisito: aptidão Kikaichuu. Fonte: Livro Básico p. 142-150.",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio" },
+        "sizeFormula": { "perEsp": 1, "unit": "m" }
+      },
+      "rules": {
+        "selosDefault": true,
+        "prerequisites": { "clan": "aburame", "aptitudes": ["kikaichuu"] },
+        "keySkill": "lidar_com_animais"
+      }
+    },
+    {
+      "code": "shintenshin",
+      "name": "Shintenshin",
+      "translation": "Transferência de Mente",
+      "category": "RESTRITO_CLA",
+      "element": null,
+      "associatedClan": "yamanaka",
+      "shortDescription": "Poder restrito do clã Yamanaka. Transfere a mente do usuário para o corpo do alvo, controlando-o.",
+      "description": "Técnica especializada em manipulação mental. Permite ao Yamanaka transferir a própria mente para o corpo do alvo, controlando-o temporariamente. Em níveis altos, leitura de mente, comunicação telepática, manipulação de memórias. Fonte: Livro Básico p. 196-200.",
+      "stats": {
+        "rangeFormula": { "base": 10, "perEsp": 2, "category": "Médio" }
+      },
+      "rules": {
+        "selosDefault": true,
+        "prerequisites": { "clan": "yamanaka" }
+      }
+    },
+    {
+      "code": "shikakyu",
+      "name": "Shikakyu",
+      "translation": "Quadrúpede",
+      "category": "RESTRITO_CLA",
+      "element": null,
+      "associatedClan": "inuzuka",
+      "shortDescription": "Poder restrito do clã Inuzuka. Técnicas de luta em parceria com cão/lobo, transformação em besta.",
+      "description": "Conjunto de técnicas que ampliam as capacidades selvagens do Inuzuka. Inclui Gatsuuga (perfuração giratória dupla com o cão), Juujin Bunshin (transformação do cão em humanóide), Soutourou e Santorou (formas de fera de duas ou três cabeças). Pré-requisito: aptidão Companheiro Animal. Fonte: Livro Básico p. 163-168.",
+      "stats": {
+        "rangeFormula": "corpo_a_corpo_ou_toque"
+      },
+      "rules": {
+        "selosDefault": false,
+        "prerequisites": { "clan": "inuzuka", "aptitudes": ["companheiro_animal"] }
+      }
+    }
+  ]
+}

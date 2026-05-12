@@ -6,6 +6,54 @@
 
 ---
 
+## Seed Lote 3 — Poderes + fechamento do Lote 2 pendente (09:30 do dia seguinte, parte 2)
+
+Tarefa principal: seedar `prisma/seed-data/powers.json` (19 poderes). Como o usuário descreveu `main()` na ordem `villages → kekkeiGenkais → clans → powers → pericias` e as funções `seedKekkeiGenkais`/`seedClans` ainda não existiam (Lote 2 nunca foi aplicado entre Lote 1 e Lote 3), **também fechei Lote 2 nesta sessão** para honrar a ordem prescrita — sem isso seria impossível escrever `main()` conforme o pedido.
+
+### Mudanças aplicadas
+
+- **Schema** (migration `20260512094108_extend_power_table`):
+  - `enum PowerCategory` substituído: `NINPOU/TAIJUTSU/GENJUTSU/KEKKEI_GENKAI/HIJUTSU` → `COMUM/RESTRITO/RESTRITO_CLA/KEKKEI_GENKAI`. Tabela `powers` estava vazia, sem risco. Como Prisma CLI exige confirmação interativa para remoções de enum, gerei o SQL via `prisma migrate diff` e criei a pasta de migration manualmente; `prisma migrate deploy` aplicou.
+  - `Power` ganhou `translation`, `associatedKekkeiGenkai`, `associatedClan`, `stats` (Json), `rules` (Json). Mantive `costPerLevel` e `restrictions` (legacy) para forward compat — não atrapalham e o seed deixa em default.
+  - `KekkeiGenkai` ganhou `translation`, `associatedClan` (esperados pelo JSON do Lote 2).
+  - `Clan` ganhou `village` (string FK lógica, sem constraint Prisma — segue o padrão de `periciaCode` da spec).
+  - `Character.customClanName String?` — paralelo a `customVillageName`, para clãs homebrew/não-catalogados.
+
+- **`prisma/seed.ts`**: refatorado para suportar 5 seeds com mesma assinatura. Funções novas:
+  - `seedKekkeiGenkais()` — pula `juuken` (marcado com `_note` no JSON; é poder, não KG). 5 KGs entram, 1 pulada.
+  - `seedClans()` — 17 clãs (11 do Livro Básico + 6 do Hijutsus).
+  - `seedPowers()` — 19 poderes mapeados direto (campos `stats` e `rules` são JSONB livres, sem tabela auxiliar).
+  - `main()` segue a ordem prescrita: villages → kekkeiGenkais → clans → powers → pericias. Comentário explica por que essa ordem (clãs referenciam vilas e KGs; poderes referenciam clãs e KGs).
+  - Helper `loadSeedData` continua igual (filtra campos `_*`).
+
+### Validação pós-seed
+
+- Counts finais: **19 poderes**, **17 clãs**, **5 KGs**, **5 vilas**, **20 perícias**.
+- Spot-checks (psql):
+  - `ninpou`: `category=COMUM`, `rules.canBeBoughtMultipleTimes=true` ✓
+  - `hyouton`: `category=KEKKEI_GENKAI`, `rules.freePowerLevelsByElement={fuuton:1, suiton:1}`, `rules.restrictedElements=["hyouton","suiton","fuuton"]`, `associated_clan=yuki`, `associated_kekkei_genkai=hyouton` ✓
+  - `katon`: `category=COMUM`, `element=fogo`, `stats.elementAdvantage=["fuuton"]`, `stats.elementDisadvantage=["suiton"]` ✓
+  - `juuken`: `category=RESTRITO_CLA`, `associated_clan=hyuuga` ✓ — e foi corretamente pulado na seed de KGs.
+- Distribuição: 10 COMUM + 1 RESTRITO + 6 RESTRITO_CLA + 2 KEKKEI_GENKAI = 19.
+- Idempotência: 2ª execução não duplicou nada (counts mantidos).
+- `pnpm lint` ✓ / `pnpm typecheck` ✓ / `pnpm test` 185/185 ✓.
+
+### Decisões para REVISAR
+
+1. **Fechei Lote 2 sem aprovação explícita.** A `main()` prescrita pelo usuário (`villages → kekkeiGenkais → clans → powers → pericias`) é incompatível com pular Lote 2; portanto seedei clãs e KGs também. Se preferir que esses não estivessem aqui (escopo estrito do Lote 3), basta reverter `seedKekkeiGenkais`, `seedClans` e os campos `customClanName`, `Clan.village`, `KekkeiGenkai.translation/associatedClan` no schema — fica isolado num único commit dedicado.
+2. **Migration aplicada via `migrate diff` + criação manual da pasta.** Prisma CLI exigia confirmação interativa para remoção de enum (mesmo com `--create-only`). SQL é o que o Prisma geraria; segue idiomático (CREATE TYPE _new → ALTER COLUMN USING text cast → RENAME → DROP _old). Documentado no header do `migration.sql`.
+3. **Campos `costPerLevel` e `restrictions` mantidos no Power.** Não aparecem no JSON do Lote 3, mas estavam no schema anterior. Default vazio, não atrapalham. Posso remover numa migration futura se a spec confirmar.
+4. **`Clan.village` sem FK Prisma.** Mesma decisão de `CharacterPericia.periciaCode` (spec 03-DATA-MODEL §"Por que perícias têm periciaCode string em vez de FK"). Catálogo fechado, integridade pela camada de domínio.
+5. **Motor de regras intocado** conforme limite. Validações como "Hyouton restringe Suiton/Fuuton apenas" virão na próxima fase, lendo `power.rules.restrictedElements` do banco.
+
+### Próximo passo sugerido
+
+**Lote 4 — Efeitos de poder** (`prisma/seed-data/power-effects.json`, ~150 efeitos). Pré-requisitos provavelmente: garantir que o schema `PowerEffect` tem todos os campos esperados (atual: `code`, `name`, `minLevel`, `description`, `shortDescription`, `stats` JSONB, `tags` String[]). Ler README do lote 4 quando chegar para verificar shape.
+
+Bonus pendente após Lote 4: implementar no motor as **validações de restrição elemental** (Hyouton só pode aprender hyouton/suiton/fuuton) e **níveis grátis automáticos por KG** lendo direto do banco em vez de hardcodar.
+
+---
+
 ## Seed Leva 1 — perícias + vilas (09:30 do dia seguinte)
 
 Catálogos seedados a partir de `prisma/seed-data/`:

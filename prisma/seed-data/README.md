@@ -1,175 +1,206 @@
-# Seed Data — Lote 2
+# Seed Data — Lote 3
 
-Segunda entrega: **Clãs e Kekkei Genkais** — destrava criação de personagens completos com origem definida.
+Terceira entrega: **Poderes** — destrava a lista de poderes selecionáveis na criação de personagem.
 
-## 📦 Conteúdo deste lote
+## 📦 Conteúdo
 
-| Arquivo | Itens | Status |
+| Arquivo | Itens | Observação |
 |---|:---:|---|
-| `clans.json` | 17 | ✅ 11 do Livro Básico + 6 do Livro de Hijutsus |
-| `kekkei-genkais.json` | 6 | ✅ Hyouton, Sharingan, Byakugan, Mokuton, Shikotsumyaku + Juuken (com nota) |
+| `powers.json` | 19 | 13 comuns/restritos + 6 elementais (Ninpou + 5 básicos + Hyouton) |
 
-## 🎯 Por que esse lote é crítico
+## 🎯 Categorias incluídas
 
-Esse lote destrava a **criação da Satsuki Yuki** no sistema:
-- Clã Yuki ✅
-- Kekkei Genkai Hyouton ✅ (com 1 nível grátis em Fuuton e 1 em Suiton)
+### Elementais básicos (6)
+- **Ninpou** — base genérica, sem elemento
+- **Katon** — Fogo (forte vs Fuuton, fraco vs Suiton)
+- **Suiton** — Água (forte vs Katon, fraco vs Doton)
+- **Fuuton** — Vento (forte vs Raiton, fraco vs Katon)
+- **Doton** — Terra (forte vs Suiton, fraco vs Raiton)
+- **Raiton** — Trovão (forte vs Doton, fraco vs Fuuton)
 
-Sem ele, o motor pode validar regras mas o usuário não consegue construir o personagem completo.
+### Kekkei Genkai (2)
+- **Hyouton** — Gelo (clã Yuki) — combina Fuuton + Suiton ✨ **Satsuki**
+- **Mokuton** — Madeira (clã Senju) — combina Doton + Suiton
 
-## ⚠️ AÇÕES REQUERIDAS DE SCHEMA
+### Comuns especiais (4)
+- **Magen** — Genjutsu avançado
+- **Iryou Ninjutsu** — Cura
+- **Fuuinjutsu** — Selamento
+- **Rasengan** — Bola de chakra
+- **Kuchiyose** — Invocação
 
-### 1. Campo `customClanName` no `Character`
+### Restritos de clã (6)
+- **Juuken** (Hyuuga)
+- **Kagejutsu** (Nara)
+- **Baika Ninpou** (Akimichi)
+- **Kikai Ninpou** (Aburame)
+- **Shintenshin** (Yamanaka)
+- **Shikakyu** (Inuzuka)
 
-Mesma lógica de `customVillageName` do lote 1. O personagem pode:
-- Ter `clanId` (FK para `Clan` do catálogo), **OU**
-- Ter `customClanName` (string, vinculado a clã customizado/órfão), **OU**
-- Nenhum dos dois (personagem sem clã definido)
+## 🔑 Pontos importantes
 
-**Migration sugerida:** `pnpm prisma migrate dev --name add_custom_clan_name`
+### 1. Limite de nível (motor de regras)
 
-### 2. Verificar campos do `Clan` no schema
+Limite máximo de qualquer poder = **NC ÷ 2 (round DOWN)**.
 
-O JSON tem campos que talvez não estejam no schema atual de `Clan`:
+Exemplo: NC 6 → poder máximo nível 3. NC 11 → poder máximo nível 5.
 
-| Campo no JSON | Comentário |
+Esse é o **único caso de arredondamento para baixo no sistema** — todos os outros são para cima.
+
+### 2. Restrições de elemento (Hyouton/Mokuton)
+
+Personagens com Hyouton **não podem aprender** Katon, Raiton, Doton.
+Personagens com Mokuton **não podem aprender** Katon, Raiton, Fuuton.
+
+Campo `rules.restrictedElements` lista quais elementos são permitidos. Motor precisa validar quando o usuário tentar comprar um novo poder elemental.
+
+### 3. Níveis grátis em outros poderes
+
+Hyouton e Mokuton dão **1 nível grátis** em poderes elementais associados:
+- Hyouton: 1 grátis em Fuuton + 1 grátis em Suiton
+- Mokuton: 1 grátis em Doton + 1 grátis em Suiton
+
+Esses níveis grátis **não contam pro budget de pontos**. Permite usar o efeito Canhão dos elementos secundários usando o nível do poder principal como parâmetro.
+
+### 4. Efeitos exclusivos não estão neste lote
+
+Cada poder tem efeitos exclusivos (ex: Hyouton tem Espelhos Demoníacos, Suiton tem Névoa, Doton tem Imergir). **Os efeitos estão no Lote 4.**
+
+O campo `rules.exclusiveEffects` lista os códigos por enquanto — referencia futura.
+
+### 5. Categorias de poder
+
+Três categorias usadas no campo `category`:
+
+| Categoria | Significado |
 |---|---|
-| `code` | ✓ Provavelmente já tem |
-| `name` | ✓ Provavelmente já tem |
-| `village` | Código da vila associada (FK string opcional para `Village.code`). Verificar se schema tem isso. |
-| `shortDescription` | Texto curto pra UI |
-| `description` | Texto completo do livro |
-| `benefits` | JSONB com estrutura específica — ver shapes abaixo |
+| `COMUM` | Qualquer personagem pode comprar |
+| `RESTRITO_CLA` | Precisa do clã específico (campo `associatedClan`) |
+| `KEKKEI_GENKAI` | KG vinculada a um clã específico (campos `associatedKekkeiGenkai` + `associatedClan`) |
+| `RESTRITO` | Restrito por pré-requisitos (Magen requer Int 6 + 3 aptidões) |
 
-### 3. Verificar campos do `KekkeiGenkai` no schema
+### 6. Confronto de elementos
 
-| Campo no JSON | Comentário |
-|---|---|
-| `code` | ✓ |
-| `name` | ✓ |
-| `translation` | Adicionar se não existir (string opcional) — ex: "Olho que Copia" para Sharingan |
-| `associatedClan` | FK string para `Clan.code` |
-| `shortDescription` | Pra UI |
-| `description` | Texto completo |
-| `benefits` | JSONB |
+Vantagens elementais (campo `stats.elementAdvantage` e `elementDisadvantage`):
 
-### 4. Campo `kekkeiGenkaiId` no `Character`
+```
+Katon → Fuuton → Raiton → Doton → Suiton → Katon (ciclo)
+```
 
-Esse campo já está no schema conforme `03-DATA-MODEL.md`. Apenas validar.
+Quando elementos rivais se confrontam, o elemento de desvantagem tem **dureza e dano cortados pela metade**. Motor precisa aplicar isso em confrontos de jutsus.
 
-## 📋 Shapes do JSONB `benefits`
+Ninpou e KGs (Mokuton, Hyouton) **não têm vantagem nem desvantagem** contra ninguém — exceto onde explicitamente especificado.
 
-### `Clan.benefits`
+### 7. Combo de elementos (NC alto)
+
+Em Espírito 12 ou Inteligência 12, personagem pode unir 2 elementos diferentes em uma técnica única (Técnica Acelerada). Não modelado no MVP — virá em lote futuro/v2.
+
+## 📋 Shape do `Power.stats`
+
+JSONB com formato variável por poder. Estrutura comum:
 
 ```typescript
-type ClanBenefits = {
-  restrictedAptitudes?: string[];        // Aptidões compráveis APENAS por este clã
-  restrictedPowers?: string[];           // Poderes compráveis APENAS por este clã
-  requiredFromOrigin?: string;           // Texto livre: coisas obrigatórias na criação
-  kekkeiGenkai?: string;                 // Código da KG associada (FK lógica)
-  hijutsuOptions?: Array<{               // Para clãs com opção de hijutsu
-    name: string;
-    type: 'invocacao' | 'tensai' | 'kekkei_genkai';
-  }>;
-  exclusiveInvocation?: string;          // Ex: "Tubarão" para Hoshigaki
-  specialRules?: string;                 // Texto livre
+type PowerStats = {
+  rangeFormula?: {
+    base: number;          // metros base (ex: 10)
+    perEsp?: number;       // metros adicionais por nível de Espírito
+    perPowerLevel?: number; // alternativa: metros por nível do poder
+    category: 'Toque' | 'Curto' | 'Médio' | 'Longo';
+  } | 'pessoal' | 'toque' | 'corpo_a_corpo';
+
+  sizeFormula?: {
+    perEsp: number;        // metros de área por nível de Espírito
+    unit: 'm';
+  };
+
+  defaultDamageFormula?: string;       // ex: "nivel_usado + ceil(esp / 2)"
+  defaultDifficultyFormula?: string;
+  defaultHardnessFormula?: string;
+  chakraCostFormula?: string;
+
+  elementBonus?: number;               // bônus de dano extra (Katon: +2)
+  elementBonusType?: 'dano' | 'alcance';
+  elementAdvantage?: string[];         // códigos de elementos contra os quais tem vantagem
+  elementDisadvantage?: string[];
+
+  additionalHardness?: number;         // Hyouton: +2 em criações
+  resistanceDifficultyBonus?: number;  // Hyouton: +1 na Dif dos testes
+
+  damageFormula?: string;              // override pra poderes com fórmula única (Rasengan)
+  healFormula?: string;                // Iryou
+  rollType?: 'CC' | 'CD' | 'sem_teste';
 };
 ```
 
-### `KekkeiGenkai.benefits`
+## 📋 Shape do `Power.rules`
 
 ```typescript
-type KekkeiGenkaiBenefits = {
-  mainPowerCode?: string;                // Poder principal (ex: "hyouton")
-  freePowerLevelsByElement?: {           // Níveis grátis em outros poderes
+type PowerRules = {
+  selosDefault?: boolean;              // Requer selos de mão por padrão?
+  canBeBoughtMultipleTimes?: boolean;  // Apenas Ninpou
+  secondPurchaseNote?: string;
+  freePowerLevelsByElement?: {         // Hyouton/Mokuton
     [powerCode: string]: number;
   };
-  linkedAptitudes?: string[];            // Aptidões que pertencem a esta KG
-  linkedPowers?: string[];               // Poderes vinculados (ex: Byakugan → Juuken)
-  additionalHardness?: number;           // Bônus de dureza em criações (Hyouton: +2)
-  resistanceDifficultyBonus?: number;    // Bônus na Dif dos testes de resistência
-  restrictedElements?: string[];         // Lista de elementos permitidos (Hyouton só pode aprender Hyouton/Suiton/Fuuton)
-  specialRules?: string;                 // Texto livre
+  restrictedElements?: string[];       // Hyouton só pode aprender Hyouton/Suiton/Fuuton
+  permanentDurationsMelt?: string;     // Hyouton: criações derretem 1h por nível
+  allowedEffects?: string[];           // Códigos de efeitos permitidos
+  exclusiveEffects?: string[];         // Efeitos exclusivos (Espelhos Demoníacos, etc.)
+  prerequisites?: {
+    attributes?: { [attr: string]: number };
+    skills?: { [skill: string]: number };
+    aptitudes?: string[];
+    clan?: string;
+  };
+  requiresContract?: boolean;          // Kuchiyose
+  keySkill?: string;                   // Kikai Ninpou usa Lidar com Animais
+  illusionTypes?: string[];            // Magen
+  noPrecisionTest?: boolean;           // Magen (não usa teste de acerto)
 };
 ```
 
-## 🚨 Pontos de atenção
+## 🚨 AÇÕES REQUERIDAS no schema
 
-### 1. Clãs sem vila padrão
+Verifique se a tabela `Power` no schema atual tem:
 
-Dois clãs têm `village: null`:
-- **Fuuma** (proscritos do País do Arroz)
-- **Kaguya** (extinto, sem vila base)
+| Campo | Tipo | Observação |
+|---|---|---|
+| `code` | string unique | ✓ Provavelmente já tem |
+| `name` | string | ✓ |
+| `translation` | string opcional | Adicionar se faltar |
+| `category` | enum (PowerCategory) | Verificar se tem todos os valores: `COMUM`, `RESTRITO`, `RESTRITO_CLA`, `KEKKEI_GENKAI` |
+| `element` | string opcional | Pra poderes elementais |
+| `associatedKekkeiGenkai` | FK string opcional | Pra KGs |
+| `associatedClan` | FK string opcional | Pra poderes restritos de clã |
+| `shortDescription` | string | |
+| `description` | text | |
+| `stats` | Json | JSONB shape acima |
+| `rules` | Json | JSONB shape acima |
 
-Trate `village: null` como "clã sem vila padrão" — o personagem ainda escolhe sua vila normalmente.
-
-### 2. Aptidões e poderes não estão no banco ainda
-
-Os arrays `restrictedAptitudes` e `restrictedPowers` referenciam **códigos** que virão nos próximos lotes:
-- Lote 3: Poderes (`hyouton`, `katon`, `juuken`, etc.)
-- Lote 5: Aptidões (`congelamento`, `byakugan`, etc.)
-
-**Por ora, esses arrays são apenas strings.** Quando os JSONs de aptidões e poderes chegarem, o motor pode validar referências. **Não crie tabelas de associação ainda** — os arrays JSONB são suficientes.
-
-### 3. Juuken — caso especial
-
-Juuken está no `kekkei-genkais.json` apenas como referência/clareza. Tecnicamente é um **Poder Restrito**, não uma KG. **No banco, modelar como `Power` (não `KekkeiGenkai`).** A entrada pode ser removida do JSON ou marcada como `"_skipInSeed": true`.
-
-### 4. Hijutsu options (Sarutobi, Hatake, Senju, Yotsuki)
-
-Alguns clãs oferecem **2 caminhos** distintos durante a criação (`hijutsuOptions`). Por exemplo, Hatake:
-- Opção A: Kuchiyose Restrito (Cães)
-- Opção B: Tensai + Presa de Prata
-
-**No MVP, isso pode ser modelado como:** o usuário escolhe a opção durante criação, e o sistema aplica os benefícios correspondentes. **Fora do escopo do seed** — é decisão de UX.
-
-Por ora, **importe o `hijutsuOptions` como JSONB** e deixe a UI/motor decidir como usar depois.
-
-### 5. Restrições do Hyouton (importante pra Satsuki)
-
-A KG Hyouton tem `restrictedElements: ["hyouton", "suiton", "fuuton"]`. Isso significa:
-- Personagem com clã Yuki **NÃO PODE** aprender Katon, Raiton, Doton, etc.
-- Pode aprender apenas Hyouton (KG), Suiton e Fuuton.
-
-**O motor de regras precisa validar isso** quando o personagem tentar comprar um novo poder.
+**Migration sugerida se faltar campos:** `pnpm prisma migrate dev --name extend_power_table`
 
 ## 🔧 Padrão de seed (continuação)
 
-Adicione ao `prisma/seed.ts`:
-
 ```typescript
-async function seedClans() {
-  const clans = loadSeedFile('clans.json');
-  for (const c of clans) {
-    await prisma.clan.upsert({
-      where: { code: c.code },
-      create: c,
-      update: c,
+async function seedPowers() {
+  const powers = loadSeedFile('powers.json');
+  for (const p of powers) {
+    await prisma.power.upsert({
+      where: { code: p.code },
+      create: p,
+      update: p,
     });
   }
-  console.log(`✓ ${clans.length} clãs`);
-}
-
-async function seedKekkeiGenkais() {
-  const kgs = loadSeedFile('kekkei-genkais.json');
-  for (const kg of kgs) {
-    // Pular Juuken — não é KG real
-    if (kg.code === 'juuken') continue;
-    await prisma.kekkeiGenkai.upsert({
-      where: { code: kg.code },
-      create: kg,
-      update: kg,
-    });
-  }
-  console.log(`✓ ${kgs.length - 1} kekkei genkais (juuken pulado — é poder)`);
+  console.log(`✓ ${powers.length} poderes`);
 }
 
 async function main() {
   console.log('🌱 Iniciando seed...');
-  // Ordem: vilas e KGs antes de clãs (clãs referenciam ambas)
+  // Ordem: vilas → KGs → clãs → poderes → perícias
   await seedVillages();
   await seedKekkeiGenkais();
   await seedClans();
+  await seedPowers();      // ← novo
   await seedPericias();
   console.log('✅ Seed completo.');
 }
@@ -177,24 +208,20 @@ async function main() {
 
 ## ✅ Validação pós-seed
 
-Depois de rodar `pnpm prisma db seed`:
+Depois de `pnpm prisma db seed`:
 
-1. Abra `pnpm prisma studio`
-2. Verifique tabela `clans`:
-   - 17 linhas (16 se contar que Juuken não vai)
-   - **Yuki**: `village: "kiri"`, `benefits.kekkeiGenkai: "hyouton"`, `benefits.restrictedPowers: ["hyouton"]`
-   - **Uchiha**: `village: "konoha"`, `benefits.kekkeiGenkai: "sharingan"`, `benefits.requiredFromOrigin` preenchido
-   - **Aburame**: `benefits.restrictedAptitudes` tem 4 entradas
-3. Verifique tabela `kekkei_genkais`:
-   - 5 linhas (Hyouton, Sharingan, Byakugan, Mokuton, Shikotsumyaku)
-   - **Hyouton**: `benefits.freePowerLevelsByElement = { fuuton: 1, suiton: 1 }`
-   - **Hyouton**: `benefits.restrictedElements = ["hyouton", "suiton", "fuuton"]`
+1. `pnpm prisma studio`
+2. Tabela `powers` tem 19 linhas
+3. Verifique entradas críticas:
+   - **Ninpou**: `category: "COMUM"`, sem element, `rules.canBeBoughtMultipleTimes: true`
+   - **Hyouton**: `category: "KEKKEI_GENKAI"`, `associatedKekkeiGenkai: "hyouton"`, `associatedClan: "yuki"`, `rules.freePowerLevelsByElement: {fuuton: 1, suiton: 1}`, `rules.restrictedElements: ["hyouton", "suiton", "fuuton"]`
+   - **Katon**: `category: "COMUM"`, `element: "fogo"`, `stats.elementBonus: 2`, `stats.elementAdvantage: ["fuuton"]`, `stats.elementDisadvantage: ["suiton"]`
+   - **Juuken**: `category: "RESTRITO_CLA"`, `associatedClan: "hyuuga"`, `rules.prerequisites.aptitudes: ["byakugan"]`
 
 ## 🔮 Próximos lotes
 
-| Lote | Conteúdo | Estimativa |
+| Lote | Conteúdo | Status |
 |---|---|---|
-| **Lote 3** | Poderes (~25): Ninpou, Suiton, Fuuton, Hyouton, Katon, Raiton, Doton, Genjutsu, Iryou, Fuuinjutsu, etc. | Em breve |
-| **Lote 4** | Efeitos de poder (~150): Canhão, Névoa, Barreira, Criar Arma, Energizar, etc. | Em breve |
-| **Lote 5** | Aptidões (~80): Acuidade, Especialista, Ataque Poderoso, Velocista, Lutar às Cegas, Congelamento, Selos Especiais, etc. | Em breve |
-| **Lote 6** | Equipamentos (~50): Tachi, Wakizashi, Shuriken, Kunai, Colete Ninja, bombas, etc. | Em breve |
+| **Lote 4** | Efeitos de poder (~150): Canhão, Orbe, Barreira, Sopro Destrutivo, Raio, Energizar, Criar Arma, Névoa, etc. | Próximo |
+| Lote 5 | Aptidões (~80) | Pendente |
+| Lote 6 | Equipamentos (~50) | Pendente |

@@ -280,16 +280,19 @@ model Power {
   @@map("powers")
 }
 
-/// Categorias de poder do Livro Básico 4.1b:
+/// Categorias de poder do Livro Básico 4.1b + Guia Avançado:
 ///   - COMUM        : qualquer um pode comprar
 ///   - RESTRITO     : pré-requisitos pesados, sem clã específico (ex.: Magen)
 ///   - RESTRITO_CLA : exige um clã específico (ex.: Juuken → Hyuuga)
 ///   - KEKKEI_GENKAI: ligado a uma Kekkei Genkai (ex.: Hyouton, Mokuton)
+///   - HIJUTSU      : hijutsus avançados/regionais do Guia Avançado
+///                    (Dokujutsu, Kami Ninpou, Shouton, Ranton, etc.)
 enum PowerCategory {
   COMUM
   RESTRITO
   RESTRITO_CLA
   KEKKEI_GENKAI
+  HIJUTSU
 }
 
 /// Efeitos de poder (Ninpou universal + variantes por elemento + hijutsus).

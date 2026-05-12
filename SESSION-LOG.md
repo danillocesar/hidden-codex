@@ -1,8 +1,57 @@
-# Session Log — F0 Bootstrap
+# Session Log — F0 Bootstrap + Seed Leva 1
 
 **Início:** 2026-05-12 01:09 (horário local)
-**Modo:** Sessão autônoma noturna (sem revisor disponível)
-**Objetivo:** Implementar Fase F0 do roadmap em ambiente local (sem Vercel, sem Supabase cloud)
+**Modo:** Sessão autônoma noturna (sem revisor disponível) + revisão humana matinal
+**Objetivo:** Implementar Fase F0 do roadmap em ambiente local (sem Vercel, sem Supabase cloud) e popular o banco com a primeira leva de catálogos.
+
+---
+
+## Seed Leva 1 — perícias + vilas (09:30 do dia seguinte)
+
+Catálogos seedados a partir de `prisma/seed-data/`:
+
+- **perícias** (20 entradas, `prisma/seed-data/pericias.json`)
+- **vilas** (5 entradas oficiais, `prisma/seed-data/villages.json`)
+
+Atributos e habilidades de combate mantidos como TS const (decisão pré-aprovada — sem tabela Prisma), mas enriquecidos com os novos campos do JSON (kanji, order, abbreviation, category, primaryUses, formula, defendsAgainst, alternateAttribute).
+
+### Mudanças aplicadas
+
+- **`prisma/schema.prisma`**:
+  - Novo `model Pericia` (code único, attribute String para suportar `car` social, trained, doubleTrained, armorPenalty, order, descrições). Sem FK com `CharacterPericia.periciaCode` por decisão da spec (03-DATA-MODEL §"Por que perícias têm periciaCode string em vez de FK?") — a lista é fechada e o domínio garante consistência.
+  - `Character.customVillageName String?` — campo NOVO para vilas customizadas (não-canônicas) digitadas pelo usuário.
+  - `Village` ganhou `translation`, `country`, `leaderTitle` (eram esperados pelo JSON).
+- **Migration** `20260512122826_add_pericia_and_custom_village` aplicada.
+- **`src/domain/catalog/attributes.ts`**: enriquecido com kanji, order, abbreviation, category (FISICO/MENTAL), shortDescription, description completa, primaryUses. Função `getAttributeByCode`.
+- **`src/domain/catalog/combatSkills.ts`**: enriquecido com kanji, abbreviation, defaultBase, baseAttribute, alternateAttribute, alternateAttributeRequiresAptitude, formula, defendsAgainst. Função `getCombatSkillByCode`. `INITIAL_COMBAT_BASES_SUM` e `MAX_REMANEJAMENTO` movidos para cá (eram redundantes em `combatBases.ts`).
+- **`src/domain/catalog/pericias.ts`**: lista de 18 inventada substituída pelas 20 do livro. Type `PericiaAttribute = AttributeKey | 'car' | 'man'` para suportar atributos sociais. Type guard `isPrimaryAttribute`. Campos `trained`, `doubleTrained`, `armorPenalty`, `order`, `shortDescription`. Removidos campos inventados (`forbiddenAtNc4`, `requiresTraining`).
+- **`src/domain/rules/skills.ts`** (motor — ajuste mínimo necessário pelo shape do JSON):
+  - `requiresTraining` → `trained` no parâmetro e no acesso ao catálogo.
+  - `calculatePericiaLevelByCode` agora throwa erro explícito para perícias sociais (`obter_informacao` com `attribute: 'car'`) em vez de fingir suporte com NaN. Implementação social entra quando atributos sociais do `Character` tiverem cálculo dedicado.
+  - Removida a checagem `forbidden_in_nc_4` (não estava no livro nem no JSON — era inferência minha do spec). Substituída por comentário explicando que o gate de Venefício (requer aptidão Químico) entra quando aptidões forem seedadas. Wizard de criação fará o gate na UI.
+- **`prisma/seed.ts`**: implementação real (substitui no-op). Helper `loadSeedData` que remove campos com prefixo `_` (notes/metadata internos). Funções `seedPericias` e `seedVillages` usam `upsert` por `code` (idempotente). `import.meta.url` + shim de `__dirname` para tsx ESM.
+- **Tests atualizados**:
+  - `skills.test.ts`: `venenificio` → `venefico` (código correto do livro). Novo teste para perícia social (lança erro). Removido teste de "venefico proibida NC 4" (rule inventada); substituído por confirmação de que `venefico` passa pelo budget enquanto gate de aptidão não existe.
+  - `aptitudes.test.ts`: `curar` (perícia que nunca existiu no livro) → `medicina` (trained, retorna 0 sem investimento — mesma semântica do teste).
+
+### Validação após seed
+
+- `pnpm prisma db seed` rodou idempotente (executado 2× sem duplicar): 20 perícias + 5 vilas.
+- Spot-check via `psql`:
+  - Acrobacia: `attribute: agi`, `trained: false`, `armor_penalty: true`, `order: 1` ✓
+  - Venefício: `attribute: int`, `trained: true`, `double_trained: true` ✓
+  - Obter Informação: `attribute: car` (social) ✓
+  - Konoha: `country: País do Fogo`, `leader_title: Hokage` ✓
+- `pnpm lint` ✓ / `pnpm typecheck` ✓ / `pnpm test` 185/185 ✓ / `pnpm build` ✓
+
+### Decisões da sessão de seed para REVISAR
+
+1. **`forbidden_in_nc_4` removido.** A regra spec/04-RULES-ENGINE.md menciona `forbidden_in_nc_4` em PericiaDef, mas o JSON oficial não tem esse campo — usa `doubleTrained` em vez. Como o gate real é "requer aptidão Químico (que só pode existir a partir de pontos de poder disponíveis)", e aptidões ainda não foram seedadas, o gate fica na UI (wizard). Documentado em comentário no `skills.ts`. **Se a spec quiser RAW estrito, posso reintroduzir `forbiddenAtNc4` no catálogo TS sem retornar pro Prisma.**
+2. **Perícia social com erro explícito.** `calculatePericiaLevelByCode('obter_informacao', ...)` joga erro. Alternativa seria retornar 0 silenciosamente — preferi explicitar a limitação para não introduzir bugs silenciosos. Implementação completa (Carisma + ½ Inteligência) entra quando atributos sociais entrarem no `Character` core do motor.
+3. **Sem FK em `CharacterPericia.periciaCode`.** Mantido conforme spec — a tabela `Pericia` existe para UI/admin, e o motor consume direto da TS const.
+4. **TS catalogs sincronizados com JSON.** Em vez de o motor ler o JSON em runtime, cada catálogo TS é uma cópia "espelhada". Trade-off: precisamos manter dois lugares atualizados; vantagem: motor 100% puro (sem I/O, sem dependência de DB).
+
+---
 
 ## Timeline
 

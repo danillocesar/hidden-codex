@@ -1,0 +1,223 @@
+{
+  "_meta": {
+    "description": "As 18 perícias do sistema Shinobi no Sho 4.1b. Lista fechada do livro básico.",
+    "source": "Livro Básico p. 36-55",
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "rules": {
+      "initialLevel": "ceil(attribute / 2)",
+      "costPerLevel": 1,
+      "maxPointsPerSkill": "floor(NC / 2)",
+      "trainedFlagMeaning": "Marcada com [x] no livro. Não pode ser usada sem ao menos 1 ponto investido.",
+      "doubleTrainedFlagMeaning": "Marcada com [x][x]. Requer aptidão especial para ser comprada (Venefício requer Químico)."
+    },
+    "armorPenalty": {
+      "description": "Acrobacia, Atletismo e Furtividade exigem liberdade de movimentos. Personagens usando armadura sofrem penalidade nestes testes (acumulativa entre peças)."
+    }
+  },
+  "data": [
+    {
+      "code": "acrobacia",
+      "name": "Acrobacia",
+      "attribute": "agi",
+      "trained": false,
+      "armorPenalty": true,
+      "order": 1,
+      "shortDescription": "Andar na corda bamba, cair sem se machucar, cambalhotas, equilíbrio, levantar-se rapidamente.",
+      "description": "Você consegue andar na corda bamba, cair sem se machucar e fazer outras proezas acrobáticas. Usos incluem: amortecer queda, cambalhota para atravessar espaço ocupado por inimigo, equilíbrio em superfícies precárias, levantar-se rapidamente como ação parcial (Dif 18), passar por espaço apertado (Dif 24)."
+    },
+    {
+      "code": "arte",
+      "name": "Arte",
+      "attribute": "int",
+      "trained": false,
+      "armorPenalty": false,
+      "order": 2,
+      "shortDescription": "Criação de esculturas, pinturas, desenhos, livros, contos ou poesias. Escolhe-se um estilo no primeiro nível.",
+      "description": "Você é um artista, capaz de criar esculturas, pinturas, desenhos ou escrever livros, contos ou poesias. Escolha um estilo artístico ao comprar o primeiro nível desta perícia, e mais um estilo a cada 4 níveis. Usos incluem: avaliação de itens artísticos (Dif 8 para comuns, 16 para raros), perceber falsificação, sustento (ganha 100 Ryos por semana por ponto que o teste exceder 15). Exige kit de artesão (sem ele, -5 no teste)."
+    },
+    {
+      "code": "atletismo",
+      "name": "Atletismo",
+      "attribute": "for",
+      "trained": false,
+      "armorPenalty": true,
+      "order": 3,
+      "shortDescription": "Corrida, escalada, natação, saltos. Façanhas físicas que dependem de Força.",
+      "description": "Usado para realizar façanhas atléticas: correr rápido (deslocamento extra igual ao resultado do teste), escalar (Dif 4 a 20), nadar (Dif 8 a 16 dependendo da água), saltar (alcança 5m + 1m a cada 2 níveis). Manter corrida prolongada exige testes de Vigor a partir do turno N+1 (onde N = Vigor)."
+    },
+    {
+      "code": "ciencias_naturais",
+      "name": "Ciências Naturais",
+      "attribute": "int",
+      "trained": false,
+      "armorPenalty": false,
+      "order": 4,
+      "shortDescription": "Conhecimento de Biologia, Herbalismo e Geografia.",
+      "description": "Mede o conhecimento do personagem sobre Biologia (animais e anatomia humana básica), Herbalismo (plantas e ervas) e Geografia (terrenos e climas). Pode ser usado para identificar plantas, animais, condições climáticas, e até como reação para identificar venenos em fumaças."
+    },
+    {
+      "code": "concentracao",
+      "name": "Concentração",
+      "attribute": "int",
+      "trained": false,
+      "armorPenalty": false,
+      "order": 5,
+      "shortDescription": "Manter atenção sob distrações: dano, clima, movimentos bruscos. Crítica para sustentar técnicas.",
+      "description": "Utilizada para manter a atenção e a concentração mental. Sempre que houver distração (dano, clima agitado, movimentos bruscos), o personagem deve obter sucesso no teste para continuar executando tarefa que exija atenção total, como usar uma técnica, sustentar uma técnica ativa, ou utilizar perícia que provoque ataques oportunos. Testar Concentração é ação livre."
+    },
+    {
+      "code": "cultura",
+      "name": "Cultura",
+      "attribute": "int",
+      "trained": false,
+      "armorPenalty": false,
+      "order": 6,
+      "shortDescription": "Conhecimento geral do mundo: história, religião, nobreza, jutsus, vilas, líderes, clãs.",
+      "description": "Representa o conhecimento geral sobre o mundo (história, religião, nobreza) e também mede o conhecimento ninja (sobre quantos e quais jutsus o personagem conhece; vilas e seus líderes; ninjas e clãs famosos). Pode ser usada para decifrar escrita (Dif 16-24) e identificar técnicas (Dif 12 + nível do poder antes do uso; 16 + nível durante)."
+    },
+    {
+      "code": "disfarce",
+      "name": "Disfarce",
+      "attribute": "int",
+      "trained": false,
+      "armorPenalty": false,
+      "order": 7,
+      "shortDescription": "Mudar a aparência para parecer outra pessoa.",
+      "description": "Permite alterar sua aparência para parecer outra pessoa, requer pelo menos 10 minutos. Penalidades cumulativas: -2 para sexo oposto, -2 para raça diferente, -2 para idade muito diferente. Quem conhece a pessoa imitada recebe bônus em Prontidão: +2 se de vista, +4 amigo, +8 íntimo."
+    },
+    {
+      "code": "escapar",
+      "name": "Escapar",
+      "attribute": "des",
+      "trained": false,
+      "armorPenalty": false,
+      "order": 8,
+      "shortDescription": "Escapar de cordas, redes, algemas ou da manobra Agarrar.",
+      "description": "Como ação completa, escapa de cordas (teste resistido pelo Destreza de quem amarrou +8), redes (Dif 16) e algemas (Dif 24). Também usado para se libertar da manobra Agarrar (Dif = 4 + CC do inimigo no teste de agarrar)."
+    },
+    {
+      "code": "furtividade",
+      "name": "Furtividade",
+      "attribute": "agi",
+      "trained": false,
+      "armorPenalty": true,
+      "order": 9,
+      "shortDescription": "Esconder-se, mover sem barulho, sumir na multidão. Resistido por Prontidão, Procurar ou Rastrear.",
+      "description": "Permite desaparecer nas sombras, andar sem barulho, sumir na multidão, seguir alguém sem ser notado. Requer camuflagem ou cobertura. Movimento normal: -4 no teste; corrida ou investida: -16. Resistido por Prontidão (instantâneo), Procurar (turnos seguintes) ou Rastrear (cenas passadas). Ataque furtivo causa alvo desprevenido (-3 nas defesas, perde bônus de Esquiva)."
+    },
+    {
+      "code": "intuir_intencoes",
+      "name": "Intuir Intenções",
+      "attribute": "per",
+      "trained": false,
+      "armorPenalty": false,
+      "order": 10,
+      "shortDescription": "Perceber se alguém está mentindo, intenções ocultas, sentimentos não-ditos.",
+      "description": "Permite perceber as intenções, motivações ou estado emocional de um alvo através de comportamento e expressões. Resistido por Manipulação do alvo quando este tenta blefar. Útil para detectar mentiras, hostilidade dissimulada, traição iminente."
+    },
+    {
+      "code": "lidar_com_animais",
+      "name": "Lidar com Animais",
+      "attribute": "per",
+      "trained": true,
+      "armorPenalty": false,
+      "order": 11,
+      "shortDescription": "Conduzir cavalos, treinar cães, domesticar animais selvagens. Requer treinamento.",
+      "description": "Usos: domesticar animal selvagem (Dif 20, criar desde filhote), ensinar um truque (Dif 12, uma semana), forçar animal a executar truque (Dif 20, ação completa), manejar animal para truque conhecido (Dif 8, ação padrão; única ação possível sem treinamento). Companheiro animal próprio dá +4 nos testes."
+    },
+    {
+      "code": "mecanismos",
+      "name": "Mecanismos",
+      "attribute": "int",
+      "trained": true,
+      "armorPenalty": false,
+      "order": 12,
+      "shortDescription": "Desabilitar, reativar ou sabotar dispositivos mecânicos: fechaduras, armadilhas, veículos. Requer treinamento.",
+      "description": "Esta perícia permite desabilitar, reativar ou sabotar (mas não consertar) dispositivos mecânicos diversos, como fechaduras, armadilhas e veículos. Falhar por 4+ ao desarmar armadilha pode disparar a armadilha."
+    },
+    {
+      "code": "medicina",
+      "name": "Medicina",
+      "attribute": "int",
+      "trained": true,
+      "armorPenalty": false,
+      "order": 13,
+      "shortDescription": "Tratar feridos, estabilizar moribundos, identificar e tratar doenças. Requer treinamento.",
+      "description": "Permite tratar ferimentos, estabilizar personagens à beira da morte, identificar e curar doenças e venenos não-mágicos. Pode ser combinada com o poder Iryou Ninjutsu para curas mais avançadas. Testes específicos para primeiros socorros, diagnóstico, tratamento de longo prazo."
+    },
+    {
+      "code": "obter_informacao",
+      "name": "Obter Informação",
+      "attribute": "car",
+      "trained": false,
+      "armorPenalty": false,
+      "order": 14,
+      "shortDescription": "Fazer contatos, ouvir rumores, descobrir informações específicas. Atributo social.",
+      "_note": "USA ATRIBUTO SOCIAL Carisma + ½ Inteligência (não os 7 atributos primários). Tratamento especial no motor — ver 04-RULES-ENGINE.md.",
+      "description": "Permite fazer contatos, ouvir rumores locais e descobrir informações. Usa Carisma + ½ Inteligência. Exige um dia inteiro e custa Ryos. Difs: informação geral Dif 8 (300 Ryos), específica Dif 12 (500 Ryos), restrita Dif 16 (900 Ryos), protegida Dif 20 (1500 Ryos). Pode pagar dobro pra +2 no teste."
+    },
+    {
+      "code": "ocultismo",
+      "name": "Ocultismo",
+      "attribute": "int",
+      "trained": true,
+      "armorPenalty": false,
+      "order": 15,
+      "shortDescription": "Conhecimento de informações secretas: técnicas proibidas, segredos de clãs. Requer treinamento.",
+      "description": "Funciona como Cultura, mas para informações secretas ou de difícil acesso: reconhecer técnicas proibidas ou exclusivas de clã; saber histórias, lendas ou segredos obscuros de famílias nobres. Pode ser usada para decifrar escrita arcaica e identificar técnicas (mesma mecânica de Cultura)."
+    },
+    {
+      "code": "prestidigitacao",
+      "name": "Prestidigitação",
+      "attribute": "des",
+      "trained": false,
+      "armorPenalty": false,
+      "order": 16,
+      "shortDescription": "Mãos rápidas: roubar, esconder objetos, malabarismo, fintar com técnicas. Realizar selos de mão.",
+      "description": "Permite manipulação fina rápida: pegar de leve (roubar), esconder objetos, malabarismo. Usada para fintar com técnicas durante combate. Aptidão Mestre dos Selos (Prestidigitação 12) permite usar selos de mão com extrema agilidade; Prestidigitação 14 permite selar com uma mão só."
+    },
+    {
+      "code": "procurar",
+      "name": "Procurar",
+      "attribute": "per",
+      "trained": false,
+      "armorPenalty": false,
+      "order": 17,
+      "shortDescription": "Vasculhar área para encontrar algo escondido: objetos, pessoas, portas secretas, armadilhas.",
+      "description": "Usado para encontrar coisas escondidas: pessoas em Furtividade, portas secretas, armadilhas, objetos perdidos. Em busca ativa de inimigo escondido, é resistido pela Furtividade do alvo."
+    },
+    {
+      "code": "prontidao",
+      "name": "Prontidão",
+      "attribute": "per",
+      "trained": false,
+      "armorPenalty": false,
+      "order": 18,
+      "shortDescription": "Estado de alerta: notar emboscadas, percebimento passivo, reagir a Furtividade.",
+      "description": "Mede o estado de alerta passivo do personagem. Usado como reação no momento em que outro personagem usa Furtividade (teste resistido), para notar emboscadas, e em situações onde percepção passiva é necessária. Diferente de Procurar, que é busca ativa."
+    },
+    {
+      "code": "rastrear",
+      "name": "Rastrear",
+      "attribute": "per",
+      "trained": false,
+      "armorPenalty": false,
+      "order": 19,
+      "shortDescription": "Seguir pegadas, encontrar caminho de quem passou, achar criatura por rastros.",
+      "description": "Permite seguir o caminho de pessoas ou criaturas por meio de pegadas, marcas no ambiente, cheiros (se a regra permitir). Resistido pela Furtividade de quem se escondeu em cena passada. Aptidão Hakken no Jutsu (clã Inuzuka) amplia capacidade olfativa."
+    },
+    {
+      "code": "venefico",
+      "name": "Venefício",
+      "attribute": "int",
+      "trained": true,
+      "doubleTrained": true,
+      "armorPenalty": false,
+      "order": 20,
+      "shortDescription": "Criar, identificar e usar venenos. Requer aptidão Químico para ser comprada.",
+      "_note": "Marcada com [x][x] no livro. Não pode ser comprada em nenhum nível a menos que o personagem tenha a aptidão Químico (que requer Inteligência 8).",
+      "description": "Permite criar, identificar, usar e tratar venenos. Não pode ser comprada sem a aptidão Químico. Pode aplicar venenos em armas (1 dose por arma ou 10 projéteis, 1 minuto de preparação). Para o veneno fazer efeito, é necessário acerto com dano de grau 3+. Mistura de venenos diferentes não funciona."
+    }
+  ]
+}

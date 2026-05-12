@@ -1,0 +1,86 @@
+{
+  "_meta": {
+    "description": "Vilas ocultas canônicas do mundo de Naruto (Shinobi no Sho 4.1b). Apenas as 5 Grandes Nações Shinobi. Vilas customizadas pelo usuário são armazenadas como texto livre em Character.customVillageName.",
+    "source": "Livro Básico p. 16-17",
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 2,
+    "changelog": [
+      { "version": 2, "date": "2026-05-12", "change": "Removidas Nami e Same (eram extra-canônicas). Vilas customizadas agora ficam em Character.customVillageName." },
+      { "version": 1, "date": "2026-05-12", "change": "Versão inicial com 5 oficiais + 2 customizadas (Nami, Same)." }
+    ]
+  },
+  "data": [
+    {
+      "code": "konoha",
+      "name": "Konoha",
+      "fullName": "Konohagakure no Sato",
+      "translation": "Vila Oculta da Folha",
+      "country": "País do Fogo",
+      "leaderTitle": "Hokage",
+      "shortDescription": "Maior e mais influente vila ninja, no centro do continente, no País do Fogo.",
+      "description": "Não é a maior das Cinco Grandes Nações, mas é a mais poderosa e influente do mundo. Localizada no centro do continente do País do Fogo, com vasto território coberto por densas florestas. Importante rota comercial e força político-militar. Fundada há aproximadamente 60 anos. Conhecida por sua filosofia da Vontade do Fogo e por abrigar o Bijuu de Nove Caudas (Kyuubi). Lar de muitos clãs lendários: Uchiha, Senju, Hyuuga, Nara, Sarutobi, entre outros.",
+      "benefits": {
+        "freeAptitudes": [],
+        "tendencies": ["bom", "leal"],
+        "iconography": "folha verde"
+      }
+    },
+    {
+      "code": "kiri",
+      "name": "Kiri",
+      "fullName": "Kirigakure no Sato",
+      "translation": "Vila Oculta da Névoa",
+      "country": "País da Água",
+      "leaderTitle": "Mizukage",
+      "shortDescription": "Vila do arquipélago insular, conhecida pelos Sete Espadachins e por sua história sangrenta.",
+      "description": "Localizada no País da Água, o menor dos cinco grandes países, distribuído em um arquipélago de ilhas ao leste do continente. Sofreu diversas guerras civis. Conhecida historicamente pelas perseguições e matanças contra clãs com Kekkei Genkai (incluindo os Yuki). Lar dos Sete Espadachins da Névoa, grupo lendário de shinobis manipuladores de espadas únicas. Ambiente caracterizado por neblina densa e clima úmido.",
+      "benefits": {
+        "freeAptitudes": [],
+        "associatedClans": ["yuki", "hoshigaki", "houzuki"],
+        "iconography": "quatro linhas verticais (névoa)"
+      }
+    },
+    {
+      "code": "suna",
+      "name": "Suna",
+      "fullName": "Sunagakure no Sato",
+      "translation": "Vila Oculta da Areia",
+      "country": "País do Vento",
+      "leaderTitle": "Kazekage",
+      "shortDescription": "Vila do deserto, especializada em defesa e desconfiada de alianças externas.",
+      "description": "Localizada no País do Vento, possivelmente o maior dentre os Cinco Grandes Países, marcado por vasto deserto. Vila historicamente desconfiada de alianças. Conhecida por sua defesa formidável e inacessibilidade. Tentou no passado dominar um dos demônios com caudas. Mistérios envolvem o desaparecimento do seu Terceiro Kazekage.",
+      "benefits": {
+        "freeAptitudes": [],
+        "iconography": "ampulheta"
+      }
+    },
+    {
+      "code": "iwa",
+      "name": "Iwa",
+      "fullName": "Iwagakure no Sato",
+      "translation": "Vila Oculta da Pedra",
+      "country": "País da Terra",
+      "leaderTitle": "Tsuchikage",
+      "shortDescription": "Vila em terreno montanhoso, com grande poder político próximo ao País do Fogo.",
+      "description": "Localizada no País da Terra, um dos maiores países dentre os Cinco Grandes mas pouco explorado em detalhe. Terreno vastamente montanhoso. País de grande poder e influência, próximo ao País do Fogo. Lar de tradições com Doton (elemento Terra) e Yoton (elemento Lava).",
+      "benefits": {
+        "freeAptitudes": [],
+        "iconography": "rocha"
+      }
+    },
+    {
+      "code": "kumo",
+      "name": "Kumo",
+      "fullName": "Kumogakure no Sato",
+      "translation": "Vila Oculta da Nuvem",
+      "country": "País do Trovão",
+      "leaderTitle": "Raikage",
+      "shortDescription": "Vila ao norte do continente, em clima frio e nevado. Conhecida pela força física dos seus shinobis.",
+      "description": "Localizada no País do Trovão, ao norte do continente, separado do País do Fogo por dois países menores. Território bastante nevado e clima muito frio o ano inteiro. Conhecida pela força física dos shinobis e dominância de técnicas Raiton (elemento Raio). Já entrou em guerra com Konoha. Já tentou sequestrar membros do clã Hyuuga.",
+      "benefits": {
+        "freeAptitudes": [],
+        "iconography": "nuvem"
+      }
+    }
+  ]
+}

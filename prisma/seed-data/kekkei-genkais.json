@@ -1,0 +1,99 @@
+{
+  "_meta": {
+    "description": "Kekkei Genkais (linhagens sanguíneas avançadas) do Shinobi no Sho 4.1b. Cada KG é vinculada a um clã específico e dá acesso a poderes/aptidões exclusivos.",
+    "sources": [
+      "Livro Básico p. 142-200",
+      "Livro de Hijutsus p. 14-21"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "notes": "Kekkei Genkais (KGs) são acessadas via clã do personagem. No motor, o personagem que escolhe um clã com KG ganha automaticamente acesso à KG correspondente. Algumas KGs concedem níveis grátis em poderes elementais (ex: Hyouton dá 1 nível grátis em Fuuton e Suiton)."
+  },
+  "data": [
+    {
+      "code": "hyouton",
+      "name": "Hyouton",
+      "translation": "Elemento Gelo",
+      "associatedClan": "yuki",
+      "shortDescription": "Combina Vento e Água para criar e manipular gelo. Cria criações com dureza superior, área de neve.",
+      "description": "Linhagem sanguínea avançada formada através do uso simultâneo dos elementos Vento e Água para criar gelo. Permite ao usuário criar e manipular livremente o gelo combinando estes elementos. Quando libera chakra, o lugar ao redor fica tão frio que chega a nevar, e o gelo produzido é tão resistente que suporta até ataques do tipo fogo, minimamente derretendo. Fonte: Livro de Hijutsus p. 19-21.",
+      "benefits": {
+        "mainPowerCode": "hyouton",
+        "freePowerLevelsByElement": {
+          "fuuton": 1,
+          "suiton": 1
+        },
+        "additionalHardness": 2,
+        "resistanceDifficultyBonus": 1,
+        "restrictedElements": ["hyouton", "suiton", "fuuton"],
+        "specialRules": "Personagem não pode aprender outros elementos além de Hyouton, Suiton e Fuuton. Criações de duração permanente derretem em 1h por nível usado. Pode usar efeito Canhão de Fuuton e Suiton usando nível de Hyouton como parâmetro."
+      }
+    },
+    {
+      "code": "sharingan",
+      "name": "Sharingan",
+      "translation": "Olho que Copia",
+      "associatedClan": "uchiha",
+      "shortDescription": "Doujutsu do clã Uchiha. Percepção avançada de movimentos (visão em câmera lenta), permite prever ataques.",
+      "description": "Poderoso doujutsu (técnica ocular) exclusivo do clã Uchiha. Manifesta-se durante grande luta na qual o usuário precise de sua habilidade de percepção visual. Inicialmente, aparência incompleta com vírgula negra na extremidade da íris vermelha. Concede percepção avançada dos movimentos, semelhante a visão em câmera lenta, permitindo prever ataques corporais ou ninjutsus. Evolui em níveis: Sharingan inicial → Nidan (2 vírgulas) → Sandan (3 vírgulas) → Mangekyou (forma única por usuário). Pré-requisito: Percepção 3. Ativar requer ação parcial e 1 chakra. Fonte: Livro Básico p. 181-193.",
+      "benefits": {
+        "linkedAptitudes": ["sharingan", "nidan_sharingan", "sandan_sharingan", "mangekyou_sharingan"],
+        "specialRules": "Ativação requer 1 chakra e ação parcial. Duração contínua por uma cena. Pode ativar durante defesa. Mangekyou desbloqueia técnicas únicas (Amaterasu, Tsukuyomi, Susanoo) dependendo do usuário."
+      }
+    },
+    {
+      "code": "byakugan",
+      "name": "Byakugan",
+      "translation": "Olho Branco",
+      "associatedClan": "hyuuga",
+      "shortDescription": "Doujutsu do clã Hyuuga. Visão de 360°, vê chakra e tenketsus. Base do Juuken.",
+      "description": "Linhagem sanguínea avançada do clã Hyuuga, conhecida pela grande percepção e poder. Quando ativo, os nervos ao redor dos olhos ficam exaltados sob a pele. Concede visão de 360° (com pequeno ponto cego na nuca), capacidade de ver chakra (incluindo tenketsus — pontos de circulação de chakra) e visão estendida através de paredes finas e em longas distâncias. Base do Taijutsu Juuken do clã, que ataca diretamente os tenketsus selando chakra do alvo. Pré-requisito: Percepção 1. Ativar requer ação parcial e 1 chakra. Fonte: Livro Básico p. 157-163.",
+      "benefits": {
+        "linkedAptitudes": ["byakugan", "tenketsu_byakugan"],
+        "linkedPowers": ["juuken"],
+        "specialRules": "Ativação requer 1 chakra e ação parcial. Permite ver chakra e tenketsus. Habilita técnicas Juuken."
+      }
+    },
+    {
+      "code": "mokuton",
+      "name": "Mokuton",
+      "translation": "Elemento Madeira",
+      "associatedClan": "senju",
+      "shortDescription": "Combina Terra e Água para criar e manipular madeira viva. KG histórica do Primeiro Hokage.",
+      "description": "Linhagem sanguínea avançada formada pela combinação de Doton (Terra) e Suiton (Água), criando madeira viva. Permite ao usuário criar árvores, raízes, lanças de madeira, prisões e até clones de madeira (Moku Bunshin) a partir do próprio chakra. KG histórica de Hashirama Senju (Primeiro Hokage). Extremamente rara após a morte de Hashirama. Fonte: Livro Básico (Senju + Mokuton).",
+      "benefits": {
+        "mainPowerCode": "mokuton",
+        "freePowerLevelsByElement": {
+          "doton": 1,
+          "suiton": 1
+        },
+        "linkedAptitudes": ["maximizar"],
+        "specialRules": "Combina Doton e Suiton. Madeira criada é viva — pode crescer, brotar."
+      }
+    },
+    {
+      "code": "shikotsumyaku",
+      "name": "Shikotsumyaku",
+      "translation": "Pulso dos Ossos Mortais",
+      "associatedClan": "kaguya",
+      "shortDescription": "Manipulação dos próprios ossos: remove, molda como armas, regenera. KG rara do extinto clã Kaguya.",
+      "description": "Kekkei Genkai do clã Kaguya. Permite ao usuário remover ossos do próprio corpo e moldá-los como armas (lâminas, lanças, projéteis, espadas). Controle sobre regeneração óssea faz com que ossos removidos cresçam de volta quase imediatamente, tornando o usuário um arsenal humano. Rara mesmo dentro do clã e temida por seus próprios membros. Fonte: Livro de Hijutsus p. 14-17.",
+      "benefits": {
+        "linkedAptitudes": ["shikotsumyaku", "artesao_de_ossos", "regeneracao"],
+        "specialRules": "Os ossos criados são extremamente densos e resistentes — mais duros que aço normal. Pode crescer ossos em formato de lâminas saindo do próprio corpo."
+      }
+    },
+    {
+      "code": "juuken",
+      "name": "Juuken",
+      "translation": "Punho Suave",
+      "associatedClan": "hyuuga",
+      "shortDescription": "Taijutsu do clã Hyuuga. Não é exatamente KG (é poder), mas só usável com Byakugan ativo.",
+      "_note": "Juuken tecnicamente é um Poder Restrito, não KG. Incluído aqui apenas pra clareza — o motor deve modelá-lo como poder em Powers, não como KG. Esta entrada pode ser removida do seed se causar confusão.",
+      "description": "Taijutsu mais forte de Konoha, exclusivo do clã Hyuuga. Aproveita o Byakugan para ver os tenketsus do oponente e atacar diretamente os pontos de circulação de chakra. Cada golpe bem-sucedido sela um tenketsu, paralisando o fluxo de chakra naquela região e drenando pontos do alvo. Variantes lendárias: Hakke Rokujuuyon Shou (64 Palmas) e Hakke Hyakunijuuhasshou (128 Palmas). Fonte: Livro Básico p. 157-163.",
+      "benefits": {
+        "specialRules": "Requer Byakugan ativo pra usar. Modelar como poder regular no banco, não como KG."
+      }
+    }
+  ]
+}

@@ -58,6 +58,10 @@ model Character {
   // não-canônica. Excludente com `villageId` na UI, mas o banco permite ambos
   // para flexibilidade (validação fica no domínio).
   customVillageName String?       @map("custom_village_name")
+  // Clã customizado: mesma lógica de `customVillageName`. Usado quando o
+  // personagem é de um clã não-catalogado (homebrew ou clã que ainda não foi
+  // seedado). Excludente com `clanId` na UI.
+  customClanName    String?       @map("custom_clan_name")
   kekkeiGenkaiId    String?       @map("kekkei_genkai_id") @db.Uuid
   kekkeiGenkai      KekkeiGenkai? @relation(fields: [kekkeiGenkaiId], references: [id])
 
@@ -235,17 +239,36 @@ model CharacterAptitude {
 // ══════════════════════════════════════════════════════════════════════
 
 model Power {
-  id               String        @id @default(uuid()) @db.Uuid
-  code             String        @unique
-  name             String
-  category         PowerCategory
-  description      String        @db.Text
-  shortDescription String?       @map("short_description")
+  id                     String        @id @default(uuid()) @db.Uuid
+  code                   String        @unique
+  name                   String
+  /// Tradução em português (ex.: "Arte Ninja", "Elemento Fogo").
+  translation            String?
+  category               PowerCategory
+  /// Elemento natural quando aplicável: "fogo", "agua", "vento", "raio",
+  /// "terra", "gelo", "madeira" — `null` para poderes não-elementais.
+  element                String?
+  /// FK lógica para `KekkeiGenkai.code` (sem constraint Prisma) — preenchida
+  /// quando o poder é um KG (ex.: hyouton, mokuton).
+  associatedKekkeiGenkai String?       @map("associated_kekkei_genkai")
+  /// FK lógica para `Clan.code` — preenchida quando o poder é restrito a um
+  /// clã (ex.: kagejutsu → nara, juuken → hyuuga).
+  associatedClan         String?       @map("associated_clan")
+  description            String        @db.Text
+  shortDescription       String?       @map("short_description")
 
+  /// Stats numéricos/estruturais do poder — varia por tipo (rangeFormula,
+  /// damageFormula, elementBonus, etc.). Shape livre por JSONB — ver
+  /// `prisma/seed-data/powers.json` para exemplos.
+  stats Json @default("{}")
+  /// Regras de uso e compra (prerequisites, restrictedElements,
+  /// freePowerLevelsByElement, etc.). Shape livre por JSONB.
+  rules Json @default("{}")
+
+  /// Mantido por compat — Lote 3 traz custo padrão = 1 ponto/nível.
   costPerLevel Int  @default(1) @map("cost_per_level")
+  /// Mantido por compat com seeds antigos; campo `rules` é o novo padrão.
   restrictions Json @default("{}")
-
-  element String?
 
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -255,12 +278,16 @@ model Power {
   @@map("powers")
 }
 
+/// Categorias de poder do Livro Básico 4.1b:
+///   - COMUM        : qualquer um pode comprar
+///   - RESTRITO     : pré-requisitos pesados, sem clã específico (ex.: Magen)
+///   - RESTRITO_CLA : exige um clã específico (ex.: Juuken → Hyuuga)
+///   - KEKKEI_GENKAI: ligado a uma Kekkei Genkai (ex.: Hyouton, Mokuton)
 enum PowerCategory {
-  NINPOU
-  TAIJUTSU
-  GENJUTSU
+  COMUM
+  RESTRITO
+  RESTRITO_CLA
   KEKKEI_GENKAI
-  HIJUTSU
 }
 
 model PowerEffect {
@@ -379,9 +406,19 @@ model Clan {
   id               String  @id @default(uuid()) @db.Uuid
   code             String  @unique
   name             String
+  /// FK lógica (string) para `Village.code`. `null` em clãs proscritos /
+  /// extintos (ex.: Fuuma sem vila base, Kaguya extinto).
+  village          String?
   description      String  @db.Text
   shortDescription String? @map("short_description")
 
+  /// Estrutura livre. Campos esperados (ver `arcana-forge-spec/03-DATA-MODEL.md`
+  /// §"Clan.benefits"):
+  ///   - restrictedAptitudes: aptidões compráveis APENAS por este clã
+  ///   - restrictedPowers: poderes compráveis APENAS por este clã
+  ///   - hijutsuOptions: caminhos alternativos de criação (ex.: Hatake)
+  ///   - kekkeiGenkai: código da KG associada (FK lógica)
+  ///   - specialRules: texto livre
   benefits Json @default("{}")
 
   createdAt  DateTime    @default(now()) @map("created_at")
@@ -420,9 +457,18 @@ model KekkeiGenkai {
   id               String  @id @default(uuid()) @db.Uuid
   code             String  @unique
   name             String
+  /// Tradução em português (ex.: "Olho que Copia" para Sharingan).
+  translation      String?
+  /// FK lógica para `Clan.code` — clã canonicamente vinculado à KG (ex.:
+  /// Hyouton → Yuki, Sharingan → Uchiha). `null` quando a KG não tem clã
+  /// único (raro).
+  associatedClan   String? @map("associated_clan")
   description      String  @db.Text
   shortDescription String? @map("short_description")
 
+  /// Shape livre — ver `arcana-forge-spec/03-DATA-MODEL.md` §"KekkeiGenkai.benefits":
+  ///   - mainPowerCode, freePowerLevelsByElement, linkedAptitudes,
+  ///     linkedPowers, restrictedElements, additionalHardness, etc.
   benefits Json @default("{}")
 
   createdAt  DateTime    @default(now()) @map("created_at")

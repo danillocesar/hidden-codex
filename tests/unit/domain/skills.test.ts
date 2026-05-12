@@ -39,11 +39,18 @@ describe('skills — calculatePericiaLevelByCode', () => {
   });
 
   it('Venefício (Int, requer treino) com 0 pts = 0', () => {
-    expect(calculatePericiaLevelByCode('venenificio', attrs, 0)).toBe(0);
+    expect(calculatePericiaLevelByCode('venefico', attrs, 0)).toBe(0);
   });
 
   it('Venefício com 2 pts calcula = ⌈1/2⌉ + 2 = 3', () => {
-    expect(calculatePericiaLevelByCode('venenificio', attrs, 2)).toBe(3);
+    expect(calculatePericiaLevelByCode('venefico', attrs, 2)).toBe(3);
+  });
+
+  it('Obter Informação (perícia social) lança erro explícito', () => {
+    // Atributo "car" (Carisma) ainda não é suportado pelo cálculo primário.
+    expect(() => calculatePericiaLevelByCode('obter_informacao', attrs, 0)).toThrow(
+      /atributo social/,
+    );
   });
 
   it('código desconhecido lança erro', () => {
@@ -92,14 +99,12 @@ describe('skills — validatePericiaBudget', () => {
     if (!result.ok) expect(result.error).toMatch(/limite/);
   });
 
-  it('NC 4: Venefício é proibida com pontos investidos', () => {
-    const result = validatePericiaBudget({ venenificio: 1 }, 4);
-    expect(result.ok).toBe(false);
-    if (!result.ok) expect(result.error).toMatch(/criação/);
-  });
-
-  it('NC 4: Venefício com 0 pontos é tolerada (sem treino)', () => {
-    const result = validatePericiaBudget({ venenificio: 0 }, 4);
+  it('NC 4: Venefício passa pela validação de budget (gate de aptidão Químico fica em F2.3+)', () => {
+    // O catálogo marca venefico como doubleTrained, mas o motor por ora não
+    // valida a aptidão associada — wizard/UI faz o gate quando aptidões forem
+    // seedadas. Aqui apenas confirmamos que a validação de orçamento aceita
+    // pontos investidos sem reclamar.
+    const result = validatePericiaBudget({ venefico: 1 }, 4);
     expect(result.ok).toBe(true);
   });
 

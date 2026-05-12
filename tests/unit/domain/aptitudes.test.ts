@@ -31,7 +31,8 @@ describe('aptitudes — checkAptitudePrerequisites', () => {
   });
 
   it('pré-req de perícia inexistente no PJ retorna 0 → falha', () => {
-    const result = checkAptitudePrerequisites({ pericias: { curar: 3 } }, satsukiNc6);
+    // Satsuki não tem pontos em Medicina; sem treino e sem investimento, vale 0.
+    const result = checkAptitudePrerequisites({ pericias: { medicina: 3 } }, satsukiNc6);
     expect(result.allMet).toBe(false);
   });
 

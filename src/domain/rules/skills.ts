@@ -1,5 +1,5 @@
 import type { Attributes, ValidationResult } from '../types';
-import { getPericiaByCode, PERICIAS } from '../catalog/pericias';
+import { getPericiaByCode, isPrimaryAttribute, PERICIAS } from '../catalog/pericias';
 import { roundUp } from './math';
 import { getLevelRow } from './pointsBudget';
 import { getPericaLimit } from './attributeLimits';
@@ -7,19 +7,26 @@ import { getPericaLimit } from './attributeLimits';
 /**
  * Nível total de uma perícia = ⌈atributo/2⌉ + pontos investidos.
  *
- * Perícias com `requiresTraining` e zero pontos retornam 0 ("sem treino").
+ * Perícias com `trained=true` e zero pontos retornam 0 ("sem treino" no livro).
  */
 export function calculatePericiaLevel(
   pointsInvested: number,
   attributeValue: number,
-  requiresTraining = false,
+  trained = false,
 ): number {
-  if (requiresTraining && pointsInvested === 0) return 0;
+  if (trained && pointsInvested === 0) return 0;
   const initial = roundUp(attributeValue / 2);
   return initial + pointsInvested;
 }
 
-/** Conveniência: calcula nível usando código + atributos do personagem. */
+/**
+ * Conveniência: calcula nível usando código + atributos primários do personagem.
+ *
+ * Para perícias sociais (atualmente apenas `obter_informacao` com base em
+ * Carisma + ½ Inteligência) o cálculo não está implementado — lance erro
+ * explícito em vez de fingir suporte com NaN. Implementação social entra
+ * quando os atributos sociais do `Character` tiverem cálculo dedicado.
+ */
 export function calculatePericiaLevelByCode(
   code: string,
   attributes: Attributes,
@@ -29,14 +36,27 @@ export function calculatePericiaLevelByCode(
   if (!def) {
     throw new Error(`Perícia desconhecida: ${code}`);
   }
-  return calculatePericiaLevel(pointsInvested, attributes[def.attribute], def.requiresTraining);
+  if (!isPrimaryAttribute(def.attribute)) {
+    throw new Error(
+      `Perícia "${code}" usa atributo social ("${def.attribute}"). Cálculo social ainda não implementado.`,
+    );
+  }
+  return calculatePericiaLevel(pointsInvested, attributes[def.attribute], def.trained);
 }
 
 /**
  * Valida o gasto total e por-perícia respeitando budget e limite individual.
- * Inclui regras de criação:
- *   - Venefício é proibida em NC 4 (criação inicial).
- *   - Perícia desconhecida (code não está no catálogo) gera erro explícito.
+ *
+ * Regras:
+ *   - Perícia desconhecida (code fora do catálogo) → erro explícito.
+ *   - Pontos negativos / não-inteiros → erro.
+ *   - Pontos individuais > ⌊NC/2⌋ → erro.
+ *   - Soma total > orçamento da tabela de evolução → erro.
+ *   - `doubleTrained` (ex.: Venefício) só pode ser comprada se a aptidão
+ *     associada estiver presente — essa checagem entra quando o catálogo de
+ *     aptidões for seedado (F2.3+). Por ora, perícias `doubleTrained` passam
+ *     pela validação de budget normalmente; o gate de aptidão é responsabilidade
+ *     do wizard de criação.
  */
 export function validatePericiaBudget(
   pericias: Readonly<Record<string, number>>,
@@ -59,12 +79,6 @@ export function validatePericiaBudget(
       return {
         ok: false,
         error: `Perícia ${def.name} excede limite de pontos (${points}/${maxPerPericia}).`,
-      };
-    }
-    if (def.forbiddenAtNc4 && nc === 4 && points > 0) {
-      return {
-        ok: false,
-        error: `${def.name} não pode ser adquirida na criação (NC 4).`,
       };
     }
     total += points;

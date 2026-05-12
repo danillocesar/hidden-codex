@@ -1,22 +1,131 @@
 import type { AttributeKey } from '../types';
 
+export type AttributeCategory = 'FISICO' | 'MENTAL';
+
 export type AttributeDef = {
   code: AttributeKey;
   name: string;
-  shortName: string;
+  abbreviation: string;
+  /** Kanji decorativo usado na ficha (estética dark+ice). */
+  kanji: string;
+  /** Ordem canônica de exibição (1..7). */
+  order: number;
+  category: AttributeCategory;
+  shortDescription: string;
   description: string;
+  /** Usos principais — alimenta tooltips e a UI do wizard. */
+  primaryUses: ReadonlyArray<string>;
 };
 
 /**
- * Os 7 atributos primários — Shinobi no Sho 4.1b, Livro Básico.
- * Spec: arcana-forge-spec/04-RULES-ENGINE.md.
+ * Os 7 atributos primários — Shinobi no Sho 4.1b, Livro Básico (p. 14-19).
+ *
+ * Lista fechada e imutável. Mantida como TypeScript const (sem tabela
+ * Prisma) porque os 7 nunca mudam e qualquer consumidor — motor, UI, seed —
+ * já tem acesso ao import.
+ *
+ * Mantenha em sincronia com `prisma/seed-data/attributes.json`.
  */
 export const ATTRIBUTES: ReadonlyArray<AttributeDef> = [
-  { code: 'for', name: 'Força', shortName: 'FOR', description: 'Poder físico bruto, capacidade de carga e dano corporal.' },
-  { code: 'des', name: 'Destreza', shortName: 'DES', description: 'Precisão, coordenação manual, ataques à distância.' },
-  { code: 'agi', name: 'Agilidade', shortName: 'AGI', description: 'Velocidade de reação, esquiva, deslocamento.' },
-  { code: 'per', name: 'Percepção', shortName: 'PER', description: 'Sentidos, intuição, ler movimento.' },
-  { code: 'int', name: 'Intelecto', shortName: 'INT', description: 'Raciocínio, conhecimento técnico, estratégia.' },
-  { code: 'vig', name: 'Vigor', shortName: 'VIG', description: 'Resistência física, vitalidade, fôlego.' },
-  { code: 'esp', name: 'Espírito', shortName: 'ESP', description: 'Reserva de chakra, força de vontade, ninpou.' },
+  {
+    code: 'for',
+    name: 'Força',
+    abbreviation: 'FOR',
+    kanji: '力',
+    order: 1,
+    category: 'FISICO',
+    shortDescription:
+      'Mede a potência muscular do personagem. Usada em ataques corporais e perícias físicas brutas.',
+    description:
+      'Força representa a potência muscular do personagem, a capacidade de aplicar força física para erguer, empurrar, golpear, lançar ou resistir. Personagens com Força alta tendem a ser fisicamente robustos e podem causar mais dano em ataques corporais. Esse atributo influencia diretamente o dano em ataques de Combate Corporal (CC), o teste de Atletismo (correr, escalar, saltar, nadar) e é o atributo base para o cálculo padrão de CC.',
+    primaryUses: ['dano em CC', 'Atletismo', 'manobras de agarrar/derrubar/empurrar'],
+  },
+  {
+    code: 'des',
+    name: 'Destreza',
+    abbreviation: 'DES',
+    kanji: '技',
+    order: 2,
+    category: 'FISICO',
+    shortDescription:
+      'Mede a precisão, coordenação fina e habilidade manual. Usada em ataques à distância.',
+    description:
+      'Destreza representa a coordenação motora fina, precisão, equilíbrio e habilidade manual. É o atributo dos arqueiros, dos arremessadores de shuriken e dos artistas marciais ágeis. Influencia diretamente o cálculo de Combate à Distância (CD), o dano em ataques de CD com arremesso, perícias como Prestidigitação, Escapar, Disfarce. Personagens com a aptidão Acuidade podem substituir Força por Destreza no cálculo de CC.',
+    primaryUses: ['CD', 'dano em CD com arremesso', 'Prestidigitação', 'Escapar', 'Disfarce'],
+  },
+  {
+    code: 'agi',
+    name: 'Agilidade',
+    abbreviation: 'AGI',
+    kanji: '速',
+    order: 3,
+    category: 'FISICO',
+    shortDescription:
+      'Mede a velocidade de reação e movimento. Usada em esquiva e perícias de movimento.',
+    description:
+      'Agilidade mede a velocidade de reação, mobilidade e capacidade de desviar. É a base para Esquiva (ESQ), uma das principais habilidades defensivas, e influencia o deslocamento do personagem. Perícias ligadas: Acrobacia, Furtividade, Voo. Personagens com a aptidão Velocista podem dobrar a Agilidade para fins de deslocamento.',
+    primaryUses: ['ESQ', 'deslocamento', 'Acrobacia', 'Furtividade'],
+  },
+  {
+    code: 'per',
+    name: 'Percepção',
+    abbreviation: 'PER',
+    kanji: '察',
+    order: 4,
+    category: 'MENTAL',
+    shortDescription:
+      'Mede a consciência sensorial. Usada para detectar ameaças, mentiras e detalhes.',
+    description:
+      'Percepção mede a acuidade sensorial e a consciência do que acontece ao redor. É a base para Ler Movimento (LM), habilidade defensiva especializada em prever ataques. Perícias ligadas: Prontidão, Procurar, Rastrear, Intuir Intenções.',
+    primaryUses: ['LM', 'Prontidão', 'Procurar', 'Rastrear'],
+  },
+  {
+    code: 'int',
+    name: 'Inteligência',
+    abbreviation: 'INT',
+    kanji: '知',
+    order: 5,
+    category: 'MENTAL',
+    shortDescription:
+      'Mede o intelecto, raciocínio e conhecimento. Necessária para perícias técnicas.',
+    description:
+      'Inteligência mede o intelecto, capacidade de raciocínio, memória e conhecimento acumulado. Influencia testes de resistência mental (resistir a Intimidação, Genjutsu). Perícias ligadas: Arte, Ciências Naturais, Cultura, Ocultismo, Mecanismos, Medicina, Venefício, Concentração. Algumas aptidões exigem Inteligência mínima (ex: Químico requer Int 8).',
+    primaryUses: ['Arte', 'Cultura', 'Mecanismos', 'Medicina', 'resistência a Genjutsu'],
+  },
+  {
+    code: 'vig',
+    name: 'Vigor',
+    abbreviation: 'VIG',
+    kanji: '体',
+    order: 6,
+    category: 'FISICO',
+    shortDescription: 'Mede resistência física e saúde. Fórmula da Vitalidade depende dele.',
+    description:
+      'Vigor mede a resistência física, fôlego e saúde geral do personagem. É o atributo crítico para a Vitalidade máxima, calculada por "10 + 3 × Vigor + 5 × NC". Também usado em testes de resistência contra venenos, doenças, fadiga e dano contínuo. Personagens com Vigor alto são duros de matar.',
+    primaryUses: ['Vitalidade', 'resistência a veneno/doença', 'manter corrida prolongada'],
+  },
+  {
+    code: 'esp',
+    name: 'Espírito',
+    abbreviation: 'ESP',
+    kanji: '霊',
+    order: 7,
+    category: 'MENTAL',
+    shortDescription:
+      'Mede a energia espiritual. Fórmula do Chakra depende dele. Base para muitas técnicas.',
+    description:
+      'Espírito mede a energia espiritual interna do personagem e a capacidade de canalizar chakra. É o atributo crítico para o Chakra máximo, calculado por "10 + 3 × Espírito". Influencia o alcance de muitos jutsus (base + N × Esp metros), o dano de jutsus padrão de Ninpou ("½ Esp + nível do poder"), e a aptidão Técnica Acelerada exige Espírito 12. Junto com Vigor, define a robustez energética do personagem.',
+    primaryUses: [
+      'Chakra',
+      'alcance de jutsus',
+      'dano de Ninpou padrão',
+      'testes de Concentração mental',
+    ],
+  },
 ];
+
+export function getAttributeByCode(code: AttributeKey): AttributeDef {
+  const attr = ATTRIBUTES.find((a) => a.code === code);
+  if (!attr) throw new Error(`Atributo desconhecido: ${code}`);
+  return attr;
+}

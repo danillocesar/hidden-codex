@@ -1,0 +1,380 @@
+{
+  "_meta": {
+    "description": "Hachimon Tonkou (Oito Portões Celestiais) — Hijutsu restrito de Taijutsu/Kinjutsu. Cada nível libera um Portão dos 8 pontos do sistema de chakra do shinobi. Pré-req: Vigor 6. Custo: ZERO chakra mas causa DANO em Vit a cada turno. Duração: 1º portão = 2 turnos. A partir do 2º = 5 turnos. Modelados aqui como 'efeitos' por nível do poder, seguindo a abstração do livro. Inclui também as técnicas Taijutsu liberadas em níveis altos (Elbow, Straight, Lariat, Hell Stab, Guillotine Drop, Linger Bomb, Reverse Chop).",
+    "sources": [
+      "Livro Básico p. 202-208 (Hachimon Tonkou)",
+      "Livro de Hijutsus p. 62-64 (efeitos Taijutsu de alto nível)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "powerNotes": {
+      "code": "hachimon_tonkou",
+      "category": "HIJUTSU_RESTRITO",
+      "prerequisites": "Vigor 6",
+      "chakraCost": 0,
+      "damagePerTurn": "ver_cada_portao",
+      "noBonusStacking": true,
+      "tiredAfterUse": "fatigado 4 turnos (-1 por nível acima do requerimento, min 1)",
+      "exhaustedOnThirdConsecutiveUse": true,
+      "deathAt8thGate": true
+    }
+  },
+  "data": [
+    {
+      "code": "hachimon_1_kaimon",
+      "name": "Kaimon (Portão da Abertura)",
+      "minLevel": 1,
+      "availableFor": ["hachimon_tonkou"],
+      "shortDescription": "1º Portão (cérebro). Bônus For +1, acelerado. Dano 3/turno. Duração 2 turnos.",
+      "description": "Localizado no cérebro. Remove restrições do cérebro sobre os músculos, permitindo usar 100% da força (normal é só 20%). Desbloquear permite usar Omote Renge (Lotus Inicial), se cumprir requisitos. Duração: 2 turnos. Fonte: Livro Básico p. 205.",
+      "stats": {
+        "action": "PADRAO (ou parcial se gradual)",
+        "range": "pessoal",
+        "duration": "2 turnos",
+        "chakraCost": 0
+      },
+      "rules": {
+        "bonusForce": 1,
+        "conditions": ["acelerado"],
+        "damagePerTurn": 3,
+        "permitsTechnique": "omote_renge"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "hachimon_2_kyumon",
+      "name": "Kyūmon (Portão da Cura)",
+      "minLevel": 2,
+      "availableFor": ["hachimon_tonkou"],
+      "shortDescription": "2º Portão. Bônus For +2, acelerado. Dano 2/turno. Anula fatigado/exausto. Duração 5 turnos.",
+      "description": "Localizado no cérebro. Renova físico, regenera danos, anula fatigado/exausto enquanto ativo. Imune a qualquer ação que cause fadiga/exaustão. Se já estava fatigado/exausto, condições negadas — retornam ao fechar. Benefícios de cura cumulativos com portões superiores. Duração: 5 turnos. Fonte: Livro Básico p. 206.",
+      "stats": {
+        "action": "PADRAO (ou parcial)",
+        "range": "pessoal",
+        "duration": "5 turnos",
+        "chakraCost": 0
+      },
+      "rules": {
+        "bonusForce": 2,
+        "conditions": ["acelerado"],
+        "damagePerTurn": 2,
+        "immuneTo": ["fatigado", "exausto"],
+        "healingCumulativeWithHigherGates": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "hachimon_3_seimon",
+      "name": "Seimon (Portão da Vida)",
+      "minLevel": 3,
+      "availableFor": ["hachimon_tonkou"],
+      "shortDescription": "3º Portão. For +3, acelerado, Dif Genjutsus -1. Dano 3/turno. Permite Ura Renge.",
+      "description": "Localizado na medula espinhal. Amplifica ganhos físicos, aumenta circulação sanguínea (pele vermelha). Permite uso de Ura Renge (Lotus Final). Fonte: Livro Básico p. 206.",
+      "stats": {
+        "action": "PADRAO (ou parcial)",
+        "range": "pessoal",
+        "duration": "5 turnos",
+        "chakraCost": 0
+      },
+      "rules": {
+        "bonusForce": 3,
+        "conditions": ["acelerado"],
+        "damagePerTurn": 3,
+        "genjutsuDifficultyPenalty": -1,
+        "permitsTechnique": "ura_renge"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "hachimon_4_shomon",
+      "name": "Shōmon (Portão da Dor)",
+      "minLevel": 4,
+      "availableFor": ["hachimon_tonkou"],
+      "shortDescription": "4º Portão. For +4, Agi +1, acelerado, Dif Genjutsus -1. Dano 4/turno. Risco de rasgar músculos.",
+      "description": "Localizado na medula espinhal. Amplifica ganhos físicos, aumenta velocidade — mas pode rasgar músculos pelo excesso de esforço. Fonte: Livro Básico p. 206.",
+      "stats": {
+        "action": "PADRAO (ou parcial)",
+        "range": "pessoal",
+        "duration": "5 turnos",
+        "chakraCost": 0
+      },
+      "rules": {
+        "bonusForce": 4,
+        "bonusAgilidade": 1,
+        "conditions": ["acelerado"],
+        "damagePerTurn": 4,
+        "genjutsuDifficultyPenalty": -1
+      },
+      "evolutions": []
+    },
+    {
+      "code": "hachimon_5_tomon",
+      "name": "Tomon (Portão do Limite)",
+      "minLevel": 5,
+      "availableFor": ["hachimon_tonkou"],
+      "shortDescription": "5º Portão. For +5, Agi +2, acelerado, Dif Genjutsus -2. Dano 5/turno.",
+      "description": "Localizado no abdômen. Continua aumento de velocidade e poder. Fonte: Livro Básico p. 206.",
+      "stats": {
+        "action": "PADRAO (ou parcial)",
+        "range": "pessoal",
+        "duration": "5 turnos",
+        "chakraCost": 0
+      },
+      "rules": {
+        "bonusForce": 5,
+        "bonusAgilidade": 2,
+        "conditions": ["acelerado"],
+        "damagePerTurn": 5,
+        "genjutsuDifficultyPenalty": -2
+      },
+      "evolutions": []
+    },
+    {
+      "code": "hachimon_6_keimon",
+      "name": "Keimon (Portão da Visão)",
+      "minLevel": 6,
+      "availableFor": ["hachimon_tonkou"],
+      "shortDescription": "6º Portão. For +6, Agi +3, acelerado, Dif Genjutsus -2. Dano 6/turno. Permite Asa Kujaku.",
+      "description": "Localizado no estômago. Continua aumento de velocidade e poder. Permite Asa Kujaku (Pavão Matutino). Fonte: Livro Básico p. 206.",
+      "stats": {
+        "action": "PADRAO (ou parcial)",
+        "range": "pessoal",
+        "duration": "5 turnos",
+        "chakraCost": 0
+      },
+      "rules": {
+        "bonusForce": 6,
+        "bonusAgilidade": 3,
+        "conditions": ["acelerado"],
+        "damagePerTurn": 6,
+        "genjutsuDifficultyPenalty": -2,
+        "permitsTechnique": "asa_kujaku"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "hachimon_7_kyomon",
+      "name": "Kyōmon (Portão do Milagre)",
+      "minLevel": 7,
+      "availableFor": ["hachimon_tonkou"],
+      "shortDescription": "7º Portão. For +1/nível, Agi +3, super acelerado, Dif Genjutsus -3. Dano = nível/turno. Permite Hirudora.",
+      "description": "Localizado abaixo do estômago. Continua aumento de velocidade. Permite uso de Hirudora (Tigre da Tarde). Fonte: Livro Básico p. 207.",
+      "stats": {
+        "action": "PADRAO (ou parcial)",
+        "range": "pessoal",
+        "duration": "5 turnos",
+        "chakraCost": 0
+      },
+      "rules": {
+        "bonusForceFormula": "1 por nível do poder",
+        "bonusAgilidade": 3,
+        "conditions": ["super_acelerado"],
+        "damagePerTurnFormula": "1 por nível do poder",
+        "genjutsuDifficultyPenalty": -3,
+        "permitsTechnique": "hirudora"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "hachimon_8_shimon",
+      "name": "Shimon (Portão da Morte)",
+      "minLevel": 8,
+      "availableFor": ["hachimon_tonkou"],
+      "shortDescription": "8º Portão (FINAL). For +2/nível, Agi +6, super acelerado, Dif -8. Acerto auto. MORTE em 3 turnos após fechar.",
+      "description": "Localizado no coração. Consome toda a energia do corpo. Coração bombeia em potência máxima. Supera poder de todos os outros portões — dizem que ultrapassa os 5 Kages juntos. Permite Sekizō (Elefante da Noite) e Yagai (Homem da Noite). Sucesso Automático: ataque pesado neste portão tem sucesso automático e não pode ser defendido. Se for ataque pesado com grau 4 garantido = acerto crítico automático. APÓS FECHAR: exausto e paralisado por 3 turnos. Depois MORRE. Fonte: Livro Básico p. 207.",
+      "stats": {
+        "action": "MOVIMENTO (libera todos de uma vez)",
+        "range": "pessoal",
+        "duration": "5 turnos",
+        "chakraCost": 0
+      },
+      "rules": {
+        "bonusForceFormula": "2 por nível do poder",
+        "bonusAgilidade": 6,
+        "conditions": ["super_acelerado"],
+        "damagePerTurn": "nenhum",
+        "genjutsuDifficultyPenalty": -8,
+        "automaticSuccess": true,
+        "permitsTechniques": ["sekizo", "yagai"],
+        "afterClosing": {
+          "conditions": ["exausto", "paralisado"],
+          "durationTurns": 3,
+          "deathAfter": true
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "elbow",
+      "name": "Elbow",
+      "minLevel": 2,
+      "availableFor": ["hachimon_tonkou"],
+      "shortDescription": "Cotovelada. Ataque desarmado com Força Bruta. Arremessa alvo 5m + 1m/For.",
+      "description": "Com cotovelada ultrapotente, envia inimigo pra longe. Ataque desarmado com Força Bruta, sem aptidão de manobra. Alvo atingido testa Vigor (Dif padrão +2) ou é arremessado 5m + 1m por Força (não cai). Fonte: Livro de Hijutsus p. 63.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "toque",
+        "damage": "comum_do_poder (força bruta)",
+        "duration": "INSTANTANEA",
+        "rollType": "CC"
+      },
+      "rules": {
+        "throwsTargetOnFailedVigor": "5m + 1m por Força",
+        "vigorDifficulty": "padrao +2",
+        "noFall": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 5,
+          "name": "Elbow Nv 5",
+          "description": "Mesmo que alvo passe no Vigor, ainda é afastado pela metade da distância do efeito."
+        }
+      ]
+    },
+    {
+      "code": "straight",
+      "name": "Straight",
+      "minLevel": 3,
+      "availableFor": ["hachimon_tonkou"],
+      "shortDescription": "Soco reto após avanço rápido. Dano comum. Arremessa alvo 10m + 2m/For, caído.",
+      "description": "Após correr em super velocidade, ataca com soco reto causando dano comum do poder. Alvo testa Vigor pra não ser arremessado 10m + 2m por Força, ficando caído. Ação completa. Fonte: Livro de Hijutsus p. 63.",
+      "stats": {
+        "action": "COMPLETA",
+        "range": "toque",
+        "damage": "comum_do_poder",
+        "duration": "INSTANTANEA",
+        "rollType": "CC"
+      },
+      "rules": {
+        "requiresAvancoRapido": true,
+        "throwsTargetOnFailedVigor": "10m + 2m por Força",
+        "leavesTargetCaido": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 6,
+          "name": "Straight Nv 6",
+          "description": "Recebe +2 em Agilidade no teste de finta acelerada durante avanço rápido."
+        }
+      ]
+    },
+    {
+      "code": "lariat",
+      "name": "Lariat",
+      "minLevel": 4,
+      "availableFor": ["hachimon_tonkou"],
+      "shortDescription": "Golpe brutal com antebraço após corrida. Dano comum +1. Obriga continuar correndo +5m.",
+      "description": "Após percorrer distância pegando impulso, desfere golpe com antebraço. Avanço rápido + ataque causando dano comum +1 bônus. Após o ataque, é OBRIGADO a continuar correndo por pelo menos +5m antes de parar. Se não houver deslocamento suficiente, efeito não pode ser usado. Ação completa. Fonte: Livro de Hijutsus p. 63.",
+      "stats": {
+        "action": "COMPLETA",
+        "range": "toque",
+        "damage": "comum_do_poder +1",
+        "duration": "INSTANTANEA",
+        "rollType": "CC"
+      },
+      "rules": {
+        "requiresAvancoRapido": true,
+        "mandatoryContinueRunning": "+5m após ataque"
+      },
+      "evolutions": [
+        {
+          "atLevel": 8,
+          "name": "Lariat Nv 8",
+          "description": "+1 de bônus de dano pra cada 5m deslocados antes do ataque, até máximo de +3."
+        }
+      ]
+    },
+    {
+      "code": "hell_stab",
+      "name": "Hell Stab",
+      "minLevel": 5,
+      "availableFor": ["hachimon_tonkou"],
+      "shortDescription": "Perfuração com dedos cobertos de chakra elétrico. Funciona como Lâmina de Raios Nv 5 com Força. Pré-req: Armadura de Raios.",
+      "description": "Concentra chakra elétrico nas pontas dos dedos de uma mão e executa movimento de impulso, perfurando alvo e sobrepujando defesa. Nível de perfuração aumenta com quantidade de dedos usados. Funciona como Lâmina de Raios Nv 5, mas usa Força no cálculo de dano. Pré-requisito: Aptidão Armadura de Raios. Fonte: Livro de Hijutsus p. 63-64.",
+      "stats": {
+        "action": "MOVIMENTO + PADRAO (como Lâmina de Raios Nv 5)",
+        "range": "toque",
+        "damage": "comum_do_poder (com Força)",
+        "duration": "INSTANTANEA",
+        "rollType": "CC"
+      },
+      "rules": {
+        "prerequisites": { "aptitudes": ["armadura_de_raios"] },
+        "basedOn": "lamina_de_raios_nv_5",
+        "usesForceForDamage": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 7,
+          "name": "Hell Stab Nv 7",
+          "description": "Funciona como Lâmina de Raios Nv 7."
+        },
+        {
+          "atLevel": 9,
+          "name": "Hell Stab Nv 9",
+          "description": "Funciona como Lâmina de Raios Nv 9. Adicionalmente, recebe gratuitamente benefícios de Domínio do Raio pra este efeito."
+        }
+      ]
+    },
+    {
+      "code": "guillotine_drop",
+      "name": "Guillotine Drop",
+      "minLevel": 7,
+      "availableFor": ["hachimon_tonkou"],
+      "shortDescription": "Chute de cima pra baixo após salto. Dano comum. Vigor ou esmagado contra chão (atordoado + caído).",
+      "description": "Após salto, martela alvo com chute de cima pra baixo usando calcanhar. Causa dano comum do poder. Alvo testa Vigor ou é esmagado contra chão, ficando atordoado e caído por 1 turno. Ação padrão. Fonte: Livro de Hijutsus p. 64.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "toque",
+        "damage": "comum_do_poder",
+        "duration": "INSTANTANEA",
+        "rollType": "CC"
+      },
+      "rules": {
+        "vigorTestOrConditions": ["atordoado", "caido"],
+        "conditionDuration": "1 turno"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "linger_bomb",
+      "name": "Linger Bomb",
+      "minLevel": 9,
+      "availableFor": ["hachimon_tonkou"],
+      "shortDescription": "Agarra e arremessa alvo no chão com Força integral. Sem bônus de dano.",
+      "description": "Agarra oponente e arremessa no chão com potência brutal, aniquilando completamente. Teste de Agarrar. Se bem-sucedido, joga pra baixo causando dano comum do poder com Força INTEGRAL (sem divisão). Não recebe bônus de dano de qualquer tipo (mesmo bônus vindos de aumento de Força, como Hachimon 1). Ação padrão. Fonte: Livro de Hijutsus p. 64.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "toque",
+        "damage": "comum_do_poder (Força integral)",
+        "duration": "INSTANTANEA",
+        "rollType": "agarrar"
+      },
+      "rules": {
+        "fullForceNoDivision": true,
+        "noDamageBonuses": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "reverse_chop",
+      "name": "Reverse Chop",
+      "minLevel": 10,
+      "availableFor": ["hachimon_tonkou"],
+      "shortDescription": "Golpe martelado com mão após salto. Como Guillotine Drop. Mínimo grau 3 de dano.",
+      "description": "Após salto, martela alvo com golpe forte de cima pra baixo com mão, enterrando-o no solo. Segue regras de Guillotine Drop. Potência ampliada pelo salto garante que nunca cause menos que Grau 3 de dano. Fonte: Livro de Hijutsus p. 64.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "toque",
+        "damage": "comum_do_poder",
+        "duration": "INSTANTANEA",
+        "rollType": "CC"
+      },
+      "rules": {
+        "basedOn": "guillotine_drop",
+        "minimumDamageGrade": 3
+      },
+      "evolutions": []
+    }
+  ]
+}

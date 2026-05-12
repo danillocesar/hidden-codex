@@ -1,0 +1,204 @@
+{
+  "_meta": {
+    "description": "Efeitos exclusivos do Sabaku Hijutsu (Técnica Secreta do Deserto) — manipulação de areia, originalmente exclusivo do jinchuuriki do Shukaku. Sabaku Hijutsu herda TODOS os efeitos de Ninpou + Imergir (Doton) + Colisão de Ondas (Suiton) MAIS estes exclusivos. +2 dureza adicional em criações. Sólidos têm duração contínua até fim da cena. Vantagem vs Katon; desvantagem vs Suiton e Sakin.",
+    "sources": [
+      "Livro de Hijutsus p. 31-34 (Sabaku Hijutsu)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "powerNotes": {
+      "code": "sabaku_hijutsu",
+      "category": "HIJUTSU",
+      "rangeFormula": "Médio (10m +2m por nível de Espírito)",
+      "sizeFormula": "2m por nível de Espírito",
+      "additionalHardness": 2,
+      "allEffectsFromNinpou": true,
+      "crossElementEffects": ["imergir", "colisao_de_ondas"],
+      "elementAdvantage": ["katon"],
+      "elementDisadvantage": ["suiton", "sakin"],
+      "solidsDuration": "continua_ate_fim_da_cena"
+    }
+  },
+  "data": [
+    {
+      "code": "areia_especial",
+      "name": "Areia Especial",
+      "minLevel": 2,
+      "availableFor": ["sabaku_hijutsu", "jiton"],
+      "shortDescription": "Areia portátil alimentada com chakra. Defesa Rápida e Barreira Rápida como reações. Compra obrigatória pra Jiton.",
+      "description": "Mantém certa quantidade de areia alimentada com chakra diariamente, mais fácil de manipular e mais rápida. Armazenada em jarro/recipiente. Preparação: criar areia especial requer um dia inteiro. Areia precisa ficar próxima — longe por mais de 24h deixa de ser especial. Quantidade: 1 compartimento por nível do poder. Mais de 3 compartimentos = penalidades de mobilidade. Uso: pode usar como material pras técnicas — 1 compartimento por nível usado. Permite executar sem gastar ações pra converter solo em areia, e usar em alto mar. Reutilizável. Não pode ser usada por outro personagem nem ter grãos destruídos. Dispersada se criação é destruída — junta com ação livre. Defesa Rápida: reação defensiva que bloqueia ataques corporais e projéteis com 1 compartimento + LM, sem custo de chakra e independente do dano. Funciona junto com Defesa Total. Pode usar mesmo impedido/indefeso/paralisado, desde que consciente. Barreira Rápida: ao usar efeito Barreira, pode conjurar como reação defensiva (demais regras mantidas). Não pode usar Barreira/Defesa Rápida fintado ou em Forma Bijuu. Compra obrigatória pra Jiton (Satetsu/Sakin). Fonte: Livro de Hijutsus p. 32.",
+      "stats": {
+        "action": "REACAO",
+        "range": "pessoal",
+        "damage": "nenhum",
+        "duration": "CONTINUA",
+        "chakraCost": 0
+      },
+      "rules": {
+        "preparationTime": "1 dia",
+        "maxCompartments": "1 por nível do poder",
+        "mobilityPenaltyAbove": 3,
+        "longAwayDecay": "24h",
+        "defesaRapida": {
+          "action": "reação defensiva",
+          "cost": "1 compartimento + teste LM",
+          "noChakra": true,
+          "worksUnderConditions": ["impedido", "indefeso", "paralisado"],
+          "noWhileFintado": true,
+          "noInBijuuForm": true
+        },
+        "barreiraRapida": {
+          "description": "Usa efeito Barreira como reação defensiva"
+        },
+        "mandatoryForJiton": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 8,
+          "name": "Areia Especial Nv 8",
+          "description": "Pode usar Barreira/Defesa Rápida mesmo fintado (mas não contra finta super acelerada). Também pode usar contra Amaterasu do Mangekyou Sharingan."
+        }
+      ]
+    },
+    {
+      "code": "armadura_de_areia",
+      "name": "Armadura de Areia",
+      "minLevel": 3,
+      "availableFor": ["sabaku_hijutsu"],
+      "shortDescription": "Segunda pele de areia. Dureza de corpo até 3 (1 por nível par). Reduz mobilidade. Quebra em ataques que ignoram dureza ou críticos.",
+      "description": "Cria uma segunda pele sobre o corpo, feita de areia, com espessura e rigidez suficientes pra proteger. Concede dureza de corpo igual a 1 pra cada nível par do poder (máximo de 3). Se sofrer ataque que ignore dureza (parcial ou total) ou Acerto Crítico, armadura se quebra. Pra consertar é necessário reutilizar o efeito. Enquanto com armadura, corpo fica mais pesado, reduzindo mobilidade: -5m no deslocamento e -3 de precisão em Esquiva, Agilidade, Acrobacia e Furtividade (deslocamento mínimo 1m). Opcional do Mestre: usar logo no início do dia pra adquirir proteção pelo restante (custo de chakra normal). Fonte: Livro de Hijutsus p. 32-33.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "pessoal",
+        "damage": "nenhum",
+        "duration": "CONTINUA",
+        "selos": false,
+        "chakraCost": "nivel_usado"
+      },
+      "rules": {
+        "bodyHardnessFormula": "1 por nível par do poder (máx 3)",
+        "breaksOnHardnessIgnore": true,
+        "breaksOnCriticalHit": true,
+        "mobilityPenalties": {
+          "deslocamento": -5,
+          "esquiva": -3,
+          "agilidade": -3,
+          "acrobacia": -3,
+          "furtividade": -3,
+          "minDeslocamento": 1
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "terceiro_olho",
+      "name": "Terceiro Olho",
+      "minLevel": 3,
+      "availableFor": ["sabaku_hijutsu"],
+      "shortDescription": "Cria olho de areia que flutua. Espionagem segura — vê de longe via chakra. Concentração.",
+      "description": "Cria um olho artificial de areia que flutua e usa chakra pra conectar sua visão com ele, fechando um dos próprios olhos. Permite observar e espionar de forma segura qualquer coisa no ponto onde o olho foi criado. Pode ser criado/recriado em qualquer ponto dentro do alcance. Tentar esconder = ação de movimento, sem testes. Notar/encontrar = teste Prontidão ou Procurar contra Dif comum do poder, seguindo regras de Furtividade. Fonte: Livro de Hijutsus p. 33.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "damage": "nenhum",
+        "duration": "CONCENTRACAO",
+        "chakraCost": "nivel_usado"
+      },
+      "rules": {
+        "userClosesOwnEye": true,
+        "canHideAsAction": "movimento",
+        "findTest": "prontidao_ou_procurar_dif_comum"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "prisao_de_areia",
+      "name": "Prisão de Areia",
+      "minLevel": 5,
+      "availableFor": ["sabaku_hijutsu"],
+      "shortDescription": "Envolve alvo em areia, imobilizando. Funeral de Areia esmaga vítima.",
+      "description": "Envolve um alvo com grande quantidade de areia, imobilizando-o por completo. Segue regras da Prisão de Água (Suiton), com diferenças. Usado à distância — não precisa permanecer em contato pra manter. Apenas 1 alvo por vez. A partir do turno seguinte, pode pagar custo novamente pra manter sustentado naquela rodada e usar Funeral de Areia. Só pode tornar sustentada se for pra usar Funeral. Funeral de Areia: pressiona areia pra esmagar a vítima. Golpe de misericórdia à distância, metade do dano comum, sem custo de chakra. Dureza da Prisão é desconsiderada nesse ataque. Fonte: Livro de Hijutsus p. 33.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "target": "uma_criatura",
+        "damage": "nenhum",
+        "duration": "CONCENTRACAO",
+        "rollType": "CD",
+        "chakraCost": "nivel_usado"
+      },
+      "rules": {
+        "basedOn": "prisao_de_agua_suiton",
+        "rangedUse": true,
+        "noContactRequired": true,
+        "oneTargetOnly": true,
+        "sustainOnlyForFuneral": true,
+        "funeralDeAreia": {
+          "description": "Golpe de misericórdia à distância",
+          "damage": "metade_do_dano_comum",
+          "noChakra": true,
+          "ignoresOwnHardness": true
+        }
+      },
+      "evolutions": [
+        {
+          "atLevel": 9,
+          "name": "Prisão de Areia Nv 9",
+          "description": "Prisão se torna sufocante: preenchida por areia até o rosto, impedindo respiração. Vítima sofre sufocamento (testes com Dif padrão -2). Funeral de Areia causa dano comum do poder (não mais metade)."
+        }
+      ]
+    },
+    {
+      "code": "areia_suspensa",
+      "name": "Areia Suspensa",
+      "minLevel": 5,
+      "availableFor": ["sabaku_hijutsu"],
+      "shortDescription": "Mantém areia suspensa no ar. Atacar de cima (finta), Nuvem de Transporte (Voo), Barreira Suspensa.",
+      "description": "Mantém a areia suspensa em pleno ar. Atacar de Cima: pode mover sua areia pra região acima do alvo antes de atacá-lo. É uma manobra de finta, usando Destreza no teste no lugar de Agilidade. Nuvem de Transporte: ação de movimento cria uma nuvem de areia sob seus pés (ou de aliado dentro do alcance) pra levitar e transportar. Criatura sobre a nuvem ganha perícia Voo temporária com nível igual ao Espírito do usuário. Distância da nuvem: 10m + 1m por nível do poder. Não afetada pelo limite de compartimentos se todos os espaços excedentes estão com Areia Especial. Nuvem tem dureza padrão, destruída se receber dano suficiente. Combate Aéreo se aplica. Não cai se ficar impedido, mas cai se nuvem for destruída. Barreira Suspensa: efeito Barreira pode criar paredes flutuantes, úteis contra ataques aéreos. Sem custos adicionais. Fonte: Livro de Hijutsus p. 34.",
+      "stats": {
+        "action": "MOVIMENTO (Nuvem) ou variada",
+        "range": "pessoal_ou_comum",
+        "damage": "nenhum",
+        "duration": "SUSTENTADA",
+        "chakraCost": 2
+      },
+      "rules": {
+        "atacarDeCima": "finta_com_destreza_no_lugar_de_agilidade",
+        "nuvemDeTransporte": {
+          "action": "movimento",
+          "grantsSkill": "voo",
+          "voodPrecision": "nivel_espirito",
+          "movementDistance": "10m + 1m por nível do poder"
+        },
+        "barreiraSuspensa": "barreira_em_pleno_ar"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "piramide",
+      "name": "Pirâmide",
+      "minLevel": 9,
+      "availableFor": ["sabaku_hijutsu"],
+      "shortDescription": "Evolução final da Prisão de Areia. Pirâmide gigante, dureza 3x nível, sufocante. Pré-req: Prisão de Areia.",
+      "description": "Reforça a Prisão de Areia com várias camadas até transformá-la em pirâmide com 1 categoria de tamanho acima da vítima. Dureza aumenta pra 3x o nível usado (bônus de elemento incluso). Torna-se sufocante, preenchida por areia, impede respiração — vítima sofre sufocamento (testes Dif padrão -2). Não é possível usar Funeral de Areia com este efeito. Adicionalmente, com Fuuinjutsu 8 ou Forma Bijuu Shukaku, pode adicionar selamentos nas paredes da pirâmide, impedindo que seja quebrada ou desfeita por dentro. Pré-requisito: efeito Prisão de Areia. Fonte: Livro de Hijutsus p. 34.",
+      "stats": {
+        "action": "COMPLETA",
+        "range": "comum_do_poder",
+        "target": "uma_criatura_capturada_em_prisao_de_areia",
+        "duration": "CONTINUA",
+        "chakraCost": "nivel_usado"
+      },
+      "rules": {
+        "prerequisites": { "effects": ["prisao_de_areia"] },
+        "pyramidHardness": "3x nível usado (com bônus elemento)",
+        "sufocamento": "Dif padrão -2",
+        "noFuneralDeAreia": true,
+        "sealingOption": {
+          "requires": ["fuuinjutsu_8", "forma_bijuu_shukaku"],
+          "effect": "impede_quebra_por_dentro"
+        }
+      },
+      "evolutions": []
+    }
+  ]
+}

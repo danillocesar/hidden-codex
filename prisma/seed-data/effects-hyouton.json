@@ -1,0 +1,66 @@
+{
+  "_meta": {
+    "description": "Efeitos exclusivos do poder Hyouton (Elemento Gelo) — KG do clã Yuki. Hyouton herda TODOS os efeitos universais de Ninpou + Imergir (Doton) MAIS estes exclusivos. +2 dureza adicional em criações; +1 na dificuldade de resistência; criações permanentes derretem em 1h por nível usado.",
+    "sources": [
+      "Livro de Hijutsus p. 19-21 (Hyouton)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "powerNotes": {
+      "code": "hyouton",
+      "category": "KEKKEI_GENKAI",
+      "rangeFormula": "Médio (10m +2m por nível de Espírito)",
+      "sizeFormula": "1m por nível de Espírito",
+      "elementBonus": 0,
+      "additionalHardness": 2,
+      "resistanceDifficultyBonus": 1,
+      "allEffectsFromNinpou": true,
+      "crossElementEffects": ["imergir"],
+      "permanentDurationsMelt": "1h por nível usado"
+    }
+  },
+  "data": [
+    {
+      "code": "espelhos_demoniacos",
+      "name": "Espelhos Demoníacos",
+      "minLevel": 6,
+      "availableFor": ["hyouton"],
+      "shortDescription": "21 espelhos de gelo em cúpula. Reflexos confundem inimigos. Movimento entre espelhos. Pré-req: Ataque em Movimento + Imergir.",
+      "description": "Cria 21 espelhos de gelo, com 5 cm de espessura cada, formando uma cúpula em torno de você e prendendo inimigos próximos num campo especial. Uso: requer teste de CD contra Evadir dos inimigos ou outra defesa que possibilite sair da área. Se não houver defesa ou deslocamento suficiente = Sucesso Automático. Movimento: entrar num espelho próximo = ação livre. Mover-se entre espelhos = ação de movimento. Proteção: espelhos têm dureza zero (sem bônus elemento), absorção 8 por nível usado. Se absorção zera, sofre dano excedente. Reflexos: espelhos refletem sua imagem, tornando indetectável a olho nu. Quando alvo de projétil/área que não atinge todos os espelhos, inimigo rola 1 dado antes do ataque — resultado 4 ou menos = ataque foi pra um reflexo. Dano vai no espelho, você não sofre excedente quando espelho quebra. Kagura Shingan/Visão Através do Chakra ignoram isso. Atacando: precisa sair pra atacar; ao mover entre espelhos é acelerado e pode usar finta acelerada pra projéteis/Canhão. Defendendo: Esquiva/Antecipar te move pro espelho mais próximo como reação; Evadir te move pra qualquer um. Fugas: espaços entre espelhos permitem entrada/saída, mas fugir abre ataque oportuno (CC ou arma simples de arremesso ou Canhão). Quebra: se todos os ataques atingem todos os espelhos, todos são destruídos juntos; se ataque não atingiu todos, só um quebra. Reconstruir: ação de movimento renova absorção ou recria espelho destruído. Espelho Único: ação livre, cria 1 espelho em qualquer ponto dentro do alcance pra se mover pra lá. Pré-requisitos: Aptidão Ataque em Movimento + Efeito Imergir. Fonte: Livro de Hijutsus p. 20-21.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "pessoal",
+        "areaOfEffect": "meia_esfera_diametro_1m_por_nivel",
+        "damage": "nenhum_direto",
+        "duration": "CONTINUA",
+        "chakraCost": "3 por turno",
+        "rollType": "CD"
+      },
+      "rules": {
+        "prerequisites": {
+          "aptitudes": ["ataque_em_movimento"],
+          "effects": ["imergir"]
+        },
+        "mirrorCount": 21,
+        "mirrorThickness": "5cm",
+        "mirrorAbsorption": "8 por nível usado",
+        "mirrorHardness": 0,
+        "movementBetweenMirrors": "acao_de_movimento",
+        "reflexConfusion": {
+          "diceRoll": "1d6",
+          "missThreshold": 4,
+          "ignoredBy": ["kagura_shingan", "visao_atraves_do_chakra"]
+        },
+        "escapesFromMirrorsAttackOpportunity": true,
+        "rebuildAction": "movimento"
+      },
+      "evolutions": [
+        {
+          "atLevel": 8,
+          "name": "Espelhos Demoníacos Nv 8",
+          "description": "Espelhos passam a ter dureza 2. Mover-se entre espelhos vira ação parcial. Pode usar finta acelerada pra atacar com Flechas. Também pode usar Flechas em ataques oportunos. Custo de chakra sobe pra 4 por turno."
+        }
+      ]
+    }
+  ]
+}

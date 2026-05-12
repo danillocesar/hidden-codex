@@ -1,0 +1,47 @@
+{
+  "_meta": {
+    "description": "Efeitos exclusivos do Aoi Katon (Elemento Fogo Azul) — variante Bijuu da Matatabi/Nibi. Funciona como Katon comum (mesmo alcance, tamanho, bônus) MAS sem desvantagem contra Suiton. Todos os ataques recebem gratuitamente Domínio do Fogo em nível 5+.",
+    "sources": [
+      "Livro de Hijutsus p. 36 + Guia Avançado p. 94-95 (Aoi Katon)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "powerNotes": {
+      "code": "aoi_katon",
+      "category": "HIJUTSU_BIJUU",
+      "prerequisites": "Jinchuuriki 1 (ou Esp 4 via Guia Avançado independente)",
+      "basedOn": "katon",
+      "noDisadvantageVsSuiton": true,
+      "freeDominioDoFogoAtLevel5": true
+    }
+  },
+  "data": [
+    {
+      "code": "nekozume",
+      "name": "Nekozume (Garras de Gato)",
+      "minLevel": 4,
+      "availableFor": ["aoi_katon"],
+      "shortDescription": "Materializa garras de chakra nas unhas. Dano = arma + ½ Espírito. Crítico Aprimorado grátis.",
+      "description": "Materializa garras de chakra a partir das unhas das mãos ou pés. A Garra Felina muda o cálculo de dano pra Dano de Arma + ½ do Espírito. Dano vira tipo corte. Recebe gratuitamente benefícios da aptidão Crítico Aprimorado (se possuir pré-requisitos). Dano de arma da Garra Felina é baseado em chakra gasto e nível do poder: 4 chakra = 2 dano de arma; 5 chakra = 3 dano de arma (requer Aoi Katon 5); 6 chakra = 4 dano de arma (requer Aoi Katon 6). Fonte: Guia Avançado p. 95.",
+      "stats": {
+        "action": "PARCIAL",
+        "range": "pessoal",
+        "damage": "dano_de_arma + ceil(esp / 2)",
+        "damageType": "corte",
+        "duration": "SUSTENTADA",
+        "selos": false,
+        "chakraCost": "4, 5 ou 6 (ver texto)"
+      },
+      "rules": {
+        "chakraCostTable": {
+          "4": { "weaponDamage": 2 },
+          "5": { "weaponDamage": 3, "requiresPowerLevel": 5 },
+          "6": { "weaponDamage": 4, "requiresPowerLevel": 6 }
+        },
+        "grantsAptitude": "critico_aprimorado",
+        "ifPrerequisitesMet": true
+      },
+      "evolutions": []
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "_meta": {
+    "description": "Efeitos exclusivos do Sanbi Suiton (Elemento Água do Sanbi) — variante Bijuu do Isobu/Sanbi. Funciona como Suiton comum, compatível com Domínio da Água.",
+    "sources": [
+      "Livro de Hijutsus p. 36-37 + Guia Avançado p. 94-95 (Sanbi Suiton)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "powerNotes": {
+      "code": "sanbi_suiton",
+      "category": "HIJUTSU_BIJUU",
+      "prerequisites": "Jinchuuriki 1 (ou Esp 4 via Guia Avançado independente)",
+      "basedOn": "suiton",
+      "compatibleWith": ["dominio_da_agua"]
+    }
+  },
+  "data": [
+    {
+      "code": "sangosho",
+      "name": "Sangoshō (Soco do Coral)",
+      "minLevel": 4,
+      "availableFor": ["sanbi_suiton"],
+      "shortDescription": "Soco corpo-a-corpo que contamina com corais. Sem dano direto, mas vítima lenta e debilitada.",
+      "description": "Realiza ataque corpo-a-corpo desarmado no oponente. Não causa dano, mas contamina com corais que solidificam e crescem rapidamente pelo corpo, limitando movimentos. Alvo atingido fica lento e debilitado pelo restante da cena. A partir do segundo turno, no início de cada turno, vítima tem direito a teste de Força (Dif 9 + 2x Nível do Poder). Sucesso = quebra corais e se liberta. Pode atacar os corais pra quebrá-los: Absorção 1, dureza igual a 2x nível de Sanbi Suiton. Fonte: Guia Avançado p. 94-95.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "toque",
+        "damage": "nenhum_direto",
+        "duration": "INSTANTANEA (efeito persiste pela cena)",
+        "rollType": "CC"
+      },
+      "rules": {
+        "appliesConditions": ["lento", "debilitado"],
+        "escapeTest": {
+          "skill": "for",
+          "difficulty": "9 + 2x nível do poder",
+          "fromTurn": 2
+        },
+        "coraisStats": { "absorption": 1, "hardness": "2x nível Sanbi Suiton" }
+      },
+      "evolutions": [
+        {
+          "atLevel": 6,
+          "name": "Sangoshō Nv 6",
+          "description": "Corais espalham mais rapidamente, atingindo tronco e pernas. Vítima fica impedida pela duração da técnica."
+        },
+        {
+          "atLevel": 10,
+          "name": "Sangoshō Nv 10",
+          "description": "Se vítima não se livrar até o fim do 2º turno, corais espalham ainda mais rápido. Vítima fica indefesa pela duração."
+        }
+      ]
+    },
+    {
+      "code": "espelho_dagua",
+      "name": "Espelho D'Água",
+      "minLevel": 5,
+      "availableFor": ["sanbi_suiton"],
+      "shortDescription": "Anula ataque com reflexo de água. Imagem do inimigo refletida ataca ele mesmo. Custo variável.",
+      "description": "Cria espelho plano e circular feito de água à sua frente. Quando inimigo ataca, a imagem dele refletida sai do espelho e o ataca com a mesma técnica/golpe, anulando completamente o ataque. Depois de atingida, imagem se dispersa em água. Deve ser usado na manobra de previsão Anular Técnica. Funciona contra: CC, técnicas de toque, projéteis, e técnicas de área em formato linha — qualquer nível ou dano. Custo de chakra = mesmo da técnica anulada, mínimo 3. Fonte: Guia Avançado p. 95.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "duration": "INSTANTANEA",
+        "chakraCost": "igual_a_tecnica_anulada (min 3)"
+      },
+      "rules": {
+        "usedInManobraAnularTecnica": true,
+        "validAgainst": ["cc", "toque", "projetil", "area_linha"],
+        "anyLevelOrDamage": true
+      },
+      "evolutions": []
+    }
+  ]
+}

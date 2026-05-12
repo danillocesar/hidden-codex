@@ -1,0 +1,75 @@
+{
+  "_meta": {
+    "description": "Senjutsu (Técnica Eremita) — Hijutsu que permite absorver Energia da Natureza pra entrar em Modo Eremita. Requer treinamento em Monte Myōboku (Sapos) ou Caverna Ryūchi (Cobras). Concede pontos de Chakra Senjutsu separados (não confundir com chakra normal). Cada uso gasta 1 ponto pra ativar bônus diversos (acelerado, dureza, dano extra, etc.). Modelados aqui como bônus selecionáveis ao invés de efeitos tradicionais — a abstração do livro é diferente.",
+    "sources": [
+      "Livro Básico p. 239-241 (Senjutsu)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "powerNotes": {
+      "code": "senjutsu",
+      "category": "HIJUTSU_RESTRITO",
+      "prerequisites": "Kuchiyose 6 (Sapos ou Cobras), Concentração 8, Vigor 6",
+      "chakraType": "chakra_senjutsu (separado do normal)",
+      "transformsToStone": "drenadores morrem virando pedra"
+    }
+  },
+  "data": [
+    {
+      "code": "modo_eremita_bonus",
+      "name": "Modo Eremita — Bônus Selecionáveis",
+      "minLevel": 1,
+      "availableFor": ["senjutsu"],
+      "shortDescription": "Senjutsu. Bônus por gasto de 1 ponto de Chakra Senjutsu como ação livre. Lista de bônus selecionáveis.",
+      "description": "No Modo Eremita, pode gastar 1 ponto de Chakra Senjutsu como ação livre pra ativar um dos seguintes bônus: For +4 (não cumulativo com bônus de dano base), Dano Base +2 pra um ataque (incluindo Energizar), Precisão de Ataque +1, Precisão de Defesa +1, Acelerado, Dificuldades de Técnicas +1, Dureza de Corpo +1, Chakra +20 (1 vez por cena), Vitalidade +30 (1 vez por cena). Recarga durante combate: técnica Senpou: Ryōsei no Jutsu, Kage Bunshins absorvendo enquanto imóveis (max 2), experiências com células Senninka (precisa Iryou 10, Medicina 20, Ocultismo 20 — 3 turnos como ação livre), ou Senjutsu 8 + Mokuton 8 (3 turnos como ação padrão; nível 10 = ação livre). Gyaku Kuchiyose: invocação reversa pra Monte Myōboku/Caverna Ryūchi. Transformação em Pedra: drenadores de chakra durante Modo Eremita-Kuchiyose viram pedra e morrem (exceto se também tiverem Senjutsu/Senninka). Fonte: Livro Básico p. 240-241.",
+      "stats": {
+        "action": "LIVRE",
+        "range": "pessoal",
+        "duration": "1 ação ou sustentado por cena (1 vez por cena pras vit/chakra)",
+        "chakraCost": "1 ponto de Chakra Senjutsu por bônus ativado"
+      },
+      "rules": {
+        "availableBonuses": [
+          { "name": "Força +4", "description": "Não cumulativo com bônus de dano base", "duration": "ação livre" },
+          { "name": "Dano Base +2 para um ataque", "description": "Incluindo Energizar", "duration": "1 ataque" },
+          { "name": "Precisão de Ataque +1", "description": "", "duration": "1 ataque" },
+          { "name": "Precisão de Defesa +1", "description": "", "duration": "1 defesa" },
+          { "name": "Acelerado", "description": "Condição", "duration": "1 cena" },
+          { "name": "Dificuldades de Técnicas +1", "description": "", "duration": "1 cena" },
+          { "name": "Dureza de Corpo +1", "description": "", "duration": "1 cena" },
+          { "name": "Chakra +20", "description": "1 vez por cena", "duration": "permanente naquela cena" },
+          { "name": "Vitalidade +30", "description": "1 vez por cena", "duration": "permanente naquela cena" }
+        ],
+        "rechargeOptions": [
+          "Senpou: Ryōsei no Jutsu",
+          "Kage Bunshins absorvendo (max 2)",
+          "Células Senninka (Iryou 10 + Medicina 20 + Ocultismo 20, 3 turnos ação livre)",
+          "Senjutsu 8 + Mokuton 8 (3 turnos ação padrão; nível 10 = ação livre)"
+        ],
+        "stoneTransformation": "drenadores externos morrem virando pedra durante Modo Eremita-Kuchiyose"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "senpou_ryosei_no_jutsu",
+      "name": "Senpou: Ryōsei no Jutsu (Técnica das Duas Vidas)",
+      "minLevel": 6,
+      "availableFor": ["senjutsu"],
+      "shortDescription": "Cria um Sapo/Cobra imóvel que absorve Energia da Natureza por você. Recarrega Chakra Senjutsu sem você ficar parado.",
+      "description": "Cria um sapo (Monte Myōboku) ou cobra (Caverna Ryūchi) imóvel que absorve Energia da Natureza por você. Permite recarregar Chakra Senjutsu durante combate sem você precisar ficar imóvel. Pré-requisitos: Senjutsu 6, Kuchiyose 8 (Sapos ou Cobras). Fonte: Livro Básico p. 241.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "pessoal",
+        "duration": "CONTINUA (ver texto)",
+        "chakraCost": "ver_texto"
+      },
+      "rules": {
+        "prerequisites": {
+          "powers": { "senjutsu": 6, "kuchiyose": 8 }
+        },
+        "rechargesChakraSenjutsu": true
+      },
+      "evolutions": []
+    }
+  ]
+}

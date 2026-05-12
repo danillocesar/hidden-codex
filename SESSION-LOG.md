@@ -6,6 +6,71 @@
 
 ---
 
+## Seed Lote 4c — KGs e Hijutsus complexos (15:40, parte 6)
+
+Terceira onda do Lote 4. **+33 efeitos** (1 Hyouton + 2 Mokuton + 6 Sabaku + 2 Jiton + 2 Yonbi Youton + 1 Aoi Katon + 2 Sanbi Suiton + 2 Senjutsu + 15 Hachimon). Total no banco: **65 efeitos** (18 4a + 14 4b + 33 4c).
+
+### Mudança
+
+- **Sem migration.** Shape de `PowerEffect` continua servindo. Efeitos Senjutsu e Hachimon usam mais campos dentro do JSONB `rules`, mas o tipo `Json` aceita qualquer estrutura.
+- **`prisma/seed.ts`**: 9 arquivos novos em `EFFECT_FILES` com comentários sobre os destaques (cross-element, pré-reqs cruzados, Bijuus opcionais).
+
+### Validação pós-seed
+
+Counts finais: 5 vilas · 5 KGs · 17 clãs · 19 poderes · **65 efeitos** · 20 perícias (idempotente).
+
+Spot-checks via psql:
+
+- **Espelhos Demoníacos** — `availableFor: {hyouton}`, prereq `effects: [imergir]` + `aptitudes: [ataque_em_movimento]` ✓
+- **Areia Especial** — cross-element `{sabaku_hijutsu, jiton}` ✓
+- **Pirâmide** — prereq `effects: [prisao_de_areia]` ✓
+- **Modo Eremita Bonus** — 9 bônus em `rules.availableBonuses` ✓
+- **8 portões Hachimon** — todos presentes com nomes japoneses corretos (Kaimon, Kyūmon, Seimon, Shōmon, Tomon, Keimon, Kyōmon, Shimon) ✓
+- **Hachimon 8 Shimon** — `rules.afterClosing.deathAfter: true` ✓
+
+`pnpm lint` ✓ / `pnpm typecheck` ✓ / `pnpm test` 210/210 ✓.
+
+### Observações importantes
+
+**1. `availableFor` aponta para poderes que ainda não existem no banco.** Os efeitos 4c referenciam `sabaku_hijutsu`, `yonbi_youton`, `aoi_katon`, `sanbi_suiton`, `senjutsu`, `hachimon_tonkou` em `availableFor`. Esses códigos NÃO estão na tabela `powers` atual (19 poderes do Lote 3 não os incluem). Como `availableFor` é FK lógica sem constraint Prisma (decisão arquitetural já tomada), o seed aceita sem erro. Quando `powers-additional.json` (já dropado no seed-data pelo usuário) for seedado num lote suplementar, as referências ficam consistentes.
+
+**2. Pré-requisitos cruzados detectados (validação no motor — sessão dedicada futura):**
+
+| Efeito | Pré-requisito de outro efeito | Tipo |
+|---|---|---|
+| Espelhos Demoníacos | `imergir` (4b, Doton/Suiton/Hyouton) | effect |
+| Pirâmide | `prisao_de_areia` (4c, Sabaku) | effect |
+| Manto de Lava | `energizar` (4a, universal) | effect |
+| Arma Elétrica | `lamina_de_raios` (4b, Raiton) | effect |
+| Afiar | `energizar` (4a) | effect |
+| Lâmina de Vento | `energizar` (4a) | effect |
+| Areia Selada | `areia_especial` (4c, Sabaku/Jiton) + Int 6 | effect + attribute |
+
+**Nota sobre Hell Stab:** o README mencionava `lamina_de_raios` como pré-requisito, mas o JSON real tem `aptitudes: [armadura_de_raios]` (uma aptidão, não um efeito). Documentado conforme está no banco.
+
+Motor precisa checar esses 7 casos ao validar compra de efeito por personagem. Fica para a sessão de wizard/criação ou sessão dedicada de validações de efeito.
+
+**3. Hachimon e Senjutsu modelados com shapes "fora do padrão"** dentro de `rules` (8 portões individuais + 7 Taijutsus separados, 9 bônus selecionáveis em `availableBonuses`). JSONB acomoda; motor terá lógica específica.
+
+**4. Fora do lote 4c (decisão do extrator):** Gobi Futton, Rokubi Suiton, Kyuubi Cura da Raposa, Magen (lote 4d), Dokujutsu, Modos Bijuu/Manto/Bijuudama. Os Bijuus completos podem virar um Lote 4f suplementar futuro.
+
+### Próximo passo
+
+**Ondas 4d e 4e:**
+
+- **4d** — Poderes restritos de clã (Magen, Iryou, Fuuinjutsu, Rasengan, Kuchiyose, Juuken, Kagejutsu, Baika, Kikai, Shikakyu, Shintenshin). Arquivos já dropados em `prisma/seed-data/`.
+- **4e** — Efeitos novos do Guia Avançado (Dano Contínuo, Deslocamento de Vácuo, Purificar, Repelir, Flutuar, Desastre).
+
+Logo após 4d/4e, sessão dedicada de motor pode implementar:
+- Validação de `availableFor` na compra de efeito por personagem
+- Validação de evoluções não-skippable (regra do livro 4a)
+- Validação dos 7+ pré-requisitos cruzados (efeitos que exigem outros efeitos)
+- Validação de `blockedNinpouEffects` por elemento (Katon não compra Algemar etc.)
+
+Em paralelo, **criação de personagem (F2.4 wizard)** continua viável com o que já está no banco.
+
+---
+
 ## Seed Lote 4b — Efeitos exclusivos dos 5 elementos básicos (15:00, parte 5)
 
 Segunda onda do Lote 4. **+14 efeitos** (3 Suiton + 3 Doton + 1 Katon + 4 Fuuton + 3 Raiton). Total no banco: **32 efeitos** (18 do 4a + 14 do 4b).

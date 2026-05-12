@@ -1,0 +1,83 @@
+{
+  "_meta": {
+    "description": "Efeitos exclusivos do poder Mokuton (Elemento Madeira) — KG do clã Senju. Mokuton herda TODOS os efeitos universais de Ninpou + Imergir (Doton) MAIS estes exclusivos. +1 dano base; +1 na dificuldade de resistência. Inclui o efeito Golem (Mokujin) que é exclusivo de Mokuton.",
+    "sources": [
+      "Livro Básico p. 176-180 (Mokuton e técnicas Senju)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "powerNotes": {
+      "code": "mokuton",
+      "category": "KEKKEI_GENKAI",
+      "rangeFormula": "Médio (10m +2m por nível de Espírito)",
+      "sizeFormula": "1m por nível de Espírito",
+      "elementBonus": 1,
+      "resistanceDifficultyBonus": 1,
+      "allEffectsFromNinpou": true,
+      "crossElementEffects": ["imergir"]
+    }
+  },
+  "data": [
+    {
+      "code": "transmissor",
+      "name": "Transmissor (Soushinki)",
+      "minLevel": 2,
+      "availableFor": ["mokuton"],
+      "shortDescription": "Faz Moku Bunshin se desfazer em sementes rastreadoras. Pré-req: aptidão Clone (Moku Bunshin).",
+      "description": "O personagem faz seu clone se desfazer em várias sementes que podem ser usadas para rastrear um alvo. Pra isso, basta implantar a semente na roupa do alvo (por exemplo) ou fazê-lo ingeri-la. Somente o usuário pode detectar as transmissões. Segue regras da aptidão Sensor, mas só detecta alvos que carregam a semente. Conhecido também como Soushinki (Semente Transmissora). Pré-requisito: aptidão Clone com escolha Moku Bunshin. Fonte: Livro Básico p. 176.",
+      "stats": {
+        "action": "PARCIAL",
+        "range": "toque",
+        "target": "um_moku_bunshin",
+        "damage": "nenhum",
+        "duration": "CONTINUA",
+        "chakraCost": 2
+      },
+      "rules": {
+        "prerequisites": { "aptitudes": ["clone_moku_bunshin"] },
+        "actsLikeAptitudeSensor": true,
+        "onlyDetectsCarriersOfSeed": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "golem",
+      "name": "Golem (Mokujin)",
+      "minLevel": 7,
+      "availableFor": ["mokuton"],
+      "shortDescription": "Cria gigante humanóide de madeira tamanho imenso. Funciona como parceiro controlado. Compatível com Senjutsu.",
+      "description": "Cria um gigantesco monstro de madeira pra lutar, podendo ter qualquer aparência — desde grande humanoide até dragão. Conhecido também como Mokujin. Ficha: golem tem os mesmos atributos do usuário, mas Força é substituída pelo nível de Espírito. Tamanho imenso (modificadores de For/Vig aplicados normalmente). Dureza zero, metade da Vit do usuário. Habilidades de Combate iguais às suas (incluindo Especialista, Maestria, Reflexos, Intuição, Acuidade). Perícias em nível zero. Ataque corporal causa dano comum do poder. Parceiro: segue regras de Comandar Parceiro mas é controlado diretamente (sem instruções). Sem mente — não pode ser alvo de Genjutsus. Controle: exige concentração; se interromper, golem fica imóvel como objeto. Concentração NÃO conta pra regra de divisão de dano de parceiros. Só 1 golem por cena. Enquanto controlado, segue regras de personagem comum (ação padrão, movimento, etc.). Pode usar qualquer técnica de Mokuton através do golem, usando as ações dele. Não pode usar outras técnicas/aptidões. Ação de movimento + metade do custo do efeito = cura metade da Vit total do golem. Senjutsu: aplica bônus do poder Senjutsu (exceto bônus de energia, e se não acumular com bônus de tamanho). Fonte: Livro Básico p. 177-178.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "pessoal",
+        "damage": "comum_do_poder (ataque corporal)",
+        "duration": "CONTINUA (concentração)",
+        "chakraCost": "nivel_usado"
+      },
+      "rules": {
+        "golemSize": "imenso",
+        "golemAttributes": "iguais_ao_usuario, força = nível_esp",
+        "golemHardness": 0,
+        "golemVitality": "metade_da_vit_do_usuario",
+        "noGenjutsu": true,
+        "requiresConcentration": true,
+        "concentrationDoesNotCountForPartnerDamageSplit": true,
+        "onePerScene": true,
+        "canCastMokutonThroughGolem": true,
+        "healOption": {
+          "action": "movimento",
+          "chakraCost": "metade_do_efeito",
+          "amount": "metade_da_vit_total"
+        },
+        "senjutsuCompatible": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 10,
+          "name": "Golem Nv 10",
+          "description": "Golem tem tamanho colossal. Ataques corporais comuns recebem gratuitamente o efeito Selar Chakra (no nível que o usuário possuir)."
+        }
+      ]
+    }
+  ]
+}

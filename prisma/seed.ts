@@ -235,7 +235,20 @@ const EFFECT_FILES: ReadonlyArray<string> = [
   'effects-katon.json', // 1: Inflamável (cross via Guia Avançado)
   'effects-fuuton.json', // 4: Venenoso, Afiar, Lâmina de Vento, Flutuar
   'effects-raiton.json', // 3: Lâmina de Raios, Arma Elétrica, Descarga
-  // Próximas ondas (4c/4d/4e) entram aqui conforme chegarem.
+  // 4c — KGs e Hijutsus complexos. Alguns `availableFor` apontam para poderes
+  // que ainda não existem no catálogo (sabaku_hijutsu, yonbi_youton, etc.) —
+  // virão em `powers-additional.json` num lote futuro. Como `availableFor` é
+  // FK lógica sem constraint Prisma, o seed aceita.
+  'effects-hyouton.json', // 1: Espelhos Demoníacos (requer Imergir + Ataque em Movimento)
+  'effects-mokuton.json', // 2: Transmissor (Soushinki), Golem (Mokujin)
+  'effects-sabaku.json', // 6: Areia Especial (cross Sabaku+Jiton), Armadura, ...
+  'effects-jiton.json', // 2: Areia Selada, Projétil Venenoso (variantes Satetsu/Sakin)
+  'effects-yonbi-youton.json', // 2: Manto de Lava (requer Energizar), Vulcão
+  'effects-aoi-katon.json', // 1: Nekozume
+  'effects-sanbi-suiton.json', // 2: Sangoshō, Espelho D'Água
+  'effects-senjutsu.json', // 2: Modo Eremita Bonus (9 bônus selecionáveis), Senpou Ryōsei
+  'effects-hachimon.json', // 15: 8 portões individuais + 7 Taijutsus avançados
+  // Próximas ondas (4d/4e) entram aqui conforme chegarem.
 ];
 
 async function seedPowerEffects(): Promise<void> {

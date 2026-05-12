@@ -1,0 +1,79 @@
+{
+  "_meta": {
+    "description": "Efeitos exclusivos do Jiton (Elemento Magnetismo) — KG do clã com 2 vertentes: Satetsu (Areia de Ferro) e Sakin (Poeira de Ouro). Funciona como variação do Sabaku Hijutsu. Areia Especial é compra OBRIGATÓRIA (grãos não existem na natureza prontos pra uso).",
+    "sources": [
+      "Livro de Hijutsus p. 53-54 (Jiton)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "powerNotes": {
+      "code": "jiton",
+      "category": "KEKKEI_GENKAI",
+      "variants": ["satetsu", "sakin"],
+      "basedOn": "sabaku_hijutsu",
+      "satetsuAllowedEffects": "todos_ninpou_e_sabaku menos [armadura_de_areia, terceiro_olho, piramide]",
+      "sakinAllowedEffects": "todos_ninpou_e_sabaku + colisao_de_ondas menos [armadura_de_areia, areia_suspensa, piramide]",
+      "sakinElementAdvantage": ["sabaku_hijutsu"],
+      "mandatoryEffect": "areia_especial"
+    }
+  },
+  "data": [
+    {
+      "code": "areia_selada",
+      "name": "Areia Selada",
+      "minLevel": 3,
+      "availableFor": ["jiton"],
+      "shortDescription": "Selo de Fuuinjutsu que sela Areia de Ferro ou Pó de Ouro na pele. Liberar é ação livre. Pré-req: Int 6 + Areia Especial.",
+      "description": "Técnica especial de Fuuinjutsu criada especificamente pra selar Areia de Ferro (Satetsu) ou Pó de Ouro (Sakin) e levá-lo consigo em grandes quantidades sem se preocupar com peso ou volume. Funciona pelas mesmas regras do Selo de Armazenamento Maior do Fuuinjutsu, com diferenças. Deve ser usado pra selar a Areia Especial em si, nunca uma técnica. Selo é gravado na pele do personagem de forma permanente — não ocupa compartimentos. Criar o selo pela primeira vez requer 1 hora; depois, selar = 1 rodada. Pode selar toda a quantidade de Areia Especial disponível pelo nível do poder. Liberar é ação livre que pode ser feita antes de ação defensiva. Areia Especial mantém propriedades quando armazenada/extraída. Reutilizável. Pré-requisitos: Int 6 + efeito Areia Especial. Variantes: Satetsu ou Sakin. Fonte: Livro de Hijutsus p. 53-54.",
+      "stats": {
+        "action": "1 rodada (selar)",
+        "range": "toque",
+        "target": "sua_areia_de_ferro_ou_po_de_ouro",
+        "duration": "PERMANENTE",
+        "chakraCost": "ver_texto"
+      },
+      "rules": {
+        "prerequisites": {
+          "attributes": { "int": 6 },
+          "effects": ["areia_especial"]
+        },
+        "basedOn": "selo_armazenamento_maior_fuuinjutsu",
+        "firstCreationTime": "1 hora",
+        "subsequentSealing": "1 rodada",
+        "releaseAction": "livre",
+        "releaseBeforeDefense": true,
+        "noCompartmentUsage": true,
+        "skinPermanent": true,
+        "reusable": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "projetil_venenoso",
+      "name": "Projétil Venenoso",
+      "minLevel": 5,
+      "availableFor": ["jiton"],
+      "shortDescription": "[Satetsu] Areia de ferro com veneno em projéteis. Variação de Flechas Nv 3. Pré-req: Venefício 8.",
+      "description": "Dissolve doses de veneno na areia de ferro previamente. Quando usa o efeito, molda a areia em projéteis perfurantes ou cortantes pra disparar contra alvos e injetar veneno ao serem atingidos. Segue regras do Flechas Nv 3, com diferenças. Projéteis são considerados Armas Venenosas (regras da perícia Venefício). Apenas 1 tipo de veneno por vez, sem misturas. Veneno é injetado se causar dano de grau 3+. Não pode ser usado pra Fintar. Apenas pra variante Satetsu (Areia de Ferro). Pré-requisito: Venefício 8. Fonte: Livro de Hijutsus p. 54.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "target": "uma_ou_mais_criaturas",
+        "damage": "2 por projétil",
+        "duration": "INSTANTANEA",
+        "chakraCost": "nivel_usado",
+        "type": "projetil"
+      },
+      "rules": {
+        "variantOnly": "satetsu",
+        "prerequisites": { "skills": { "venefico": 8 } },
+        "basedOn": "flechas_nv_3",
+        "treatsAsPoisonedWeapon": true,
+        "oneVenomTypePerUse": true,
+        "venomInjectionMinDamageGrade": 3,
+        "noFeintUse": true
+      },
+      "evolutions": []
+    }
+  ]
+}

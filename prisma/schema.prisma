@@ -1,0 +1,456 @@
+// Arcana Forge — Prisma schema
+// Documentação detalhada: arcana-forge-spec/03-DATA-MODEL.md
+// Convenções: tabelas em snake_case, modelos em PascalCase, FKs com @map.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// USUÁRIOS E AUTENTICAÇÃO
+// ══════════════════════════════════════════════════════════════════════
+
+model User {
+  id          String   @id @default(uuid()) @db.Uuid
+  firebaseUid String   @unique @map("firebase_uid")
+  email       String   @unique
+  displayName String?  @map("display_name")
+  avatarUrl   String?  @map("avatar_url")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  characters Character[]
+  shareLinks ShareLink[]
+
+  @@map("users")
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// PERSONAGENS
+// ══════════════════════════════════════════════════════════════════════
+
+model Character {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Identidade
+  name          String
+  age           Int?
+  gender        String?
+  campaignLevel Int           @map("campaign_level")
+  rank          CharacterRank @default(GENIN)
+  tendency      String?
+  size          CharacterSize @default(MEDIUM)
+
+  // Referencial (FK opcionais para catálogos)
+  clanId         String?       @map("clan_id") @db.Uuid
+  clan           Clan?         @relation(fields: [clanId], references: [id])
+  villageId      String?       @map("village_id") @db.Uuid
+  village        Village?      @relation(fields: [villageId], references: [id])
+  kekkeiGenkaiId String?       @map("kekkei_genkai_id") @db.Uuid
+  kekkeiGenkai   KekkeiGenkai? @relation(fields: [kekkeiGenkaiId], references: [id])
+
+  // Atributos primários (7)
+  attrFor Int @default(1) @map("attr_for")
+  attrDes Int @default(1) @map("attr_des")
+  attrAgi Int @default(1) @map("attr_agi")
+  attrPer Int @default(1) @map("attr_per")
+  attrInt Int @default(1) @map("attr_int")
+  attrVig Int @default(1) @map("attr_vig")
+  attrEsp Int @default(1) @map("attr_esp")
+
+  // Habilidades de combate (bases — remanejamento permitido)
+  baseCc  Int @default(5) @map("base_cc")
+  baseCd  Int @default(3) @map("base_cd")
+  baseEsq Int @default(3) @map("base_esq")
+  baseLm  Int @default(1) @map("base_lm")
+
+  // Sociais
+  socialCarisma     Int @default(0) @map("social_carisma")
+  socialManipulacao Int @default(0) @map("social_manipulacao")
+
+  // Energias correntes
+  currentVitality Int @map("current_vitality")
+  currentChakra   Int @map("current_chakra")
+
+  // Bio/lore livre
+  biography String? @db.Text
+
+  // Estado de UI (Json estruturado — ver 03-DATA-MODEL.md §"UIState")
+  uiState Json @default("{}") @map("ui_state")
+
+  // Recursos
+  ryos Int @default(0)
+
+  // Visibilidade pública (perfil público)
+  isPublicOnProfile Boolean @default(false) @map("is_public_on_profile")
+
+  // Metadados
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  pericias     CharacterPericia[]
+  aptitudes    CharacterAptitude[]
+  powers       CharacterPower[]
+  jutsus       CharacterJutsu[]
+  inventory    CharacterInventoryItem[]
+  diaryEntries DiaryEntry[]
+  shareLinks   ShareLink[]
+  images       CharacterImage[]
+
+  @@index([userId])
+  @@index([deletedAt])
+  @@map("characters")
+}
+
+enum CharacterRank {
+  ACADEMICO
+  GENIN
+  CHUUNIN
+  JOUNIN
+  ANBU
+  KAGE
+}
+
+enum CharacterSize {
+  MINUSCULO
+  MIUDO
+  PEQUENO
+  MEDIUM
+  GRANDE
+  ENORME
+  COLOSSAL
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// PERÍCIAS (associativa Character ↔ Pericia hardcoded no domínio)
+// ══════════════════════════════════════════════════════════════════════
+
+model CharacterPericia {
+  id          String    @id @default(uuid()) @db.Uuid
+  characterId String    @map("character_id") @db.Uuid
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  periciaCode String    @map("pericia_code")
+  points      Int       @default(0)
+
+  @@unique([characterId, periciaCode])
+  @@map("character_pericias")
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// APTIDÕES
+// ══════════════════════════════════════════════════════════════════════
+
+model Aptitude {
+  id               String           @id @default(uuid()) @db.Uuid
+  code             String           @unique
+  name             String
+  category         AptitudeCategory
+  costPoints       Int              @default(2) @map("cost_points")
+  description      String           @db.Text
+  shortDescription String?          @map("short_description")
+
+  prerequisites Json @default("{}")
+  restrictions  Json @default("{}")
+
+  isFree Boolean @default(false) @map("is_free")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  characterAptitudes CharacterAptitude[]
+
+  @@map("aptitudes")
+}
+
+enum AptitudeCategory {
+  COMBATE
+  PODER
+  PERICIA
+  GERAL
+  RESTRITA
+}
+
+model CharacterAptitude {
+  id          String    @id @default(uuid()) @db.Uuid
+  characterId String    @map("character_id") @db.Uuid
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  aptitudeId  String    @map("aptitude_id") @db.Uuid
+  aptitude    Aptitude  @relation(fields: [aptitudeId], references: [id])
+
+  parameter        String?
+  isFreeFromOrigin Boolean @default(false) @map("is_free_from_origin")
+
+  @@unique([characterId, aptitudeId, parameter])
+  @@map("character_aptitudes")
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// PODERES E EFEITOS
+// ══════════════════════════════════════════════════════════════════════
+
+model Power {
+  id               String        @id @default(uuid()) @db.Uuid
+  code             String        @unique
+  name             String
+  category         PowerCategory
+  description      String        @db.Text
+  shortDescription String?       @map("short_description")
+
+  costPerLevel Int  @default(1) @map("cost_per_level")
+  restrictions Json @default("{}")
+
+  element String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  effects         PowerEffect[]
+  characterPowers CharacterPower[]
+
+  @@map("powers")
+}
+
+enum PowerCategory {
+  NINPOU
+  TAIJUTSU
+  GENJUTSU
+  KEKKEI_GENKAI
+  HIJUTSU
+}
+
+model PowerEffect {
+  id               String  @id @default(uuid()) @db.Uuid
+  powerId          String  @map("power_id") @db.Uuid
+  power            Power   @relation(fields: [powerId], references: [id], onDelete: Cascade)
+  code             String
+  name             String
+  minLevel         Int     @map("min_level")
+  description      String  @db.Text
+  shortDescription String? @map("short_description")
+
+  stats Json
+
+  tags String[] @default([])
+
+  @@unique([powerId, code])
+  @@map("power_effects")
+}
+
+model CharacterPower {
+  id          String    @id @default(uuid()) @db.Uuid
+  characterId String    @map("character_id") @db.Uuid
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  powerId     String    @map("power_id") @db.Uuid
+  power       Power     @relation(fields: [powerId], references: [id])
+  level       Int
+
+  @@unique([characterId, powerId])
+  @@map("character_powers")
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// JUTSUS (instanciações de Power+Effect customizadas pelo personagem)
+// ══════════════════════════════════════════════════════════════════════
+
+model CharacterJutsu {
+  id            String    @id @default(uuid()) @db.Uuid
+  characterId   String    @map("character_id") @db.Uuid
+  character     Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  powerId       String    @map("power_id") @db.Uuid
+  powerEffectId String    @map("power_effect_id") @db.Uuid
+
+  name        String
+  kanjiName   String? @map("kanji_name")
+  translation String?
+  flavorText  String? @map("flavor_text") @db.Text
+  imageUrl    String? @map("image_url")
+
+  overrides Json @default("{}")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("character_jutsus")
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// INVENTÁRIO
+// ══════════════════════════════════════════════════════════════════════
+
+model Equipment {
+  id               String            @id @default(uuid()) @db.Uuid
+  code             String            @unique
+  name             String
+  category         EquipmentCategory
+  description      String            @db.Text
+  shortDescription String?           @map("short_description")
+
+  stats Json     @default("{}")
+  tags  String[] @default([])
+
+  basePrice Int @default(0) @map("base_price")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  inventoryItems CharacterInventoryItem[]
+
+  @@map("equipments")
+}
+
+enum EquipmentCategory {
+  ARMA_CC
+  ARMA_CD
+  ARMA_ARREMESSO
+  ARMADURA
+  ESCUDO
+  ITEM_NINJA
+  CONSUMIVEL
+  MISC
+}
+
+model CharacterInventoryItem {
+  id          String    @id @default(uuid()) @db.Uuid
+  characterId String    @map("character_id") @db.Uuid
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  equipmentId String?    @map("equipment_id") @db.Uuid
+  equipment   Equipment? @relation(fields: [equipmentId], references: [id])
+  customName  String?    @map("custom_name")
+  customStats Json?      @map("custom_stats")
+
+  quantity Int     @default(1)
+  notes    String? @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("character_inventory_items")
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// CATÁLOGOS DE REFERÊNCIA (CLÃS, VILAS, KEKKEI GENKAIS)
+// ══════════════════════════════════════════════════════════════════════
+
+model Clan {
+  id               String  @id @default(uuid()) @db.Uuid
+  code             String  @unique
+  name             String
+  description      String  @db.Text
+  shortDescription String? @map("short_description")
+
+  benefits Json @default("{}")
+
+  createdAt  DateTime    @default(now()) @map("created_at")
+  characters Character[]
+
+  @@map("clans")
+}
+
+model Village {
+  id               String  @id @default(uuid()) @db.Uuid
+  code             String  @unique
+  name             String
+  fullName         String? @map("full_name")
+  description      String  @db.Text
+  shortDescription String? @map("short_description")
+
+  benefits Json @default("{}")
+
+  createdAt  DateTime    @default(now()) @map("created_at")
+  characters Character[]
+
+  @@map("villages")
+}
+
+model KekkeiGenkai {
+  id               String  @id @default(uuid()) @db.Uuid
+  code             String  @unique
+  name             String
+  description      String  @db.Text
+  shortDescription String? @map("short_description")
+
+  benefits Json @default("{}")
+
+  createdAt  DateTime    @default(now()) @map("created_at")
+  characters Character[]
+
+  @@map("kekkei_genkais")
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// IMAGENS DO PERSONAGEM (galeria)
+// ══════════════════════════════════════════════════════════════════════
+
+model CharacterImage {
+  id          String    @id @default(uuid()) @db.Uuid
+  characterId String    @map("character_id") @db.Uuid
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  url           String
+  storagePath   String  @map("storage_path")
+  fileName      String? @map("file_name")
+  width         Int?
+  height        Int?
+  fileSizeBytes Int?    @map("file_size_bytes")
+
+  label String?
+
+  uploadedAt DateTime @default(now()) @map("uploaded_at")
+
+  @@index([characterId])
+  @@map("character_images")
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// DIÁRIO
+// ══════════════════════════════════════════════════════════════════════
+
+model DiaryEntry {
+  id          String    @id @default(uuid()) @db.Uuid
+  characterId String    @map("character_id") @db.Uuid
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  title     String
+  body      String    @db.Text
+  entryDate DateTime? @map("entry_date")
+  tag       String?
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([characterId])
+  @@index([deletedAt])
+  @@map("diary_entries")
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// COMPARTILHAMENTO
+// ══════════════════════════════════════════════════════════════════════
+
+model ShareLink {
+  id          String    @id @default(uuid()) @db.Uuid
+  token       String    @unique
+  characterId String    @map("character_id") @db.Uuid
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  userId      String    @map("user_id") @db.Uuid
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  isActive     Boolean   @default(true) @map("is_active")
+  viewCount    Int       @default(0) @map("view_count")
+  lastViewedAt DateTime? @map("last_viewed_at")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  expiresAt DateTime? @map("expires_at")
+
+  @@index([token])
+  @@index([characterId])
+  @@map("share_links")
+}

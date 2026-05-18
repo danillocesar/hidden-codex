@@ -1,0 +1,72 @@
+{
+  "_meta": {
+    "description": "Lote 7h — Power Rinne Ninpou (variante Ninpou aceitando 5 elementos básicos via Rinnegan). NÃO é power virtual sem progressão (como Mangekyou Sharingan) — TEM progressão de níveis normal de Ninpou. Diferença é flexibilidade elemental.",
+    "sources": [
+      "Livro de Hijutsus p. 65-67 (Rinnegan + Transformações da Natureza)"
+    ],
+    "extractedAt": "2026-05-14",
+    "schemaVersion": 1,
+    "appliesToTable": "powers",
+    "expectedItemCount": 1
+  },
+  "data": [
+    {
+      "code": "rinne_ninpou",
+      "name": "Rinne Ninpou",
+      "translation": "Arte Ninja do Caminho dos Renascimentos",
+      "category": "RESTRITO",
+      "element": null,
+      "shortDescription": "Variante de Ninpou concedida pelo Rinnegan. Permite usar os 5 elementos básicos (Doton/Fuuton/Katon/Raiton/Suiton). Troca elemento via ação parcial.",
+      "description": "Comprado como Ninpou regular mas com flexibilidade elemental concedida pelo Rinnegan. Personagem pode usar os 5 elementos básicos de Ninjutsu (Doton, Fuuton, Katon, Raiton, Suiton). Antes de usar o poder no turno, pode alterar a propriedade de sua natureza de chakra com ação parcial. Usa qualquer efeito selecionado como se fosse outro power elemental — recebe todas as propriedades (bônus dano, dureza, alcance) DAQUELE elemento. Restrição: só pode transformar efeito do Rinne Ninpou em elemento se o efeito também for permitido pelo elemento alvo (ex: Barreira NÃO pode virar Katon pois Katon não tem Barreira). NÃO permite adquirir efeitos exclusivos de elementos. Pode trocar elemento mantendo efeito sustentado/contínuo/permanente — exceto por concentração. Nível de Rinne Ninpou serve pra cumprir pré-reqs elementais (Domínios). Aptidões de combate/benefícios que afetam Rinne Ninpou (Maestria) servem pras Transformações — mas o contrário NÃO. Kage Bunshin pode usar Rinne Ninpou. Fonte: Livro de Hijutsus p. 66-67.",
+      "stats": {
+        "rangeFormula": {
+          "base": 10,
+          "perEsp": 2,
+          "category": "Médio"
+        },
+        "sizeFormula": {
+          "perEsp": 1,
+          "unit": "m"
+        },
+        "keyAttribute": "esp",
+        "elementAdvantage": [],
+        "elementDisadvantage": []
+      },
+      "rules": {
+        "selosDefault": true,
+        "type": "ninjutsu_rinnegan",
+        "prerequisites": {
+          "aptitudes": [
+            "rinnegan"
+          ]
+        },
+        "isVariantOf": "ninpou",
+        "inheritsNinpouRules": true,
+        "acceptsBasicElements": [
+          "doton",
+          "fuuton",
+          "katon",
+          "raiton",
+          "suiton"
+        ],
+        "elementSwitching": {
+          "action": "parcial",
+          "timing": "antes_de_usar_o_poder_no_turno",
+          "compatibleWithSustainedEffects": true,
+          "compatibleWithContinuousEffects": true,
+          "compatibleWithPermanentEffects": true,
+          "notCompatibleWithConcentrationEffects": true
+        },
+        "transformsEffectIntoElement": {
+          "allowsAllBaseEffectsOfTargetElement": true,
+          "blocksExclusiveEffectsOfElement": true,
+          "inheritsTargetElementProperties": true
+        },
+        "levelCountsForElementalPrereqs": true,
+        "kageBunshinCanUse": true,
+        "combatAptitudesAffectBoth": "aptidoes_que_afetam_rinne_ninpou_afetam_transformacoes_mas_inverso_nao_vale",
+        "associatedEffects": "compartilhado com Ninpou — mais effects exclusivos via técnicas Tendō (shinra_tensei, bansho_tenin, chibaku_tensei) em effects-rinnegan.json"
+      }
+    }
+  ]
+}

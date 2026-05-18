@@ -91,6 +91,10 @@ model Character {
   // Bio/lore livre
   biography String? @db.Text
 
+  // Retrato principal (hero image da ficha). URL relativa quando local
+  // (`/uploads/portraits/...`). Galeria multi-imagem fica em `CharacterImage`.
+  portraitUrl String? @map("portrait_url")
+
   // Estado de UI (Json estruturado — ver 03-DATA-MODEL.md §"UIState")
   uiState Json @default("{}") @map("ui_state")
 
@@ -395,35 +399,80 @@ model CharacterJutsu {
 // INVENTÁRIO
 // ══════════════════════════════════════════════════════════════════════
 
+/// Catálogo de equipamentos seedado em ondas via `prisma/seed-data/equipment-*.json`.
+/// Lote 6a (Livro Básico, armas simples + marciais) começa com `kind=WEAPON` e
+/// `kind=AMMO`; lotes posteriores adicionam ARMOR, TOOL, CONSUMABLE, GENERAL.
+///
+/// `subtype` é texto livre por design — para WEAPON é "simples"/"marcial"/"especial";
+/// para ARMOR seria "leve"/"media"/"pesada"; para TOOL/CONSUMABLE o livro define
+/// outras categorizações. Promover a enum só depois que todos os lotes 6b-6i
+/// estiverem mapeados.
+///
+/// `category` é tipado como `WeaponCategory` (enum) — null para kinds que não
+/// usam categoria de arma (ARMOR, TOOL etc.).
+///
+/// `prerequisites` e `effects` seguem o padrão JSONB livre dos outros catálogos
+/// (Aptitude, Power, PowerEffect). Vocabulário detalhado nos READMEs de cada lote.
 model Equipment {
-  id               String            @id @default(uuid()) @db.Uuid
-  code             String            @unique
+  id               String          @id @default(uuid()) @db.Uuid
+  code             String          @unique
   name             String
-  category         EquipmentCategory
-  description      String            @db.Text
-  shortDescription String?           @map("short_description")
-
-  stats Json     @default("{}")
-  tags  String[] @default([])
-
-  basePrice Int @default(0) @map("base_price")
+  kind             EquipmentKind
+  subtype          String?
+  category         WeaponCategory?
+  price            Int?
+  damage           String?
+  range            String?         @map("range_text")
+  critRange        String?         @map("crit_range")
+  slots            Json?
+  damageType       String?         @map("damage_type")
+  prerequisites    Json            @default("{}")
+  effects          Json            @default("{}")
+  shortDescription String?         @map("short_description")
+  description      String          @db.Text
 
   createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   inventoryItems CharacterInventoryItem[]
 
+  @@index([kind])
+  @@index([subtype])
+  @@index([category])
   @@map("equipments")
 }
 
-enum EquipmentCategory {
-  ARMA_CC
-  ARMA_CD
-  ARMA_ARREMESSO
-  ARMADURA
-  ESCUDO
-  ITEM_NINJA
-  CONSUMIVEL
-  MISC
+/// Discriminador macro do catálogo. Lote 6a usa WEAPON + AMMO.
+enum EquipmentKind {
+  WEAPON
+  ARMOR
+  TOOL
+  CONSUMABLE
+  GENERAL
+  AMMO
+}
+
+/// Categoria de arma do Livro Básico 4.1b. `LEVE_COMPLEMENTAR` é o Kousen (5b
+/// específico — arma complementar que precisa de projétil). `MUNICAO` cobre
+/// flechas/virotes que viram entrada do catálogo via `kind=AMMO`. `VARIAVEL`
+/// é o Kusanagi (6b — Livro de Hijutsus 1) — jogador escolhe a forma da arma
+/// na aquisição (uma vez) e congela; modelagem da escolha fica pro motor/UI.
+/// `EXPLOSIVO`/`AREA`/`EQUIPAMENTO` (6f) cobrem ferramentas shinobi utilitárias:
+/// bombas + tarja explosiva (EXPLOSIVO), estrepes (AREA), tampões (EQUIPAMENTO).
+enum WeaponCategory {
+  DESARMADO
+  LEVE
+  MEDIANA
+  LONGA
+  PESADA
+  ARREMESSO
+  DISPARO
+  LEVE_COMPLEMENTAR
+  MUNICAO
+  VARIAVEL
+  EXPLOSIVO
+  AREA
+  EQUIPAMENTO
 }
 
 model CharacterInventoryItem {
@@ -452,9 +501,6 @@ model Clan {
   id               String  @id @default(uuid()) @db.Uuid
   code             String  @unique
   name             String
-  /// FK lógica (string) para `Village.code`. `null` em clãs proscritos /
-  /// extintos (ex.: Fuuma sem vila base, Kaguya extinto).
-  village          String?
   description      String  @db.Text
   shortDescription String? @map("short_description")
 

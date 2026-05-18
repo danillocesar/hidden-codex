@@ -1,0 +1,174 @@
+{
+  "_meta": {
+    "description": "Lote 6e — Armaduras e roupas do Livro Básico. 6 itens: 4 armaduras leves + 2 pesadas. NÃO inclui armaduras exclusivas de hijutsu (Armadura de Batalha Samurai e Armadura a Vapor) — essas vão pro 6i com referência cruzada ao hijutsu correspondente. Schema: usa kind=ARMOR + armorType (leve/pesada) + absorptionBonus + armorPenalty (formato '0(-2)') + compartmentModifier. Aptidão pré-req (Usar Armaduras Pesadas) NÃO existe ainda no banco — gera warning.",
+    "sources": [
+      "Livro Básico p. 135-137 (Armaduras e Trajes)",
+      "Livro Básico p. 139 (Tabela)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "expectedItemCount": 6,
+    "schemaNotes": "Campo novo: armorType (string 'leve' ou 'pesada'). armorPenalty no formato 'X(Y)' onde X=sem Usar Armaduras Pesadas, Y=com a aptidão. compartmentModifier: +1, -1, -2. Armaduras leves: vestir/remover = ação completa. Pesadas: 5 minutos.",
+    "missingAptitude": "usar_armaduras_pesadas — NÃO está em 5a-5d. Adicionar como aptidão GERAL em patch futuro. Pré-req: Força 10 ou Vigor 15."
+  },
+  "data": [
+    {
+      "code": "roupa_comum",
+      "name": "Roupa Comum",
+      "kind": "ARMOR",
+      "subtype": "vestuario",
+      "category": null,
+      "price": 10,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "armorType": "leve",
+        "absorptionBonus": 0,
+        "armorPenalty": null,
+        "compartmentModifier": 0,
+        "donTime": "acao_completa"
+      },
+      "shortDescription": "Roupas comuns sem proteção. Vestir/remover = ação completa.",
+      "description": "Roupas comuns sem nenhuma proteção adicional. Permitem total liberdade de movimentos. Vestir ou remover demora uma ação completa. Fonte: Livro Básico p. 139 (tabela)."
+    },
+    {
+      "code": "manopla",
+      "name": "Manopla",
+      "kind": "ARMOR",
+      "subtype": "vestuario",
+      "category": null,
+      "price": 5,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "armorType": "leve",
+        "absorptionBonus": 0,
+        "armorPenalty": null,
+        "compartmentModifier": 0,
+        "donTime": "acao_completa",
+        "blocksWithoutInjury": "Permite Bloqueio sem ferimentos. Regras específicas (Afiar, Armas Especiais/Pesadas) ainda devem ser observadas",
+        "preservesHandMovement": "Não atrapalha selos e aptidões de manobra",
+        "destroyedByDurezaIgnoring": "Destruída se receber dano que ignore dureza"
+      },
+      "shortDescription": "Luva metálica leve. Permite Bloqueio sem ferimentos. Destruída por dano que ignora dureza.",
+      "description": "Luva com proteção metálica leve nas costas das mãos e/ou antebraços. Permite realizar a reação de Bloqueio sem sofrer ferimentos (regras específicas, como Afiar e Armas Especiais e Pesadas, ainda devem ser observadas caso a caso). NÃO atrapalha movimento das mãos — pode realizar selos e aptidões de manobra normalmente. Absorção zero. Destruída se receber qualquer dano que ignore dureza. Fonte: Livro Básico p. 136."
+    },
+    {
+      "code": "colete_ninja",
+      "name": "Colete Ninja",
+      "kind": "ARMOR",
+      "subtype": "colete",
+      "category": null,
+      "price": 100,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {
+        "narrative": "Chuunin ou superior"
+      },
+      "effects": {
+        "armorType": "leve",
+        "absorptionBonus": 0,
+        "armorPenalty": null,
+        "compartmentModifier": 1,
+        "donTime": "acao_completa",
+        "rankRestriction": "chuunin_ou_superior",
+        "extraPockets": "Versão comum possui bolsos adicionais"
+      },
+      "shortDescription": "Colete de couro com bolsos. +1 compartimento. Chuunin+.",
+      "description": "Colete de couro batido, tingido com cores características da vila pelo qual o ninja trabalha (verde para Konoha, azul para Kiri, etc). Pode possuir símbolos diversos, referentes à história da vila ou como homenagem (em Konoha, traz o símbolo do clã Uzumaki). Versão comum possui bolsos adicionais (+1 compartimento). Restrição: apenas ninjas de patente Chuunin ou superior. Fonte: Livro Básico p. 136."
+    },
+    {
+      "code": "colete_ninja_resistente",
+      "name": "Colete Ninja Resistente",
+      "kind": "ARMOR",
+      "subtype": "colete",
+      "category": null,
+      "price": 150,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {
+        "narrative": "Chuunin ou superior"
+      },
+      "effects": {
+        "armorType": "leve",
+        "absorptionBonus": 10,
+        "armorPenalty": null,
+        "compartmentModifier": -1,
+        "donTime": "acao_completa",
+        "rankRestriction": "chuunin_ou_superior",
+        "reinforced": "Versão resistente possui couro reforçado para dar proteção (-1 compartimento por causa do peso)"
+      },
+      "shortDescription": "Colete reforçado. +10 absorção, -1 compartimento. Chuunin+.",
+      "description": "Versão reforçada do Colete Ninja. Couro mais espesso oferece +10 de absorção, mas o peso reduz capacidade de carga (-1 compartimento). Restrição: apenas ninjas de patente Chuunin ou superior. Fonte: Livro Básico p. 136."
+    },
+    {
+      "code": "armadura_de_batalha",
+      "name": "Armadura de Batalha",
+      "kind": "ARMOR",
+      "subtype": "armadura_pesada",
+      "category": null,
+      "price": 250,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "vig": 15 }
+      },
+      "effects": {
+        "armorType": "pesada",
+        "absorptionBonus": 15,
+        "armorPenalty": "0(-2)",
+        "armorPenaltyAppliesOn": ["esquiva", "agilidade", "acrobacia", "atletismo", "escapar", "furtividade"],
+        "armorPenaltyExplain": "0 com aptidão Usar Armaduras Pesadas; -2 sem ela",
+        "compartmentModifier": -1,
+        "donTime": "5_minutos"
+      },
+      "shortDescription": "Meia-armadura cota+placas. +15 absorção. -2 penalidade sem Usar Armaduras Pesadas.",
+      "description": "Meia-armadura, combinação de cota de malha e placas de metal posicionadas sobre as áreas vitais, de forma a não prejudicar muito a locomoção. Vestir/remover demora 5 minutos. Penalidade de armadura aplicada em Esquiva, testes de Agilidade, Acrobacia, Atletismo, Escapar e Furtividade. Com a aptidão Usar Armaduras Pesadas: penalidade 0. Sem ela: -2. Fonte: Livro Básico p. 136-137."
+    },
+    {
+      "code": "armadura_de_batalha_reforcada",
+      "name": "Armadura de Batalha Reforçada",
+      "kind": "ARMOR",
+      "subtype": "armadura_pesada",
+      "category": null,
+      "price": 600,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "vig": 15 }
+      },
+      "effects": {
+        "armorType": "pesada",
+        "absorptionBonus": 20,
+        "armorPenalty": "-2(-4)",
+        "armorPenaltyAppliesOn": ["esquiva", "agilidade", "acrobacia", "atletismo", "escapar", "furtividade"],
+        "armorPenaltyExplain": "-2 com aptidão Usar Armaduras Pesadas; -4 sem ela",
+        "compartmentModifier": -2,
+        "donTime": "5_minutos",
+        "includesHelmet": "Elmo incluso que pode ser aberto ou fechado"
+      },
+      "shortDescription": "Armadura pesada com elmo. +20 absorção. -4 penalidade sem Usar Armaduras Pesadas.",
+      "description": "Armadura de batalha mais reforçada e com elmo incluso, que pode ser aberto ou fechado. Vestir/remover demora 5 minutos. Penalidade de armadura: -2 com Usar Armaduras Pesadas; -4 sem ela. Fonte: Livro Básico p. 136-137."
+    }
+  ]
+}

@@ -1,0 +1,562 @@
+{
+  "_meta": {
+    "description": "Lote 7e1 — 6 técnicas Nv 10 fixas do Mangekyou Sharingan. Power virtual mangekyou_sharingan. Player escolhe 1 par + Susanoo fixo. Kagutsuchi inclui Enton (3 subTechniques: criar_arma, susanoo_costelas, barreira_nv3). Kamui Curto e Longo compartilham Teletransporte como subTechnique flagada sharedAcrossKamuiEffects.",
+    "sources": [
+      "Livro Básico p. 183-193 (Mangekyou Sharingan, Amaterasu, Kagutsuchi, Kamui, Tsukuyomi, Susanoo)"
+    ],
+    "extractedAt": "2026-05-14",
+    "schemaVersion": 1,
+    "appliesToTable": "effects",
+    "expectedItemCount": 6,
+    "powerNotes": {
+      "power": "mangekyou_sharingan",
+      "fixedLevel": 10,
+      "noLevelProgression": true
+    },
+    "unmodeledPowers": [],
+    "unmodeledAptitudes": [],
+    "sharedSubTechniques": [
+      "kamui_teletransporte"
+    ],
+    "sharedSubTechniquesNote": "kamui_teletransporte aparece em ambos kamui_curto e kamui_longo. Motor de regras deve tratar como capacidade única se jogador tem ambos os effects.",
+    "audit": [
+      {
+        "date": "2026-05-14",
+        "phase": "7e1-fix",
+        "change": "Refator de prereqs improvisados: powers_one_of_min8 (kamui_curto/longo) → powers_one_of canônico com dict {power:8}. effectsAllRequired (susanoo) → alternatives com 3 caminhos válidos (Tsukuyomi+Amaterasu / Kagutsuchi+Amaterasu / Kamui Curto+Longo). Alinha com SCHEMA-PATTERNS §2 e §3."
+      }
+    ]
+  },
+  "data": [
+    {
+      "code": "tsukuyomi",
+      "name": "Tsukuyomi (Deusa da Lua)",
+      "minLevel": 10,
+      "availableFor": [
+        "mangekyou_sharingan"
+      ],
+      "shortDescription": "Genjutsu KG via Olhar Hipnótico. Modo Mensageiro (1 PV) ou Modo Torturador (2 PV) com trauma mental severo.",
+      "description": "Ilusão que prende o alvo num mundo fictício sob controle do usuário, executada via Olhar Hipnótico. Capaz de alterar percepção do tempo. Modo Mensageiro: conversa de vários dias em segundos reais, sem penalidades. Modo Torturador: tortura ilusória — alvo testa resistência (Inteligência Dif 11+Int_usuario, Ilusão Profunda já inclusa). Falha = exausto até cura + -4 níveis em Int permanente; sucesso = fatigado temporário (vira exausto fim de cena). Int reduzida a zero = coma. Permanente até cura por Iryou Ninjutsu Nv 9. Sandan tem Dif -2 nat; Mangekyou tem Dif -2 adicional. Repetível mesma cena. Fonte: Livro Básico p. 191.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "9m",
+        "target": "1_criatura",
+        "duration": "INSTANTANEA",
+        "chakraCost": 10,
+        "visionCost": "1_ou_2_dependendo_do_modo",
+        "selos": false,
+        "rollType": "olhar_hipnotico"
+      },
+      "rules": {
+        "type": "genjutsu_kekkei_genkai_doujutsu",
+        "prerequisites": {
+          "aptitudes": [
+            "mangekyou_sharingan",
+            "fascinar",
+            "ilusao_profunda"
+          ],
+          "attributes": {
+            "int": 16
+          }
+        },
+        "subTechniques": [
+          {
+            "code": "tsukuyomi_mensageiro",
+            "name": "Modo Mensageiro",
+            "subType": "active_ability",
+            "visionCost": 1,
+            "description": "Conversa livre com alvo, usando alteração de percepção de tempo (segundos reais = vários dias ilusórios). Sem penalidades ao alvo. Pode reproduzir imagens/sensações."
+          },
+          {
+            "code": "tsukuyomi_torturador",
+            "name": "Modo Torturador",
+            "subType": "active_attack",
+            "visionCost": 2,
+            "description": "Ilusão de tortura repetida por dias ilusórios em segundos reais. Causa trauma mental severo se alvo falha resistência.",
+            "resistanceTest": {
+              "attribute": "int",
+              "difficulty": "11 + Int do usuario (Ilusao Profunda ja inclusa)"
+            },
+            "onFailure": "exausto_ate_cura + -4_niveis_int_permanente",
+            "onSuccess": "fatigado_temporario_vira_exausto_fim_de_cena",
+            "intZeroResult": "coma",
+            "healing": "iryou_ninjutsu_nv_9",
+            "dailyReductionAfterSecondDay": "teste_diario_resistencia_pode_diminuir_pra_fatigado_se_sem_esforco_fisico"
+          }
+        ],
+        "sandanResistanceBonus": "alvo_com_sandan_sucesso_ignora_penalidades + dif -2",
+        "mangekyouResistanceBonus": "alvo_com_mangekyou_dif -2_adicional",
+        "repeatableInScene": true,
+        "uniqueReturnToCaster": false,
+        "reverteImmunity": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "amaterasu",
+      "name": "Amaterasu (Deusa do Sol)",
+      "minLevel": 10,
+      "availableFor": [
+        "mangekyou_sharingan"
+      ],
+      "shortDescription": "Chamas negras no ponto focal do olhar. Vantagem contra TODOS elementos. Defesas limitadas. Custo: 10 chakra + 2 PV (+1/turno se concentrado).",
+      "description": "Chamas negras produzidas no ponto focal de visão. Queima até cinzas, não pode ser apagada por métodos comuns nem água. Uso: teste de LM contra defesa do alvo, custa 2 PV. Vantagem elemental contra TODOS os elementos (básicos e KG). Alcance: até 10m, alvo no campo de visão. Defesas permitidas: Esquiva (só se acelerado/super acelerado/Agi>Per_usuario ou Hiraishin Desaparecer); Evadir (só se há cobertura ou pra fora do alcance); Antecipar (só com Hiraishin Desaparecer); Ação Preparada (alvo precisa Ocultismo 16 ou Cultura 18 + LM contra acerto). Dano imediato 2x Katon do usuario; dano contínuo 4 fixo/turno por uso enquanto contato. Cumulativos por uso, ignora durezas. Pode usar com Concentração (2 PV 1º turno + 1/turno seguinte, deixa desprevenido; se atingido, interrompe). Chamas permanecem no ambiente até serem seladas ou objeto consumido. Fonte: Livro Básico p. 187-188.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "9m",
+        "target": "1_criatura",
+        "duration": "INSTANTANEA_chamas_permanecem",
+        "chakraCost": 10,
+        "visionCost": "2 +1/turno_se_concentracao",
+        "selos": false,
+        "rollType": "LM"
+      },
+      "rules": {
+        "type": "ninjutsu_kekkei_genkai_doujutsu",
+        "prerequisites": {
+          "aptitudes": [
+            "mangekyou_sharingan"
+          ],
+          "powers": {
+            "katon": 8
+          }
+        },
+        "elementalAdvantageVsAll": true,
+        "elementalAdvantageNote": "Vantagem contra TODOS elementos, básico ou KG/Hijutsu. RAW p.187.",
+        "allowedDefenses": {
+          "esquiva": [
+            "acelerado_ou_super_acelerado",
+            "agi_maior_que_per_usuario",
+            "hiraishin_desaparecer"
+          ],
+          "evadir": [
+            "movimento_para_cobertura",
+            "movimento_fora_do_alcance"
+          ],
+          "antecipar": [
+            "apenas_hiraishin_desaparecer"
+          ],
+          "preparar": [
+            "ocultismo_16_ou_cultura_18 + LM contra acerto + tecnica_de_cobertura_ou_camuflagem"
+          ]
+        },
+        "noDefenseEqualsAutoSuccess": true,
+        "damage": {
+          "immediate": "2x_nivel_katon_usuario",
+          "ongoingPerTurn": "4_fixo",
+          "cumulativeAcrossUses": true,
+          "ignoresDurezas": true
+        },
+        "concentrationMode": {
+          "visionCostFirstTurn": 2,
+          "visionCostFollowingTurns": 1,
+          "leavesDesprevenido": true,
+          "interruptedIfHit": true,
+          "requiresHitTestEachTurn": true
+        },
+        "durationNote": "Chamas permanentes no ambiente ate selamento ou consumo total do alvo",
+        "extinctionBy": [
+          "selamento",
+          "fuuinjutsu",
+          "kagutsuchi_controle"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "kagutsuchi",
+      "name": "Kagutsuchi (Deus do Fogo)",
+      "minLevel": 10,
+      "availableFor": [
+        "mangekyou_sharingan"
+      ],
+      "shortDescription": "Manipula chamas negras do Amaterasu (Enton). Custa 1 PV/uso. Aplica em qualquer efeito Katon do usuário (exceto exclusivos).",
+      "description": "Aplica transformação da forma às chamas negras do Amaterasu. Permite ao usuário manipulá-las à vontade. Uso: precisa existir chamas Amaterasu no ambiente. Pode moldar Amaterasu em qualquer Efeito que tenha em Katon, com exceção dos efeitos exclusivos (como Meteoros). Modificação do Katon é chamada Enton (Elemento Chama). Cada uso do Enton custa 1 PV. Dano: mantém regras de dano dos efeitos do Katon (com bônus elemento). Alvo atingido por Enton também sofre dano contínuo do Amaterasu. Ataques divididos (Flechas) não aplicam contínuo mais de uma vez. Opcional: dano base do Enton = 2x nível usado de Katon (sem regras originais nem bônus). Outras regras e parâmetros mantidos. Precisão = mesma do Katon. Chamas exigem controle: efeitos contínuos viram sustentados; se solto, voltam a agir como Amaterasu. Controle das Chamas: pode extinguir Amaterasu de um alvo ou área 2m de diâmetro com ação padrão. Fonte: Livro Básico p. 188-189.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "depende_do_efeito_katon_aplicado",
+        "target": "depende_do_efeito",
+        "duration": "varia",
+        "chakraCost": "depende_do_efeito_katon",
+        "visionCost": "1_por_uso",
+        "selos": false
+      },
+      "rules": {
+        "type": "ninjutsu_kekkei_genkai_doujutsu",
+        "prerequisites": {
+          "aptitudes": [
+            "mangekyou_sharingan"
+          ],
+          "effects": [
+            "amaterasu"
+          ],
+          "powers": {
+            "katon": 8
+          }
+        },
+        "requiresExistingAmaterasuChamas": true,
+        "appliesToKatonEffects": "todos_exceto_exclusivos",
+        "exclusiveEffectsBlocked": [
+          "meteoros"
+        ],
+        "damageRules": {
+          "default": "manter_regras_originais_do_efeito_katon + elementBonus",
+          "amaterasuOngoingApplied": true,
+          "amaterasuOngoingNotMultipliedByDivisao": true,
+          "optionalDamageMode": "2x_nivel_katon_usado_sem_bonus"
+        },
+        "chamasControl": {
+          "continuousEffectsBecomeSustained": true,
+          "ifLost": "chamas_voltam_a_agir_como_amaterasu",
+          "canExtinguishWithAcaoPadrao": true,
+          "extinguishRadius": "2m_diametro_ou_alvo_unico"
+        },
+        "subTechniques": [
+          {
+            "code": "enton_criar_arma",
+            "name": "Enton: Criar Arma",
+            "subType": "weapon_creation",
+            "visionCost": 1,
+            "description": "Ganha efeito Criar Arma pra seu Enton. Pode usar junto com Susanoo pra criar armas pro Susanoo, com dano substituído pelo dano do Amaterasu."
+          },
+          {
+            "code": "enton_susanoo_costelas",
+            "name": "Enton no Susanoo Incompleto",
+            "subType": "conditional_buff",
+            "visionCost": 1,
+            "description": "Usa Amaterasu nas costelas do Susanoo incompleto. Quem tocar sofre dano fixo por turno do Amaterasu. Demais regras do Amaterasu mantidas.",
+            "requires": "susanoo_ativo_em_forma_incompleta"
+          },
+          {
+            "code": "enton_barreira_nv3",
+            "name": "Enton: Barreira Nv 3",
+            "subType": "active_reaction",
+            "visionCost": 1,
+            "description": "Ganha efeito Barreira Nv 3, movendo chamas negras existentes pra frente pra interceptar ataque."
+          }
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "kamui_curto",
+      "name": "Kamui de Curto Alcance",
+      "minLevel": 10,
+      "availableFor": [
+        "mangekyou_sharingan"
+      ],
+      "shortDescription": "Espaço-tempo defensivo. Abdução de objetos jogados, Expelir objetos armazenados, Intangibilidade temporária. Ativação compartilhada com Kamui Longo.",
+      "description": "Técnica de espaço-tempo que permite transferir objetos para dimensão especial. Compartilha com Kamui Longo o Teletransporte e acesso à dimensão. Habilidades de Curto: defensivo, usado sobre si mesmo. Ativação geral: ação livre/duração contínua/10 chakra. Selos necessários pra ativar, não pra usar técnicas depois. Teletransporte (compartilhado, ação movimento/instantânea/1 chakra/1 PV): suga próprio corpo pra dimensão, reaparece em lugar conhecido. Tocar alvo e arrastá-lo = ação completa, dobra chakra, só em indefesos/voluntários. Fonte: Livro Básico p. 189-190.",
+      "stats": {
+        "action": "varia_por_subtecnica",
+        "range": "pessoal_ou_toque",
+        "duration": "varia",
+        "chakraCost": "varia",
+        "visionCost": "1_ou_2",
+        "selos": "apenas_ativacao"
+      },
+      "rules": {
+        "type": "ninjutsu_kekkei_genkai_doujutsu_espaco_tempo",
+        "prerequisites": {
+          "aptitudes": [
+            "mangekyou_sharingan"
+          ],
+          "powers_one_of": {
+            "ninpou": 8,
+            "doton": 8,
+            "fuuton": 8,
+            "katon": 8,
+            "raiton": 8,
+            "suiton": 8,
+            "hyouton": 8,
+            "mokuton": 8,
+            "magen": 8,
+            "fuuinjutsu": 8,
+            "iryou_ninjutsu": 8,
+            "kagejutsu": 8,
+            "kikai_ninpou": 8,
+            "rasengan": 8,
+            "baika_ninpou": 8,
+            "juuken": 8,
+            "shintenshin": 8
+          },
+          "_ninjutsuMin8Note": "RAW p.189: 'Nível 8 em algum poder de Ninjutsu'. Magen incluído por interpretação (genjutsu canônicamente também é Ninjutsu); validar com gameplay."
+        },
+        "dimensionShared": true,
+        "dimensionSharedWith": "kamui_longo",
+        "objectsAreUndetectableInDimension": true,
+        "activation": {
+          "action": "livre",
+          "duration": "continua",
+          "chakraCost": 10,
+          "requiresSelosMaos": true,
+          "selosOnlyForActivation": true
+        },
+        "subTechniques": [
+          {
+            "code": "kamui_teletransporte",
+            "name": "Teletransporte",
+            "subType": "active_ability",
+            "action": "movimento",
+            "duration": "instantanea",
+            "chakraCost": 1,
+            "visionCost": 1,
+            "sharedAcrossKamuiEffects": true,
+            "description": "Suga próprio corpo pra dimensão; reaparece em lugar conhecido. Pode levar coisas tocadas. Tocar alvo e arrastá-lo (ou enviar sozinho): ação completa, dobra chakra, só em indefesos/voluntários."
+          },
+          {
+            "code": "kamui_abducao_objetos",
+            "name": "Abdução de Objetos",
+            "subType": "active_reaction",
+            "action": "movimento",
+            "chakraCostPerCompartment": 1,
+            "visionCost": 1,
+            "description": "Defensiva. Transfere pra dimensão qualquer objeto tamanho grande ou menor jogado contra você. Não requer teste. Armazena até 10 compartimentos."
+          },
+          {
+            "code": "kamui_expelir_objetos",
+            "name": "Expelir Objetos",
+            "subType": "active_attack",
+            "action": "padrao",
+            "chakraCostPerCompartment": 1,
+            "visionCost": 1,
+            "rangeM": 18,
+            "damageIfArmas": "nivel_espirito",
+            "damageIfNonArmas": "metade_de_nivel_espirito",
+            "description": "Expele objetos armazenados como ataque à distância. 1 alvo por compartimento."
+          },
+          {
+            "code": "kamui_intangibilidade",
+            "name": "Intangibilidade",
+            "subType": "active_ability",
+            "action": "padrao",
+            "duration": "continua_max_5min",
+            "chakraCost": 5,
+            "visionCost": 2,
+            "description": "Transfere todas partes do corpo pra dimensão temporariamente. Imagem oca no mundo real, incapaz de ser atingida. Ativar como defesa = sucesso auto (exceto crítico). Pode atravessar barreiras/subsolo. Desativar = ação parcial sem custo de PV. Impede Teletransporte e interações com mundo real (inclusive técnicas à distância). Inimigos Super Acelerados adjacentes ou marcados Hiraishin têm direito a ataque oportuno antes da ativação/após desativação — usuário fica desprevenido; se atingido, intangibilidade interrompida."
+          }
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "kamui_longo",
+      "name": "Kamui de Longo Alcance",
+      "minLevel": 10,
+      "availableFor": [
+        "mangekyou_sharingan"
+      ],
+      "shortDescription": "Espaço-tempo ofensivo. Abdução Ofensiva (3 acertos = dimensão + amputação) ou Abdução Defensiva (transfere ataque pra dimensão).",
+      "description": "Uso mais ofensivo do Kamui, transporta alvos pra outra dimensão mesmo distantes. Compartilha Teletransporte e Dimensão Especial com Kamui Curto. Fonte: Livro Básico p. 190-191.",
+      "stats": {
+        "action": "varia_por_subtecnica",
+        "range": "18m",
+        "duration": "varia",
+        "chakraCost": "varia",
+        "visionCost": "2",
+        "selos": "apenas_ativacao"
+      },
+      "rules": {
+        "type": "ninjutsu_kekkei_genkai_doujutsu_espaco_tempo",
+        "prerequisites": {
+          "aptitudes": [
+            "mangekyou_sharingan"
+          ],
+          "powers_one_of": {
+            "ninpou": 8,
+            "doton": 8,
+            "fuuton": 8,
+            "katon": 8,
+            "raiton": 8,
+            "suiton": 8,
+            "hyouton": 8,
+            "mokuton": 8,
+            "magen": 8,
+            "fuuinjutsu": 8,
+            "iryou_ninjutsu": 8,
+            "kagejutsu": 8,
+            "kikai_ninpou": 8,
+            "rasengan": 8,
+            "baika_ninpou": 8,
+            "juuken": 8,
+            "shintenshin": 8
+          },
+          "_ninjutsuMin8Note": "RAW p.189: 'Nível 8 em algum poder de Ninjutsu'. Magen incluído por interpretação (genjutsu canônicamente também é Ninjutsu); validar com gameplay."
+        },
+        "dimensionShared": true,
+        "dimensionSharedWith": "kamui_curto",
+        "activation": {
+          "action": "livre",
+          "duration": "continua",
+          "chakraCost": 10,
+          "requiresSelosMaos": true,
+          "sharedActivationWithKamuiCurto": true
+        },
+        "subTechniques": [
+          {
+            "code": "kamui_teletransporte",
+            "name": "Teletransporte",
+            "subType": "active_ability",
+            "action": "movimento",
+            "duration": "instantanea",
+            "chakraCost": 1,
+            "visionCost": 1,
+            "sharedAcrossKamuiEffects": true,
+            "description": "Mesma capacidade do Kamui Curto. Compartilhada — usar apenas uma vez por turno mesmo com ambos os Kamuis."
+          },
+          {
+            "code": "kamui_abducao_ofensiva",
+            "name": "Abdução Ofensiva",
+            "subType": "active_attack",
+            "action": "padrao",
+            "duration": "concentracao",
+            "chakraCost": 10,
+            "visionCost": 2,
+            "rangeM": 18,
+            "description": "Cria barreira espaço-tempo ao redor do alvo. Mantém concentração. No fim de cada turno, teste LM contra defesa. 3 acertos consecutivos ou crítico = Kamui acerta. Alvo movendo pra fora do alcance descarta acertos. Bloqueio visual idem. Distância CC (1m) não gera penalidade. Acerto: alvo amputado de 1 braço escolhido pelo usuário + dano fixo igual a nível de Espírito + sangrando x5. Amputado não pode usar armas que requerem 2 mãos nem selos (exceto Mestre dos Selos + Prestidigitação 14).",
+            "successCriteria": "3_acertos_consecutivos_ou_critico",
+            "damageOnHit": "nivel_espirito_fixo",
+            "additionalEffect": "amputacao_1_braco + sangrando_x5"
+          },
+          {
+            "code": "kamui_abducao_defensiva",
+            "name": "Abdução Defensiva",
+            "subType": "active_reaction",
+            "action": "movimento",
+            "duration": "instantanea",
+            "chakraCost": 5,
+            "visionCost": 2,
+            "description": "Transfere pra dimensão qualquer ataque à distância feito contra você ou aliado dentro do alcance. Ação defensiva sem teste."
+          }
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "susanoo",
+      "name": "Susanoo (Deus das Tormentas)",
+      "minLevel": 10,
+      "availableFor": [
+        "mangekyou_sharingan"
+      ],
+      "shortDescription": "Avatar gigante de chakra ao redor do usuário. Evolução em 4 turnos: costelas → esqueleto → musculatura → armadura completa. Custo 10 chakra + 2 PV (+1/turno).",
+      "description": "Habilidade do Mangekyou pra usuários que dominaram ambos os olhos (par escolhido). Cria ser gigante humanoide envolvendo o usuário. Formado pela materialização do chakra — difere em aparência/cor entre usuários. Evolução em 4 turnos: T1 costelas (com 1 braço, ação parcial pra conjurar até forma esqueleto). T2 esqueleto completo (tórax + cabeça). T3 musculatura + pele. T4 armadura samurai = forma completa. Custo: 10 chakra + 2 PV iniciais + 1 PV/turno adicional. Ação inicial: padrão. Depois pode alternar livre entre incompleto/completo (parcial pra evoluir, livre pra regredir). Interior: usuário pode se mover dentro, levitar, permitir entrada/saída de outros. Quando se desloca, Susanoo acompanha. Forma completa = intocável a menos que inimigo passe pela barreira de chakra. Proteção: barreira de chakra dureza 0 absorção 2x Esp (incompleto) ou 3x Esp (completo). Restaurar totalmente quando ≤10 = ação movimento. Tamanho: Imenso (sem bônus de Vigor por tamanho). Ataque: armas de chakra (espadas, shurikens, disparo). Alcance baseado em tamanho ajustado da Tabela. Sempre arma pesada, 1 ataque por ação padrão. Dano base = nível Espírito. Forma incompleta permite técnicas à distância normais. Forma completa só permite técnicas que não partam diretamente do usuário (ex: Lança Nv 6 Ninpou). Forma Perfeita (Int ou Esp 18): pernas + asas, perícia Voo 18, tamanho Colossal. Fonte: Livro Básico p. 192-193.",
+      "stats": {
+        "action": "PADRAO_inicial",
+        "range": "pessoal",
+        "duration": "SUSTENTADA",
+        "chakraCost": 10,
+        "visionCost": "2_iniciais +1/turno",
+        "selos": false
+      },
+      "rules": {
+        "type": "ninjutsu_kekkei_genkai_doujutsu_avatar",
+        "prerequisites": {
+          "aptitudes": [
+            "mangekyou_sharingan"
+          ],
+          "alternatives": [
+            {
+              "name": "susanoo_par_tsukuyomi_amaterasu",
+              "description": "Dominar par Tsukuyomi + Amaterasu.",
+              "effects": [
+                "tsukuyomi",
+                "amaterasu"
+              ]
+            },
+            {
+              "name": "susanoo_par_kagutsuchi_amaterasu",
+              "description": "Dominar par Kagutsuchi + Amaterasu (Kagutsuchi requer Amaterasu via pré-req do próprio effect).",
+              "effects": [
+                "kagutsuchi",
+                "amaterasu"
+              ]
+            },
+            {
+              "name": "susanoo_par_kamui",
+              "description": "Dominar par Kamui Curto + Kamui Longo.",
+              "effects": [
+                "kamui_curto",
+                "kamui_longo"
+              ]
+            }
+          ]
+        },
+        "evolutionStages": [
+          {
+            "turn": 1,
+            "stage": "costelas_com_1_braco",
+            "action": "padrao_inicial",
+            "armCanAttack": true
+          },
+          {
+            "turn": 2,
+            "stage": "esqueleto_completo",
+            "action": "parcial_pra_evoluir"
+          },
+          {
+            "turn": 3,
+            "stage": "musculatura_e_pele"
+          },
+          {
+            "turn": 4,
+            "stage": "armadura_samurai_forma_completa"
+          }
+        ],
+        "stateSwitching": {
+          "incompleteToComplete": "acao_parcial",
+          "completeToIncomplete": "acao_livre",
+          "afterFirstCompletion": "alterna_livremente"
+        },
+        "protection": {
+          "incomplete": "dureza_0 absorcao_2x_esp",
+          "complete": "dureza_0 absorcao_3x_esp",
+          "restoreFullWhenLeq10": "acao_movimento",
+          "evolveOrRegressAdjustsAbsorption": "esp_por_estagio"
+        },
+        "size": {
+          "default": "Imenso",
+          "noBonusVigByTamanho": true,
+          "perfectForm": "Colossal"
+        },
+        "interior": {
+          "movementInside": true,
+          "levitationInside": true,
+          "allowsEntryExitOfOthers": true,
+          "susanooAcompanhaMovimento": true,
+          "untouchableInComplete": "exceto_se_inimigo_destroi_barreira_parcialmente",
+          "canBePulledOutIfIncomplete": true
+        },
+        "attack": {
+          "weaponType": "armas_de_chakra (espada, shuriken, disparo)",
+          "alwaysHeavyWeapon": true,
+          "attacksPerStandardAction": 1,
+          "damageBase": "nivel_espirito",
+          "rangeFromTabelaEquipamentos": "com_ajustes_de_tamanho",
+          "incompleteAllowsRangedTechniques": true,
+          "completeOnlyAllowsTechniquesNotOriginatingFromUser": true
+        },
+        "perfectForm": {
+          "prerequisiteAttribute": "int_ou_esp_18",
+          "additions": [
+            "pernas",
+            "asas",
+            "pericia_voo_18"
+          ],
+          "size": "Colossal"
+        },
+        "entonInteractions": [
+          "criar_arma_enton_substitui_dano_susanoo_pelo_amaterasu",
+          "amaterasu_nas_costelas_aplica_dano_continuo_em_quem_tocar"
+        ]
+      },
+      "evolutions": [
+        {
+          "atLevel": "atributo_int_ou_esp_18",
+          "name": "Susanoo Forma Perfeita",
+          "description": "Pernas + asas + Voo Nv 18. Tamanho Colossal. Fonte: p. 193."
+        }
+      ]
+    }
+  ]
+}

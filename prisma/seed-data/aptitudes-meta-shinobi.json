@@ -1,0 +1,787 @@
+{
+  "_meta": {
+    "description": "Lote 5d — Aptidões META (técnica) + utilidades shinobi + Tensai. Última onda da fase 5. Cobre meta-aptidões que modificam técnicas (Potencializar, Técnica Poderosa, Acelerada, Eficiente, Elevada, Controle de Chakra, Impacto, Domínio da Água/Fogo/Raio/Terra/Vento/Ninpou, Ilusão Profunda) e aptidões utilitárias shinobi (Clone, Clone Verdadeiro, Clone Perfeito, Shunjutsu, Kyoudo Kyouka, Réplica Enganadora, Fascinar, Miragem, Trabalho Duro) + trio do Tensai (Aprendizagem Rápida, Talento Natural, Técnica Avançada).",
+    "sources": [
+      "Livro Básico p. 73-83 (Aptidões de Técnicas + Aptidões Shinobi)",
+      "Guia Avançado do Shinobi p. 36-41 (Meta-aptidões revisadas + novas)",
+      "Livro Básico p. 241-242 (Tensai aptidões base)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "notes": "Categorias: META pra aptidões de técnica que modificam jutsus; GERAL pra aptidões utilitárias que concedem jutsus inteiros (Clone, Clone Verdadeiro/Perfeito, Shunjutsu, Kyoudo Kyouka, Réplica Enganadora, Fascinar, Miragem). README original do lote propunha categoria SHINOBI separada, mas o enum AptitudeCategory não tem SHINOBI — decisão da sessão: remapear pra GERAL e manter a semântica 'classe shinobi' acessível via effects.type (clone_creation, body_enhancement, technique_grant, etc.). Domínios são todos META. Tensai aptidões base ficam como RESTRITA (só Tensai compra) com flag tensaiOnly nos effects.",
+    "futureAptitudes": [
+      "Capacidade, Controle Perfeito, Instinto de Batalha (Tensai aptidões avançadas do GAS — fora de escopo do 5d)"
+    ],
+    "audit": [
+      {
+        "date": "2026-05-14",
+        "phase": "7e-cleanup",
+        "change": "Adicionado grantsBypassesPrereq:true + Note em 1 aptidão(ões): ['dominio_do_raio']. Resolve Task #16 do user."
+      },
+      {
+        "date": "2026-05-14",
+        "phase": "7e-cleanup",
+        "change": "Declarado em _meta: ['unmodeledPowers', 'unmodeledPowersNote']. Demove erros de validador (refs parametrizadas + dívidas reais marcadas)."
+      },
+      {
+        "date": "2026-05-14",
+        "phase": "7j-cleanup",
+        "change": "Removido 'hibon_ninpou' de unmodeledPowers (agora modelado em powers-nintaijutsu-hibon.json)."
+      },
+      {
+        "date": "2026-05-16",
+        "phase": "dt3-fix",
+        "change": "Normalizadas 3 chaves não-canônicas detectadas pelo teste de cobertura: clone_verdadeiro.aptitudeChoiceCondition → aptitudes_one_of:[clone_kage_bunshin, clone_moku_bunshin] (refs parametrizadas resolvidas via splitParameterizedAptitude); clone_perfeito.evolution removido (clone_verdadeiro já cumpre o papel de Nv 2); replica_enganadora.aptitudes_alternative → aptitudes:[clone] (typo)."
+      }
+    ],
+    "unmodeledPowers": [],
+    "unmodeledPowersNote": "DÍVIDA REAL — Hibon Ninpou é power Restrito (Livro Básico p. 212-213, GAS p. 8247). Variante Genialidade/Trabalho Duro do Ninpou comum, +1 dano e +2 dureza em criações. Modelar em lote futuro (Task #15 do Claude). Por enquanto declarado como dormente.",
+    "unmodeledAptitudes": [
+      "clone_kage_bunshin",
+      "clone_moku_bunshin"
+    ],
+    "unmodeledAptitudesNotes": "Refs parametrizadas a 'clone' (base 'clone' + parameter 'kage_bunshin' | 'moku_bunshin'). Motor resolve via splitParameterizedAptitude em src/domain/rules/aptitudes.ts. Catalogadas como dormentes seguindo mesmo padrão de 'clone_verdadeiro_kage_bunshin' em aptitudes-clan-restricted.json. Usadas em clone_verdadeiro.aptitudes_one_of (dt3-fix 2026-05-16)."
+  },
+  "data": [
+    {
+      "code": "potencializar",
+      "name": "Potencializar",
+      "category": "META",
+      "shortDescription": "Meta. Dobra área OU alcance OU +1 dano base em uma técnica.",
+      "description": "Ao usar uma técnica, aplica UM dos melhoramentos: (1) Dobra diâmetro/largura/comprimento da área de efeito, (2) Dobra alcance se for técnica à distância com teste de CD, (3) +1 dano base. Só usa melhoramento se parâmetro existir na técnica. Fonte: Livro Básico p. 74.",
+      "prerequisites": {
+        "attributes_one_of": {
+          "esp": 8,
+          "int": 8
+        }
+      },
+      "effects": {
+        "type": "meta_technique",
+        "actionToApply": "movimento",
+        "requiresChakraCost": "minimo_1",
+        "exclusiveOptions": [
+          "dobra_area",
+          "dobra_alcance",
+          "+1_dano_base"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "tecnica_poderosa",
+      "name": "Técnica Poderosa",
+      "category": "META",
+      "shortDescription": "Meta. +0,5 no Grau de Dano da técnica.",
+      "description": "Aumenta em +0,5 o Grau de Dano da técnica. Ex: Grau 2 vira 2,5. Após multiplicar dano base por novo grau, arredondar pra cima se decimal. Fonte: Livro Básico p. 75.",
+      "prerequisites": {
+        "attributes_one_of": {
+          "esp": 12,
+          "int": 12
+        }
+      },
+      "effects": {
+        "type": "meta_technique",
+        "actionToApply": "movimento",
+        "requiresChakraCost": "minimo_1",
+        "damageGradeBonus": 0.5,
+        "roundingRule": "arredondar_para_cima"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "tecnica_acelerada",
+      "name": "Técnica Acelerada",
+      "category": "META",
+      "shortDescription": "Meta. Técnica de padrão vira movimento. NÃO funciona com dano nem perda de chakra.",
+      "description": "Executa técnica de ação padrão como ação de movimento. NÃO afeta técnicas que causam dano ou perda de chakra (se técnica tem outros efeitos além do dano, pode reduzir dano a zero e acelerar só os outros). Técnicas de toque NÃO podem ter execução acelerada (mas preparação sim). Só no próprio turno. NÃO afeta técnicas defensivas. NÃO afeta técnicas com ação completa ou maior. Afeta só execução, não duração (concentração ainda gasta padrão a partir do turno seguinte). Fonte: Livro Básico p. 75.",
+      "prerequisites": {
+        "attributes_one_of": {
+          "esp": 12,
+          "int": 12
+        }
+      },
+      "effects": {
+        "type": "meta_technique",
+        "actionToApply": "modifica_acao_da_tecnica",
+        "actionUpgrade": "padrao_para_movimento",
+        "blocksOn": [
+          "dano",
+          "perda_de_chakra",
+          "duracao_completa_ou_maior",
+          "tecnicas_defensivas"
+        ],
+        "ownTurnOnly": true,
+        "affectsExecutionOnly": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "tecnica_eficiente",
+      "name": "Técnica Eficiente",
+      "category": "META",
+      "shortDescription": "Meta. Re-rola Grau de Dano da técnica e mantém o melhor.",
+      "description": "Quando acerta técnica no adversário, pode gastar ação de movimento e rolar dados novamente pra novo Grau de Dano, mantendo o melhor entre os dois. Fonte: Livro Básico p. 75.",
+      "prerequisites": {
+        "attributes_one_of": {
+          "esp": 10,
+          "int": 10
+        }
+      },
+      "effects": {
+        "type": "meta_technique",
+        "actionToApply": "movimento",
+        "requiresChakraCost": "minimo_1",
+        "trigger": "apos_acertar_tecnica",
+        "rerollGraf": "manter_melhor"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "tecnica_elevada",
+      "name": "Técnica Elevada",
+      "category": "META",
+      "shortDescription": "Meta. +2 Dif dos testes de Perícia pra resistir a técnicas.",
+      "description": "+2 na dificuldade dos testes de Perícia pra alguém resistir/se livrar de técnica (ex: Acrobacia pra evitar derrubar por efeito). Fonte: Livro Básico p. 75.",
+      "prerequisites": {
+        "attributes": {
+          "int": 6
+        }
+      },
+      "effects": {
+        "type": "meta_technique",
+        "actionToApply": "movimento",
+        "requiresChakraCost": "minimo_1",
+        "resistanceDifficultyBonus": 2,
+        "scope": "testes_de_pericia"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "tecnica_controle_de_chakra",
+      "name": "Técnica de Controle de Chakra",
+      "category": "META",
+      "shortDescription": "Meta GAS. -3 chakra na técnica (min 1). -1 dano, -1 dureza, -1 dif resistência.",
+      "description": "Reduz custo de chakra da técnica em 3 (mín 1). Em contrapartida: -1 dano base, -1 dureza, -1 Dif testes de resistência. Técnicas SEM nenhum dos três parâmetros (dano, dureza, teste de resistência) NÃO podem receber benefícios. Fonte: GAS p. 38-39.",
+      "prerequisites": {
+        "attributes": {
+          "int": 5,
+          "esp": 5
+        }
+      },
+      "effects": {
+        "type": "meta_technique",
+        "actionToApply": "movimento",
+        "chakraReduction": 3,
+        "minimumChakra": 1,
+        "tradeoffs": {
+          "danoBase": -1,
+          "dureza": -1,
+          "difResistencia": -1
+        },
+        "requiresOneOfParameters": [
+          "dano",
+          "dureza",
+          "teste_resistencia"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "tecnica_de_impacto",
+      "name": "Técnica de Impacto",
+      "category": "META",
+      "shortDescription": "Meta GAS. Técnica instantânea com custo: alvo testa Vigor ou fica Caído.",
+      "description": "Apenas técnicas de duração instantânea e com custo de chakra. Alvos acertados testam Vigor (Dif comum do poder -2) ou ficam Caídos. Fonte: GAS p. 39-40.",
+      "prerequisites": {
+        "attributes": {
+          "esp": 5
+        }
+      },
+      "effects": {
+        "type": "meta_technique",
+        "actionToApply": "movimento",
+        "requiresChakraCost": "minimo_1",
+        "appliesOnlyTo": [
+          "duracao_instantanea_com_chakra"
+        ],
+        "saveDifficulty": "comum_do_poder -2",
+        "saveType": "vigor",
+        "saveResult": "evita_caido"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "dominio_da_agua",
+      "name": "Domínio da Água",
+      "category": "META",
+      "shortDescription": "Meta. Acumula pontos de água por efeito em área Suiton. Gasta pra +1 dano em ataques.",
+      "description": "Ao atacar com efeito em área Suiton, acumula pontos de água no ambiente = nível do efeito usado. Gasta pontos = nível do efeito conjurado pra +1 dano em novo ataque (NÃO precisa ser ataque em área). Bônus NÃO cumulativo. Água natural no ambiente (mar/rio) = sempre recebe bônus. Efeito melhorado NÃO gera novos pontos. Pontos gerados só na execução; técnica contínua/sustentada/concentração não gera depois. Bônus de dano permanece pela duração. Fonte: Livro Básico p. 73.",
+      "prerequisites": {
+        "powers": {
+          "suiton": 5
+        }
+      },
+      "effects": {
+        "type": "elemental_domain",
+        "element": "suiton",
+        "resourceMechanic": "pontos_de_agua",
+        "pointsPerEffectInArea": "nivel_do_efeito",
+        "spendCostForBonus": "nivel_do_efeito_conjurado",
+        "bonusType": "+1_dano",
+        "naturalWaterAutoBonus": true,
+        "noStacking": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "dominio_do_fogo",
+      "name": "Domínio do Fogo",
+      "category": "META",
+      "shortDescription": "Meta. Katon em área: alvos testam Vigor ou ficam debilitados pelo calor.",
+      "description": "Técnica em área Katon (acertando ou não): criaturas na área testam Vigor (Dif 7 + 2x Nível do Efeito) ou ficam debilitados por 1 turno. Ambientes fechados: Dif +2. NÃO aplica se ataque foi contra-atacado com Suiton ou bloqueado. Fonte: Livro Básico p. 73-74.",
+      "prerequisites": {
+        "powers": {
+          "katon": 5
+        }
+      },
+      "effects": {
+        "type": "elemental_domain",
+        "element": "katon",
+        "trigger": "tecnica_em_area_katon",
+        "appliesEvenOnMiss": true,
+        "saveDifficulty": "7 + 2x_nivel_efeito",
+        "saveType": "vigor",
+        "saveResult": "evita_debilitado_1_turno",
+        "indoorBonus": "+2_dif",
+        "blockedBy": [
+          "contraataque_suiton",
+          "bloqueio"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "dominio_do_raio",
+      "name": "Domínio do Raio",
+      "category": "META",
+      "shortDescription": "Meta. Crítico Aprimorado em TODOS os efeitos Raiton (incluindo Energizar).",
+      "description": "Recebe Crítico Aprimorado pra todos efeitos Raiton (Energizar incluído). NÃO cumulativo com outros bônus do mesmo tipo. Fonte: Livro Básico p. 74.",
+      "prerequisites": {
+        "powers": {
+          "raiton": 5
+        }
+      },
+      "effects": {
+        "type": "elemental_domain",
+        "element": "raiton",
+        "grants": "critico_aprimorado_para_efeitos",
+        "noStacking": true,
+        "grantsBypassesPrereq": true,
+        "grantsBypassesPrereqNote": "Meta-aptidão pra usuários de Raiton avançados. Grant critico_aprimorado_para_efeitos é benefício derivado (não aptidão pura — STRING vs LIST atual, corrigir tipo no upgrade futuro do schema). Flag aplicada por completude."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "dominio_da_terra",
+      "name": "Domínio da Terra",
+      "category": "META",
+      "shortDescription": "Meta. Barreira Doton mais resistente: +1 chakra = +1 dureza (limite = nível do poder).",
+      "description": "Ao defender com efeito Barreira Doton, gasta mais chakra pra +dureza (proporção 1:1). Dureza extra limitada ao nível usado do poder. Fonte: Livro Básico p. 74.",
+      "prerequisites": {
+        "powers": {
+          "doton": 5
+        }
+      },
+      "effects": {
+        "type": "elemental_domain",
+        "element": "doton",
+        "scope": "efeito_barreira",
+        "ratio": "1_chakra_por_1_dureza",
+        "maxExtra": "nivel_usado_do_poder"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "dominio_do_vento",
+      "name": "Domínio do Vento",
+      "category": "META",
+      "shortDescription": "Meta. Fuuton em área: ventos sustentados reduzem deslocamento à metade.",
+      "description": "Quando conjurar técnica em área Fuuton, gasta ação parcial pra ventos permanecerem sustentados, reduzindo deslocamento de todas criaturas pela metade. Fonte: Livro Básico p. 74.",
+      "prerequisites": {
+        "powers": {
+          "fuuton": 5
+        }
+      },
+      "effects": {
+        "type": "elemental_domain",
+        "element": "fuuton",
+        "trigger": "tecnica_em_area",
+        "additionalAction": "parcial",
+        "duration": "sustentada",
+        "movementReductionRatio": 0.5
+      },
+      "evolutions": []
+    },
+    {
+      "code": "dominio_ninpou",
+      "name": "Domínio Ninpou",
+      "category": "META",
+      "shortDescription": "Meta. Finta do efeito Flechas (Ninpou) custa parcial em vez de padrão.",
+      "description": "Quando usa a finta do efeito Flechas de Ninpou/Hibon Ninpou, deve anunciar que vai atacar em seguida com o mesmo Flechas pra receber: finta custa só ação parcial. A menos que dito contrário, NÃO funciona com versões modificadas do Ninpou (Kikai Ninpou do Aburame, etc.). Fonte: Livro Básico p. 74.",
+      "prerequisites": {
+        "powers_one_of": {
+          "ninpou": 5,
+          "hibon_ninpou": 5
+        },
+        "aptitudes": [
+          "ponto_cego"
+        ]
+      },
+      "effects": {
+        "type": "elemental_domain",
+        "element": "ninpou",
+        "scope": "efeito_flechas",
+        "actionUpgrade": "padrao_para_parcial",
+        "trigger": "finta_seguida_de_ataque_flechas",
+        "blocksModifiedNinpou": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "ilusao_profunda",
+      "name": "Ilusão Profunda",
+      "category": "META",
+      "shortDescription": "Meta. +1 Dif resistência genjutsu; +2 se for Kai.",
+      "description": "Ilusões recebem +1 Dif no teste de resistência. Sobe pra +2 se tentarem dissipar com Kai. Aplica em: Fascinar, Magen, Hipnose Sharingan e qualquer técnica que diga ser aplicável. Fonte: Livro Básico p. 74.",
+      "prerequisites": {
+        "attributes": {
+          "int": 5
+        }
+      },
+      "effects": {
+        "type": "meta_technique",
+        "appliesTo": [
+          "fascinar",
+          "magen",
+          "hipnose_sharingan"
+        ],
+        "resistanceDifficultyBonus": 1,
+        "kaiDifficultyBonus": 2
+      },
+      "evolutions": []
+    },
+    {
+      "code": "clone",
+      "name": "Clone",
+      "category": "GERAL",
+      "shortDescription": "Cria até 2 clones como Parceiros. -3 em todos os testes. Materiais: Kage, Mizu, Iwa, etc.",
+      "description": "Cria até 2 clones (Parceiros) com ação padrão, 1 chakra por clone. Tipo escolhido na compra: Kage Bunshin (Konoha), Mizu Bunshin, Iwa Bunshin, Moku Bunshin (Mokuton), genérico, etc. Recebe vantagem/desvantagem do elemento. Ficha igual ao usuário com -3 em todos os testes (sem contar limite de penalidade). Inclui benefícios de Punho de Ferro, Especialista, Maestria, Intuição, Reflexos, Acuidade. NÃO podem usar técnicas/poderes/aptidões além dessas, NÃO podem ativar itens com chakra. Vit = 1, Chakra = 0 (exceto variantes especiais). Capangas: sem crítico contra não-capangas, atacantes simulam 1 dado. Repetível pra outros tipos. Fonte: Livro Básico p. 77-78.",
+      "prerequisites": {
+        "attributes": {
+          "esp": 6
+        }
+      },
+      "effects": {
+        "type": "shinobi_jutsu",
+        "creates": "clones_parceiros",
+        "maxClones": 2,
+        "action": "padrao",
+        "chakraPerClone": 1,
+        "cloneTestPenalty": -3,
+        "cloneAptitudesIncluded": [
+          "punho_de_ferro",
+          "especialista",
+          "maestria",
+          "intuicao",
+          "reflexos",
+          "acuidade"
+        ],
+        "asCapangas": true,
+        "repeatable": "para_outros_tipos_de_clone",
+        "cloneTypes": [
+          "kage_bunshin",
+          "mizu_bunshin",
+          "iwa_bunshin",
+          "moku_bunshin",
+          "generico"
+        ]
+      },
+      "evolutions": [
+        {
+          "atLevel": 2,
+          "name": "Clone Nv 2",
+          "prerequisites": {
+            "attributes": {
+              "esp": 8
+            },
+            "aptitudes": [
+              "clone"
+            ]
+          },
+          "description": "Cria e controla até 6 clones, mas falham em qualquer teste de Habilidade de Combate. Fonte: Livro Básico p. 77."
+        }
+      ]
+    },
+    {
+      "code": "clone_verdadeiro",
+      "name": "Clone Verdadeiro",
+      "category": "GERAL",
+      "shortDescription": "1 clone usa poderes/aptidões/jutsus básicos. Dif técnicas -3. Bloqueia outros clones.",
+      "description": "Cria/controla 1 único clone capaz de usar poderes, aptidões e jutsus básicos. Dif resistência dos jutsus/poderes do clone -3. Uso de técnicas com limite (Kawarimi) conta como uso do original. Pode ativar itens com chakra (tarjas etc.). NÃO pode usar poderes/aptidões restritas (mesmo compradas como Hachimon Nv 1) — exceto Moku Bunshin que pode usar Mokuton. NÃO pode manter técnicas sustentadas/concentração. Bloqueia outros clones. Fonte: Livro Básico p. 78.",
+      "prerequisites": {
+        "attributes": {
+          "esp": 10
+        },
+        "aptitudes": [
+          "clone"
+        ],
+        "aptitudes_one_of": [
+          "clone_kage_bunshin",
+          "clone_moku_bunshin"
+        ]
+      },
+      "effects": {
+        "type": "shinobi_jutsu_upgrade",
+        "upgradesAptitude": "clone",
+        "maxTrueClones": 1,
+        "cloneCanUse": [
+          "poderes",
+          "aptidoes",
+          "jutsus_basicos"
+        ],
+        "techniqueResistanceMalus": -3,
+        "limitedUseCounts": "para_original",
+        "canActivateChakraItems": true,
+        "noRestrictedAptitudes": true,
+        "mokuBunshinException": "pode_usar_mokuton",
+        "noSustainedOrConcentration": true,
+        "blocksOtherClones": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "clone_perfeito",
+      "name": "Clone Perfeito",
+      "category": "GERAL",
+      "shortDescription": "PdM only. Até 6 clones perfeitos sem restrições. Pode usar TUDO.",
+      "description": "**Somente para PdM** (Personagem do Mestre). Cria até 6 clones perfeitos. SEM penalidade de precisão, sem redução de Dif. PODE usar qualquer poder/aptidão incluindo restritos. PODE manter sustentadas/concentração. Fonte: Livro Básico p. 78.",
+      "prerequisites": {
+        "attributes": {
+          "esp": 16
+        },
+        "aptitudes": [
+          "clone",
+          "clone_verdadeiro"
+        ],
+        "narrative": "PdM_only"
+      },
+      "effects": {
+        "type": "shinobi_jutsu_upgrade",
+        "maxPerfectClones": 6,
+        "pdmOnly": true,
+        "noPrecisionPenalty": true,
+        "noResistanceMalus": true,
+        "canUseRestricted": true,
+        "canSustainAndConcentrate": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "kyoudo_kyouka",
+      "name": "Kyoudo Kyouka (Aumento de Força)",
+      "category": "GERAL",
+      "shortDescription": "Acumula chakra na mão/pé. Ataque desarmado massivo: ½ Esp + Iryou. Dispara como ação livre.",
+      "description": "Ação parcial pra acumular chakra na mão/pé (sem selos). Duração contínua. Ação livre pra liberar em ataque desarmado único, causando dano massivo. Dano = ½ Esp + nível Iryou Ninjutsu (substitui cálculo padrão — sem For/dano de arma). Custo: ½ Esp. Alvo testa Acrobacia (Dif 9 + Esp) ou fica Caído. NÃO pode Bloquear com armas comuns ou desarmado (só com arma especial que permita). Pode usar em manobras comuns (Investida, Ataque Oportuno, Misericórdia) se já acumulou. Pode receber Especialista (Desarmado) OU Maestria (não ambos). NÃO recebe bônus de dano/arma/Crítico Aprimorado/aptidões de manobra. Fonte: Livro Básico p. 81.",
+      "prerequisites": {
+        "attributes": {
+          "esp": 6
+        },
+        "powers": {
+          "iryou_ninjutsu": 2
+        }
+      },
+      "effects": {
+        "type": "shinobi_jutsu",
+        "preparationAction": "parcial",
+        "preparationDuration": "continua",
+        "releaseAction": "livre",
+        "damageFormula": "0.5 * esp + nivel_iryou_ninjutsu",
+        "damageReplacesCalculation": true,
+        "chakraCost": "0.5 * esp",
+        "saveDifficulty": "9 + esp",
+        "saveType": "acrobacia",
+        "saveResult": "evita_caido",
+        "blocksDefense": [
+          "bloqueio_normal_e_desarmado"
+        ],
+        "compatibleManobras": [
+          "investida",
+          "ataque_oportuno",
+          "golpe_de_misericordia"
+        ],
+        "compatibleAptitudes": [
+          "especialista_desarmado_OU_maestria"
+        ],
+        "incompatibleAptitudes": [
+          "critico_aprimorado",
+          "aptidoes_de_manobra",
+          "bonus_de_dano_ou_arma"
+        ]
+      },
+      "evolutions": [
+        {
+          "atLevel": 2,
+          "name": "Kyoudo Kyouka Nv 2",
+          "prerequisites": {
+            "attributes": {
+              "esp": 10
+            },
+            "aptitudes": [
+              "kyoudo_kyouka"
+            ]
+          },
+          "description": "Preparação vira ação de movimento (em vez de parcial). Dano aumenta pra Esp + nível de Iryou Ninjutsu. Fonte: Livro Básico p. 81-82."
+        }
+      ]
+    },
+    {
+      "code": "replica_enganadora",
+      "name": "Réplica Enganadora",
+      "category": "GERAL",
+      "shortDescription": "1x/cena cria clone defensivo. Falha defesa por até 2 = troca de lugar.",
+      "description": "Quando alvo de CC/projétil e falha defesa por até 2 pontos: paga 4 chakra, cria clone pra receber ataque no lugar, gasta movimento pra fugir sem ataque oportuno. NÃO paga custo do clone. Clone destruído após receber ataque. 1x/cena. NÃO pode usar após falhar em técnica defensiva. Com permissão do Mestre, Ninpou ou Hibon Ninpou pode substituir Suiton/Doton como pré-req. Fonte: Livro Básico p. 82.",
+      "prerequisites": {
+        "powers_one_of": {
+          "suiton": 4,
+          "doton": 4
+        },
+        "aptitudes": [
+          "clone"
+        ],
+        "skills": {
+          "prestidigitacao": 10
+        }
+      },
+      "effects": {
+        "type": "defensive_clone_swap",
+        "trigger": "falha_defesa_por_ate_2",
+        "chakraCost": 4,
+        "freeCloneCreation": true,
+        "movementAction": "sem_ataque_oportuno",
+        "perScene": 1,
+        "blocksAfterTechniqueFail": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 2,
+          "name": "Réplica Enganadora Nv 2",
+          "prerequisites": {
+            "skills": {
+              "prestidigitacao": 12
+            },
+            "aptitudes": [
+              "replica_enganadora"
+            ]
+          },
+          "description": "Pode usar até 2x por cena. Após fugir, ganha teste de Furtividade pra se esconder como parte do deslocamento (reduzido à metade pelas regras de Furtividade). Fonte: Livro Básico p. 82."
+        }
+      ]
+    },
+    {
+      "code": "shunjutsu",
+      "name": "Shunjutsu (Arte do Movimento Veloz)",
+      "category": "GERAL",
+      "shortDescription": "Shunshin no Jutsu mais rápido. Kawarimi 1x extra/cena.",
+      "description": "Melhora Shunshin no Jutsu em combate. Permite Kawarimi 1x extra por cena. Detalhes mecânicos completos seguem livro (capítulo Aptidões Shinobi). Fonte: Livro Básico p. 82-83.",
+      "prerequisites": {
+        "attributes_one_of": {
+          "des": 8,
+          "int": 8
+        }
+      },
+      "effects": {
+        "type": "shinobi_jutsu",
+        "enhances": "shunshin_no_jutsu",
+        "extraKawarimi": "1x_por_cena",
+        "needsDeepResearch": true,
+        "notes": "Consultar Livro Básico p. 82-83 pra mecânica completa de níveis 1-3."
+      },
+      "evolutions": [
+        {
+          "atLevel": 2,
+          "name": "Shunjutsu Nv 2",
+          "prerequisites": {
+            "attributes_one_of": {
+              "des": 12,
+              "int": 12
+            },
+            "aptitudes": [
+              "shunjutsu"
+            ]
+          },
+          "description": "Pode fintar usando Destreza ou Inteligência no lugar de Agilidade. Fonte: Livro Básico p. 83."
+        },
+        {
+          "atLevel": 3,
+          "name": "Shunjutsu Nv 3",
+          "prerequisites": {
+            "attributes_one_of": {
+              "des": 16,
+              "int": 16
+            },
+            "aptitudes": [
+              "shunjutsu"
+            ]
+          },
+          "description": "Considerado acelerado enquanto se move com shunjutsu. Usá-lo na defesa anula finta acelerada do oponente. Fonte: Livro Básico p. 83."
+        }
+      ]
+    },
+    {
+      "code": "fascinar",
+      "name": "Fascinar",
+      "category": "GERAL",
+      "shortDescription": "Ilusão mental. Alvo testa Int (Dif 6 + Int do usuário) ou fica fascinado pela cena.",
+      "description": "Ação padrão + 3 chakra. Prende alvo a até 5m em ilusão mental. Sem teste do usuário; alvo testa Inteligência (Dif 6 + Int do usuário). Falha = fascinado pelo restante da cena. Notar Genjutsu: a partir do 2º turno, alvo repete teste como ação livre com -1 Dif acumulativo. Sucesso = livre. Quebra também se sofrer qualquer dano. Alvo não pode ficar fascinado 2x na mesma cena. Fonte: Livro Básico p. 80-81.",
+      "prerequisites": {
+        "attributes": {
+          "int": 4
+        }
+      },
+      "effects": {
+        "type": "illusion_aptitude",
+        "action": "padrao",
+        "chakraCost": 3,
+        "maxRange": "5m",
+        "saveDifficulty": "6 + int_usuario",
+        "saveType": "inteligencia",
+        "saveResult": "evita_fascinado",
+        "duration": "resto_da_cena",
+        "notarGenjutsu": "a_partir_do_2o_turno_repete_-1_dif_cumulativo",
+        "breaksOnDamage": true,
+        "maxOncePerScene": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "miragem",
+      "name": "Miragem",
+      "category": "GERAL",
+      "shortDescription": "Cria ilusão visual estática ou móvel num ponto. 1 chakra por categoria de tamanho.",
+      "description": "Cria ilusão em ponto até 5m. NÃO se desloca, mas imagem pode ser estática (objeto) ou móvel sem sair da posição (animal mexendo). Pode se afastar sem limite. Ação padrão + 1 chakra por categoria de tamanho. Tamanho por Int: pequeno (Int 2 inicial), médio (Int 8), grande (Int 12), enorme (Int 16). Interagir tocando = percebe ilusão (pode Kai sem teste). Visão de chakra identifica auto. Duração contínua (imóveis) ou sustentada (móveis). Cancela como ação livre. Fonte: Livro Básico p. 82.",
+      "prerequisites": {
+        "attributes": {
+          "int": 2
+        }
+      },
+      "effects": {
+        "type": "illusion_aptitude",
+        "action": "padrao",
+        "chakraCostPerSize": 1,
+        "maxRange": "5m",
+        "rangeBindsToPoint": true,
+        "movementType": [
+          "estatica",
+          "movel_sem_sair_da_posicao"
+        ],
+        "sizeByInteligencia": {
+          "2": "pequeno",
+          "8": "medio",
+          "12": "grande",
+          "16": "enorme"
+        },
+        "duration": "continua_ou_sustentada",
+        "interactRevealOnTouch": true,
+        "chakraVisionAutoDetects": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "trabalho_duro",
+      "name": "Trabalho Duro",
+      "category": "GERAL",
+      "shortDescription": "Sem clã/hijutsu. Escolha 1 bônus/turno: +5m desloc, +1 atk, +1 def, +1 dano, +1 dif técnica.",
+      "description": "Pré-req: NÃO possuir Clã ou Hijutsu. A cada turno, escolhe um bônus até início do próximo turno. Cumulativo com outras aptidões. Opções: +5m deslocamento, +1 precisão ataque, +1 precisão defesa, +1 dano base ataque, +1 Dif resistência técnicas. Se futuramente adquirir poder/aptidão de clã/hijutsu, deve trocar Trabalho Duro por outra. Especial Hachimon: pode manter junto com Hachimon Tonkou, mas só 3 primeiras opções e não recebe benefícios dos dois ao mesmo tempo. Fonte: Livro Básico p. 83-84.",
+      "prerequisites": {
+        "narrative": "sem_cla_e_sem_hijutsu"
+      },
+      "effects": {
+        "type": "non_clan_compensation",
+        "actionPerTurn": "livre_escolha",
+        "duration": "ate_proximo_turno",
+        "stackable": true,
+        "options": [
+          "+5m_deslocamento",
+          "+1_precisao_ataque",
+          "+1_precisao_defesa",
+          "+1_dano_base",
+          "+1_dif_resistencia_tecnicas"
+        ],
+        "swapsOnClanAcquisition": true,
+        "hachimonException": {
+          "compatibleWith": "hachimon_tonkou",
+          "limitedTo3Options": true,
+          "mutuallyExclusiveActiveBonus": true
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "aprendizagem_rapida",
+      "name": "Aprendizagem Rápida",
+      "category": "RESTRITA",
+      "shortDescription": "Tensai. Aptidão base do hijutsu Genialidade. Detalhes seguem livro.",
+      "description": "Aptidão base do hijutsu Tensai. Permite ao gênio aprender técnicas mais rápido. Detalhes mecânicos completos seguem Livro Básico p. 241-242 + expansão no GAS. Fonte: Livro Básico p. 241.",
+      "prerequisites": {
+        "aptitudes": [
+          "tensai"
+        ]
+      },
+      "effects": {
+        "type": "tensai_base",
+        "tensaiOnly": true,
+        "needsDeepResearch": true,
+        "notes": "Aptidão base obrigatória do Tensai. Consultar Livro Básico p. 241-242 pra mecânica completa."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "talento_natural",
+      "name": "Talento Natural",
+      "category": "RESTRITA",
+      "shortDescription": "Tensai. Aptidão base do hijutsu Genialidade. Detalhes seguem livro.",
+      "description": "Aptidão base do hijutsu Tensai. Permite ao gênio ter talento natural em áreas específicas. Detalhes mecânicos completos seguem Livro Básico p. 241-242 + expansão no GAS. Fonte: Livro Básico p. 241.",
+      "prerequisites": {
+        "aptitudes": [
+          "tensai"
+        ]
+      },
+      "effects": {
+        "type": "tensai_base",
+        "tensaiOnly": true,
+        "needsDeepResearch": true,
+        "notes": "Aptidão base obrigatória do Tensai. Consultar Livro Básico p. 241-242 pra mecânica completa."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "tecnica_avancada",
+      "name": "Técnica Avançada",
+      "category": "RESTRITA",
+      "shortDescription": "Tensai. Aptidão base do hijutsu Genialidade. Detalhes seguem livro.",
+      "description": "Aptidão base do hijutsu Tensai. Permite ao gênio usar técnicas em nível mais avançado. Detalhes mecânicos completos seguem Livro Básico p. 241-242 + expansão no GAS. Fonte: Livro Básico p. 241.",
+      "prerequisites": {
+        "aptitudes": [
+          "tensai"
+        ]
+      },
+      "effects": {
+        "type": "tensai_base",
+        "tensaiOnly": true,
+        "needsDeepResearch": true,
+        "notes": "Aptidão base obrigatória do Tensai. Consultar Livro Básico p. 241-242 pra mecânica completa."
+      },
+      "evolutions": []
+    }
+  ]
+}

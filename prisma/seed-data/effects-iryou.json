@@ -10,27 +10,67 @@
     "powerNotes": {
       "code": "iryou_ninjutsu",
       "category": "PODER_COMUM",
-      "prerequisites": { "attributes": { "esp": 6 }, "aptitudes": ["ninja_medico"] },
+      "prerequisites": {
+        "attributes": {
+          "esp": 6
+        },
+        "aptitudes": [
+          "ninja_medico"
+        ]
+      },
       "rangeFormula": "Toque",
       "healingFormula": "Nível Poder + Medicina/2 (+1 Perito + 1 Perícia Inata)",
       "selfHealingPenalty": "metade até Nv 4",
       "keySkill": "medicina"
-    }
+    },
+    "unmodeledAptitudes": [
+      "pericia_inata_medicina",
+      "perito_medicina"
+    ],
+    "unmodeledAptitudesNote": "Refs parametrizadas: perito_<pericia> e pericia_inata_<pericia>. Aptidões 'perito' e 'pericia_inata' existem como bases.",
+    "audit": [
+      {
+        "date": "2026-05-14",
+        "phase": "7e-cleanup",
+        "change": "Declarado em _meta: ['unmodeledAptitudes', 'unmodeledAptitudesNote']. Demove erros de validador (refs parametrizadas + dívidas reais marcadas)."
+      }
+    ]
   },
   "data": [
     {
       "code": "chakra_no_mesu",
       "name": "Chakra no Mesu (Bisturi de Chakra)",
       "minLevel": 6,
-      "availableFor": ["iryou_ninjutsu"],
+      "availableFor": [
+        "iryou_ninjutsu"
+      ],
       "shortDescription": "Bisturi de chakra. Técnica de toque, dano letal 2x nível usado. 3 acertos = lento + debilitado.",
       "description": "Cria duas lâminas de chakra extremamente afiadas usadas como bisturis. Pode fazer cortes dentro do corpo sem ferida aberta. Ofensivamente: técnica de toque, dano letal igual a 2x o nível usado no poder. Funciona com Ataque Múltiplo (divide dano base). NÃO pode usar reação Bloqueio desarmado contra ele. Se atingir 3 vezes: alvo testa Vigor (Dif 7 + Nível Poder + Medicina/2) ou fica lento e debilitado, com tecidos cortados por 2 meses. Curáveis com 1 turno de Iryou ou 1 mês de repouso. Pré-req: Iryou Nv 6. Fonte: Livro Básico p. 120-121.",
-      "stats": { "action": "MOVIMENTO", "range": "pessoal", "damage": "2 por nível usado", "duration": "SUSTENTADA", "rollType": "CC", "chakraCost": "nivel_usado", "type": "tecnica_de_toque" },
+      "stats": {
+        "action": "MOVIMENTO",
+        "range": "pessoal",
+        "damage": "2 por nível usado",
+        "duration": "SUSTENTADA",
+        "rollType": "CC",
+        "chakraCost": "nivel_usado",
+        "type": "tecnica_de_toque"
+      },
       "rules": {
-        "prerequisites": { "powers": { "iryou_ninjutsu": 6 } },
+        "prerequisites": {
+          "powers": {
+            "iryou_ninjutsu": 6
+          }
+        },
         "noBlockDesarmado": true,
         "supportsAtaqueMultiplo": true,
-        "threeHitsCondition": { "trigger": "3 acertos", "vigorTest": "Dif 7 + Nível + Medicina/2", "appliesConditions": ["lento", "debilitado"] }
+        "threeHitsCondition": {
+          "trigger": "3 acertos",
+          "vigorTest": "Dif 7 + Nível + Medicina/2",
+          "appliesConditions": [
+            "lento",
+            "debilitado"
+          ]
+        }
       },
       "evolutions": []
     },
@@ -38,12 +78,28 @@
       "code": "inyu_shomestu",
       "name": "In'Yu Shōmetsu (Recuperação Secreta de Ferimentos)",
       "minLevel": 6,
-      "availableFor": ["iryou_ninjutsu"],
+      "availableFor": [
+        "iryou_ninjutsu"
+      ],
       "shortDescription": "Cura defensiva instantânea. 1 chakra = 2 Vit. 1x por dia. Sem testes. Não contra críticos/área.",
       "description": "Técnica defensiva: prevê onde será atacado e começa regeneração celular antes mesmo do ataque terminar, minimizando o dano. Usa Iryou Ninjutsu instantaneamente em si próprio, curando até o limite de dano recebido em UM ataque. Sem testes. NÃO funciona contra acertos críticos nem ataques em área. Limite: 1 vez por dia (regeneração instantânea é prejudicial). Pré-req: Iryou 6 + Perito e Perícia Inata pra Medicina. Fonte: Livro Básico p. 121.",
-      "stats": { "action": "MOVIMENTO", "range": "pessoal", "duration": "INSTANTANEA", "selos": false, "chakraCost": "1 para cada 2 Vit curada" },
+      "stats": {
+        "action": "MOVIMENTO",
+        "range": "pessoal",
+        "duration": "INSTANTANEA",
+        "selos": false,
+        "chakraCost": "1 para cada 2 Vit curada"
+      },
       "rules": {
-        "prerequisites": { "powers": { "iryou_ninjutsu": 6 }, "aptitudes": ["perito_medicina", "pericia_inata_medicina"] },
+        "prerequisites": {
+          "powers": {
+            "iryou_ninjutsu": 6
+          },
+          "aptitudes": [
+            "perito_medicina",
+            "pericia_inata_medicina"
+          ]
+        },
         "noCriticalHits": true,
         "noAreaAttacks": true,
         "oncePerDay": true
@@ -54,13 +110,29 @@
       "code": "shousen_no_jutsu",
       "name": "Shousen no Jutsu (Técnica da Mão Mística)",
       "minLevel": 7,
-      "availableFor": ["iryou_ninjutsu"],
+      "availableFor": [
+        "iryou_ninjutsu"
+      ],
       "shortDescription": "Cura à mão mística (concentração) ou ofensivo (atordoar/inconsciente).",
       "description": "Envia chakra da mão pra ferida, aumentando capacidade de cura. Trata pela taxa de cura padrão do Iryou Ninjutsu. Ofensivo: envia quantidade exagerada de chakra ao corpo do alvo, pondo circulação em desordem pra nocautear. Alvo testa Vigor (Dif 7 + Nível + Medicina/2). Falha = atordoado até fim do próximo turno. Falha crítica = repete teste; nova falha = inconsciente. Pré-req: Iryou 7. Fonte: Livro Básico p. 121.",
-      "stats": { "action": "PADRAO", "range": "toque", "duration": "CONCENTRACAO", "selos": false, "chakraCost": "nivel_usado" },
+      "stats": {
+        "action": "PADRAO",
+        "range": "toque",
+        "duration": "CONCENTRACAO",
+        "selos": false,
+        "chakraCost": "nivel_usado"
+      },
       "rules": {
-        "prerequisites": { "powers": { "iryou_ninjutsu": 7 } },
-        "offensiveMode": { "vigorTest": "Dif 7 + Nível + Medicina/2", "failureCondition": "atordoado", "criticalFailureCondition": "inconsciente" }
+        "prerequisites": {
+          "powers": {
+            "iryou_ninjutsu": 7
+          }
+        },
+        "offensiveMode": {
+          "vigorTest": "Dif 7 + Nível + Medicina/2",
+          "failureCondition": "atordoado",
+          "criticalFailureCondition": "inconsciente"
+        }
       },
       "evolutions": []
     },
@@ -68,17 +140,37 @@
       "code": "byakugou_no_in",
       "name": "Byakugou no In (Selo das 100 Curas)",
       "minLevel": 8,
-      "availableFor": ["iryou_ninjutsu"],
+      "availableFor": [
+        "iryou_ninjutsu"
+      ],
       "shortDescription": "Selo na testa. Libera chakra extra dobrado. Sozou Saisei OU Byakugou no Jutsu. Pré-req: Kuchiyose Lesmas + Iryou 8 + Fuuinjutsu 5.",
       "description": "Selo de maior dificuldade de controle de chakra. Marca em forma de losango na testa. Anos pra criar (mín 3). Quando liberado, marcas se espalham e todo o chakra retorna ao corpo, dando regeneração que beira imortalidade. Pra criar/manter, reduz 15 pontos de chakra permanentes. Quando liberado, duplica chakra total (45 vira 90). Chakra extra só usado em Iryou Ninjutsu ou efeitos da técnica. Acaba quando chakra extra zera; precisa 1 dia inteiro de descanso. Escolha: Sozou Saisei (cura tudo até max Vit, 1 chakra = 3 Vit) OU Byakugou no Jutsu (regeneração instantânea após ataque, 1 chakra = 2 Vit). Cura à Distância: usa mini-lesmas (Katsuyu Daibunretsu) acompanhando aliados pra canalizar Iryou Ninjutsu remoto. Pré-req: Kuchiyose 6 Lesmas + Iryou 8 + Fuuinjutsu 5. Fonte: Livro Básico p. 232.",
-      "stats": { "action": "PADRAO (liberação)", "range": "pessoal", "duration": "CONTINUA", "chakraCost": "15 permanente + variável na liberação" },
+      "stats": {
+        "action": "PADRAO (liberação)",
+        "range": "pessoal",
+        "duration": "CONTINUA",
+        "chakraCost": "15 permanente + variável na liberação"
+      },
       "rules": {
-        "prerequisites": { "powers": { "kuchiyose": 6, "iryou_ninjutsu": 8, "fuuinjutsu": 5 }, "kuchiyoseRestricted": "lesmas" },
+        "prerequisites": {
+          "powers": {
+            "kuchiyose": 6,
+            "iryou_ninjutsu": 8,
+            "fuuinjutsu": 5
+          },
+          "kuchiyoseRestricted": "lesmas"
+        },
         "permanentChakraCost": 15,
         "doublesChakraOnRelease": true,
         "modes": {
-          "sozou_saisei": { "description": "Cura instantânea até max Vit", "ratio": "1 chakra = 3 Vit" },
-          "byakugou_no_jutsu": { "description": "Regeneração instantânea após ataque", "ratio": "1 chakra = 2 Vit" }
+          "sozou_saisei": {
+            "description": "Cura instantânea até max Vit",
+            "ratio": "1 chakra = 3 Vit"
+          },
+          "byakugou_no_jutsu": {
+            "description": "Regeneração instantânea após ataque",
+            "ratio": "1 chakra = 2 Vit"
+          }
         },
         "remoteHealingViaMiniSlugs": true,
         "recoveryTime": "1 dia inteiro de descanso"

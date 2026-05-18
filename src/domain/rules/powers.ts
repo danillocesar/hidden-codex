@@ -5,6 +5,13 @@ import { getPowerBudget } from './pointsBudget';
 export const APTITUDE_COST = 2 as const;
 
 /**
+ * Numero de aptidoes gratuitas concedidas na CRIACAO do personagem (alem das
+ * de origem/cla/KG). As N primeiras aptidoes "pagas" entram sem custar pontos.
+ * Fonte: Livro Basico (regra de criacao).
+ */
+export const FREE_STARTING_APTITUDES = 3 as const;
+
+/**
  * Calcula o custo total de poderes considerando níveis gratuitos da origem
  * (kekkei genkai, clã). Níveis grátis abatem dos níveis pagos.
  *
@@ -27,10 +34,20 @@ export function calculateTotalPowerCost(
   return total;
 }
 
+/**
+ * Custo de aptidoes em pontos.
+ *
+ * `freeStartingCount` desconta as N primeiras aptidoes "pagas" (sem origem).
+ * Default 0 mantem o comportamento antigo (level up, fichas pos-criacao).
+ * Na CRIACAO o wizard passa `FREE_STARTING_APTITUDES` (3).
+ */
 export function calculateAptitudeCost(
   aptitudes: ReadonlyArray<CharacterAptitudeRef>,
+  freeStartingCount: number = 0,
 ): number {
-  return aptitudes.filter((a) => !a.isFreeFromOrigin).length * APTITUDE_COST;
+  const paid = aptitudes.filter((a) => !a.isFreeFromOrigin).length;
+  const billable = Math.max(0, paid - Math.max(0, freeStartingCount));
+  return billable * APTITUDE_COST;
 }
 
 /**
@@ -44,8 +61,19 @@ export function validatePowersAndAptitudes(args: {
   aptitudes: ReadonlyArray<CharacterAptitudeRef>;
   freeLevelsByPower: Readonly<Record<string, number>>;
   nc: number;
+  /**
+   * Numero de aptidoes "starter" gratuitas (alem das de origem). Wizard de
+   * criacao passa `FREE_STARTING_APTITUDES` (3); level up passa 0 (default).
+   */
+  freeStartingAptitudes?: number;
 }): ValidationResult {
-  const { characterPowers, aptitudes, freeLevelsByPower, nc } = args;
+  const {
+    characterPowers,
+    aptitudes,
+    freeLevelsByPower,
+    nc,
+    freeStartingAptitudes = 0,
+  } = args;
   const limit = getPowerLimit(nc);
 
   for (const { code, level } of characterPowers) {
@@ -61,7 +89,7 @@ export function validatePowersAndAptitudes(args: {
   }
 
   const powerCost = calculateTotalPowerCost(characterPowers, freeLevelsByPower);
-  const aptidaoCost = calculateAptitudeCost(aptitudes);
+  const aptidaoCost = calculateAptitudeCost(aptitudes, freeStartingAptitudes);
   const total = powerCost + aptidaoCost;
   const budget = getPowerBudget(nc);
 

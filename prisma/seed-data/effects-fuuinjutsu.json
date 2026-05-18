@@ -9,20 +9,38 @@
     "powerNotes": {
       "code": "fuuinjutsu",
       "category": "PODER_COMUM",
-      "prerequisites": { "attributes": { "int": 6 } },
+      "prerequisites": {
+        "attributes": {
+          "int": 6
+        }
+      },
       "rangeFormula": "Toque",
       "keySkill": "ocultismo"
-    }
+    },
+    "audit": [
+      {
+        "date": "2026-05-14",
+        "phase": "7g",
+        "change": "Adicionado effect 'juuin_jutsu' (Técnica do Selo Amaldiçoado, Hijutsus p.55) ao Fuuinjutsu."
+      }
+    ]
   },
   "data": [
     {
       "code": "selo_armazenamento",
       "name": "Selo de Armazenamento",
       "minLevel": 1,
-      "availableFor": ["fuuinjutsu"],
+      "availableFor": [
+        "fuuinjutsu"
+      ],
       "shortDescription": "Sela 3 compartimentos de itens ou 3 chakra/jutsu pequenos em pergaminho.",
       "description": "Cria selo simples que porta carga limitada. Pode prender em outra dimensão: até 3 compartimentos de itens; ou jutsus de pequenas quantidades (até 3 pontos de chakra comum/elemental); ou 1 objeto pequeno por compartimento. Não pode aninhar pergaminhos. Pergaminho de Jutsus custa 10 Ryos, ocupa 1 compartimento. Cada compartimento selado custa 1 chakra. Pergaminho não é reutilizável. Armazenar jutsu custa 1 chakra + custo do jutsu. Liberar = custo de chakra dele novamente. Não armazena: técnicas pessoais/toque, sustentadas/concentração. Em combate: liberar requer a ação que normalmente seria necessária. Só 1 compartimento/jutsu liberado por ação. Liberar jutsu sempre requer selos de mão. Pode ser liberado por qualquer um (não precisa ter o poder). Kage Bunshin libera armas/objetos; jutsus só com Clone Verdadeiro. Fonte: Livro Básico p. 114-115.",
-      "stats": { "action": "1 rodada (selar)", "range": "toque", "duration": "PERMANENTE", "chakraCost": "1 por compartimento" },
+      "stats": {
+        "action": "1 rodada (selar)",
+        "range": "toque",
+        "duration": "PERMANENTE",
+        "chakraCost": "1 por compartimento"
+      },
       "rules": {
         "maxCompartments": 3,
         "maxChakraStorage": 3,
@@ -37,14 +55,24 @@
       "code": "selo_armazenamento_maior",
       "name": "Selo de Armazenamento Maior",
       "minLevel": 2,
-      "availableFor": ["fuuinjutsu"],
+      "availableFor": [
+        "fuuinjutsu"
+      ],
       "shortDescription": "Expansão: 6 compartimentos. Mais chakra. Nv 3 = objeto médio. Nv 5 = grande.",
       "description": "Funciona como Selo de Armazenamento. Expande capacidade pra 6 compartimentos de itens, ou maior quantidade de chakra (1 ponto + 1 por nível do poder). Com Nv 3 do poder: pode armazenar 1 objeto médio ocupando todos compartimentos. Com Nv 5: tamanho grande. Demais regras inalteradas. Fonte: Livro Básico p. 115.",
-      "stats": { "action": "1 rodada (selar)", "range": "toque", "duration": "PERMANENTE", "chakraCost": "variável" },
+      "stats": {
+        "action": "1 rodada (selar)",
+        "range": "toque",
+        "duration": "PERMANENTE",
+        "chakraCost": "variável"
+      },
       "rules": {
         "maxCompartments": 6,
         "maxChakraStorageFormula": "1 + 1 por nível",
-        "objectSizeByPowerLevel": { "3": "medio", "5": "grande" }
+        "objectSizeByPowerLevel": {
+          "3": "medio",
+          "5": "grande"
+        }
       },
       "evolutions": []
     },
@@ -52,45 +80,91 @@
       "code": "misshi",
       "name": "Misshi (Mensageiro)",
       "minLevel": 3,
-      "availableFor": ["fuuinjutsu"],
+      "availableFor": [
+        "fuuinjutsu"
+      ],
       "shortDescription": "Selo avançado. Grava mensagem de até 20 palavras pra assinatura de chakra específica.",
       "description": "Ativa selo avançado e fala mensagem que será gravada. Até 20 palavras, no idioma e tom usados. Escolhe assinatura de chakra específica pra ativar (precisa conhecer a do destinatário). Quando criatura com a assinatura tocar o selo, mensagem é reproduzida e selo se autodestrói. Usuário sabe imediatamente quando reproduzida. Selo avançado: criar requer tarja especial em branco, chakra = nível usado, ação completa. Selos avançados são consumidos quando usados. Destruídos com qualquer dano de corte/fogo. Só usável pelo criador. Fonte: Livro Básico p. 115-116.",
-      "stats": { "action": "PADRAO", "duration": "PERMANENTE (até reprodução)", "chakraCost": 3 },
-      "rules": { "selo_avancado": true, "maxWords": 20, "selfDestructs": true, "destroyedByCuttingOrFire": true, "creatorOnly": true },
+      "stats": {
+        "action": "PADRAO",
+        "duration": "PERMANENTE (até reprodução)",
+        "chakraCost": 3
+      },
+      "rules": {
+        "selo_avancado": true,
+        "maxWords": 20,
+        "selfDestructs": true,
+        "destroyedByCuttingOrFire": true,
+        "creatorOnly": true
+      },
       "evolutions": []
     },
     {
       "code": "bakudan",
       "name": "Bakudan (Bomba)",
       "minLevel": 4,
-      "availableFor": ["fuuinjutsu"],
+      "availableFor": [
+        "fuuinjutsu"
+      ],
       "shortDescription": "Selo avançado. Tarja explosiva custom. Esfera 2m/nível. Dano 2/nível usado.",
       "description": "Selo avançado pra criar tarjas explosivas customizadas, com maior área e dano. Usa regras de tarjas explosivas, com diferenças. Explosão em esfera diâmetro 2m por nível do poder. Dano 2 por nível usado. Testes contra ativação remota: Dif 9 + 2x Nível Poder. Apenas 1 selo Bakudan por vez. Não acumula dano/dificuldade por quantidade de tarjas. Permite meta-aptidões como Potencializar (gasta ação de movimento no momento da explosão). Pode criar armadilhas via perícia Mecanismos. Fonte: Livro Básico p. 116.",
-      "stats": { "action": "PADRAO", "range": "toque", "duration": "PERMANENTE", "chakraCost": "1 por tarja na criação + (nível/2) na ativação" },
-      "rules": { "selo_avancado": true, "areaOfEffect": "esfera 2m por nível", "damageFormula": "2 por nível usado", "supportsMetaAptitudes": true, "supportsMecanismos": true },
+      "stats": {
+        "action": "PADRAO",
+        "range": "toque",
+        "duration": "PERMANENTE",
+        "chakraCost": "1 por tarja na criação + (nível/2) na ativação"
+      },
+      "rules": {
+        "selo_avancado": true,
+        "areaOfEffect": "esfera 2m por nível",
+        "damageFormula": "2 por nível usado",
+        "supportsMetaAptitudes": true,
+        "supportsMecanismos": true
+      },
       "evolutions": []
     },
     {
       "code": "gensou_no_in",
       "name": "Gensou no In (Selo de Ilusão)",
       "minLevel": 5,
-      "availableFor": ["fuuinjutsu"],
+      "availableFor": [
+        "fuuinjutsu"
+      ],
       "shortDescription": "Selo avançado. Ilusão de objetos/criaturas no local. NÃO é Kai-cancelável (é ninjutsu).",
       "description": "Cria ilusão de algo no local onde o selo é colocado (objetos ou criaturas). Tamanho: 1m por nível de Int (diâmetro/comprimento/largura/altura). Pra reconhecer, precisa interagir. NÃO pode ser cancelada por Kai (é ninjutsu, não genjutsu). Quando selo é removido/destruído, ilusão desaparece. Fonte: Livro Básico p. 116.",
-      "stats": { "action": "PADRAO", "duration": "PERMANENTE", "chakraCost": 5 },
-      "rules": { "selo_avancado": true, "sizePerInt": "1m", "notCancelableByKai": true }
+      "stats": {
+        "action": "PADRAO",
+        "duration": "PERMANENTE",
+        "chakraCost": 5
+      },
+      "rules": {
+        "selo_avancado": true,
+        "sizePerInt": "1m",
+        "notCancelableByKai": true
+      }
     },
     {
       "code": "ninjutsu_no_wana",
       "name": "Ninjutsu no Wana (Armadilha de Ninjutsu)",
       "minLevel": 6,
-      "availableFor": ["fuuinjutsu"],
+      "availableFor": [
+        "fuuinjutsu"
+      ],
       "shortDescription": "Armadilha que lança ninjutsu pré-selecionado. Círculo 0,5m/Int. Pré-req: Mecanismos 10.",
       "description": "Configura selo como armadilha fixa. Quando ativada, lança ninjutsu previamente selecionado. Chakra pago só na criação = 4 + custo da técnica selada. Técnica pode ser de poder ou efeito de nível máx 8 (se NC permitir), de alcance à distância. Poderes restritos NÃO podem ser usados. Ao criar, faz teste de CD como se estivesse usando ninjutsu — resultado registrado pra defesa da vítima. Primeira criatura que se mover pela área sofre a técnica como se usuário tivesse executado (testes defensivos com -1 precisão). Se técnica tem área, modificada pra cone partindo do selo. Não pode ser desarmada — só dissipando ou forçando ativação. Procurar/Prontidão pra notar: Dif 7 + 2x nível do Poder; só criaturas com Ocultismo ou Fuuinjutsu têm direito. Pré-req: Mecanismos 10. Fonte: Livro Básico p. 116-117.",
-      "stats": { "action": "1 rodada (criação)", "areaOfEffect": "circulo 0,5m por nível Int", "duration": "PERMANENTE (até ativação)", "chakraCost": "4 + custo do ninjutsu" },
+      "stats": {
+        "action": "1 rodada (criação)",
+        "areaOfEffect": "circulo 0,5m por nível Int",
+        "duration": "PERMANENTE (até ativação)",
+        "chakraCost": "4 + custo do ninjutsu"
+      },
       "rules": {
         "selo_avancado": true,
-        "prerequisites": { "skills": { "mecanismos": 10 } },
+        "prerequisites": {
+          "skills": {
+            "mecanismos": 10
+          }
+        },
         "maxSealedTechniqueLevel": 8,
         "noRestrictedPowers": true,
         "defensiveTestPenalty": -1,
@@ -102,35 +176,73 @@
       "code": "chakra_no_souin",
       "name": "Chakra no Souin (Selo de Contenção de Chakra)",
       "minLevel": 7,
-      "availableFor": ["fuuinjutsu"],
+      "availableFor": [
+        "fuuinjutsu"
+      ],
       "shortDescription": "Selo épico. Drena 2 chakra/turno de quem entrar. Reduz chakra do usuário a 1.",
       "description": "Cria selo de absorção de chakra. Não pode ser colocado em objetos em movimento. Na ativação, chakra do usuário é reduzido a 1 ponto (precisa ter pelo menos 15 antes, incluindo Kage Bunshins). Ativado, selo se assemelha a símbolo arcaico vermelho escuro cobrindo a área. Toda criatura sobre a área (pisando ou não) perde 2 chakra por turno. NÃO consome chakra de criaturas com mesma assinatura do usuário. Não reduz abaixo de 1 ponto. Fonte: Livro Básico p. 117.",
-      "stats": { "action": "COMPLETA (ativação)", "areaOfEffect": "circulo 1m por nível Int", "duration": "PERMANENTE", "chakraCost": "reduz usuário a 1" },
-      "rules": { "minChakraToActivate": 15, "reducesUserChakraTo": 1, "drainPerTurn": 2, "minTargetChakra": 1, "exemptSameSignature": true },
+      "stats": {
+        "action": "COMPLETA (ativação)",
+        "areaOfEffect": "circulo 1m por nível Int",
+        "duration": "PERMANENTE",
+        "chakraCost": "reduz usuário a 1"
+      },
+      "rules": {
+        "minChakraToActivate": 15,
+        "reducesUserChakraTo": 1,
+        "drainPerTurn": 2,
+        "minTargetChakra": 1,
+        "exemptSameSignature": true
+      },
       "evolutions": []
     },
     {
       "code": "kekkai_no_in",
       "name": "Kekkai no In (Barreira de Selo)",
       "minLevel": 8,
-      "availableFor": ["fuuinjutsu"],
+      "availableFor": [
+        "fuuinjutsu"
+      ],
       "shortDescription": "Parede invisível indestrutível de chakra. 1cm espessura. Não pode ser movida.",
       "description": "Cria parede invisível e indestrutível de chakra que não pode ser movida, danificada ou alterada. Não permite criatura/objeto atravessar. Concede cobertura defensiva (mas não esconde, é invisível). NÃO impede técnicas tempo-espaço (Hiraishin) nem doujutsus. 1cm de espessura, formato quadrado. Selo no canto ou no centro do quadrado. Cancelada quando selo é movido, removido ou destruído. Fonte: Livro Básico p. 117.",
-      "stats": { "action": "COMPLETA", "areaOfEffect": "parede 0,5m por nível Int (altura e largura)", "duration": "PERMANENTE", "chakraCost": 8 },
-      "rules": { "selo_epico": true, "indestructible": true, "invisible": true, "noTimeSpaceTechniques": true, "noDojutsus": true },
+      "stats": {
+        "action": "COMPLETA",
+        "areaOfEffect": "parede 0,5m por nível Int (altura e largura)",
+        "duration": "PERMANENTE",
+        "chakraCost": 8
+      },
+      "rules": {
+        "selo_epico": true,
+        "indestructible": true,
+        "invisible": true,
+        "noTimeSpaceTechniques": true,
+        "noDojutsus": true
+      },
       "evolutions": []
     },
     {
       "code": "shishou_fuuin",
       "name": "Shishou Fuuin (Selo dos Quatro Símbolos)",
       "minLevel": 8,
-      "availableFor": ["fuuinjutsu"],
+      "availableFor": [
+        "fuuinjutsu"
+      ],
       "shortDescription": "Selo épico. Sela Bijuu em pessoa/objeto. Ritual de 3 dias. Pré-req: Ocultismo 16.",
       "description": "Técnica genérica pra selar Bijuu em pessoa ou objeto especial. Recebe nomes diferentes por Vila (Tekkou Fuuin em Kumo, Hakke no Fuuin Shiki em Konoha). Grande ritual sem testes, com muita preparação. Qualquer perturbação cancela. Mín 10 pessoas no ritual, sendo pelo menos uma conhecendo a técnica. Bijuu contida por outras pessoas com genjutsus e selamentos menores. Dura 3 dias inteiros. Bijuu selada em pote especial (até 10 anos) ou pessoa (vira Jinchuuriki). Pode ser feita instantânea no fim do Shiki Fuujin. Pré-req: Ocultismo 16. Fonte: Livro Básico p. 118.",
-      "stats": { "action": "3 dias", "range": "20m", "target": "1 Bijuu", "duration": "PERMANENTE", "chakraCost": 16 },
+      "stats": {
+        "action": "3 dias",
+        "range": "20m",
+        "target": "1 Bijuu",
+        "duration": "PERMANENTE",
+        "chakraCost": 16
+      },
       "rules": {
         "selo_epico": true,
-        "prerequisites": { "skills": { "ocultismo": 16 } },
+        "prerequisites": {
+          "skills": {
+            "ocultismo": 16
+          }
+        },
         "ritualMinPeople": 10,
         "ritualDuration": "3 dias",
         "potDuration": "10 anos",
@@ -142,11 +254,73 @@
       "code": "keiyaku_fuuin",
       "name": "Keiyaku Fuuin (Selo Anticontrato)",
       "minLevel": 9,
-      "availableFor": ["fuuinjutsu"],
+      "availableFor": [
+        "fuuinjutsu"
+      ],
       "shortDescription": "Selo épico. Cancela Hipnose Sharingan sobre Bijuu. Toque.",
       "description": "Técnica usada sobre usuário do Mangekyou Sharingan que utilizou Hipnose Sharingan em uma Bijuu. Tocando o alvo, cancela imediatamente o controle dele sobre a Bijuu. Pré-req: Ocultismo 16. Fonte: Livro Básico p. 118.",
-      "stats": { "action": "PADRAO", "range": "toque", "target": "1 criatura", "duration": "PERMANENTE", "chakraCost": 8 },
-      "rules": { "selo_epico": true, "prerequisites": { "skills": { "ocultismo": 16 } }, "cancelsMangekyouHypnosis": true },
+      "stats": {
+        "action": "PADRAO",
+        "range": "toque",
+        "target": "1 criatura",
+        "duration": "PERMANENTE",
+        "chakraCost": 8
+      },
+      "rules": {
+        "selo_epico": true,
+        "prerequisites": {
+          "skills": {
+            "ocultismo": 16
+          }
+        },
+        "cancelsMangekyouHypnosis": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "juuin_jutsu",
+      "name": "Juuin Jutsu (Técnica do Selo Amaldiçoado)",
+      "minLevel": 10,
+      "availableFor": [
+        "fuuinjutsu"
+      ],
+      "shortDescription": "Fuuinjutsu Nv 10. Aplica Selo Amaldiçoado (Juuinka) em alvo indefeso. Mordida sem testes. Vítima testa sobrevivência por 4h.",
+      "description": "Técnica que contamina alvo com Selo Amaldiçoado (Juuinka) através de mordida. Sem testes de acerto. SOMENTE em alvos indefesos ou fora de combate. Pré-req desenvolvimento: acesso a células de portador da kekkei genkai Senninka. Custo 10 chakra. Alvo recebe selo aleatório entre tórax e pescoço, fica inconsciente 4h. Cada 1h: rola 1 dado. Soma ao final ≥24 = adapta. Senão = morre. Mesmo se sobreviver, alvo fica sob influência narrativa do criador do selo. Não tem controle do selo até comprar aptidões Juuinka. Fonte: Livro de Hijutsus p. 55.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "50m",
+        "target": "1_criatura_indefesa_ou_fora_de_combate",
+        "duration": "PERMANENTE",
+        "chakraCost": 10,
+        "selos": true
+      },
+      "rules": {
+        "type": "fuuinjutsu_kinjutsu_selo_amaldicoado",
+        "prerequisites": {
+          "powers": {
+            "fuuinjutsu": 10
+          },
+          "skills": {
+            "ocultismo": 20,
+            "medicina": 20
+          },
+          "narrative": "acesso_a_celulas_de_portador_senninka"
+        },
+        "noAttackTest": true,
+        "targetRestriction": "indefeso_ou_fora_de_combate",
+        "victimAdaptationTest": {
+          "duration": "4_horas",
+          "rolls": "1_dado_por_hora_4_total",
+          "successThreshold": 24,
+          "onSuccess": "corpo_adaptado_recebe_selo",
+          "onFailure": "morte"
+        },
+        "narrativeConsequence": "alvo_sob_influencia_do_criador_do_selo_a_menos_que_morto_ou_enfraquecido",
+        "controlRequiresAptitudes": [
+          "juuinka_ichi",
+          "juuinka_ni"
+        ]
+      },
       "evolutions": []
     }
   ]

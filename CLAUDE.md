@@ -174,9 +174,56 @@ pnpm lint && pnpm typecheck && pnpm test
 
 ### CSS
 - **Sem CSS-in-JS.** Tailwind + CSS vars apenas.
-- **Tokens em `src/styles/tokens.css`** referenciados via `var(--...)`.
+- **Tokens em `src/styles/tokens.css`** em formato `R G B` (suportam alpha modifier do Tailwind: `bg-danger/25`).
 - **Classes Tailwind organizadas:** layout → spacing → typography → color → state. ESLint plugin `prettier-plugin-tailwindcss` ordena.
 - **`cn()` utility** (de `src/lib/utils/cn.ts`) para condicionalmente compor classes.
+
+### Design system — `src/components/ui/` (REGRA OBRIGATÓRIA)
+
+**Sempre que precisar de um container, tipografia, layout, alerta, badge, formulário, modal ou primitive visual:** PRIMEIRO procure em `src/components/ui/`. Use o que já existe. NÃO crie variações da mesma coisa.
+
+**Documentação completa em `src/components/ui/README.md`.** Galeria visual em `/components` (autenticada).
+
+| Precisa de... | Use |
+|---|---|
+| Card grande (seção de step, painel) | `<Section tone="default \| accent \| paper">` |
+| Tile menor (card aninhado) | `<Surface tone="default \| elevated \| sunken">` |
+| Título de página/seção | `<Heading level={1\|2\|3\|4} italic? accent?>` |
+| Label CINZEL uppercase | `<Eyebrow tone="...">` (NUNCA digite `font-display text-[10px] uppercase tracking-[0.3em]` à mão) |
+| Texto corrido / hint / mono | `<Text variant="body\|muted\|help\|mono\|accent\|strong">` |
+| Coluna vertical | `<Stack gap="...">` |
+| Linha horizontal com wrap | `<Cluster gap="..." align="..." justify="...">` |
+| Inline baseline | `<Inline gap="...">` |
+| Alerta (erro/warn/info/sucesso) | `<Alert tone="danger\|warning\|info\|success">` |
+| Chip pequeno (origem, grátis, treinada, contador) | `<Badge tone="..." variant="...">` |
+| Tooltip no hover | `<Tooltip content="...">` |
+| Lista vazia | `<EmptyState title description action?>` |
+| Modal centralizado | `<Modal open onClose title>` |
+| Drawer lateral | `<InfoDrawer>` (em `character/wizard/` — promover pra `ui/Drawer` quando aparecer 2º caso) |
+| Botão | `<Button variant="default\|outline\|ghost\|seal" size>` |
+| Input / Select / Textarea | `<Input>` `<Select>` `<Textarea>` + envolver em `<Field label htmlFor required error>` |
+| Combobox (creatable) | `<Combobox options value onChange>` |
+| Checkbox | `<Checkbox checked onChange label>` |
+| Erros de form touched-on-blur | `useFormErrors()` hook |
+
+**Quando criar um primitive novo:**
+1. Mesmo padrão se repetiu ≥ 3 vezes, OU você se pegou copiando classes Tailwind entre arquivos
+2. Coloque em `src/components/ui/<nome>.tsx`
+3. Use `cva` (class-variance-authority) pra variants — padrão dos outros primitives
+4. Crie showcase em `src/app/(app)/components/<Nome>Playground.tsx` + plugue na galeria
+5. Atualize `src/components/ui/README.md` com exemplo
+6. NUNCA mexa numa tela existente pra adicionar um padrão visual novo sem antes criar o primitive em `ui/`
+
+**Hierarquia de imports:**
+- `ui/*` é "burro" — sem regra de RPG, sem fetch, sem state global. Só tokens semânticos + variants
+- Domain components (`character/wizard/`, `character/ficha/`) podem importar `ui/*` — **nunca o contrário**
+
+**Code smell — pare e reflita:**
+- Digitar `rounded border bg-bg-card` direto numa tela → falta `<Section>` ou `<Surface>`
+- Digitar `font-display text-[10px] uppercase tracking-[0.3em]` direto → falta `<Eyebrow>`
+- Digitar `text-sm text-ink-muted` solto repetido → use `<Text variant="muted">`
+- Criar 2º componente similar (ex: `BackButton` específico) quando o genérico cobre → use `<Button>` com variant existente
+- Reinventar visual de chip/badge → use `<Badge>`
 
 ### Server Actions
 - **Sempre `'use server'`** no topo do arquivo (não da função).

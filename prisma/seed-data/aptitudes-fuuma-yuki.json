@@ -1,0 +1,88 @@
+{
+  "_meta": {
+    "description": "Lote 7d — FECHAMENTO DA FASE 7. Fuuma (Demônio do Vento — única aptidão restrita do clã, completamente ausente do banco) + refino do Congelamento (Yuki) que estava como needsDeepResearch. Selos Especiais (Yuki) já está completo em aptitudes-clan-restricted.json e NÃO entra aqui.",
+    "sources": [
+      "Livro de Hijutsus 4.1b p. 7 (Clã Fuuma, Demônio do Vento)",
+      "Livro de Hijutsus 4.1b p. 19 (Clã Yuki, Congelamento)"
+    ],
+    "extractedAt": "2026-05-13",
+    "schemaVersion": 1,
+    "appliesToTable": "aptitudes",
+    "expectedItemCount": 2,
+    "intentionalUpserts": [
+      "congelamento"
+    ],
+    "intentionalUpsertsNotes": "congelamento JÁ EXISTE em aptitudes-clan-restricted.json:591 com effects.needsDeepResearch=true e descrição genérica. Este lote substitui pela versão completa do livro: pré-req Hyouton 6, teste de Vigor Dif padrão -2, impedido até fim do próximo turno da vítima, só aplica em efeitos à distância com teste contra defesa (exclui Energizar e Criar Arma).",
+    "phase7Closure": "Lote 7d fecha o bloco 'Patches de Aptidões' da Fase 7 (7a Samurai + 7b Powers Órfãos + 7c Kaguya + 7d Fuuma+Yuki)."
+  },
+  "data": [
+    {
+      "code": "demonio_do_vento",
+      "name": "Demônio do Vento",
+      "category": "RESTRITA",
+      "shortDescription": "Aptidão Especial Tensai do clã Fuuma. Grants Usar Arma (Fuuma Shuriken) + Especialista (Armas de Arremesso). Dano base com fuuma shuriken = nível de Destreza.",
+      "description": "Aptidão Especial do Hijutsu Tensai, exclusiva do clã Fuuma. Tem o talento e a ambição de um dos clãs mais renomados (famoso pelo uso e criação das Fuuma Shurikens). Deve ser escolhida como UMA das duas Aptidões Especiais que tem direito pelo Tensai. Recebe os benefícios das aptidões Usar Arma (Fuuma Shuriken) e Especialista (Armas de Arremesso). Adicionalmente, pode fazer o dano base do ataque com qualquer fuuma shuriken ser igual ao seu nível de Destreza — ou seja, NÃO usa o cálculo padrão de dano base para armas de arremesso, nem o dano de arma. Não recebe benefícios das aptidões nas quais ainda não tenha atingido os pré-requisitos de compra normal, mas receberá assim que eles forem alcançados. Fonte: Livro de Hijutsus p. 7.",
+      "prerequisites": {
+        "clans": [
+          "fuuma"
+        ],
+        "aptitudes": [
+          "tensai"
+        ]
+      },
+      "effects": {
+        "type": "tensai_special",
+        "occupiesTensaiSpecialSlot": true,
+        "tensaiSpecialSlotsTotal": 2,
+        "grants": [
+          "usar_arma_fuuma_shuriken",
+          "especialista_armas_de_arremesso"
+        ],
+        "grantsBypassesPrereq": true,
+        "grantsBypassesPrereqNote": "Demônio do Vento concede ambas aptidões diretamente, sem que o personagem precise atender ao pré-req normal de cada uma. Mesma flag do armadura_samurai (7a).",
+        "fuumaShurikenDamageOverride": {
+          "damageBaseFormula": "nivel_de_destreza",
+          "overrides": [
+            "calculo_padrao_dano_base_armas_arremesso",
+            "dano_de_arma"
+          ],
+          "appliesTo": "qualquer_fuuma_shuriken"
+        },
+        "grantsBenefitOnPrereqReached": "Não recebe benefícios de aptidões cujo pré-req normal ainda não foi atingido. Recebe automaticamente quando o pré-req for alcançado."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "congelamento",
+      "name": "Congelamento",
+      "category": "RESTRITA",
+      "shortDescription": "Yuki. Efeito Hyouton à distância: vítima testa Vigor (Dif padrão -2) ou fica impedida até fim do próximo turno dela. NÃO aplica em Energizar ou Criar Arma.",
+      "description": "Pode congelar inimigos cada vez que acerta uma técnica Hyouton. Sempre que causar dano com um efeito do poder Hyouton, a vítima deverá fazer um teste de Vigor (Dif padrão -2). Falhando, ficará impedida até o final do próximo turno DELA. Esta aptidão somente é aplicada a efeitos à distância que necessitem de teste de acerto contra a ação defensiva do alvo — portanto NÃO se aplica a ataques com os efeitos Energizar nem Criar Arma. Fonte: Livro de Hijutsus p. 19.",
+      "prerequisites": {
+        "clans": [
+          "yuki"
+        ],
+        "powers": {
+          "hyouton": 6
+        }
+      },
+      "effects": {
+        "type": "hyouton_status_proc",
+        "trigger": "causou_dano_com_efeito_hyouton",
+        "vigorTest": {
+          "type": "vigor",
+          "difficulty": "padrao_-2"
+        },
+        "onFailure": "impedido_ate_fim_do_proximo_turno_da_vitima",
+        "appliesTo": {
+          "scope": "efeitos_a_distancia_com_teste_de_acerto_contra_defesa_do_alvo",
+          "excludes": [
+            "energizar",
+            "criar_arma"
+          ]
+        }
+      },
+      "evolutions": []
+    }
+  ]
+}

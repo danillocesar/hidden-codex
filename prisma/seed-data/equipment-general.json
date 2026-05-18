@@ -1,0 +1,604 @@
+{
+  "_meta": {
+    "description": "Lote 6h — Equipamento Geral. Itens utilitários do dia-a-dia shinobi: kits, recipientes, ferramentas comuns, pergaminhos em branco, animais, veículos e serviços. Schema: kind=GENERAL. Inclui itens com 'usos' (kits limitados a 5 usos), itens que dão compartimentos extras (mochila, coldre), animais e veículos como entradas no banco mesmo sem mecânica detalhada (preço serve pra economia). Serviços (Bebida/Estadia/Refeição/Mensageiro/Estábulo/Condução) também entram pra economia, embora não 'ocupem compartimento'.",
+    "sources": [
+      "Livro Básico p. 140 (Tabela de Itens e Serviços)",
+      "Livro Básico p. 43 (Mecanismos — referência a Kit de Ferramentas)",
+      "Livro Básico p. 44 (Medicina — referência a Kit de Medicamentos)",
+      "Livro Básico p. 114-115 (Pergaminho de Jutsus + Tarja Especial Fuuinjutsu)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "expectedItemCount": 29,
+    "schemaNotes": "kind=GENERAL, subtype categoriza: 'recipiente' (mochila/coldre), 'kit' (5 usos), 'ferramenta_comum' (corda/lanterna/algemas/instrumento), 'pergaminho_papel' (pergaminho jutsus/escrita/tarja especial), 'campismo' (saco/ração), 'animal', 'veiculo', 'servico'. Itens de serviço têm price mas slots=null (não ocupam compartimento). 'Pílulas do Soldado' já modelada no 6g como CONSUMABLE — não duplica.",
+    "notes": "Decisão: serviços (Bebida, Estadia, Refeição, Mensageiro, Estábulo, Condução Terrestre/Marítima) têm entradas no banco mesmo sendo 'consumíveis temporais' — útil pra UI de loja e cálculo de despesas. Sem slots porque não ocupam compartimento."
+  },
+  "data": [
+    {
+      "code": "algemas",
+      "name": "Algemas",
+      "kind": "GENERAL",
+      "subtype": "ferramenta_comum",
+      "category": null,
+      "price": 15,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "purpose": "Prender mãos de prisioneiros/inimigos derrotados"
+      },
+      "shortDescription": "Algemas de metal. 1 comp.",
+      "description": "Algemas pra imobilizar prisioneiros/inimigos derrotados. Fonte: Livro Básico p. 140."
+    },
+    {
+      "code": "coldre_bolsa_com_cinto",
+      "name": "Coldre/Bolsa com Cinto",
+      "kind": "GENERAL",
+      "subtype": "recipiente",
+      "category": null,
+      "price": 1,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "compartmentBonus": 1,
+        "purpose": "Adiciona 1 compartimento de itens"
+      },
+      "shortDescription": "+1 compartimento. Bainha/coldre/aljava básico.",
+      "description": "Coldre, bolsa com cinto ou item similar de transporte. Adiciona +1 compartimento de itens ao personagem. Fonte: Livro Básico p. 140 + p. 128 (sobre compartimentos)."
+    },
+    {
+      "code": "corda_15m",
+      "name": "Corda (15m)",
+      "kind": "GENERAL",
+      "subtype": "ferramenta_comum",
+      "category": null,
+      "price": 1,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "length": "15m"
+      },
+      "shortDescription": "Corda 15m. 1 comp.",
+      "description": "Corda comum de 15 metros. Útil pra escaladas, amarração, descida controlada, criação de armadilhas improvisadas. Fonte: Livro Básico p. 140."
+    },
+    {
+      "code": "kit_de_artesao",
+      "name": "Kit de Artesão",
+      "kind": "GENERAL",
+      "subtype": "kit",
+      "category": null,
+      "price": 30,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "uses": 5,
+        "purpose": "Trabalhos de artesanato (madeira, couro, etc). Cada uso consome 1 dos 5"
+      },
+      "shortDescription": "5 usos. Artesanato (madeira, couro). 1 comp.",
+      "description": "Kit com ferramentas pra trabalhos de artesanato (madeira, couro, costura, reparos básicos). 5 usos. Fonte: Livro Básico p. 140."
+    },
+    {
+      "code": "kit_de_ferramentas",
+      "name": "Kit de Ferramentas",
+      "kind": "GENERAL",
+      "subtype": "kit",
+      "category": null,
+      "price": 30,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "uses": 5,
+        "purpose": "Trabalhos mecânicos: abrir fechaduras, desarmar mecanismos, criar armadilhas, consertar equipamentos",
+        "requiredFor": ["criar_armadilha_engenheiro"]
+      },
+      "shortDescription": "5 usos. Necessário pra criar armadilhas (Engenheiro). 1 comp.",
+      "description": "Kit com ferramentas mecânicas (limas, chaves, fios). Necessário pra criar armadilhas via perícia Mecanismos + aptidão Engenheiro (1 uso por armadilha). Também útil pra abrir fechaduras e desarmar mecanismos. 5 usos. Fonte: Livro Básico p. 140 + p. 43 (uso em Mecanismos)."
+    },
+    {
+      "code": "kit_de_medicamentos",
+      "name": "Kit de Medicamentos",
+      "kind": "GENERAL",
+      "subtype": "kit",
+      "category": null,
+      "price": 50,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "uses": 5,
+        "purpose": "Tratamento médico via perícia Medicina",
+        "withoutPenalty": "-4 em testes de Medicina sem o kit (ou sala equipada)"
+      },
+      "shortDescription": "5 usos. Necessário pra Medicina sem -4 penalidade. 1 comp.",
+      "description": "Kit médico com bandagens, antissépticos, suturas, ervas. Necessário pra usar a perícia Medicina sem penalidade de -4. Alternativa: sala de equipamentos cirúrgicos. 5 usos. Fonte: Livro Básico p. 140 + p. 44 (uso em Medicina)."
+    },
+    {
+      "code": "kit_de_laboratorio",
+      "name": "Kit de Laboratório",
+      "kind": "GENERAL",
+      "subtype": "kit",
+      "category": null,
+      "price": 50,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "uses": 5,
+        "purpose": "Análise de substâncias e fabricação portátil de venenos/antídotos",
+        "noLabAlternative": "Sem laboratório completo, kit portátil permite fabricar com teste (em vez de automático)",
+        "veneficioBonus": "Em Reconhecer substância: simula 2 dados (com kit portátil completo)"
+      },
+      "shortDescription": "5 usos. Análise química e fabricação portátil de venenos. 1 comp.",
+      "description": "Kit portátil com tubos, frascos, reagentes básicos. Permite análise de substâncias e fabricação de venenos/antídotos fora de laboratório completo (com teste de Venefício). Em Reconhecer substância: ajuda no teste. 5 usos. Fonte: Livro Básico p. 140 + GAS p. 74-75 (Venefício)."
+    },
+    {
+      "code": "instrumento_musical",
+      "name": "Instrumento Musical",
+      "kind": "GENERAL",
+      "subtype": "ferramenta_comum",
+      "category": null,
+      "price": 50,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "purpose": "Tocar música, performances, distração, atividades sociais"
+      },
+      "shortDescription": "Flauta, koto, shamisen ou similar. 1 comp.",
+      "description": "Instrumento musical comum (flauta, koto, shamisen, etc). Útil pra performances, atividades sociais, distração de inimigos. Tipo específico fica a cargo do jogador. Fonte: Livro Básico p. 140."
+    },
+    {
+      "code": "lanterna",
+      "name": "Lanterna",
+      "kind": "GENERAL",
+      "subtype": "ferramenta_comum",
+      "category": null,
+      "price": 7,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "purpose": "Iluminação em áreas escuras"
+      },
+      "shortDescription": "Iluminação. 1 comp.",
+      "description": "Lanterna com vela ou óleo. Útil pra iluminar áreas escuras (cavernas, túneis, missões noturnas em ambientes fechados). Fonte: Livro Básico p. 140."
+    },
+    {
+      "code": "mochila",
+      "name": "Mochila",
+      "kind": "GENERAL",
+      "subtype": "recipiente",
+      "category": null,
+      "price": 2,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "compartmentBonus": 4,
+        "purpose": "Adiciona 4 compartimentos de itens"
+      },
+      "shortDescription": "+4 compartimentos. Item essencial pra viagens longas.",
+      "description": "Mochila grande de viagem. Adiciona +4 compartimentos de itens ao personagem — equivalente a quase dobrar a capacidade básica (3 comps padrão). Essencial pra missões longas. Fonte: Livro Básico p. 140."
+    },
+    {
+      "code": "caneta",
+      "name": "Caneta",
+      "kind": "GENERAL",
+      "subtype": "ferramenta_comum",
+      "category": null,
+      "price": 1,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "negligibleWeight": true,
+        "purpose": "Escrever em pergaminhos, papéis e tarjas"
+      },
+      "shortDescription": "Pena/caneta de tinta. Peso desprezível.",
+      "description": "Caneta (pena com tinta) pra escrever em pergaminhos, mapas e documentos. Peso desprezível, não ocupa compartimento. Fonte: Livro Básico p. 140."
+    },
+    {
+      "code": "pergaminho_de_jutsus",
+      "name": "Pergaminho de Jutsus (em branco)",
+      "kind": "GENERAL",
+      "subtype": "pergaminho_papel",
+      "category": null,
+      "price": 10,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "purpose": "Necessário pra gravar selos básicos de Fuuinjutsu Nv1 (armazenar itens, jutsus, chakra)",
+        "consumable": "Não pode ser reutilizado após selado",
+        "compatibleWith": ["fuuinjutsu_nv1"]
+      },
+      "shortDescription": "Pergaminho em branco pra Fuuinjutsu Nv1. Sela 3 comp ou 3 chakra.",
+      "description": "Pergaminho em branco usado pra gravar selos básicos de Fuuinjutsu (nível 1). Cada pergaminho armazena até 3 compartimentos de itens, ou jutsus de até 3 pontos de chakra, ou 1 objeto pequeno por compartimento. Não pode ser reutilizado após selado. Custa 1 ponto de chakra por compartimento pra armazenar/retirar. Fonte: Livro Básico p. 114-115 + tabela p. 140."
+    },
+    {
+      "code": "pergaminho_de_escrita",
+      "name": "Pergaminho de Escrita",
+      "kind": "GENERAL",
+      "subtype": "pergaminho_papel",
+      "category": null,
+      "price": 1,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": { "items": 6, "compartments": 1 },
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "purpose": "Escrita comum: cartas, anotações, mapas, contratos"
+      },
+      "shortDescription": "Pergaminho comum pra escrita. 6/comp.",
+      "description": "Pergaminho comum pra escrita: cartas, anotações, mapas, contratos. 6 unidades por compartimento. Fonte: Livro Básico p. 140."
+    },
+    {
+      "code": "tarja_especial",
+      "name": "Tarja Especial (em branco)",
+      "kind": "GENERAL",
+      "subtype": "pergaminho_papel",
+      "category": null,
+      "price": 10,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": { "items": 6, "compartments": 1 },
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "purpose": "Tarja em branco pra criar Selos Avançados (Misshi/Bakudan/Gensou no In/Ninjutsu no Wana)",
+        "consumable": "Consumida ao criar selo. Selo criado também é consumido ao usar",
+        "destroyedBy": ["corte", "fogo"],
+        "compatibleWith": ["fuuinjutsu_nv3_plus"]
+      },
+      "shortDescription": "Tarja em branco pra Selos Avançados Fuuinjutsu Nv3+. 6/comp.",
+      "description": "Tarja especial em branco usada pra criar Selos Avançados de Fuuinjutsu (Misshi, Bakudan, Gensou no In, Ninjutsu no Wana — ver 6g). Mesmo custo e ocupação das tarjas explosivas. Selo só pode ser usado pelo criador. Destruída por qualquer dano cortante ou fogo. Fonte: Livro Básico p. 115 + tabela p. 140."
+    },
+    {
+      "code": "saco_de_dormir",
+      "name": "Saco de Dormir",
+      "kind": "GENERAL",
+      "subtype": "campismo",
+      "category": null,
+      "price": 1,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": { "items": 1, "compartments": 2 },
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "purpose": "Dormir confortavelmente ao ar livre. Permite recuperação completa de Vit e Chakra durante o sono (8h)"
+      },
+      "shortDescription": "Dormir ao ar livre. Ocupa 2 comps.",
+      "description": "Saco de dormir pra acampamento ao ar livre. Permite recuperação adequada (Vit + Chakra com 8h de sono). Ocupa 2 compartimentos por ser volumoso. Fonte: Livro Básico p. 140."
+    },
+    {
+      "code": "racao_de_viagem",
+      "name": "Ração de Viagem (por dia)",
+      "kind": "GENERAL",
+      "subtype": "campismo",
+      "category": null,
+      "price": 1,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": { "items": 6, "compartments": 1 },
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "feedingPeriod": "1 dia",
+        "purpose": "Alimentação em viagens longas"
+      },
+      "shortDescription": "Comida pra 1 dia. 6 rações por comp.",
+      "description": "Ração compacta (frutas secas, carne seca, biscoito duro) pra 1 dia de viagem. 6 rações por compartimento. Custo: 1 Ryo por dia. Fonte: Livro Básico p. 140."
+    },
+    {
+      "code": "cao_de_guarda",
+      "name": "Cão de Guarda",
+      "kind": "GENERAL",
+      "subtype": "animal",
+      "category": null,
+      "price": 50,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "purpose": "Defesa de propriedade, alerta contra intrusos, rastreamento básico"
+      },
+      "shortDescription": "Cão treinado pra guarda/proteção. 50 Ryos.",
+      "description": "Cão treinado pra guarda. Útil pra proteção de propriedade, alerta contra intrusos, rastreamento básico. Atributos e dano definidos pelo Mestre (PdM). Fonte: Livro Básico p. 140."
+    },
+    {
+      "code": "cavalo",
+      "name": "Cavalo",
+      "kind": "GENERAL",
+      "subtype": "animal",
+      "category": null,
+      "price": 75,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "purpose": "Montaria pra viagens, transporte de carga",
+        "requiresSaddle": "Pra montaria adequada precisa de Sela (20 Ryos)"
+      },
+      "shortDescription": "Montaria. 75 Ryos.",
+      "description": "Cavalo de montaria/carga. Acelera viagens significativamente. Pra cavalgar com conforto e controle precisa de Sela (vendida separadamente). Atributos e estatísticas definidos pelo Mestre (PdM). Fonte: Livro Básico p. 140."
+    },
+    {
+      "code": "estabulo_por_dia",
+      "name": "Estábulo (por dia)",
+      "kind": "GENERAL",
+      "subtype": "servico",
+      "category": null,
+      "price": 2,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "isService": true,
+        "billingPeriod": "1 dia",
+        "purpose": "Abrigo e alimentação pra cavalo ou montaria"
+      },
+      "shortDescription": "Serviço. 2 Ryos/dia. Abrigo pra montaria.",
+      "description": "Custo diário de abrigar uma montaria em estábulo (incluindo alimentação básica). 2 Ryos por dia. Fonte: Livro Básico p. 140."
+    },
+    {
+      "code": "sela",
+      "name": "Sela",
+      "kind": "GENERAL",
+      "subtype": "ferramenta_comum",
+      "category": null,
+      "price": 20,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "purpose": "Necessária pra montaria adequada de cavalos. Permanece com a montaria."
+      },
+      "shortDescription": "Sela pra cavalo. 20 Ryos.",
+      "description": "Sela de couro pra cavalgar com conforto e controle. Permanece com a montaria (não ocupa compartimento do personagem). Fonte: Livro Básico p. 140."
+    },
+    {
+      "code": "carroca",
+      "name": "Carroça",
+      "kind": "GENERAL",
+      "subtype": "veiculo",
+      "category": null,
+      "price": 30,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {
+        "narrative": "Necessita de 1 cavalo (ou similar) pra puxar"
+      },
+      "effects": {
+        "purpose": "Transporte de carga/mercadoria. Veículo aberto puxado por animal."
+      },
+      "shortDescription": "Veículo aberto pra carga. 30 Ryos.",
+      "description": "Carroça simples puxada por cavalo. Útil pra transporte de carga e mercadoria. Veículo aberto, sem conforto pra passageiros. Fonte: Livro Básico p. 140."
+    },
+    {
+      "code": "carruagem",
+      "name": "Carruagem",
+      "kind": "GENERAL",
+      "subtype": "veiculo",
+      "category": null,
+      "price": 100,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {
+        "narrative": "Necessita de cavalo(s) pra puxar"
+      },
+      "effects": {
+        "purpose": "Transporte fechado e mais confortável de passageiros. Geralmente sinal de status."
+      },
+      "shortDescription": "Veículo fechado pra passageiros. 100 Ryos.",
+      "description": "Carruagem fechada, mais confortável que carroça. Transporte de passageiros — geralmente sinal de status. Necessita de cavalos pra puxar. Fonte: Livro Básico p. 140."
+    },
+    {
+      "code": "canoa",
+      "name": "Canoa",
+      "kind": "GENERAL",
+      "subtype": "veiculo",
+      "category": null,
+      "price": 50,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "purpose": "Navegação em rios, lagos e travessias curtas",
+        "capacity": "1-3 pessoas"
+      },
+      "shortDescription": "Embarcação simples. 50 Ryos.",
+      "description": "Canoa pequena pra navegação em rios, lagos e travessias curtas. Capacidade: 1-3 pessoas. Fonte: Livro Básico p. 140."
+    },
+    {
+      "code": "conducao_terrestre",
+      "name": "Condução Terrestre",
+      "kind": "GENERAL",
+      "subtype": "servico",
+      "category": null,
+      "price": 1,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "isService": true,
+        "billingPeriod": "1 km",
+        "purpose": "Serviço de transporte por terra (caravana, carruagem alugada, etc)"
+      },
+      "shortDescription": "Serviço. 1 Ryo/km. Transporte terrestre.",
+      "description": "Serviço de transporte por terra — pagamento por quilômetro percorrido. Inclui caravanas, carruagens alugadas, carona em comboios. 1 Ryo por km. Fonte: Livro Básico p. 140."
+    },
+    {
+      "code": "conducao_maritima",
+      "name": "Condução Marítima",
+      "kind": "GENERAL",
+      "subtype": "servico",
+      "category": null,
+      "price": 3,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "isService": true,
+        "billingPeriod": "1 km",
+        "purpose": "Serviço de transporte marítimo (barcos, navios mercantes, balsas)"
+      },
+      "shortDescription": "Serviço. 3 Ryos/km. Transporte marítimo.",
+      "description": "Serviço de transporte marítimo — barcos, navios mercantes, balsas. 3 Ryos por km — mais caro que terrestre. Fonte: Livro Básico p. 140."
+    },
+    {
+      "code": "bebida",
+      "name": "Bebida",
+      "kind": "GENERAL",
+      "subtype": "servico",
+      "category": null,
+      "price": 1,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "isService": true,
+        "purpose": "Bebida em taverna/estabelecimento. Saquê, chá, água."
+      },
+      "shortDescription": "Serviço. 1 Ryo. Bebida em taverna.",
+      "description": "Bebida comum servida em taverna ou estabelecimento (saquê, chá, água, etc). 1 Ryo. Fonte: Livro Básico p. 140."
+    },
+    {
+      "code": "estadia_por_noite",
+      "name": "Estadia (por noite)",
+      "kind": "GENERAL",
+      "subtype": "servico",
+      "category": null,
+      "price": 5,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "isService": true,
+        "billingPeriod": "1 noite",
+        "purpose": "Pousada/estalagem. Permite descanso adequado pra recuperação."
+      },
+      "shortDescription": "Serviço. 5 Ryos/noite. Pousada.",
+      "description": "Quarto em pousada/estalagem por noite. Permite descanso adequado pra recuperação completa de Vit/Chakra (alternativa ao saco de dormir). 5 Ryos por noite. Fonte: Livro Básico p. 140."
+    },
+    {
+      "code": "refeicao",
+      "name": "Refeição",
+      "kind": "GENERAL",
+      "subtype": "servico",
+      "category": null,
+      "price": 3,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "isService": true,
+        "purpose": "Refeição completa em estabelecimento (alternativa à ração de viagem)"
+      },
+      "shortDescription": "Serviço. 3 Ryos. Refeição em estabelecimento.",
+      "description": "Refeição completa em taverna ou estalagem. Alternativa mais cara mas saborosa à ração de viagem. 3 Ryos. Fonte: Livro Básico p. 140."
+    },
+    {
+      "code": "mensageiro",
+      "name": "Mensageiro",
+      "kind": "GENERAL",
+      "subtype": "servico",
+      "category": null,
+      "price": 1,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "isService": true,
+        "billingPeriod": "1 km",
+        "purpose": "Serviço de mensageiro pra entregas escritas (alternativa ao Selo Misshi)"
+      },
+      "shortDescription": "Serviço. 1 Ryo/km. Entrega de mensagens.",
+      "description": "Contratar um mensageiro pra entregar uma mensagem escrita. 1 Ryo por km. Alternativa não-mística ao Selo Misshi (Fuuinjutsu Nv3). Fonte: Livro Básico p. 140."
+    }
+  ]
+}

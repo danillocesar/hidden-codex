@@ -47,7 +47,7 @@ export default function HomePage() {
         </div>
 
         <div className="mt-10 flex flex-col items-center gap-2 text-ink-faint">
-          <span className="font-jp text-2xl text-ice/40">忍</span>
+          <span className="font-jp text-2xl text-ice/40">影</span>
           <span className="font-display text-[9px] uppercase tracking-[0.4em]">
             Fase F0 · Bootstrap
           </span>

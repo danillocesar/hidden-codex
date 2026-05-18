@@ -1,0 +1,347 @@
+{
+  "_meta": {
+    "description": "Lote 7a — Aptidões do Hijutsu Samurai. 8 aptidões restritas categorizadas como hijutsu_samurai. Fecha buraco identificado na auditoria: tu listou 6, mas o livro tem 8 (Yojinbo e Issen estavam faltando na narrativa do user). Aparar Lâmina é sub-técnica de Espadachim (Des 10), não aptidão separada — segue o mesmo padrão de Corte Rápido dentro de Iaido.",
+    "sources": [
+      "Livro de Hijutsus 4.1b p. 75-79 (capítulo Samurai)"
+    ],
+    "extractedAt": "2026-05-13",
+    "schemaVersion": 1,
+    "appliesToTable": "aptitudes",
+    "expectedItemCount": 8,
+    "hijutsuRestrictions": {
+      "noNinjutsu": "Samurai não pode comprar qualquer poder comum nem qualquer Aptidão Shinobi. Também não tem direito a usar os jutsus básicos Bunshin no Jutsu, Henge no Jutsu e Shunshin no Jutsu. (Opcionalmente retirável pelo Mestre.)",
+      "noManobras": "Várias aptidões deste Hijutsu são incompatíveis com Aptidões de Manobra. Quando aplicável, está documentado em effects.noManobras: true. Aptidões afetadas: Yojinbo, Issen (Hadan), Iaigiri, Corte de Chakra (sub-técnica do Sabre Samurai). Impedir Selos tem regra especial — não pode ser usada em resposta a técnica defensiva do inimigo que você mesmo atacou."
+    },
+    "notes": "Schema idêntico ao Lote 5b (clan-restricted): category RESTRITA, prerequisites.type='hijutsu_samurai' como discriminador do Hijutsu. Espadachim é a aptidão base sem pré-req de atributo (ponto de entrada do Hijutsu). Todas as outras dependem dela direta ou transitivamente.",
+    "subTechniquesAsEvolutions": "Aparar Lâmina, Corte Rápido (Iaido), Lâmina de Chakra + Corte de Chakra + Especialista em Espadas (Sabre Samurai), Hadan (Issen), Seguir Passo (Impedir Selos) — modeladas em effects.subTechniques porque NÃO são aptidões compradas separadamente, são parte integrante da aptidão pai. Mesma decisão que Mímica Sharingan dentro de Nidan Sharingan no 5b.",
+    "subTypeDiscriminator": "Cada subTechnique declara `subType` para o motor consumir uniformemente: 'passive_buff' (sempre ativo), 'reactive_buff' (modifica reação específica), 'conditional_buff' (trigger contextual), 'active_ability' (ação consciente sustentada), 'active_attack' (ataque consumindo recurso), 'active_reaction' (reação a ação inimiga). Introduzido nesse lote como pattern; também aplicado em aptitudes-kaguya.json (7c)."
+  },
+  "data": [
+    {
+      "code": "espadachim",
+      "name": "Espadachim",
+      "category": "RESTRITA",
+      "shortDescription": "Hijutsu Samurai (base). Manobras especiais com espada leve/mediana sem penalidade -2. Recebe Desarme Agressivo. Sub-técnica: Aparar Lâmina (Des 10).",
+      "description": "Você é especializado na luta com espadas. Empunhando uma espada leve ou mediana, pode utilizar as manobras especiais de combate com a precisão da arma e sem a penalidade de -2 no teste (exceto Agarrar, que necessita de mãos livres). Adicionalmente, recebe os benefícios da aptidão Desarme Agressivo. Aptidão de entrada do Hijutsu Samurai — pré-requisito de todas as demais aptidões samurai. Fonte: Livro de Hijutsus p. 76.",
+      "prerequisites": {
+        "type": "hijutsu_samurai"
+      },
+      "effects": {
+        "type": "weapon_specialization",
+        "weaponCategory": "espada_leve_ou_mediana",
+        "specialManeuverPenaltyRemoved": -2,
+        "specialManeuverException": "agarrar_requer_maos_livres",
+        "grants": [
+          "desarme_agressivo"
+        ],
+        "subTechniques": [
+          {
+            "code": "aparar_lamina",
+            "name": "Aparar Lâmina",
+            "subType": "reactive_buff",
+            "prerequisites": {
+              "attributes": {
+                "des": 10
+              }
+            },
+            "description": "Quando usa a reação de Bloqueio contra uma arma cortante, desvia o fio da lâmina do inimigo sem enfrentá-la diretamente. Impede que sua própria espada seja danificada ou destruída por armas que ignoram dureza. Fonte: Livro de Hijutsus p. 76.",
+            "trigger": "bloqueio_contra_arma_cortante",
+            "effect": "espada_propria_imune_a_dano_e_destruicao_por_armas_que_ignoram_dureza"
+          }
+        ],
+        "grantsBypassesPrereq": true,
+        "grantsBypassesPrereqNote": "Espadachim concede 'desarme_agressivo' diretamente; pré-req normal pede For 13 + Especialista. Sem bypass."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "sabre_samurai",
+      "name": "Sabre Samurai",
+      "category": "RESTRITA",
+      "shortDescription": "Hijutsu Samurai. Usar Arma Marcial pra todas espadas (exceto pesadas). Sub-técnicas: Especialista em Espadas, Lâmina de Chakra, Corte de Chakra.",
+      "description": "Os samurais são mestres no manejo das espadas, podendo usá-las tanto de forma pura quanto com chakra, estendendo e moldando o formato de suas lâminas. Recebe Usar Arma Marcial para todos os tipos de espada (exceto armas pesadas) — ainda precisa cumprir os requisitos de Força ou Destreza para usar as armas. Fonte: Livro de Hijutsus p. 76-77.",
+      "prerequisites": {
+        "type": "hijutsu_samurai",
+        "aptitudes": [
+          "espadachim"
+        ],
+        "skills": {
+          "cc": 12
+        }
+      },
+      "effects": {
+        "type": "weapon_specialization_advanced",
+        "grants": {
+          "usarArmaMarcial": "todas_espadas_exceto_pesadas",
+          "stillRequiresForOrDes": true
+        },
+        "subTechniques": [
+          {
+            "code": "especialista_em_espadas",
+            "name": "Especialista em Espadas",
+            "subType": "passive_buff",
+            "description": "Todos os seus testes de CC usando espadas afetadas por esta aptidão recebem o bônus da aptidão Especialista. Fonte: Livro de Hijutsus p. 76.",
+            "effect": "bonus_especialista_em_testes_cc_com_espadas_afetadas"
+          },
+          {
+            "code": "lamina_de_chakra",
+            "name": "Lâmina de Chakra",
+            "subType": "active_ability",
+            "action": "parcial",
+            "duration": "sustentada",
+            "chakraCost": 3,
+            "description": "Envolve de chakra a lâmina das espadas que estiver empunhando, como um uso do efeito Energizar. Opcionalmente, pode moldar a lâmina de chakra para ter aparência diferente (machado, etc.). Fonte: Livro de Hijutsus p. 76-77.",
+            "effect": "energizar_em_espadas_empunhadas",
+            "moldableShape": true
+          },
+          {
+            "code": "corte_de_chakra",
+            "name": "Corte de Chakra",
+            "subType": "active_attack",
+            "action": "padrao",
+            "duration": "instantanea",
+            "description": "Com a Lâmina de Chakra ativa, brande a espada no ar para disparar um projétil de chakra. Teste de CC, alcance curto (5m + 1m por Espírito), dano de um ataque comum com a Lâmina de Chakra. Custo de chakra = metade do Espírito. NÃO pode ser utilizada com Aptidões de Manobra. Fonte: Livro de Hijutsus p. 77.",
+            "rollType": "CC",
+            "rangeFormula": "5m + 1m por Espírito",
+            "rangeCategory": "Curto",
+            "damageFormula": "ataque_comum_com_lamina_de_chakra",
+            "chakraCostFormula": "ceil(esp / 2)",
+            "requires": "lamina_de_chakra_ativa",
+            "noManobras": true
+          }
+        ],
+        "grantsBypassesPrereq": true,
+        "grantsBypassesPrereqNote": "Sabre Samurai concede 'usar_arma_marcial' diretamente pra todas espadas, sem que personagem precise comprar individualmente cada Usar Arma."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "iaido",
+      "name": "Iaido",
+      "category": "RESTRITA",
+      "shortDescription": "Hijutsu Samurai. Acuidade ao usar espada leve/mediana. Katana sem ambidestria = +1 dano. Sub-técnica: Corte Rápido.",
+      "description": "Iaido é um estilo específico de kenjutsu (luta com espadas) que se preocupa com movimentos suaves e controlados no momento de sacar a espada da bainha, atingindo ou cortando o oponente, removendo o sangue da lâmina e guardando a espada de volta. O movimento linear e a força aplicados para sacar resultam em cortes mais rápidos e fortes que com a espada já sacada. Recebe o benefício da aptidão Acuidade ao usar qualquer espada leve ou mediana. Atacar com uma katana (sem Ambidestria) concede +1 de bônus de dano. Fonte: Livro de Hijutsus p. 77.",
+      "prerequisites": {
+        "type": "hijutsu_samurai",
+        "aptitudes": [
+          "espadachim",
+          "saque_rapido"
+        ],
+        "attributes": {
+          "des": 8
+        }
+      },
+      "effects": {
+        "type": "weapon_style",
+        "grants": [
+          "acuidade_para_espadas_leves_e_medianas"
+        ],
+        "katanaBonus": {
+          "damageBonus": 1,
+          "requires": "sem_ambidestria"
+        },
+        "subTechniques": [
+          {
+            "code": "corte_rapido",
+            "name": "Corte Rápido",
+            "subType": "conditional_buff",
+            "description": "Quando ataca um inimigo imediatamente após sacar a espada, pode utilizar Destreza no cálculo de dano no lugar de Força; e também pode realizar uma Finta como ação livre. Deve ser usada com uma única espada em mãos. Incompatível com armas duplas. Fonte: Livro de Hijutsus p. 77.",
+            "trigger": "ataque_imediatamente_apos_sacar",
+            "damageAttributeSwap": "des_no_lugar_de_for",
+            "fintaAsLivre": true,
+            "constraints": [
+              "uma_espada_unica",
+              "incompativel_com_armas_duplas"
+            ]
+          }
+        ],
+        "grantsBypassesPrereq": true,
+        "grantsBypassesPrereqNote": "Iaido concede 'acuidade' diretamente pra espadas leves/medianas, sem que personagem precise comprar Acuidade que tem pré-req Des 13."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "yojinbo",
+      "name": "Yojinbo",
+      "category": "RESTRITA",
+      "shortDescription": "Hijutsu Samurai. Investida + Saque + ataque com +0,5 grau de dano. Sem penalidades de defesa da Investida. NÃO usa Aptidões de Manobra.",
+      "description": "Você avança contra o inimigo e desfere um golpe rápido com a espada. Realiza a manobra Investida, saca a espada e ataca o inimigo. Seu ataque recebe +0,5 no grau de dano. Caso o dano final total tenha valor decimal, aproxime para cima. Não recebe as penalidades de defesa da manobra Investida quando ataca com esta aptidão, porém NÃO pode utilizar outras manobras. Técnica incompatível com armas duplas e deve ser usada com uma única espada em mãos, que deve estar guardada na bainha antes do ataque. NÃO pode ser utilizada com Aptidões de Manobra. Fonte: Livro de Hijutsus p. 77.",
+      "prerequisites": {
+        "type": "hijutsu_samurai",
+        "aptitudes": [
+          "espadachim",
+          "saque_rapido",
+          "iaido",
+          "ataque_em_movimento"
+        ],
+        "attributes": {
+          "des": 10
+        }
+      },
+      "effects": {
+        "type": "combo_attack",
+        "combinesManeuvers": [
+          "investida",
+          "saque",
+          "ataque"
+        ],
+        "damageGradeBonus": 0.5,
+        "roundDamageUp": true,
+        "investidaDefensePenaltyImmunity": true,
+        "noOtherManobras": true,
+        "noManobras": true,
+        "constraints": [
+          "uma_espada_unica",
+          "incompativel_com_armas_duplas",
+          "espada_na_bainha_antes_do_ataque"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "issen",
+      "name": "Issen",
+      "category": "RESTRITA",
+      "shortDescription": "Hijutsu Samurai. Corte de Chakra com 2 espadas dobra dano de arma. Sub-técnica: Hadan (interrupção de aproximação).",
+      "description": "Seu Corte de Chakra fica mais poderoso ao ser usado com duas espadas. Quando usa duas espadas durante a técnica Corte de Chakra, pode dobrar o dano de arma no cálculo de dano base do ataque. Fonte: Livro de Hijutsus p. 77-78.",
+      "prerequisites": {
+        "type": "hijutsu_samurai",
+        "aptitudes": [
+          "sabre_samurai",
+          "ambidestria"
+        ],
+        "attributes": {
+          "des": 12,
+          "esp": 12
+        }
+      },
+      "effects": {
+        "type": "weapon_specialization_enhancement",
+        "augmentsAptitude": "sabre_samurai",
+        "corteDeChakraWithDualSwords": {
+          "weaponDamageMultiplier": 2,
+          "appliesTo": "dano_base"
+        },
+        "subTechniques": [
+          {
+            "code": "hadan",
+            "name": "Hadan",
+            "subType": "active_reaction",
+            "action": "completa",
+            "duration": "instantanea",
+            "description": "Somente usável quando um inimigo a 10m+ de distância tentar se aproximar — deve anunciar a técnica logo após o inimigo informar a ação. Realiza um ataque com o Corte de Chakra. Caso bem-sucedido, inimigo tem sua movimentação interrompida, perdendo a ação de movimento mas mantendo a ação padrão (mesmo que tenha tentado atacar usando Investida). NÃO pode ser utilizada com Aptidões de Manobra. Fonte: Livro de Hijutsus p. 78.",
+            "triggerCondition": "inimigo_a_10m_ou_mais_tenta_aproximar",
+            "announceTimingRequired": "logo_apos_inimigo_informar_acao",
+            "uses": "corte_de_chakra",
+            "onSuccess": "interrompe_movimento_inimigo_perde_acao_movimento_mantem_padrao",
+            "investidaInterruption": true,
+            "noManobras": true
+          }
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "impedir_selos",
+      "name": "Impedir Selos",
+      "category": "RESTRITA",
+      "shortDescription": "Hijutsu Samurai. Saca + ataca como ação parcial impedindo selos do inimigo. Sub-técnica: Seguir Passo (-3 CD vs Passo Seguro).",
+      "description": "É capaz de impedir que o oponente realize selos de mão ao atacá-lo rapidamente, forçando uma defesa. Quando um inimigo tentar realizar selos de mão dentro de seu alcance corpo-a-corpo, pode sacar a arma e imediatamente atacá-lo com ação parcial. Este ataque NÃO causa dano e é automaticamente esquivado, porém impede a realização dos selos. NÃO é realizado teste de ataque ou defesa, e possíveis efeitos resultantes da esquiva bem-sucedida não são ativados. A técnica ou poder que seria usado pelo inimigo é imediatamente interrompida — ele não poderá utilizar poderes e técnicas dependentes de selos de mão durante esse turno, mas não perde sua ação, podendo refazê-la como achar melhor. NÃO pode ser usada em resposta a uma técnica defensiva do inimigo que você mesmo atacou. As técnicas desta aptidão são incompatíveis com armas duplas e devem ser usadas com uma única espada que está guardada na bainha. Fonte: Livro de Hijutsus p. 78.",
+      "prerequisites": {
+        "type": "hijutsu_samurai",
+        "aptitudes": [
+          "espadachim",
+          "saque_rapido",
+          "iaido"
+        ],
+        "attributes": {
+          "des": 12
+        }
+      },
+      "effects": {
+        "type": "seal_interruption",
+        "trigger": "inimigo_realiza_selos_no_alcance_cc",
+        "action": "parcial",
+        "noDamage": true,
+        "autoEsquivado": true,
+        "noEsquivaSideEffects": true,
+        "noAttackOrDefenseTest": true,
+        "interruptsTechnique": true,
+        "interruptionScope": "poderes_e_tecnicas_dependentes_de_selos_durante_o_turno",
+        "enemyDoesNotLoseAction": "pode_refazer_acao_como_achar_melhor",
+        "noResponseToDefensiveTechniqueFromTargetYouAttacked": true,
+        "constraints": [
+          "uma_espada_unica",
+          "incompativel_com_armas_duplas",
+          "espada_na_bainha_antes"
+        ],
+        "subTechniques": [
+          {
+            "code": "seguir_passo",
+            "name": "Seguir Passo",
+            "subType": "active_reaction",
+            "description": "Caso o oponente tenha realizado Passo Seguro e tente atacá-lo com técnica ou poder com selos de mão, pode gastar ação parcial para forçá-lo a receber -3 de precisão em seu teste de CD, como se ainda estivesse em seu alcance corpo-a-corpo, ou realizar teste de combate próximo (à escolha do inimigo — ver perícia Concentração no Livro Básico p. 40). Fonte: Livro de Hijutsus p. 78.",
+            "trigger": "inimigo_usou_passo_seguro_e_tenta_tecnica_com_selos",
+            "action": "parcial",
+            "cdPrecisionPenalty": -3,
+            "alternativeForEnemy": "teste_de_combate_proximo_via_concentracao"
+          }
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "iaigiri",
+      "name": "Iaigiri",
+      "category": "RESTRITA",
+      "shortDescription": "Hijutsu Samurai. Golpe de Misericórdia com Corte Rápido + 1 grau de dano (total 5). NÃO usa Aptidões de Manobra.",
+      "description": "A última forma do Iaido, desenvolvida para finalizar inimigos. Esta manobra somente pode ser usada como Golpe de Misericórdia. Ataca o alvo usando o Corte Rápido do Iaido e recebe +1 em seu grau de dano (total de grau de dano 5 para o Golpe de Misericórdia). NÃO pode ser utilizada com Aptidões de Manobra. Fonte: Livro de Hijutsus p. 78.",
+      "prerequisites": {
+        "type": "hijutsu_samurai",
+        "aptitudes": [
+          "espadachim",
+          "saque_rapido",
+          "iaido"
+        ],
+        "attributes": {
+          "des": 14
+        }
+      },
+      "effects": {
+        "type": "coup_de_grace",
+        "onlyAsGolpeDeMisericordia": true,
+        "uses": "corte_rapido",
+        "damageGradeBonus": 1,
+        "totalDamageGradeOnCoupDeGrace": 5,
+        "noManobras": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "armadura_samurai",
+      "name": "Armadura Samurai",
+      "category": "RESTRITA",
+      "shortDescription": "Hijutsu Samurai. Concede Usar Armaduras Pesadas grátis. Habilita Armadura de Batalha Samurai.",
+      "description": "Os samurais desenvolveram suas armaduras pesadas ao longo dos anos, para fornecer proteção sem limitar os movimentos. Recebe os benefícios da aptidão Usar Armaduras Pesadas. Adicionalmente, torna-se apto a usar a exclusiva Armadura de Batalha Samurai. Fonte: Livro de Hijutsus p. 78-79.",
+      "prerequisites": {
+        "type": "hijutsu_samurai",
+        "attributes_one_of": {
+          "for": 10,
+          "vig": 12
+        }
+      },
+      "effects": {
+        "type": "armor_proficiency_with_grant",
+        "grants": [
+          "usar_armaduras_pesadas"
+        ],
+        "grantsBypassesPrereq": true,
+        "grantsBypassesPrereqNote": "armadura_samurai concede usar_armaduras_pesadas sem que o personagem precise cumprir o pré-req normal dela (For 10 OU Vig 15). O pré-req da armadura_samurai é menos exigente (For 10 OU Vig 12). Motor deve interpretar 'grants' como concessão direta, NÃO como atalho que ainda valida pré-req da aptidão concedida.",
+        "unlocksEquipment": [
+          "armadura_de_batalha_samurai"
+        ]
+      },
+      "evolutions": []
+    }
+  ]
+}

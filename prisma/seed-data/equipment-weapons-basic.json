@@ -1,0 +1,995 @@
+{
+  "_meta": {
+    "description": "Lote 6a — Armas Simples + Armas Marciais do Livro Básico. Primeira onda da fase 6 (Equipamentos). Inclui categoria 'WEAPON' com discriminadores subtype/category (simples/marcial × leve/mediana/longa/pesada/arremesso/disparo/explosivo). Próximos lotes: 6b (Armas Especiais), 6c (Armas de Fogo GAS), 6d (Armas novas/revisadas GAS), 6e (Armaduras), 6f (Ferramentas Shinobi), 6g (Consumíveis), 6h (Equipamento Geral), 6i (Armas exclusivas de Hijutsu).",
+    "sources": [
+      "Livro Básico p. 128-141 (Equipamentos — Tabelas de Armas)",
+      "Livro Básico p. 130-136 (Descrição das Armas)",
+      "Livro Básico p. 137-139 (Tabela completa)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "schemaNotes": "Schema do modelo Equipment (nova tabela): { id, code, name, kind (enum), subtype (string), category (enum WeaponCategory), price, damage, range, critRange, slots, damageType, prerequisites JSONB, effects JSONB, shortDescription, description }. Damage como string ('+2' ou '+1/+1' pra duplas). Slots como objeto { items, compartments }. Migration `replace_equipment_for_lote_6a` aplicada em 2026-05-12 (drop EquipmentCategory antigo, criar EquipmentKind + WeaponCategory, alter tabela equipments).",
+    "expectedItemCount": 42,
+    "futureLotes": ["6b", "6c", "6d", "6e", "6f", "6g", "6h", "6i"],
+    "unmodeledAptitudes": [
+      "usar_arma_aian_nakkuru",
+      "usar_arma_kousen",
+      "usar_arma_nunchaku",
+      "usar_arma_sai",
+      "usar_arma_wakizashi",
+      "usar_arma_katana",
+      "usar_arma_chicote",
+      "usar_arma_chokuto",
+      "usar_arma_cimitarra",
+      "usar_arma_corrente_com_cravos",
+      "usar_arma_espada_longa",
+      "usar_arma_florete",
+      "usar_arma_machado",
+      "usar_arma_martelo_de_guerra",
+      "usar_arma_foice",
+      "usar_arma_leque_gigante",
+      "usar_arma_espada_de_duas_laminas",
+      "usar_arma_espada_grande",
+      "usar_arma_machado_grande",
+      "usar_arma_fuuma_shuriken",
+      "usar_arma_arco_composto",
+      "usar_arma_besta_pesada"
+    ],
+    "unmodeledAptitudesNotes": "22 variantes parametrizadas de 'usar_arma' (5a). Cada arma marcial referencia 'usar_arma_<codigo_da_arma>' em prerequisites — o motor deve interpretar como CharacterAptitude (code='usar_arma', parameter='<codigo>'). Mesma pendência arquitetural acumulada do Lote 5 (guerreiro_pesadas, especialista_armas_longas, etc.). Validador (scripts/validate-seed-data.ts) demota refs nesta lista de error para info."
+  },
+  "data": [
+    {
+      "code": "ataque_desarmado",
+      "name": "Ataque Desarmado",
+      "kind": "WEAPON",
+      "subtype": "simples",
+      "category": "DESARMADO",
+      "price": 0,
+      "damage": "+0",
+      "range": null,
+      "critRange": "15-16",
+      "slots": null,
+      "damageType": "esmagamento",
+      "prerequisites": {},
+      "effects": {
+        "nonLethalByDefault": true,
+        "compatibleAptitudes": ["especialista_desarmado", "maestria_desarmado", "punho_de_ferro"]
+      },
+      "shortDescription": "Soco, chute, qualquer golpe corporal. Dano não-letal.",
+      "description": "Pode atacar com soco, chute ou qualquer outro golpe que use o próprio corpo, como se fosse uma arma de corpo-a-corpo. Causa apenas dano não-letal. Pode escolher Ataque Desarmado para aptidões como Especialista. Fonte: Livro Básico p. 131."
+    },
+    {
+      "code": "espada_curta",
+      "name": "Espada Curta",
+      "kind": "WEAPON",
+      "subtype": "simples",
+      "category": "LEVE",
+      "price": 8,
+      "damage": "+2",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes_one_of": { "for": 8, "des": 8 }
+      },
+      "effects": {
+        "compatibleAptitudes": ["acuidade"]
+      },
+      "shortDescription": "Tipo mais comum de espada, 40-50cm. Acuidade se aplica.",
+      "description": "É o tipo mais comum de espada, muito usada por soldados, legionários e guardas de milícia — ou como arma secundária. Mede entre 40 e 50cm de comprimento. Acuidade se aplica. Fonte: Livro Básico p. 132."
+    },
+    {
+      "code": "tanto",
+      "name": "Tantō",
+      "kind": "WEAPON",
+      "subtype": "simples",
+      "category": "LEVE",
+      "price": 10,
+      "damage": "+2",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes_one_of": { "for": 8, "des": 8 },
+        "bypassPrerequisite": "pode_usar_sem_atributo_mas_dano_-1"
+      },
+      "effects": {
+        "noPrereqPenalty": "-1 dano base se usar sem cumprir pré-req de For/Des",
+        "compatibleAptitudes": ["acuidade"]
+      },
+      "shortDescription": "Pequena espada usada por chuunin ou superior. Pode usar sem pré-req de atributo (-1 dano).",
+      "description": "Simplesmente uma pequena espada, usada por diversos ninjas de nível chuunin ou maior, mesmo os ninjas médicos. Normalmente amarrada nas costas, é fabricada em diversas versões. A versão da Anbu Raiz, por exemplo, é reta, com dois gumes e sem ponta, destinada para cortes e defesas. Pode usar mesmo sem cumprir o pré-requisito mínimo de Força ou Destreza para armas leves, mas o dano base é reduzido em -1. Fonte: Livro Básico p. 134."
+    },
+    {
+      "code": "tonfa",
+      "name": "Tonfa (par)",
+      "kind": "WEAPON",
+      "subtype": "simples",
+      "category": "LEVE",
+      "price": 8,
+      "damage": "+1/+1",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1, "asPair": true },
+      "damageType": "esmagamento",
+      "prerequisites": {
+        "attributes_one_of": { "for": 8, "des": 8 },
+        "aptitudes_for_pair": ["ambidestria"]
+      },
+      "effects": {
+        "isPair": true,
+        "compatibleAptitudes": ["acuidade", "ambidestria"]
+      },
+      "shortDescription": "Par de bastões curtos com cabo perpendicular. Arma em par — requer Ambidestria pra somar danos.",
+      "description": "Par de armas leves. Para somar os danos é necessária a aptidão Ambidestria. Fonte: Livro Básico p. 137 (tabela)."
+    },
+    {
+      "code": "clava",
+      "name": "Clava",
+      "kind": "WEAPON",
+      "subtype": "simples",
+      "category": "MEDIANA",
+      "price": 0,
+      "damage": "+3",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "esmagamento",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "des": 10 }
+      },
+      "effects": {
+        "easyToFind": true
+      },
+      "shortDescription": "Pedaço de madeira improvisado como arma. Preço zero.",
+      "description": "Um pedaço de madeira empunhado como arma, geralmente usado como arma improvisada, como um galho de árvore ou pedaço de mobília. Sendo fácil de conseguir, seu preço é zero. Fonte: Livro Básico p. 131."
+    },
+    {
+      "code": "lanca",
+      "name": "Lança",
+      "kind": "WEAPON",
+      "subtype": "simples",
+      "category": "MEDIANA",
+      "price": 2,
+      "damage": "+3",
+      "range": "10m",
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "des": 10 }
+      },
+      "effects": {
+        "canBeThrown": true,
+        "thrownAttackUsesCC": true,
+        "thrownDamageUsesForca": true
+      },
+      "shortDescription": "Haste de madeira com ponta afiada. Pode ser arremessada (CC + Força).",
+      "description": "É o nome de qualquer arma feita com uma haste de madeira e uma ponta afiada, natural ou metálica, com grande facilidade de fabricação. Pode ser arremessada usando a habilidade CC no teste de acerto e o atributo Força no cálculo de dano. Fonte: Livro Básico p. 133."
+    },
+    {
+      "code": "maca",
+      "name": "Maça",
+      "kind": "WEAPON",
+      "subtype": "simples",
+      "category": "MEDIANA",
+      "price": 12,
+      "damage": "+3",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "esmagamento",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "des": 10 }
+      },
+      "effects": {},
+      "shortDescription": "Bastão metálico com peso protuberante. Esmaga ossos sem derramar sangue.",
+      "description": "Bastão metálico com um peso cheio de protuberâncias na extremidade. Muito usada por religiosos que fazem votos de não derramar sangue. De fato, um golpe de maça nem sempre derrama sangue, mas esmaga ossos. Fonte: Livro Básico p. 133."
+    },
+    {
+      "code": "ninja_to",
+      "name": "Ninja-tō",
+      "kind": "WEAPON",
+      "subtype": "simples",
+      "category": "MEDIANA",
+      "price": 20,
+      "damage": "+3",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "des": 10 }
+      },
+      "effects": {
+        "compatibleAptitudes": ["acuidade"]
+      },
+      "shortDescription": "Sabre ninja, lâmina reta. Sacado nas costas em corte vertical. Acuidade se aplica.",
+      "description": "Este é o sabre ninja. A diferença entre a espada ninja e a katana samurai se dá na sua forma: a ninja-tō tem forma reta e ponta também reta, pois é carregada nas costas e sacada em um corte vertical para baixo; enquanto que a katana possui uma leve curvatura e ponta semicurva, e o samurai leva sua espada na altura da cintura, realizando um corte transversal de baixo para cima ou horizontal. Acuidade se aplica. Fonte: Livro Básico p. 133."
+    },
+    {
+      "code": "bastao",
+      "name": "Bastão",
+      "kind": "WEAPON",
+      "subtype": "simples",
+      "category": "LONGA",
+      "price": 0,
+      "damage": "+2/+2",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "esmagamento",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "des": 10 }
+      },
+      "effects": {
+        "isDoubleWeapon": true,
+        "withoutAmbidestria": "ainda usável, mas dano +2 (não +2/+2)",
+        "compatibleAptitudes": ["acuidade", "ambidestria", "bloqueio_ambidestro"]
+      },
+      "shortDescription": "Cajado duplo. Sem Ambidestria: dano +2 (não +2/+2). Acuidade se aplica.",
+      "description": "Um cajado apreciado por viajantes e camponeses. O bastão é uma arma dupla: pode ser usado com as aptidões Ambidestria e Bloqueio Ambidestro. Se não possuir Ambidestria, ainda pode usar o bastão, mas com dano de arma +2 (e não +2/+2). A leveza e versatilidade do bastão também o permite ser usado com a aptidão Acuidade. Fonte: Livro Básico p. 131."
+    },
+    {
+      "code": "pique",
+      "name": "Pique",
+      "kind": "WEAPON",
+      "subtype": "simples",
+      "category": "LONGA",
+      "price": 2,
+      "damage": "+3",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "des": 10 }
+      },
+      "effects": {},
+      "shortDescription": "Lança muito longa. Perfeita pra manter distância.",
+      "description": "Essencialmente uma lança muito longa, é a arma perfeita para guardas medrosos, que não querem ficar perto de seus inimigos. Fonte: Livro Básico p. 134."
+    },
+    {
+      "code": "tacape",
+      "name": "Tacape",
+      "kind": "WEAPON",
+      "subtype": "simples",
+      "category": "PESADA",
+      "price": 0,
+      "damage": "+4",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "esmagamento",
+      "prerequisites": {
+        "attributes": { "for": 12 }
+      },
+      "effects": {},
+      "shortDescription": "Versão maior da clava, com pregos. Preço zero.",
+      "description": "Versão mais perigosa da clava, maior e/ou com pregos. Não é uma arma muito elegante, mas faz o serviço. Fonte: Livro Básico p. 134."
+    },
+    {
+      "code": "senbon",
+      "name": "Senbon",
+      "kind": "WEAPON",
+      "subtype": "simples",
+      "category": "ARREMESSO",
+      "price": 3,
+      "damage": "+1",
+      "range": "20m",
+      "critRange": "15-16",
+      "slots": { "items": 15, "compartments": 1 },
+      "damageType": "perfuracao",
+      "prerequisites": {},
+      "effects": {
+        "throwCountForDamage": 3,
+        "alsoUsableAsCC": true,
+        "ccDamageUsesForca": true,
+        "cdDamageUsesDestreza": true,
+        "compatibleAptitudes": ["acuidade"]
+      },
+      "shortDescription": "Agulha metálica. Arremessa 3 com ação padrão. Também usável em CC.",
+      "description": "São agulhas compridas e metálicas, usadas como projéteis. Pode gastar uma ação padrão para arremessar três senbons. Além disso, o formato comprido das senbons ainda permite que estas possam ser usadas no combate corpo a corpo. Usar em CD: teste de CD + Destreza no dano. Usar em CC: como arma leve + Força no dano. Fonte: Livro Básico p. 133-134."
+    },
+    {
+      "code": "shuriken",
+      "name": "Shuriken",
+      "kind": "WEAPON",
+      "subtype": "simples",
+      "category": "ARREMESSO",
+      "price": 3,
+      "damage": "+1",
+      "range": "20m",
+      "critRange": "15-16",
+      "slots": { "items": 18, "compartments": 1 },
+      "damageType": "perfuracao",
+      "prerequisites": {},
+      "effects": {
+        "throwCountForDamage": 3
+      },
+      "shortDescription": "Projétil metálico em estrela. Arremessa 3 com ação padrão.",
+      "description": "Pequenos projéteis metálicos em forma de estrelas ou dardos. Pode gastar uma ação padrão para arremessar três shurikens. Fonte: Livro Básico p. 134."
+    },
+    {
+      "code": "kunai",
+      "name": "Kunai",
+      "kind": "WEAPON",
+      "subtype": "simples",
+      "category": "ARREMESSO",
+      "price": 2,
+      "damage": "+1",
+      "range": "15m",
+      "critRange": "15-16",
+      "slots": { "items": 10, "compartments": 1 },
+      "damageType": "perfuracao",
+      "prerequisites": {},
+      "effects": {
+        "throwCountForDamage": 3,
+        "alsoUsableAsCC": true,
+        "ccCategory": "leve",
+        "ccDamageUsesForca": true,
+        "cdDamageUsesDestreza": true,
+        "compatibleAptitudes": ["acuidade"]
+      },
+      "shortDescription": "Arma clássica ninja. Pequena, versátil. CC (Força) ou CD (Destreza).",
+      "description": "Armas clássicas dos ninjas, pequenas e versáteis. Podem ser utilizadas tanto no combate corporal quanto a distância, embora seu alcance seja menor do que o das shurikens. Usar em CD: teste de CD + Destreza no dano. Usar em CC: como arma leve + Força no dano. Fonte: Livro Básico p. 133."
+    },
+    {
+      "code": "arco_curto",
+      "name": "Arco Curto",
+      "kind": "WEAPON",
+      "subtype": "simples",
+      "category": "DISPARO",
+      "price": 30,
+      "damage": "+1",
+      "range": "25m",
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes": { "des": 8 }
+      },
+      "effects": {
+        "twoHanded": true,
+        "requiresAmmo": "flechas",
+        "ammoSharesSlot": true
+      },
+      "shortDescription": "Arco bastante comum, próprio para caçadas e ambientes fechados. Duas mãos.",
+      "description": "Este arco bastante comum é próprio para caçadas, pois o tamanho pequeno é apropriado para manuseio em florestas e outros ambientes fechados. Exige as duas mãos. Necessita de flechas como munição. Fonte: Livro Básico p. 131."
+    },
+    {
+      "code": "besta_leve",
+      "name": "Besta Leve",
+      "kind": "WEAPON",
+      "subtype": "simples",
+      "category": "DISPARO",
+      "price": 35,
+      "damage": "+2",
+      "range": "25m",
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes": { "des": 8 }
+      },
+      "effects": {
+        "twoHanded": true,
+        "requiresAmmo": "virotes",
+        "reloadAction": "movimento",
+        "ammoSharesSlot": true
+      },
+      "shortDescription": "Arco em coronha de madeira com gatilho. Recarga = movimento. Duas mãos.",
+      "description": "Um arco montado sobre uma coronha de madeira com um gatilho, a besta leve é uma arma que dispara virotes com grande potência. Recarregar uma besta leve é uma ação de movimento. Exige as duas mãos. Fonte: Livro Básico p. 131."
+    },
+    {
+      "code": "aian_nakkuru",
+      "name": "Aian Nakkuru (par)",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "LEVE",
+      "price": 100,
+      "damage": "+1/+1",
+      "range": "15m",
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1, "asPair": true },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "des": 10 },
+        "aptitudes": ["usar_arma_aian_nakkuru"]
+      },
+      "effects": {
+        "isPair": true,
+        "altDamageType": {
+          "soqueira": "esmagamento",
+          "lamina_com_ambidestria": "corte"
+        },
+        "canBeThrown": true,
+        "thrownDamageBonus": 1,
+        "thrownMaxOnePerHand": true,
+        "energizarBonus": 1,
+        "afiarFuutonBonus": 2,
+        "fixedToHand": true,
+        "disarmPenaltyAgainst": -2,
+        "compatibleAptitudes": ["acuidade", "ambidestria"]
+      },
+      "shortDescription": "Par de soqueiras com lâminas. Energizar +1, Afiar Fuuton +2. -2 vs Desarmar.",
+      "description": "Par de armas leves que consistem em soqueiras com lâminas ao final. São feitas com um metal especial que facilita a infusão de chakra (comum, elemento, hijutsu). Atacar com a parte da soqueira = esmagamento; com as lâminas (exige Ambidestria) = corte. Mesmo valor de dano de arma, só altera tipo. Também podem ser arremessadas: +1 dano de arma cada uma, máx 1 por mão. Em CC, com Energizar = +1 dano base; com Afiar (Fuuton) = +2 dano base. Não recebe bônus se usar só 1, nem em dobro com par. Ficam presas à mão (formato soqueira): -2 nos testes de Desarmar contra o usuário. Acuidade se aplica. Fonte: Livro Básico p. 130-131."
+    },
+    {
+      "code": "kousen",
+      "name": "Kousen (15m)",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "LEVE_COMPLEMENTAR",
+      "price": 2,
+      "damage": null,
+      "range": "15m",
+      "critRange": null,
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": null,
+      "prerequisites": {
+        "aptitudes": ["usar_arma_kousen"]
+      },
+      "effects": {
+        "isComplementary": true,
+        "mustBeUsedWithProjectile": true,
+        "compatibleProjectiles": ["shuriken", "kunai"],
+        "halvesItemsPerCompartment": true,
+        "maxRangeWithProjectile": "15m",
+        "manuevers": {
+          "puxar_projetil": "puxa de volta ou ataque adicional (-2 precisão)",
+          "amarrar": "6 projéteis amarrados → impedido (alvo desprevenido/indefeso); escapar = ação padrão sem teste OU movimento + For/Escapar Dif 17"
+        },
+        "attackTestType": "cd",
+        "noAttackMultiplo": true
+      },
+      "shortDescription": "Linhas de aço pra atrelar a kunais/shurikens. Manobras Puxar Projétil e Amarrar.",
+      "description": "Linhas de aço comumente usadas para prender inimigos ou realizar combinação de ataques com tarjas explosivas, kunais e shurikens. Arma complementar — deve ser usada amarrada em projéteis. Atacar dessa forma é teste de CD e não pode usar com Ataque Múltiplo. Projétil com Linha: shurikens/kunais com orifícios podem ter kousen amarrado (n° máximo de itens por compartimento reduzido pela metade). Cada projétil tem alcance máximo de 15m. Manobras: Puxar Projétil (após erro, puxa de volta ou ataca de novo com -2), Amarrar (6 projéteis → alvo impedido). Fonte: Livro Básico p. 133."
+    },
+    {
+      "code": "nunchaku",
+      "name": "Nunchaku",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "LEVE",
+      "price": 2,
+      "damage": "+2",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "esmagamento",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "des": 10 },
+        "aptitudes": ["usar_arma_nunchaku"]
+      },
+      "effects": {
+        "agarrarSemPenalidade": true,
+        "compatibleAptitudes": ["acuidade"]
+      },
+      "shortDescription": "Bastões curtos ligados por corrente. Executa Agarrar sem penalidades.",
+      "description": "Formado por dois bastões curtos de madeira ligados por uma corrente ou tira de couro, o nunchaku era usado por camponeses para separar o joio do trigo, sendo mais tarde adotado como arma. Pode executar a manobra Agarrar sem as penalidades comuns. Fonte: Livro Básico p. 134."
+    },
+    {
+      "code": "sai",
+      "name": "Sai (par)",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "LEVE",
+      "price": 5,
+      "damage": "+1/+1",
+      "range": "20m",
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1, "asPair": true },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "des": 10 },
+        "aptitudes": ["usar_arma_sai"]
+      },
+      "effects": {
+        "isPair": true,
+        "desarmarSemPenalidade": true,
+        "canBeThrown": true,
+        "thrownDamageBonus": 1,
+        "thrownMaxOnePerHand": true,
+        "compatibleAptitudes": ["acuidade", "ambidestria"]
+      },
+      "shortDescription": "Garfo metálico, executa Desarmar sem penalidades. Pode ser arremessada (+1 cada).",
+      "description": "Parecida com um grande garfo de metal, a adaga sai é própria para prender as armas do oponente. Pode executar a manobra Desarmar sem as penalidades comuns. Também podem ser usadas como armas de arremesso, +1 dano de arma cada uma. Só é possível arremessar uma única adaga com cada mão. Fonte: Livro Básico p. 134."
+    },
+    {
+      "code": "wakizashi",
+      "name": "Wakizashi",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "LEVE",
+      "price": 15,
+      "damage": "+2",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "des": 10 },
+        "aptitudes_one_of": ["usar_arma_wakizashi", "usar_arma_katana"]
+      },
+      "effects": {
+        "daisho": "Usar Arma: Katana concede proficiência automática + benefícios (ex: Especialista)",
+        "katanaWakizashiAmbidestria": "Com For ou Des 12 + Ambidestria, pode empunhar Katana + Wakizashi simultâneo",
+        "compatibleAptitudes": ["acuidade"]
+      },
+      "shortDescription": "Espada curta samurai. Daisho com Katana (proficiência compartilhada).",
+      "description": "Espada curta samurai. Daisho: Usar Arma: Katana concede proficiência também pra Wakizashi e estende todos os benefícios (ex: Especialista). Com Força ou Destreza 12, pode empunhar Katana + Wakizashi simultaneamente com Ambidestria. Acuidade se aplica. Fonte: Livro Básico p. 132."
+    },
+    {
+      "code": "chicote",
+      "name": "Chicote",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "MEDIANA",
+      "price": 1,
+      "damage": "+0",
+      "range": "4m",
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "des": 10 },
+        "aptitudes": ["usar_arma_chicote"]
+      },
+      "effects": {
+        "enrolaInimigo": true,
+        "desarmarSemPenalidade": true,
+        "derrubarSemPenalidade": true,
+        "compatibleAptitudes": ["acuidade"]
+      },
+      "shortDescription": "Atinge até 4m. Enrola e permite Desarmar/Derrubar sem penalidades.",
+      "description": "Arma mediana. Pode atacar inimigo a até 4m. Pode se enroscar nas mãos, pernas ou armas do adversário, permitindo realizar as manobras Desarmar e Derrubar sem as penalidades comuns. Acuidade se aplica. Fonte: Livro Básico p. 131."
+    },
+    {
+      "code": "chokuto",
+      "name": "Chokutō",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "MEDIANA",
+      "price": 20,
+      "damage": "+4",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "des": 10 },
+        "aptitudes": ["usar_arma_chokuto"]
+      },
+      "effects": {
+        "compatibleAptitudes": ["acuidade"]
+      },
+      "shortDescription": "Espada longa reta de um gume. Derivada das chinesas. Acuidade se aplica.",
+      "description": "Uma espada longa, com lâmina reta de um gume. É uma arma derivada das espadas da antiga China, normalmente levada amarrada na cintura. Acuidade se aplica. Fonte: Livro Básico p. 131."
+    },
+    {
+      "code": "cimitarra",
+      "name": "Cimitarra",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "MEDIANA",
+      "price": 20,
+      "damage": "+2",
+      "range": null,
+      "critRange": "14-15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "des": 10 },
+        "aptitudes": ["usar_arma_cimitarra"]
+      },
+      "effects": {
+        "extendedCritRange": true
+      },
+      "shortDescription": "Espada de lâmina curva, leve e muito afiada. Crítico estendido 14-15-16.",
+      "description": "Espada com a lâmina curva, leve e muito afiada. Crítico estendido: 14, 15 ou 16. Fonte: Livro Básico p. 131."
+    },
+    {
+      "code": "corrente_com_cravos",
+      "name": "Corrente com Cravos",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "MEDIANA",
+      "price": 25,
+      "damage": "+1",
+      "range": "4m",
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "des": 10 },
+        "aptitudes": ["usar_arma_corrente_com_cravos"]
+      },
+      "effects": {
+        "enrolaInimigo": true,
+        "desarmarSemPenalidade": true,
+        "derrubarSemPenalidade": true
+      },
+      "shortDescription": "Atinge até 4m. Enrola e permite Desarmar/Derrubar sem penalidades.",
+      "description": "Arma mediana. Pode atacar inimigo a até 4m. Pode se enroscar nas mãos, pernas ou armas do adversário, permitindo realizar as manobras Desarmar e Derrubar sem as penalidades comuns. Fonte: Livro Básico p. 132."
+    },
+    {
+      "code": "espada_longa",
+      "name": "Espada Longa",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "MEDIANA",
+      "price": 15,
+      "damage": "+4",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "des": 10 },
+        "aptitudes": ["usar_arma_espada_longa"]
+      },
+      "effects": {},
+      "shortDescription": "Espada de dois gumes com lâmina reta, 80cm a 1m.",
+      "description": "Espada de dois gumes com lâmina reta medindo entre 80cm e 1m. Fonte: Livro Básico p. 132."
+    },
+    {
+      "code": "florete",
+      "name": "Florete",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "MEDIANA",
+      "price": 20,
+      "damage": "+2",
+      "range": null,
+      "critRange": "14-15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "des": 10 },
+        "aptitudes": ["usar_arma_florete"]
+      },
+      "effects": {
+        "extendedCritRange": true
+      },
+      "shortDescription": "Lâmina leve e fina, muito precisa. Crítico estendido 14-15-16.",
+      "description": "A lâmina leve e fina desta espada torna a arma muito precisa. Crítico estendido: 14, 15 ou 16. Fonte: Livro Básico p. 132."
+    },
+    {
+      "code": "katana",
+      "name": "Katana",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "MEDIANA",
+      "price": 20,
+      "damage": "+3",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "des": 10 },
+        "aptitudes": ["usar_arma_katana"]
+      },
+      "effects": {
+        "daisho": "Inclui proficiência pra Wakizashi automaticamente",
+        "ambidestriaWithWakizashi": "Com For ou Des 12 + Ambidestria, pode empunhar Katana + Wakizashi simultâneo",
+        "compatibleAptitudes": ["acuidade"]
+      },
+      "shortDescription": "Espada samurai com leve curvatura. Daisho compartilha proficiência com Wakizashi.",
+      "description": "Espada samurai com leve curvatura e ponta semicurva. Samurai leva na altura da cintura, realizando corte transversal de baixo para cima ou horizontal. Daisho: Comprar Usar Arma: Katana também concede proficiência pra Wakizashi e estende todos os benefícios. Com Força ou Destreza 12 + Ambidestria, pode empunhar Katana + Wakizashi simultaneamente. Acuidade se aplica. Fonte: Livro Básico p. 132."
+    },
+    {
+      "code": "machado",
+      "name": "Machado",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "MEDIANA",
+      "price": 10,
+      "damage": "+3",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "des": 10 },
+        "aptitudes": ["usar_arma_machado"]
+      },
+      "effects": {},
+      "shortDescription": "Não é instrumento de corte de árvore — arma de combate.",
+      "description": "Diferente de uma machadinha, este não é um instrumento para corte de árvores, mas sim uma arma capaz de causar ferimentos terríveis. Fonte: Livro Básico p. 133."
+    },
+    {
+      "code": "martelo_de_guerra",
+      "name": "Martelo de Guerra",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "MEDIANA",
+      "price": 12,
+      "damage": "+3",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "esmagamento",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "des": 10 },
+        "aptitudes": ["usar_arma_martelo_de_guerra"]
+      },
+      "effects": {
+        "_note_gas_revision": "Versão GAS p. 66 ignora 2 dureza de objetos e corpos"
+      },
+      "shortDescription": "Eficiente contra inimigos resistentes a corte/perfuração. (GAS: ignora 2 dureza)",
+      "description": "Outra ferramenta modificada para combate, o martelo é muito eficiente contra alguns tipos inimigos mais resistentes a danos por corte ou perfuração. NOTA: o GAS revisa esta arma adicionando 'ignora 2 dureza de objetos e corpos' — será modelado no Lote 6d. Fonte: Livro Básico p. 133."
+    },
+    {
+      "code": "foice",
+      "name": "Foice",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "LONGA",
+      "price": 18,
+      "damage": "+4",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 2 },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "des": 10 },
+        "aptitudes": ["usar_arma_foice"]
+      },
+      "effects": {},
+      "shortDescription": "Arma longa de corte, duas mãos.",
+      "description": "Arma longa de corte. Duas mãos. Fonte: Livro Básico p. 139 (tabela)."
+    },
+    {
+      "code": "leque_gigante",
+      "name": "Leque Gigante",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "LONGA",
+      "price": 100,
+      "damage": "+2",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 2 },
+      "damageType": "esmagamento",
+      "prerequisites": {
+        "attributes": { "des": 8 },
+        "aptitudes": ["usar_arma_leque_gigante"]
+      },
+      "effects": {
+        "fuutonNoSeals": "Pode executar técnicas Fuuton sem selos (precisa 2m livre ao redor)",
+        "potencializarGratuito": "Permite Potencializar pra Fuuton sem comprar aptidão",
+        "compatibleAptitudes": ["acuidade"],
+        "_note_gas_revision": "GAS p. 65 expande: Técnica Poderosa/Domínio do Vento gratuitos; Afiar/Energizar Fuuton aumenta dano pra +4; alcance 2m"
+      },
+      "shortDescription": "Leque arena, natural de Suna. Fuuton sem selos. Potencializar grátis. (GAS expandido)",
+      "description": "Uma arma longa rara, natural da Vila Oculta da Areia. Suportes de aço, tecido interno reforçado. Quando fechado = esmagamento. Aberto = cria ventanias com chakra. Pode executar técnicas Fuuton sem selos de mão (precisa 2m livre ao redor). Permite usar Potencializar pra Fuuton gratuitamente, sem comprar aptidão. Embora seja arma longa, requer só Des 8. Acuidade se aplica. NOTA: o GAS revisa amplamente esta arma (Técnica Poderosa/Domínio do Vento gratuitos, Afiar/Energizar = +4 dano, alcance 2m) — será modelado no Lote 6d. Fonte: Livro Básico p. 133."
+    },
+    {
+      "code": "espada_de_duas_laminas",
+      "name": "Espada de Duas Lâminas",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "PESADA",
+      "price": 100,
+      "damage": "+2/+2",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 2 },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes": { "for": 12 },
+        "aptitudes": ["usar_arma_espada_de_duas_laminas"]
+      },
+      "effects": {
+        "isDoubleWeapon": true,
+        "needsAmbidestriaForDoubleDamage": true
+      },
+      "shortDescription": "Arma dupla pesada. Duas espadas longas em lados opostos do cabo.",
+      "description": "Arma dupla pesada. Duas espadas longas, presas em lados opostos de um mesmo cabo. Fonte: Livro Básico p. 132."
+    },
+    {
+      "code": "espada_grande",
+      "name": "Espada Grande",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "PESADA",
+      "price": 20,
+      "damage": "+5",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 2 },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes": { "for": 12 },
+        "aptitudes": ["usar_arma_espada_grande"]
+      },
+      "effects": {
+        "alsoUsableViaKubikiribochoProficiency": true
+      },
+      "shortDescription": "Espada 1,5m. Uma das armas mais poderosas que um Médio consegue empunhar.",
+      "description": "Enorme e muito pesada, tem 1,5m de comprimento. É uma das armas mais poderosas que uma criatura Média consegue empunhar. Nota: Usar Arma: Kubikiribōchō também permite usar Espada Grande. Fonte: Livro Básico p. 132."
+    },
+    {
+      "code": "machado_grande",
+      "name": "Machado Grande",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "PESADA",
+      "price": 50,
+      "damage": "+5",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 2 },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes": { "for": 12 },
+        "aptitudes": ["usar_arma_machado_grande"]
+      },
+      "effects": {
+        "fullActionAttack": {
+          "action": "completa",
+          "damageBonus": 1,
+          "blocksManobras": true
+        }
+      },
+      "shortDescription": "Machado de lâmina dupla. Ataque completo = +1 dano arma (sem aptidões de manobra).",
+      "description": "Imenso machado com lâmina dupla. Uma das armas mais perigosas que existem. Pode atacar com ação completa pra ganhar +1 dano de arma. NÃO pode usar aptidões de manobra ao atacar dessa forma (mesmo as permitidas pra armas pesadas). Fonte: Livro Básico p. 133."
+    },
+    {
+      "code": "fuuma_shuriken_gigante",
+      "name": "Fuuma Shuriken: Gigante",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "ARREMESSO",
+      "price": 10,
+      "damage": "+5",
+      "range": "20m",
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes": { "for": 10 },
+        "aptitudes": ["usar_arma_fuuma_shuriken"]
+      },
+      "effects": {
+        "noOpportunityKnockdown": "Ataque oportuno acertando = alvo sucesso auto vs derrubar"
+      },
+      "shortDescription": "Shuriken gigante, dano +5. Único item por compartimento.",
+      "description": "Fonte: Livro Básico p. 139 (tabela)."
+    },
+    {
+      "code": "fuuma_shuriken_lamina_reta",
+      "name": "Fuuma Shuriken: Lâmina Reta",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "ARREMESSO",
+      "price": 15,
+      "damage": "+3",
+      "range": "20m",
+      "critRange": "15-16",
+      "slots": { "items": 2, "compartments": 1 },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes": { "for": 10 },
+        "aptitudes": ["usar_arma_fuuma_shuriken"]
+      },
+      "effects": {},
+      "shortDescription": "Fuuma com lâmina reta. 2 por compartimento.",
+      "description": "Fonte: Livro Básico p. 139 (tabela)."
+    },
+    {
+      "code": "fuuma_shuriken_kage_fusha",
+      "name": "Fuuma Shuriken: Kage Fushä",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "ARREMESSO",
+      "price": 20,
+      "damage": "+2",
+      "range": "20m",
+      "critRange": "14-15-16",
+      "slots": { "items": 2, "compartments": 1 },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes": { "for": 10 },
+        "aptitudes": ["usar_arma_fuuma_shuriken"]
+      },
+      "effects": {
+        "extendedCritRange": true
+      },
+      "shortDescription": "Fuuma Kage Fushä. Crítico estendido 14-15-16.",
+      "description": "Fonte: Livro Básico p. 139 (tabela)."
+    },
+    {
+      "code": "arco_composto",
+      "name": "Arco Composto/Longo",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "DISPARO",
+      "price": 100,
+      "damage": "+3",
+      "range": "10m + 2m x Des",
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes": { "des": 10 },
+        "aptitudes": ["usar_arma_arco_composto"]
+      },
+      "effects": {
+        "twoHanded": true,
+        "requiresAmmo": "flechas",
+        "ammoSharesSlot": true,
+        "rangeFormula": "10 + 2 * destreza (em metros)"
+      },
+      "shortDescription": "Arco reforçado, alta distância. Duas mãos. Alcance escala com Destreza.",
+      "description": "Arco feito com materiais melhorados, dispara com mais força que arco comum. Mais alcance e maior dano. Próprio para campos de batalha. Exige as duas mãos. Fonte: Livro Básico p. 131."
+    },
+    {
+      "code": "besta_pesada",
+      "name": "Besta Pesada",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "DISPARO",
+      "price": 50,
+      "damage": "+4",
+      "range": "35m",
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes": { "des": 10 },
+        "aptitudes": ["usar_arma_besta_pesada"]
+      },
+      "effects": {
+        "twoHanded": true,
+        "requiresAmmo": "virotes",
+        "reloadAction": "padrao",
+        "ammoSharesSlot": true
+      },
+      "shortDescription": "Besta maior e potente. Recarga = ação padrão. Duas mãos.",
+      "description": "Versão maior e mais potente da besta leve. Recarregar uma besta pesada é uma ação padrão. Usar esta besta também exige as duas mãos. Fonte: Livro Básico p. 131."
+    },
+    {
+      "code": "flechas",
+      "name": "Flechas",
+      "kind": "AMMO",
+      "subtype": "municao",
+      "category": "MUNICAO",
+      "price": 1,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": { "items": 20, "compartments": 1 },
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "compatibleWith": ["arco_curto", "arco_composto"]
+      },
+      "shortDescription": "Munição pra arcos. 20 por compartimento.",
+      "description": "Munição pra arcos curtos e compostos. Fonte: Livro Básico p. 139 (tabela)."
+    },
+    {
+      "code": "virotes",
+      "name": "Virotes",
+      "kind": "AMMO",
+      "subtype": "municao",
+      "category": "MUNICAO",
+      "price": 1,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": { "items": 20, "compartments": 1 },
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "compatibleWith": ["besta_leve", "besta_pesada"]
+      },
+      "shortDescription": "Munição pra bestas. 20 por compartimento.",
+      "description": "Munição pra bestas leves e pesadas. Fonte: Livro Básico p. 139 (tabela)."
+    }
+  ]
+}

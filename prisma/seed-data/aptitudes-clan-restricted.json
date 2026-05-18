@@ -1,0 +1,1220 @@
+{
+  "_meta": {
+    "description": "Lote 5b — Aptidões Restritas de Clã. Cobre aptidões kekkei genkai e hijutsus de clã do Livro Básico e Livro de Hijutsus 2. Cada aptidão é exclusiva de um clã específico (ou hijutsu compartilhado como Juuinka, Senjutsu). Continuação do Lote 5a (Comuns + Combate). Próximos: 5c (Manobras), 5d (Meta).",
+    "sources": [
+      "Livro Básico p. 142-200 (Clãs de Konoha)",
+      "Livro de Hijutsus 1 p. 7-21 (Clãs Hoshigaki, Hozuki, Kaguya, Yotsuki, Yuki, Fuuma)",
+      "Livro de Hijutsus 1 p. 54-56 (Juuinka)",
+      "Livro Básico p. 222-223 (Kagura Shingan)",
+      "Livro Básico p. 239-241 (Senjutsu, Tensai)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "notes": "Schema idêntico ao Lote 5a — categoria RESTRITA pra todas. Pré-requisitos referenciam aptidões do 5a (Acuidade, Ataque Múltiplo, Reflexos, etc.), poderes do Lote 3, perícias e atributos. Algumas têm evoluções (Kikaichuu Nv 2, por exemplo). PATCH IMPORTANTE: o Mangekyou e Eien no Mangekyou usam um sistema próprio de Pontos de Visão modelado como 'resource' especial em effects.",
+    "futureAptitudes": [
+      "dominio_da_agua (vem no Lote 5d - Meta)",
+      "potencializar (vem no Lote 5d - Meta)",
+      "clone_nv2 (vem em lote futuro - Aptidões Shinobi)",
+      "clone_verdadeiro_kage_bunshin (vem em lote futuro - Aptidões Shinobi)",
+      "resistencia_maior_vigor (variante de Resistência Maior do 5a com atributo escolhido — Vigor)",
+      "aprendizagem_rapida (vem com Tensai expansão futura)",
+      "talento_natural (vem com Tensai expansão futura)",
+      "tecnica_avancada (vem com Tensai expansão futura)"
+    ],
+    "unmodeledAptitudes": [
+      "clone_nv2",
+      "clone_verdadeiro_kage_bunshin",
+      "resistencia_maior_vigor",
+      "senninka"
+    ],
+    "unmodeledAptitudesNotes": "Refs dormentes intencionais. 'dominio_da_agua' e 'potencializar' originalmente listados aqui foram REMOVIDOS quando o Lote 5d introduziu esses codes (agora reais). Os 4 restantes: 'clone_nv2' é evolução de clone (5d) — motor resolve via evolutions; 'clone_verdadeiro_kage_bunshin' é instância parametrizada de clone_verdadeiro (5d) — motor resolve via CharacterAptitude.parameter; 'resistencia_maior_vigor' é variante parametrizada de resistencia_maior (5a) — idem; 'senninka' é variante de senjutsu mencionada apenas em juuinka_ichi.incompatibleWith. Validador (scripts/validate-seed-data.ts) demota refs nesta lista de error para info.",
+    "audit": [
+      {
+        "date": "2026-05-14",
+        "phase": "7e-cleanup",
+        "change": "Adicionado grantsBypassesPrereq:true + Note em 5 aptidão(ões): ['rinkaichuu', 'presa_de_prata', 'vontade_do_fogo', 'lamina_da_lua', 'juuinka_ni']. Resolve Task #16 do user."
+      }
+    ]
+  },
+  "data": [
+    {
+      "code": "byakugan",
+      "name": "Byakugan",
+      "category": "RESTRITA",
+      "shortDescription": "Doujutsu Hyuuga. Visão raio-X 360°, sensor de chakra, não sofre flanqueio nem ataque surpresa.",
+      "description": "Linhagem sanguínea avançada do clã Hyuuga. Ativar requer ação parcial + 1 chakra. Duração contínua por uma cena. Pode ativar durante defesa. Benefícios ativos: Super Visão (raio-X 360°, ignora cobertura e camuflagem ambiental), não sofre ataque surpresa nem flanqueio, 1x por cena rola 2 dados em Per/Procurar/Prontidão/Rastrear, Visão de Chakra (identifica jutsus, genjutsus, áreas afetadas), Visão Através do Chakra (não enganada por técnicas), Medir Poder, Distinguir Chakra, Analisar Emoção. Alcance: 10m + 2m/Rastrear. Alcance Estendido [Rastrear 5]: dobra alcance via concentração. Fonte: Livro Básico p. 157-158.",
+      "prerequisites": {
+        "clans": [
+          "hyuuga"
+        ],
+        "attributes": {
+          "per": 1
+        }
+      },
+      "effects": {
+        "type": "doujutsu",
+        "activation": {
+          "action": "parcial",
+          "chakraCost": 1
+        },
+        "duration": "continua_uma_cena",
+        "rangeFormula": "10m + 2m/rastrear",
+        "passiveBenefits": [
+          "visao_raio_x_360",
+          "ignora_cobertura_e_camuflagem_ambiental",
+          "imune_ataque_surpresa",
+          "imune_flanqueio",
+          "visao_de_chakra",
+          "visao_atraves_do_chakra",
+          "medir_poder",
+          "distinguir_chakra",
+          "analisar_emocao"
+        ],
+        "perScene": {
+          "rolar_2_dados_per_procurar_prontidao_rastrear": 1
+        },
+        "alcanceEstendidoAt": {
+          "skill": "rastrear",
+          "level": 5,
+          "effect": "dobra_alcance_via_concentracao"
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "tenketsu_byakugan",
+      "name": "Tenketsu Byakugan",
+      "category": "RESTRITA",
+      "shortDescription": "Evolução do Byakugan. Selamento de Tenketsu via Juuken: -2 chakra do alvo por golpe.",
+      "description": "Permite enxergar os Tenketsus e selá-los via Juuken. Sempre que acertar ataque básico Juuken, alvo testa Vigor (Dif 7 + 2x Nível de Juuken). Falha = 1 tenketsu selado + perde 2 chakra. Ataque múltiplo: teste pra cada golpe. Bloqueio desarmado não impede o teste (a menos que defensor também tenha Tenketsu Byakugan). Chakra recuperado após noite de descanso. Alcance Progressivo [Rastrear 9]: alcance vira 50m/Rastrear via concentração imóvel 2 minutos. Custo: ½ Rastrear em chakra. Fonte: Livro Básico p. 158-159.",
+      "prerequisites": {
+        "clans": [
+          "hyuuga"
+        ],
+        "aptitudes": [
+          "byakugan"
+        ],
+        "skills": {
+          "procurar": 7,
+          "prontidao": 7,
+          "rastrear": 7
+        }
+      },
+      "effects": {
+        "type": "doujutsu_enhancement",
+        "augmentsAptitude": "byakugan",
+        "tenketsuSeal": {
+          "saveDifficulty": "7 + 2x_juuken_level",
+          "saveType": "vigor",
+          "onFailure": "1 tenketsu selado + 2 chakra drenado",
+          "appliesToMultiAttack": true,
+          "bypassesBlock": true,
+          "recoveryAfter": "noite_de_descanso"
+        },
+        "alcanceProgressivo": {
+          "requires": {
+            "skill": "rastrear",
+            "level": 9
+          },
+          "preparation": "concentracao_imovel_2_minutos",
+          "rangeFormula": "50m/rastrear",
+          "chakraCost": "metade_de_rastrear"
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "elemento_natural_katon",
+      "name": "Elemento Natural: Katon",
+      "category": "RESTRITA",
+      "shortDescription": "Uchiha obrigatório. Usa Sopro Destrutivo Nv 4 sem possuir Katon. Evolui em Nv 7 e 10 grátis.",
+      "description": "Obrigatório pra Uchiha (escolha entre comprar Katon ou esta aptidão). Permite usar Sopro Destrutivo Nv 4 pra Katon mesmo sem ter o poder (mesmo em NC 4 / Genin). Dano base = Esp + 2 (bônus elemento). Custo: ½ Esp arredondado pra cima. Alcance e tamanho seguem Katon. Se comprar Katon depois, recebe Sopro Destrutivo Nv 4 ADICIONALMENTE ao outro efeito escolhido. Evoluções automáticas grátis nos Nv 7 e 10. Pode ser usada por Clone Verdadeiro. Não conta no limite de afinidade elemental. Fonte: Livro Básico p. 180-181.",
+      "prerequisites": {
+        "clans": [
+          "uchiha"
+        ],
+        "attributes": {
+          "esp": 1
+        }
+      },
+      "effects": {
+        "type": "free_effect_grant",
+        "grantedEffect": "sopro_destrutivo",
+        "atLevel": 4,
+        "damageFormula": "esp + 2",
+        "chakraCostFormula": "ceil(esp / 2)",
+        "freeEvolutionsAt": [
+          7,
+          10
+        ],
+        "usableByKageBunshin": true,
+        "noElementalAffinityLimit": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "sharingan",
+      "name": "Sharingan",
+      "category": "RESTRITA",
+      "shortDescription": "Doujutsu Uchiha. Percepção avançada de movimentos. Detalhes evoluem com Nidan/Sandan.",
+      "description": "Doujutsu Uchiha. Manifesta-se em momentos de grande necessidade. Aparência: vírgula negra na íris vermelha. Concede percepção de movimentos tipo câmera lenta. Ativar: ação parcial + 1 chakra. Duração contínua por uma cena. Pode ativar durante defesa. Evolui em Nidan (segundo estágio) e Sandan (terceiro estágio) — ambos compram-se como aptidões separadas. Fonte: Livro Básico p. 180-181.",
+      "prerequisites": {
+        "clans": [
+          "uchiha"
+        ],
+        "attributes": {
+          "per": 3
+        }
+      },
+      "effects": {
+        "type": "doujutsu",
+        "activation": {
+          "action": "parcial",
+          "chakraCost": 1
+        },
+        "duration": "continua_uma_cena",
+        "passiveBenefits": [
+          "percepcao_avancada_movimentos"
+        ],
+        "notes": "Detalhes completos do Sharingan inicial seguem o Livro Básico. Evolui com aptidões Nidan Sharingan e Sandan Sharingan separadas."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "nidan_sharingan",
+      "name": "Nidan Sharingan",
+      "category": "RESTRITA",
+      "shortDescription": "Sharingan 2º estágio. Habilita Mímica Sharingan (Anular/Copiar/Memorizar técnica).",
+      "description": "Segundo estágio do Sharingan. Aparência: duas vírgulas negras. Habilita técnica Mímica Sharingan: Anular Técnica (manobra Anular Técnica mesmo sem contra-técnica), Copiar Técnica (analisa técnica como ação completa, copia até 1/4 Int, máx 5; dura 1 semana), Memorizar Técnica (uma técnica copiada vira permanente). Fonte: Livro Básico p. 182-185.",
+      "prerequisites": {
+        "clans": [
+          "uchiha"
+        ],
+        "aptitudes": [
+          "sharingan"
+        ]
+      },
+      "effects": {
+        "type": "doujutsu_enhancement",
+        "augmentsAptitude": "sharingan",
+        "unlocks": [
+          "mimica_sharingan"
+        ],
+        "mimicaSharingan": {
+          "anularTecnica": "via manobra Anular Técnica sem contra-técnica",
+          "copiarTecnica": {
+            "action": "completa",
+            "limit": "1 por cada 4 pontos completos de Int (max 5)",
+            "duration": "1 semana"
+          },
+          "memorizarTecnica": "1 técnica permanente substituível"
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "sandan_sharingan",
+      "name": "Sandan Sharingan",
+      "category": "RESTRITA",
+      "shortDescription": "Sharingan 3º estágio. Olhar Hipnótico + Reverter Ilusão.",
+      "description": "Terceiro estágio do Sharingan. Aparência: três vírgulas negras. Habilita Olhar Hipnótico e Reverter Ilusão (Percepção em vez de Inteligência pra detectar ilusão; se sucesso, ilusão retorna ao conjurador). Pré-req do Mangekyou. Fonte: Livro Básico p. 182-184.",
+      "prerequisites": {
+        "clans": [
+          "uchiha"
+        ],
+        "aptitudes": [
+          "nidan_sharingan"
+        ]
+      },
+      "effects": {
+        "type": "doujutsu_enhancement",
+        "augmentsAptitude": "sharingan",
+        "unlocks": [
+          "olhar_hipnotico",
+          "reverter_ilusao"
+        ],
+        "reverterIlusao": {
+          "skillSubstitution": "percepcao_for_inteligencia",
+          "onSuccess": "ilusao_retorna_ao_conjurador",
+          "maxDistance": "9m",
+          "chakraCost": "igual_da_ilusao",
+          "exceptions": [
+            "tsukuyomi"
+          ]
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "mangekyou_sharingan",
+      "name": "Mangekyou Sharingan",
+      "category": "RESTRITA",
+      "shortDescription": "Sharingan caleidoscópico. 3 técnicas especiais ao custo de visão. 10 pontos totais.",
+      "description": "Último estágio do Sharingan, alcançado em momento traumático. Cada par de olhos tem desenho único. Escolha par de técnicas: (Tsukuyomi+Amaterasu) OU (Kagutsuchi+Amaterasu) OU (Kamui Curto+Longo). Susanoo é a 3ª técnica fixa. Todas consideradas Nv 10 pra dificuldade. NÃO pode usar meta-aptidões nem Técnica Acelerada com elas. Sistema de Pontos de Visão: total 10 (ambos os olhos). Cada 3 PV perdidos = condição 'ofuscado' permanente (até 3x cumulativa). PV zerados 1ª vez: Desativação Forçada (atordoado + desprevenido 1 turno, sangramento, cego até descansar). Descanso do Sharingan: 24h sem usar = recupera até 5 PV (mantém ofuscado -3). PV zerados 2ª vez: cegueira permanente. Fonte: Livro Básico p. 182-184.",
+      "prerequisites": {
+        "clans": [
+          "uchiha"
+        ],
+        "aptitudes": [
+          "sandan_sharingan"
+        ],
+        "attributes": {
+          "per": 16
+        },
+        "narrative": "evento_traumatico"
+      },
+      "effects": {
+        "type": "doujutsu_advanced",
+        "visionPointsTotal": 10,
+        "techniquePairs": [
+          [
+            "tsukuyomi",
+            "amaterasu"
+          ],
+          [
+            "kagutsuchi",
+            "amaterasu"
+          ],
+          [
+            "kamui_curto",
+            "kamui_longo"
+          ]
+        ],
+        "fixedTechnique": "susanoo",
+        "techniquesPowerLevel": 10,
+        "noMetaAptitudes": true,
+        "noTecnicaAcelerada": true,
+        "visionLoss": {
+          "ofuscadoStackPer3PV": 3,
+          "firstZero": "desativacao_forcada (atordoado + desprevenido 1 turno + cego ate descansar)",
+          "restAfterFirstZero": "24h sem uso = recupera ate 5 PV (mantem ofuscado -3)",
+          "secondZero": "cegueira_permanente"
+        }
+      },
+      "evolutions": [
+        {
+          "atLevel": "PdM_only",
+          "name": "Eien no Mangekyou Sharingan",
+          "prerequisites": {
+            "narrative": "transplante_olhos_de_parente_proximo_via_iryou",
+            "skills": {
+              "medicina": 28
+            },
+            "powers": {
+              "iryou_ninjutsu": 1
+            }
+          },
+          "description": "Mangekyou Eterno (somente Personagem do Mestre). Mantém todos benefícios do MS sem regras de Perdendo a Visão. Não precisa pagar PV pra técnicas. Cura cego e ofuscado. Mantém técnicas escolhidas; não recebe técnicas do Sharingan transplantado. Fonte: Livro Básico p. 184."
+        }
+      ]
+    },
+    {
+      "code": "corpulencia",
+      "name": "Corpulência",
+      "category": "RESTRITA",
+      "shortDescription": "Akimichi. Vit +3x Vigor, +2 Vigor. Queima caloria: 2 Vit pra 1 chakra.",
+      "description": "Akimichi tem corpo e resistência invejáveis. Vitalidade adicional = 3x Vigor. +2 precisão em testes de Vigor. Pode queimar calorias acumuladas pra chakra: paga 2 Vit por 1 chakra durante execução de técnica. Restrição: condições Acelerado de qualquer fonte (incluindo Hachimon Tonkou) não funcionam pra Akimichi com Corpulência. Fonte: Livro Básico p. 150-151.",
+      "prerequisites": {
+        "clans": [
+          "akimichi"
+        ]
+      },
+      "effects": {
+        "type": "stat_bonus",
+        "extraVit": "3x_vigor",
+        "vigorTestBonus": 2,
+        "calorieToChakra": {
+          "vitCost": 2,
+          "chakraGain": 1
+        },
+        "incompatibleWith": [
+          "acelerado"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "resiliencia",
+      "name": "Resiliência",
+      "category": "RESTRITA",
+      "shortDescription": "Akimichi tanque. +1 dureza de corpo por 4 Vigor. -5m desloc, -3 Esquiva/Agi/Acrobacia/Furt.",
+      "description": "Akimichi se coloca na frente de batalha. +1 dureza de corpo a cada 4 pontos completos de Vigor contra TODOS os tipos de ataque (bônus de Vigor por tamanho NÃO afetam). Em contrapartida: -5m no deslocamento, -3 precisão em Esquiva, Agilidade, Acrobacia e Furtividade. Fonte: Livro Básico p. 151.",
+      "prerequisites": {
+        "clans": [
+          "akimichi"
+        ]
+      },
+      "effects": {
+        "type": "tank_stat_modifier",
+        "bodyHardnessFormula": "ceil(vigor / 4)",
+        "appliesAgainst": "todos_tipos_ataque",
+        "vigorBonusFromSizeIgnored": true,
+        "penalties": {
+          "movement": -5,
+          "esquiva": -3,
+          "agilidade": -3,
+          "acrobacia": -3,
+          "furtividade": -3
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "companheiro_animal",
+      "name": "Companheiro Animal",
+      "category": "RESTRITA",
+      "shortDescription": "Inuzuka. Animal de estimação (cão/lobo) como Parceiro. Evolui com NC do dono.",
+      "description": "Inuzuka tem animal companheiro (cão ou lobo) como Parceiro. Animal tem ficha igual ao personagem mas com -2 níveis em todos atributos/habilidades/perícias (mínimo 0). Cão pode usar Shikakyu (se técnica permitir) e aptidões do Inuzuka listadas. Tamanho inicial: Pequeno → Médio (Lidar com Animais 10) → Grande + fala (LcA 14). Matilha em LcA 16 e 18 (+1 cada). Aptidões permitidas pro cão: Acuidade, Ataque em Movimento, Especialista, Intuição, Reflexos, Velocista, Perito, Perícia Inata, Lutador, Ponto Cego, Ataque Atordoante, Ataque Poderoso, Derrubar Agressivo, De Pé, Desarme Agressivo, Rasteira, Hakken no Jutsu. Fonte: Livro Básico p. 163-164.",
+      "prerequisites": {
+        "clans": [
+          "inuzuka"
+        ],
+        "skills": {
+          "lidar_com_animais": 1
+        }
+      },
+      "effects": {
+        "type": "companion",
+        "animalType": [
+          "cao",
+          "lobo"
+        ],
+        "statPenalty": -2,
+        "sizeBySkill": {
+          "1": "pequeno",
+          "10": "medio",
+          "14": "grande_com_fala"
+        },
+        "extraCompanionsAt": [
+          16,
+          18
+        ],
+        "allowedAptitudes": [
+          "acuidade",
+          "ataque_em_movimento",
+          "especialista",
+          "intuicao",
+          "reflexos",
+          "velocista",
+          "perito",
+          "pericia_inata",
+          "lutador",
+          "ponto_cego",
+          "ataque_atordoante",
+          "ataque_poderoso",
+          "derrubar_agressivo",
+          "de_pe",
+          "desarme_agressivo",
+          "rasteira",
+          "hakken_no_jutsu"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "hakken_no_jutsu",
+      "name": "Hakken no Jutsu",
+      "category": "RESTRITA",
+      "shortDescription": "Inuzuka. Olfato super-apurado. Alcance 10m + 2m/Rastrear. -1 Dif testes olfativos.",
+      "description": "Inuzuka concentra chakra no nariz, ampliando olfato. Ativar/desativar = ação livre, custa 2 chakra, contínuo. Alcance: 10m + 2m/Rastrear. Detecta odores sem teste no alcance (a menos que ventos/chuva/odores fortes atrapalhem). Alerta contra Surpresa: teste de Rastrear adicional pra notar ataque surpresa. Olfato Apurado: -1 Dif em Prontidão, Rastrear, Procurar quando puder usar olfato. Fonte: Livro Básico p. 164-165.",
+      "prerequisites": {
+        "clans": [
+          "inuzuka"
+        ],
+        "skills": {
+          "rastrear": 1
+        }
+      },
+      "effects": {
+        "type": "sensor",
+        "sensorType": "olfato",
+        "activation": {
+          "action": "livre",
+          "chakraCost": 2
+        },
+        "duration": "continua",
+        "rangeFormula": "10m + 2m/rastrear",
+        "ambushAlert": "teste_rastrear_adicional",
+        "difficultyReduction": {
+          "skills": [
+            "prontidao",
+            "rastrear",
+            "procurar"
+          ],
+          "reduction": -1,
+          "when": "olfato_aplicavel"
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "kikaichuu",
+      "name": "Kikaichuu",
+      "category": "RESTRITA",
+      "shortDescription": "Aburame. Insetos parasitas destruidores de chakra. 1 grupo (100 insetos) por nível de LcA.",
+      "description": "Aburame hospeda insetos drenadores de chakra. 1 grupo (100 insetos) por nível de Lidar com Animais. Insetos sob controle absoluto, não traem. Ações: Liberar/Recolher = livre, Atacar = padrão, Mover = parcial (15m/ação). Insetos perdidos: morrem com 1 dano letal. Imunes a venenos e genjutsus. Ataque: até metade do total via CD, drena chakra = nº de kikaichuu (sem dano físico). Ataques de Kikaichuu NÃO podem ser bloqueados. Insetos sozinhos NÃO fazem ataque oportuno mas você pode usar via Aburame. Defesa: usa Antecipar pra mover insetos antes de serem atingidos. Chakra abaixo de zero: alvo morre se drenado ≥ metade da reserva natural. Maestria Kikaichuu: serve pra TODOS os tipos de inseto e pro Kikai Ninpou. Fonte: Livro Básico p. 143-144.",
+      "prerequisites": {
+        "clans": [
+          "aburame"
+        ],
+        "skills": {
+          "lidar_com_animais": 1
+        }
+      },
+      "effects": {
+        "type": "insect_swarm",
+        "groupCountFormula": "lidar_com_animais",
+        "groupSize": 100,
+        "actions": {
+          "liberar_recolher": "livre",
+          "atacar": "padrao",
+          "mover": "parcial",
+          "movementPerAction": "15m"
+        },
+        "attackRules": {
+          "skill": "cd",
+          "maxInsectsPerAttack": "metade_do_total",
+          "drainsChakra": "1_por_kikaichuu",
+          "noPhysicalDamage": true,
+          "cannotBeBlocked": true
+        },
+        "immunities": [
+          "veneno",
+          "genjutsu"
+        ],
+        "fragile": "1 dano letal destroi 1 grupo",
+        "chakraDrainBelowZero": "alvo morre se drenado >= metade reserva natural",
+        "maestriaScope": "todos_insetos_e_kikai_ninpou"
+      },
+      "evolutions": [
+        {
+          "atLevel": 2,
+          "name": "Kikaichuu Nv 2",
+          "prerequisites": {
+            "skills": {
+              "lidar_com_animais": 10
+            }
+          },
+          "description": "Notar Genjutsu via Lidar com Animais no lugar de Inteligência (sem bônus de Perito). Esconder Insetos no ambiente (substitui Furtividade por LcA, ou Ciências Naturais em florestas). Drenar Veneno: 1 kikaichuu drena substância venenosa via teste de LcA/Medicina vs Dif do veneno; cada sucesso = sucesso automático na resistência do alvo; kikaichuu usado morre. Fonte: Livro Básico p. 144."
+        }
+      ]
+    },
+    {
+      "code": "shokaichuu",
+      "name": "Shōkaichuu",
+      "category": "RESTRITA",
+      "shortDescription": "Aburame. Insetos rastreadores. Buscam assinatura de chakra em área. Não atacam.",
+      "description": "Insetos rastreadores escavadores. 1 grupo (100 insetos) por nível de Lidar com Animais (adicional ao kikaichuu). Liberar = livre. Comandar busca = padrão (sem chakra). Cada grupo cobre área de 20m de raio (3 grupos = 60m). No 5º turno finalizam busca e retornam relatando posições. NÃO atacam. Demais regras = kikaichuu. Fonte: Livro Básico p. 144-145.",
+      "prerequisites": {
+        "clans": [
+          "aburame"
+        ],
+        "aptitudes": [
+          "kikaichuu"
+        ],
+        "skills": {
+          "lidar_com_animais": 6
+        }
+      },
+      "effects": {
+        "type": "insect_swarm",
+        "subtype": "rastreador",
+        "groupCountFormula": "lidar_com_animais",
+        "groupSize": 100,
+        "searchRadius": "20m por grupo",
+        "searchDuration": "5 turnos",
+        "noAttack": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "kidaichuu",
+      "name": "Kidaichuu",
+      "category": "RESTRITA",
+      "shortDescription": "Aburame. Besouros gigantes que drenam chakra brutalmente. Viram capangas parceiros.",
+      "description": "Insetos parasitas gigantes (besouros). 1 inseto por 3 níveis completos de Lidar com Animais. Não voam — precisam de contato direto (CC) pra implantar. Drenam 2 chakra cada por turno, crescendo. No final do turno crescem pra Médio e atacam (1º ataque sem drenar de novo). Viram capangas parceiros: ataque com mordida (dano arma 0, drena 2 chakra), usam precisão CD do Aburame, defendem-se com Esquiva via LM do Aburame. **RESTRIÇÃO**: NÃO pode ter Kidaichuu E Rinkaichuu simultaneamente. Fonte: Livro Básico p. 145-146.",
+      "prerequisites": {
+        "clans": [
+          "aburame"
+        ],
+        "aptitudes": [
+          "kikaichuu"
+        ],
+        "skills": {
+          "lidar_com_animais": 12
+        },
+        "mutuallyExclusiveWith": [
+          "rinkaichuu"
+        ]
+      },
+      "effects": {
+        "type": "insect_swarm",
+        "subtype": "gigante_parasita",
+        "groupCountFormula": "floor(lidar_com_animais / 3)",
+        "requiresContactToImplant": true,
+        "drainPerTurn": 2,
+        "growth": "medio_no_final_do_turno",
+        "asCompanion": true,
+        "attackDamage": "0 arma + 2 chakra drenado"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "rinkaichuu",
+      "name": "Rinkaichuu",
+      "category": "RESTRITA",
+      "shortDescription": "Aburame. Insetos microscópicos venenosos. Destruição celular contínua. Anticorpos naturais.",
+      "description": "Insetos microscópicos extremamente venenosos. 1 grupo por nível de Lidar com Animais. Transferência por contato físico direto pele-pele (NÃO voam). Toque rápido = 1 grupo; agarrar/contato turno inteiro = qualquer quantidade. Ataque Múltiplo: 1 grupo por ataque bem-sucedido. Transferência automática quando Aburame é tocado. Destruição Celular: dano fixo por turno = 1 por rinkaichuu infectado. Vítima testa Vigor (Dif 7 + LcA) ou fica atordoada 1 turno + fatigada até tratada. Vit 0 = paralisada até remover insetos. Tratamento: Aburame tocar 1 turno OU remédio (Medicina + Ocultismo 14, 12 pra Konoha; 3 dias). Anticorpos Naturais: recebe Resistência Maior (Vigor) contra vírus/bactérias. **RESTRIÇÃO**: NÃO pode ter Kidaichuu E Rinkaichuu simultaneamente. Fonte: Livro Básico p. 146-147.",
+      "prerequisites": {
+        "clans": [
+          "aburame"
+        ],
+        "aptitudes": [
+          "kikaichuu"
+        ],
+        "skills": {
+          "lidar_com_animais": 12
+        },
+        "mutuallyExclusiveWith": [
+          "kidaichuu"
+        ]
+      },
+      "effects": {
+        "type": "insect_swarm",
+        "subtype": "venenoso_microscopico",
+        "groupCountFormula": "lidar_com_animais",
+        "transferMethod": "contato_pele_pele_direto",
+        "transferRate": {
+          "toqueRapido": "1 grupo",
+          "agarrarTurnoInteiro": "qualquer quantidade"
+        },
+        "destruicaoCelular": {
+          "damagePerTurn": "1 por rinkaichuu",
+          "saveDifficulty": "7 + lcA",
+          "saveType": "vigor",
+          "onFailure": "atordoado 1 turno + fatigada"
+        },
+        "grants": [
+          "resistencia_maior_vigor_vs_doencas"
+        ],
+        "grantsBypassesPrereq": true,
+        "grantsBypassesPrereqNote": "Pai (Aburame clan-restricted + Insetos) já gateia. Grant resistencia_maior_vigor_vs_doencas é benefício derivado."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "predador_aquatico",
+      "name": "Predador Aquático",
+      "category": "RESTRITA",
+      "shortDescription": "Hoshigaki. Pele de tubarão, guelras, dureza de corpo 1-3. Respira underwater.",
+      "description": "Pele grossa recoberta de escamas, guelras, dentes afiados. Respira debaixo d'água. Movimento aquático dobrado. Dureza de corpo 1 contra ataques armados/desarmados. Aumenta com Vigor: 8+ → dureza 2, 12+ → dureza 3. Fonte: Livro de Hijutsus 1 p. 8-9.",
+      "prerequisites": {
+        "clans": [
+          "hoshigaki"
+        ]
+      },
+      "effects": {
+        "type": "body_modification",
+        "bodyHardnessByVigor": {
+          "1": 1,
+          "8": 2,
+          "12": 3
+        },
+        "appliesAgainst": "armados_e_desarmados",
+        "underwaterBreathing": true,
+        "underwaterMovementMultiplier": 2,
+        "naturalWeapons": [
+          "mordida_perfuracao"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "elemento_natural_suiton",
+      "name": "Elemento Natural: Suiton",
+      "category": "RESTRITA",
+      "shortDescription": "Hoshigaki. +2 dano base em todo efeito Suiton (como bônus elemental).",
+      "description": "Proximidade biológica com predadores marinhos. Todo Efeito Suiton recebe +2 de dano base como bônus de elemento (funciona como o dano adicional do Katon). Fonte: Livro de Hijutsus 1 p. 9.",
+      "prerequisites": {
+        "clans": [
+          "hoshigaki"
+        ],
+        "aptitudes": [
+          "predador_aquatico"
+        ],
+        "powers": {
+          "suiton": 1
+        }
+      },
+      "effects": {
+        "type": "elemental_damage_bonus",
+        "element": "suiton",
+        "damageBonus": 2,
+        "bonusType": "elemental"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "reserva_de_agua",
+      "name": "Reserva de Água",
+      "category": "RESTRITA",
+      "shortDescription": "Hoshigaki. Dobra pontos de água do Domínio da Água.",
+      "description": "Projeta água com facilidade. Ao usar aptidão Domínio da Água, acumula o dobro de pontos de água possíveis. Demais regras do Domínio da Água permanecem. Fonte: Livro de Hijutsus 1 p. 9.",
+      "prerequisites": {
+        "clans": [
+          "hoshigaki"
+        ],
+        "aptitudes": [
+          "dominio_da_agua",
+          "elemento_natural_suiton"
+        ],
+        "powers": {
+          "suiton": 5
+        },
+        "attributes": {
+          "esp": 9
+        }
+      },
+      "effects": {
+        "type": "aptitude_enhancement",
+        "augmentsAptitude": "dominio_da_agua",
+        "waterPointsMultiplier": 2
+      },
+      "evolutions": []
+    },
+    {
+      "code": "suika",
+      "name": "Suika",
+      "category": "RESTRITA",
+      "shortDescription": "Hozuki. Corpo vira água. PS = 3x Vigor. Imune a Suiton, meio dano Katon, dobro Raiton.",
+      "description": "Transforma corpo em água, imune a ataques físicos. Pontos Suika (PS) = 3x Vigor — dano vai pra PS antes de Vit. Imunidade Fluida: imune a Suiton, imune a sufocamento por afogamento, meio dano de Katon (e tipos fogo), DOBRO dano de Raiton (e tipos elétricos). Escape Fluido: ação padrão pra escapar de prisão física sem teste. Recebe Imergir Nv 2 grátis pra Suiton. Poder Fluido: pode pagar custo de chakra de Suiton com PS (1:1); se totalmente pago com PS, técnica recebe +2 dano (incompatível com Domínio da Água e Energizar). Fonte: Livro de Hijutsus 1 p. 10-11.",
+      "prerequisites": {
+        "clans": [
+          "hozuki"
+        ],
+        "powers": {
+          "suiton": 4
+        },
+        "attributes": {
+          "esp": 9
+        }
+      },
+      "effects": {
+        "type": "body_modification_fluid",
+        "suikaPointsFormula": "3x_vigor",
+        "damageAbsorption": "ps_before_vit",
+        "elementalImmunities": {
+          "suiton": "imune",
+          "katon": "metade_dano",
+          "raiton": "dobro_dano"
+        },
+        "drowningImmunity": true,
+        "escapeFluido": "acao_padrao_sem_teste",
+        "freeEffect": {
+          "effect": "imergir",
+          "level": 2,
+          "power": "suiton"
+        },
+        "poderFluido": {
+          "psPerChakra": 1,
+          "fullyPaidBonus": "+2 dano",
+          "incompatibleWith": [
+            "dominio_da_agua",
+            "energizar"
+          ]
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "shikotsumyaku",
+      "name": "Shikotsumyaku",
+      "category": "RESTRITA",
+      "shortDescription": "Kaguya. Pulso dos Ossos Mortais. Conjunto de aptidões kekkei genkai.",
+      "description": "Kekkei genkai do clã Kaguya — Pulso dos Ossos Mortais. Aptidão guarda-chuva que dá acesso a Artesão de Ossos e outras técnicas ósseas. Compõe com a Regeneração do Uzumaki (conjunto Kaguya). Fonte: Livro de Hijutsus 1 p. 14.",
+      "prerequisites": {
+        "clans": [
+          "kaguya"
+        ]
+      },
+      "effects": {
+        "type": "kekkei_genkai_unlock",
+        "unlocks": [
+          "artesao_de_ossos"
+        ],
+        "associatedAptitudes": [
+          "regeneracao"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "artesao_de_ossos",
+      "name": "Artesão de Ossos",
+      "category": "RESTRITA",
+      "shortDescription": "Kaguya. Remove ossos do corpo, molda em armas. Regeneração óssea quase imediata.",
+      "description": "Remove ossos do corpo e molda em armamentos diversos. Regeneração óssea quase imediata torna o usuário um arsenal humano. Detalhes mecânicos completos seguem o livro. Fonte: Livro de Hijutsus 1 p. 14.",
+      "prerequisites": {
+        "clans": [
+          "kaguya"
+        ],
+        "aptitudes": [
+          "shikotsumyaku"
+        ]
+      },
+      "effects": {
+        "type": "weapon_creation",
+        "source": "ossos_do_corpo",
+        "regenerationTime": "quase_imediata",
+        "notes": "Detalhes completos seguem Livro de Hijutsus 1 p. 14-17."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "selos_especiais",
+      "name": "Selos Especiais",
+      "category": "RESTRITA",
+      "shortDescription": "Yuki. Selos com uma única mão. -3 não se aplica em combate próximo. Combo Golpear → técnica.",
+      "description": "Yuki domina selos avançados. Permite realizar selos com uma única mão (precisa pelo menos 1 mão livre). NÃO sofre penalidade -3 ao usar técnicas em combate próximo (nem precisa teste de concentração). Bônus combat: ao usar manobra Golpear, se ataque CC for bloqueado/esquivado/antecipado, pode executar técnica de ação padrão como ação de movimento. Técnica precisa ser CD ofensiva, duração instantânea. Fonte: Livro de Hijutsus 1 p. 18.",
+      "prerequisites": {
+        "clans": [
+          "yuki"
+        ],
+        "attributes": {
+          "des": 8
+        }
+      },
+      "effects": {
+        "type": "seal_mastery",
+        "oneHandedSeals": true,
+        "noClosePenalty": true,
+        "noConcentrationCheck": true,
+        "comboGolpearTechnique": {
+          "trigger": "ataque_cc_bloqueado_esquivado_antecipado",
+          "techniqueAction": "movimento",
+          "techniqueConstraints": [
+            "cd_ofensiva",
+            "duracao_instantanea"
+          ]
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "congelamento",
+      "name": "Congelamento",
+      "category": "RESTRITA",
+      "shortDescription": "Yuki. Aptidão restrita do clã. Detalhes seguem Livro de Hijutsus 1 p. 18-21.",
+      "description": "Aptidão restrita do clã Yuki ligada ao Hyouton. Detalhes mecânicos completos seguem o Livro de Hijutsus 1 (mesma página do clã Yuki). Modelada como entrada existente; quando necessária consulta detalhada, ler livro. Marcada como needsDeepResearch.",
+      "prerequisites": {
+        "clans": [
+          "yuki"
+        ]
+      },
+      "effects": {
+        "type": "hyouton_enhancement",
+        "needsDeepResearch": true,
+        "notes": "Consultar Livro de Hijutsus 1 p. 18-21 pra detalhes mecânicos completos."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "regeneracao",
+      "name": "Regeneração",
+      "category": "RESTRITA",
+      "shortDescription": "Uzumaki/Kaguya. Cura sangramento 1 nv/turno auto. +25% cura. Estabiliza auto. +2 doenças/venenos.",
+      "description": "Reprodução celular fora do comum. NÃO precisa teste pra recuperar sangrando — cura 1 nível/turno automaticamente. Pode testar Vigor pra recuperar +1 nível. Sucesso automático em estabilizar (Vit -11 a -20). Técnicas de cura usadas no personagem +25% efetivas. +2 bônus em testes de resistência contra doenças e venenos. Compartilhada entre clãs Uzumaki e Kaguya. Fonte: Livro Básico p. 193.",
+      "prerequisites": {
+        "clans_one_of": [
+          "uzumaki",
+          "kaguya"
+        ]
+      },
+      "effects": {
+        "type": "regeneration",
+        "bleedingHealPerTurn": 1,
+        "extraHealOnVigorTest": 1,
+        "autoStabilize": "vit_-11_a_-20",
+        "healingReceivedMultiplier": 1.25,
+        "diseaseAndPoisonResistanceBonus": 2
+      },
+      "evolutions": []
+    },
+    {
+      "code": "chakra_expandido",
+      "name": "Chakra Expandido",
+      "category": "RESTRITA",
+      "shortDescription": "Uzumaki/Hoshigaki. +50% chakra total.",
+      "description": "Quantidade extra de chakra. Total de chakra do personagem aumenta em 50%. Disponível pra Uzumaki e Hoshigaki (via referência do Hoshigaki ao Uzumaki). Fonte: Livro Básico p. 193.",
+      "prerequisites": {
+        "clans_one_of": [
+          "uzumaki",
+          "hoshigaki"
+        ]
+      },
+      "effects": {
+        "type": "stat_bonus",
+        "chakraMultiplier": 1.5
+      },
+      "evolutions": []
+    },
+    {
+      "code": "mil_clones",
+      "name": "Mil Clones",
+      "category": "RESTRITA",
+      "shortDescription": "Uzumaki. Cria 1 Kage Bunshin por ponto de chakra. Falha auto em combate, +Furt no meio.",
+      "description": "6 Vit + ação padrão. Cria 1 Kage Bunshin por chakra disponível, dividindo todo o chakra (1 por clone, 1 sobra). Pode criar menos se quiser. Bloqueia outros tipos de clone. Clones têm fracasso automático em combate. 20+ clones permite Furtividade pra misturar no meio. Fonte: Livro Básico p. 193-194.",
+      "prerequisites": {
+        "clans": [
+          "uzumaki"
+        ],
+        "aptitudes": [
+          "chakra_expandido",
+          "clone_nv2",
+          "clone_verdadeiro_kage_bunshin"
+        ],
+        "attributes": {
+          "esp": 10
+        }
+      },
+      "effects": {
+        "type": "mass_clone",
+        "vitCost": 6,
+        "action": "padrao",
+        "clonesPerChakra": 1,
+        "blocksOtherClones": true,
+        "combatTestAutoFail": true,
+        "furtividadeAt20Plus": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "kongou_fuusa",
+      "name": "Kongou Fuusa",
+      "category": "RESTRITA",
+      "shortDescription": "Uzumaki. Correntes de Selamento Inquebráveis. Detalhes seguem livro.",
+      "description": "Correntes de selamento inquebráveis, marca do clã Uzumaki. Detalhes completos seguem Livro Básico. Modelada como entrada catalogada.",
+      "prerequisites": {
+        "clans": [
+          "uzumaki"
+        ]
+      },
+      "effects": {
+        "type": "sealing_chains",
+        "needsDeepResearch": true,
+        "notes": "Consultar Livro Básico capítulo Uzumaki pra detalhes."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "kagura_shingan",
+      "name": "Kagura Shingan",
+      "category": "RESTRITA",
+      "shortDescription": "Uzumaki. Olho Divino da Mente. Sensor de chakra avançado.",
+      "description": "Sensor de chakra do clã Uzumaki (Karin). Detecta criaturas via assinatura de chakra. Alcance padrão e passivo definidos no livro. Identifica genjutsus ativos no alcance como reação (sem teste). Medir Poder, Analisar Emoção, Localizar Sensor. Fonte: Livro Básico p. 222-223.",
+      "prerequisites": {
+        "clans": [
+          "uzumaki"
+        ]
+      },
+      "effects": {
+        "type": "sensor",
+        "sensorType": "chakra",
+        "abilities": [
+          "detectar_criaturas_por_chakra",
+          "medir_poder",
+          "analisar_emocao",
+          "localizar_sensor",
+          "identificar_genjutsu_como_reacao"
+        ]
+      },
+      "evolutions": [
+        {
+          "atLevel": 2,
+          "name": "Ryoushitsu Kagura Shingan",
+          "prerequisites": {
+            "aptitudes": [
+              "kagura_shingan"
+            ],
+            "skills": {
+              "rastrear": 6
+            }
+          },
+          "description": "Alcance padrão E passivo dobrados. Alcance Progressivo: 2 minutos imóvel concentrado → alcance vira 100m/Rastrear. Supressão de Chakra: oculta usuário (Dif Rastrear = 9 + Rastrear do usuário); não funciona contra sensores olfato/visão. Fonte: Livro Básico p. 223."
+        }
+      ]
+    },
+    {
+      "code": "maximizar",
+      "name": "Maximizar",
+      "category": "RESTRITA",
+      "shortDescription": "Senju (e outros). Potencializa elementos Mokuton/Suiton ao máximo.",
+      "description": "Aptidão restrita do clã Senju. Pré-req do Hijutsu Mokuton via opção 1. Ao comprar, escolha entre Mokuton ou Suiton. Detalhes seguem livro. Fonte: Livro Básico p. 175.",
+      "prerequisites": {
+        "clans_one_of": [
+          "senju"
+        ],
+        "aptitudes": [
+          "potencializar"
+        ],
+        "attributes_one_of": {
+          "esp": 15,
+          "int": 15
+        }
+      },
+      "effects": {
+        "type": "meta_aptitude",
+        "elementChoice": [
+          "mokuton",
+          "suiton"
+        ],
+        "notes": "Detalhes completos no Livro Básico p. 175."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "presa_de_prata",
+      "name": "Presa de Prata",
+      "category": "RESTRITA",
+      "shortDescription": "Hatake. Aptidão de Tensai. Usar Arma Espada de Chakra Branco + Domínio elemental + Maestria.",
+      "description": "Aptidão especial do Tensai do clã Hatake (Kakashi). Recebe Usar Arma pra Espada de Chakra Branco. Recebe uma das aptidões de Domínio Elemental (Água, Fogo, Ar, Terra ou Raio) e Maestria pra um dos cinco poderes elementais básicos à sua escolha. Se tem Versatilidade, pode estender pra um dos poderes versáteis (não ambos). Não recebe benefícios de aptidões sem pré-req atingido — recebe quando atingir. Fonte: Livro Básico p. 155-156.",
+      "prerequisites": {
+        "clans": [
+          "hatake"
+        ],
+        "aptitudes": [
+          "tensai"
+        ]
+      },
+      "effects": {
+        "type": "tensai_special",
+        "grants": [
+          "usar_arma_espada_chakra_branco",
+          "um_dominio_elemental_a_escolha",
+          "maestria_em_um_poder_elemental"
+        ],
+        "elementalDomains": [
+          "agua",
+          "fogo",
+          "ar",
+          "terra",
+          "raio"
+        ],
+        "grantsBypassesPrereq": true,
+        "grantsBypassesPrereqNote": "Pai é Aptidão Especial Tensai (já tem requisitos altos). Grants são bônus de Hijutsu Hatake — refs parametrizadas (usar_arma_X, dominio_elemental, maestria_X)."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "vontade_do_fogo",
+      "name": "Vontade do Fogo",
+      "category": "RESTRITA",
+      "shortDescription": "Sarutobi. Aptidão de Tensai. Duro de Matar grátis + 2 Kage Bunshin simultâneos.",
+      "description": "Aptidão especial do Tensai do clã Sarutobi. Recebe Duro de Matar grátis. Não sofre velhice até muito mais tarde que o normal. Pode criar/usar até 2 Kage Bunshins simultâneos. Cada um com Vit = 1/5 do usuário + Duro de Matar. NÃO pode criar nem ter criado qualquer outro clone na cena além desses 2. Fonte: Livro Básico p. 173-174.",
+      "prerequisites": {
+        "clans": [
+          "sarutobi"
+        ],
+        "aptitudes": [
+          "tensai",
+          "resistencia_maior_vigor",
+          "clone_verdadeiro_kage_bunshin"
+        ],
+        "attributes": {
+          "vig": 6
+        }
+      },
+      "effects": {
+        "type": "tensai_special",
+        "grants": [
+          "duro_de_matar"
+        ],
+        "ageResistance": true,
+        "extraKageBunshin": {
+          "count": 2,
+          "vitPerClone": "vit_usuario / 5",
+          "cloneAptitudes": [
+            "duro_de_matar"
+          ],
+          "exclusiveWithOtherClones": true
+        },
+        "grantsBypassesPrereq": true,
+        "grantsBypassesPrereqNote": "Pai é Aptidão Especial Tensai (Sarutobi). Grant duro_de_matar é aptidão real — Tensai justifica concessão."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "lamina_da_lua",
+      "name": "Lâmina da Lua",
+      "category": "RESTRITA",
+      "shortDescription": "Yotsuki. Aptidão de Tensai. Acuidade + Domínio do Raio + Usar Arma espadas marciais.",
+      "description": "Aptidão especial do Tensai do clã Yotsuki (Kumo). Recebe Acuidade e Domínio do Raio. Usar Arma pra TODOS os tipos de espadas marciais. Ainda precisa cumprir requisitos de For/Des pra armas medianas/pesadas. Fonte: Livro de Hijutsus 1 p. 18.",
+      "prerequisites": {
+        "clans": [
+          "yotsuki"
+        ],
+        "aptitudes": [
+          "tensai"
+        ]
+      },
+      "effects": {
+        "type": "tensai_special",
+        "grants": [
+          "acuidade",
+          "dominio_do_raio",
+          "usar_arma_espadas_marciais_todas"
+        ],
+        "grantsBypassesPrereq": true,
+        "grantsBypassesPrereqNote": "Pai é Aptidão Especial Tensai (Yotsuki). Grants: acuidade (aptidão real), dominio_do_raio (aptidão real), usar_arma_espadas_marciais_todas (ref parametrizada). Tensai justifica concessões."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "tensai",
+      "name": "Tensai (Genialidade)",
+      "category": "RESTRITA",
+      "shortDescription": "Hijutsu. Gênio nato. Poder Versatilidade ou Hibon Ninpou + 3 aptidões base + 2 especiais.",
+      "description": "Hijutsu de gênios. Poder restrito: Versatilidade OU Hibon Ninpou. Aptidões base: Aprendizagem Rápida, Talento Natural, Técnica Avançada. Direito a 2 Aptidões Especiais (Presa de Prata, Vontade do Fogo, Lâmina da Lua etc., dependendo do clã). Fonte: Livro Básico p. 241-242.",
+      "prerequisites": {
+        "type": "hijutsu"
+      },
+      "effects": {
+        "type": "hijutsu_unlock",
+        "restrictedPowerOneOf": [
+          "versatilidade",
+          "hibon_ninpou"
+        ],
+        "baseAptitudes": [
+          "aprendizagem_rapida",
+          "talento_natural",
+          "tecnica_avancada"
+        ],
+        "specialAptitudeSlots": 2,
+        "knownSpecialOptions": [
+          "presa_de_prata",
+          "vontade_do_fogo",
+          "lamina_da_lua"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "senjutsu",
+      "name": "Senjutsu (Técnica Eremita)",
+      "category": "RESTRITA",
+      "shortDescription": "Hijutsu. Absorve energia da natureza, entra em Modo Eremita. Drena chakra = morte pra atacante.",
+      "description": "Permite absorver energia da natureza e misturar com próprio chakra. Quando absorvido corretamente, entra em Sennin Modo (Modo Eremita), conferindo grande aumento de poder. Detalhes mecânicos completos seguem o livro. Transformação em Pedra: criatura que drena chakra do usuário em Modo Eremita é transformada em pedra (morta), exceto se também tiver Senjutsu ou Senninka. Fonte: Livro Básico p. 239-241.",
+      "prerequisites": {
+        "type": "hijutsu"
+      },
+      "effects": {
+        "type": "sage_mode",
+        "absorvesNatureEnergy": true,
+        "modeName": "sennin_modo",
+        "chakraDrainKills": "transforma_atacante_em_pedra_exceto_senjutsu_senninka",
+        "needsDeepResearch": true,
+        "notes": "Detalhes mecânicos do Modo Eremita seguem Livro Básico p. 239-241 + Livro de Hijutsus 1 capítulo Senninka."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "juuinka_ichi",
+      "name": "Juuinka - Ichi (Selo Amaldiçoado 1º Estágio)",
+      "category": "RESTRITA",
+      "shortDescription": "Hijutsu. Selo Amaldiçoado primeiro estágio. Escolhe 2 de 6 bônus na compra. Fatigado após.",
+      "description": "Primeiro estágio do Selo Amaldiçoado. Manchas escuras cobrem corpo. Liberar = parcial, 8 Vit, contínua. Escolha 2 bônus permanentes na compra (não pode mudar): Força +4 (não cumulativo com Dano Base +2), Dano Base +2 num ataque (Energizar incluído), Precisão de Ataque +1, Precisão de Defesa +1, Dif de Técnicas +1, Dureza de Corpo +1. Desativação = fatigado 30 min. Sem aptidão: ativa automático ao usar chakra, consome Vit sem benefícios + exausto 30 min. Fonte: Livro de Hijutsus 1 p. 55-56.",
+      "prerequisites": {
+        "type": "hijutsu_juuinka",
+        "narrative": "sobrevivido_ao_juuin_jutsu",
+        "attributes_one_of": {
+          "esp": 8,
+          "vig": 8
+        },
+        "incompatibleWith": [
+          "senninka",
+          "senjutsu"
+        ]
+      },
+      "effects": {
+        "type": "curse_seal",
+        "activation": {
+          "action": "parcial",
+          "vitCost": 8
+        },
+        "duration": "continua",
+        "deactivationPenalty": "fatigado_30_min",
+        "chooseBonuses": {
+          "count": 2,
+          "options": [
+            "forca_+4",
+            "dano_base_+2_num_ataque",
+            "precisao_ataque_+1",
+            "precisao_defesa_+1",
+            "dif_tecnicas_+1",
+            "dureza_corpo_+1"
+          ]
+        },
+        "mutuallyExclusiveBonuses": [
+          [
+            "forca_+4",
+            "dano_base_+2_num_ataque"
+          ]
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "juuinka_ni",
+      "name": "Juuinka - Ni (Selo Amaldiçoado 2º Estágio)",
+      "category": "RESTRITA",
+      "shortDescription": "Hijutsu. Selo Amaldiçoado segundo estágio. Acelerado + Chakra +20 (1x/cena). Selo do Céu = asas; Terra = cauda.",
+      "description": "Segundo estágio. Liberar = parcial, 4 Vit, contínua. Requer ter ativado o 1º estágio antes. Recebe todos benefícios do 1º + Acelerado + Chakra +20 (1x cena). Opcionalmente troca cada um dos 2 bônus por outros da lista do 1º (escolha permanente). Selo do Céu: asas (Voo Nv 2, até 2m altura, +3m desloc/salto, armas naturais médias corte +3 dano). Selo da Terra: cauda (+1 Agi e perícias dependentes, +3m desloc, arma natural pesada esmagamento +5 dano, requer For 12). Fonte: Livro de Hijutsus 1 p. 56-57.",
+      "prerequisites": {
+        "type": "hijutsu_juuinka",
+        "aptitudes": [
+          "juuinka_ichi"
+        ],
+        "attributes_one_of": {
+          "esp": 10,
+          "vig": 10
+        },
+        "narrative": "ritual_da_nevoa_negra"
+      },
+      "effects": {
+        "type": "curse_seal_advanced",
+        "activation": {
+          "action": "parcial",
+          "vitCost": 4
+        },
+        "duration": "continua",
+        "requiresFirstStageActive": true,
+        "grants": [
+          "acelerado",
+          "chakra_+20_1x_cena"
+        ],
+        "tradableBonusesFromIchi": true,
+        "celestialVariants": {
+          "ceu": {
+            "wings": true,
+            "voo_nv": 2,
+            "altMax": "2m",
+            "movDeslocBonus": 3,
+            "naturalWeaponDamage": "+3 corte (asas medianas)"
+          },
+          "terra": {
+            "tail": true,
+            "agiBonus": 1,
+            "desclocBonus": 3,
+            "naturalWeaponDamage": "+5 esmagamento (cauda pesada)",
+            "requires": {
+              "for": 12
+            }
+          }
+        },
+        "grantsBypassesPrereq": true,
+        "grantsBypassesPrereqNote": "Pai exige Juuinka Ichi + Ritual Néva Negra (atributos altos). Grants são CONDIÇÕES de combate (acelerado) e BENEFÍCIOS de recursos (chakra +20 1x/cena), não aptidões — flag aplicada por completude semântica."
+      },
+      "evolutions": []
+    }
+  ]
+}

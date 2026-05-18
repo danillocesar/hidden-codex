@@ -13,37 +13,52 @@
     {
       "code": "aburame",
       "name": "Aburame",
-      "village": "konoha",
       "shortDescription": "Clã de Konoha que comunga seu corpo com insetos kikai, alimentadores de chakra. Usam-nos em jutsus defensivos e ofensivos.",
       "description": "Um dos mais importantes e conhecidos clãs de Konoha. Sua Kekkei Genkai permite aos membros do clã comungar seu corpo com pequenos insetos que se alimentam de chakra, os insetos kikai. Quando as crianças nascem, seus corpos são oferecidos aos insetos para serem usados como ninho. Ao longo dos anos, à medida que a criança cresce, ela aprende as técnicas secretas do clã. Os Aburame são reconhecidos por usarem óculos escuros e roupas que cobrem o corpo. Sensoriais por natureza, podem rastrear via insetos. Fonte: Livro Básico p. 142-150.",
       "benefits": {
-        "restrictedAptitudes": ["kikaichuu", "shokaichuu", "kidaichuu", "rinkaichuu"],
-        "restrictedPowers": ["kikai_ninpou"],
+        "restrictedAptitudes": [
+          "kikaichuu",
+          "shokaichuu",
+          "kidaichuu",
+          "rinkaichuu"
+        ],
+        "restrictedPowers": [
+          "kikai_ninpou"
+        ],
         "specialRules": "Não é possível ter Kidaichuu e Rinkaichuu simultaneamente."
       }
     },
     {
       "code": "akimichi",
       "name": "Akimichi",
-      "village": "konoha",
       "shortDescription": "Clã nobre de Konoha com grande força física, capaz de converter calorias em chakra e expandir o corpo gigantescamente.",
       "description": "Um dos clãs nobres de Konoha. Membros possuem grande força física e capacidade de converter calorias em chakra através de técnicas secretas. Usam o kanji 食 (shoku, 'alimento') em suas roupas. Podem usar os Três Comprimidos Coloridos para converter excesso de gordura em chakra ao custo da própria saúde. Muitos usam o bō (bastão) como arma. Hijutsu permite aumentar o tamanho do corpo, parcial ou totalmente. Fonte: Livro Básico p. 150-155.",
       "benefits": {
-        "restrictedAptitudes": ["corpulencia", "resiliencia"],
-        "restrictedPowers": ["baika_ninpou"],
+        "restrictedAptitudes": [
+          "corpulencia",
+          "resiliencia"
+        ],
+        "restrictedPowers": [
+          "baika_ninpou"
+        ],
         "specialRules": "Recebe Vitalidade adicional (3x Vigor) via Corpulência. Pode queimar Vitalidade como combustível para chakra (2 Vit por 1 Chakra)."
       }
     },
     {
       "code": "hatake",
       "name": "Hatake",
-      "village": "konoha",
       "shortDescription": "Clã de Konoha conhecido por contrato com Cães Ninjas e pela Espada de Chakra Branco.",
       "description": "Clã de Konoha com duas marcas características: contrato de invocação com os Cães Ninjas de Konoha, e a Espada de Chakra Branco (espada leve que produz luz branca quando movimentada). O usuário pode usar Espírito no lugar da Força para calcular dano de ataques com essa espada. Maior representante: Hatake Kakashi. Fonte: Livro Básico p. 155-157.",
       "benefits": {
         "hijutsuOptions": [
-          { "name": "Kuchiyose Restrito: Cães", "type": "invocacao" },
-          { "name": "Tensai + Presa de Prata", "type": "tensai" }
+          {
+            "name": "Kuchiyose Restrito: Cães",
+            "type": "invocacao"
+          },
+          {
+            "name": "Tensai + Presa de Prata",
+            "type": "tensai"
+          }
         ],
         "specialRules": "Acesso à Espada de Chakra Branco (corte +2, requer Des 8)."
       }
@@ -51,59 +66,78 @@
     {
       "code": "hyuuga",
       "name": "Hyuuga",
-      "village": "konoha",
       "shortDescription": "Clã nobre de Konoha com a kekkei genkai Byakugan. Possuem o Taijutsu mais forte da vila: Juuken.",
       "description": "Um dos clãs mais nobres de Konoha, com sistema hierárquico interno rígido (dividido em Família Principal e Ramo Secundário, com selo de obediência). Sua kekkei genkai Byakugan dá visão de 360°, vê chakra e tenketsus (pontos de pressão). O Taijutsu do clã, Juuken (Punho Suave), ataca diretamente os tenketsus, selando o fluxo de chakra do alvo. Fonte: Livro Básico p. 157-163.",
       "benefits": {
-        "restrictedAptitudes": ["byakugan", "tenketsu_byakugan"],
-        "restrictedPowers": ["juuken"],
+        "restrictedAptitudes": [
+          "byakugan",
+          "tenketsu_byakugan"
+        ],
+        "restrictedPowers": [
+          "juuken"
+        ],
         "kekkeiGenkai": "byakugan"
       }
     },
     {
       "code": "inuzuka",
       "name": "Inuzuka",
-      "village": "konoha",
       "shortDescription": "Clã de Konoha com afinidade canina. Cada membro recebe um cão/lobo companheiro e luta em parceria.",
       "description": "Marca principal: afinidade com cães e lobos. Toda criança Inuzuka ganha um cão ou lobo quando pequena, que será seu companheiro inseparável. Habilidade especial concentra chakra no nariz, dando capacidades olfativas sobre-humanas. Conhecidos pela marca de tinta nas bochechas e por lutarem em parceria com seu animal. Fonte: Livro Básico p. 163-168.",
       "benefits": {
-        "restrictedAptitudes": ["companheiro_animal", "hakken_no_jutsu"],
-        "restrictedPowers": ["shikakyu"]
+        "restrictedAptitudes": [
+          "companheiro_animal",
+          "hakken_no_jutsu"
+        ],
+        "restrictedPowers": [
+          "shikakyu"
+        ]
       }
     },
     {
       "code": "nara",
       "name": "Nara",
-      "village": "konoha",
       "shortDescription": "Clã estrategista de Konoha. Manipulam sombras como armas e criam medicamentos a partir de cervos.",
       "description": "Clã caracterizado pela capacidade de liderança, talento estrategista e criação de medicamentos. Possuem uma criação de cervos da qual extraem substâncias medicinais. Sua arte secreta permite manipular jutsus relacionados às sombras — a técnica básica imobiliza o adversário ao conectar a sombra dele com a do Nara. Fonte: Livro Básico p. 168-173.",
       "benefits": {
-        "restrictedPowers": ["kagejutsu"]
+        "restrictedPowers": [
+          "kagejutsu"
+        ]
       }
     },
     {
       "code": "sarutobi",
       "name": "Sarutobi",
-      "village": "konoha",
       "shortDescription": "Clã influente de Konoha. Lealdade à Vontade do Fogo, talento com Katon, contrato com Macacos Ninjas.",
       "description": "Clã influente de Konoha do qual surgem ninjas de renome que ocupam posições de autoridade (vários Hokages vieram dele). Extremamente leais à vila e devotos da Vontade do Fogo. Grande resistência e talento com técnicas Katon, rivalizando apenas com o clã Uchiha. Contrato de invocação com os Macacos Ninjas. Fonte: Livro Básico p. 173-174.",
       "benefits": {
         "hijutsuOptions": [
-          { "name": "Kuchiyose Restrito: Macacos", "type": "invocacao" },
-          { "name": "Tensai + Vontade do Fogo", "type": "tensai" }
+          {
+            "name": "Kuchiyose Restrito: Macacos",
+            "type": "invocacao"
+          },
+          {
+            "name": "Tensai + Vontade do Fogo",
+            "type": "tensai"
+          }
         ]
       }
     },
     {
       "code": "senju",
       "name": "Senju",
-      "village": "konoha",
       "shortDescription": "Clã fundador de Konoha. Conhecidos como Clã das Mil Habilidades. Hashirama Senju dominava Mokuton (Madeira).",
       "description": "Um dos clãs responsáveis por fundar a Vila Oculta da Folha, junto com o rival Uchiha. Conhecido pela força e versatilidade dos membros — recebia o nome de Clã das Mil Habilidades. Continua a influenciar Konoha através da filosofia da Vontade do Fogo. O maior ícone, Hashirama Senju (Primeiro Hokage), possuía grande vitalidade e a kekkei genkai Mokuton (elemento Madeira). Fonte: Livro Básico p. 174-180.",
       "benefits": {
         "hijutsuOptions": [
-          { "name": "Mokuton + Maximizar + Regeneração + Senjutsu", "type": "kekkei_genkai" },
-          { "name": "Tensai + Maximizar", "type": "tensai" }
+          {
+            "name": "Mokuton + Maximizar + Regeneração + Senjutsu",
+            "type": "kekkei_genkai"
+          },
+          {
+            "name": "Tensai + Maximizar",
+            "type": "tensai"
+          }
         ],
         "kekkeiGenkai": "mokuton"
       }
@@ -111,11 +145,16 @@
     {
       "code": "uchiha",
       "name": "Uchiha",
-      "village": "konoha",
       "shortDescription": "Clã rival do Senju. Kekkei genkai Sharingan: visão preditiva e cópia de técnicas. Obrigatoriamente afins com Katon.",
       "description": "Um dos mais famosos clãs de Konoha, responsável pela proteção e segurança da vila (policiamento). Sua kekkei genkai, o Sharingan, é conhecida e cobiçada por todo o mundo: concede percepção avançada dos movimentos (visão em câmera lenta), permitindo prever ataques. Evolui para Nidan (2 vírgulas), Sandan (3 vírgulas), e Mangekyou (formas únicas por usuário). Membros são obrigados a ter Katon ou a aptidão Elemento Natural: Katon. Fonte: Livro Básico p. 180-193.",
       "benefits": {
-        "restrictedAptitudes": ["elemento_natural_katon", "sharingan", "nidan_sharingan", "sandan_sharingan", "mangekyou_sharingan"],
+        "restrictedAptitudes": [
+          "elemento_natural_katon",
+          "sharingan",
+          "nidan_sharingan",
+          "sandan_sharingan",
+          "mangekyou_sharingan"
+        ],
         "requiredFromOrigin": "Katon ou Elemento Natural: Katon (obrigatório desde criação)",
         "kekkeiGenkai": "sharingan"
       }
@@ -123,32 +162,39 @@
     {
       "code": "uzumaki",
       "name": "Uzumaki",
-      "village": "konoha",
       "shortDescription": "Clã da Vila do Redemoinho (extinta). Conhecidos por chakra abundante, longevidade e fuuinjutsu avançado.",
       "description": "Clã originalmente da Vila do Redemoinho (Uzushiogakure), atualmente residente principalmente em Konoha após a destruição de Uzushio. Conhecidos por chakra abundante, longevidade impressionante, vitalidade aumentada e mestria em Fuuinjutsu (técnicas de selamento). Mais famosos membros: Uzumaki Kushina e Uzumaki Naruto. Fonte: Livro Básico p. 193-196.",
       "benefits": {
-        "restrictedAptitudes": ["chakra_expandido", "regeneracao"]
+        "restrictedAptitudes": [
+          "chakra_expandido",
+          "regeneracao"
+        ]
       }
     },
     {
       "code": "yamanaka",
       "name": "Yamanaka",
-      "village": "konoha",
       "shortDescription": "Clã de Konoha especializado em técnicas mentais: transferência de mente, leitura de pensamentos, controle.",
       "description": "Clã de Konoha especializado em técnicas mentais. Membros podem transferir a própria mente para o corpo de um alvo, ler pensamentos, e controlar outros. Geralmente trabalham em conjunto com Nara e Akimichi formando o time Ino-Shika-Cho clássico de Konoha. Também são herbalistas e floricultores (mantêm uma floricultura). Fonte: Livro Básico p. 196-200.",
       "benefits": {
-        "restrictedPowers": ["shintenshin"]
+        "restrictedPowers": [
+          "shintenshin"
+        ]
       }
     },
     {
       "code": "yuki",
       "name": "Yuki",
-      "village": "kiri",
       "shortDescription": "Clã do País da Água, possuidor da kekkei genkai Hyouton (elemento Gelo). Perseguidos historicamente em Kiri.",
       "description": "Clã oriundo do País da Água, possuidor da poderosa kekkei genkai Hyouton (elemento Gelo). Participaram de intensas guerras civis, nas quais demonstraram sua força e passaram a ser temidos por ela. Após o Mizukage começar perseguições contra clãs com kekkei genkai, foram massacrados — membros sobreviventes são raros e dispersos. Hyouton é formado pela combinação simultânea de Vento e Água, criando gelo manipulável. Fonte: Livro de Hijutsus p. 18-21.",
       "benefits": {
-        "restrictedAptitudes": ["selos_especiais", "congelamento"],
-        "restrictedPowers": ["hyouton"],
+        "restrictedAptitudes": [
+          "selos_especiais",
+          "congelamento"
+        ],
+        "restrictedPowers": [
+          "hyouton"
+        ],
         "kekkeiGenkai": "hyouton",
         "specialRules": "Membros do clã Yuki recebem Hyouton como poder exclusivo. Acesso à aptidão Congelamento (requer Hyouton 6)."
       }
@@ -156,7 +202,6 @@
     {
       "code": "fuuma",
       "name": "Fuuma",
-      "village": null,
       "shortDescription": "Clã proscrito do País do Arroz. Especialistas em assassinato com shuriken e wakizashi.",
       "description": "Clã ninja sem vila oficial, originário do País do Arroz. Especialistas em assassinato, conhecidos por shuriken gigantes (Fuuma Shuriken) e técnicas de wakizashi. Após dispersão histórica, muitos seguem como mercenários ou nukenins. Fonte: Livro de Hijutsus p. 7.",
       "benefits": {}
@@ -164,43 +209,54 @@
     {
       "code": "hoshigaki",
       "name": "Hoshigaki",
-      "village": "kiri",
       "shortDescription": "Clã de Kirigakure. Membros têm aparência tubaroide: dentes afiados, brânquias. Especialistas em Suiton.",
       "description": "Clã de Kirigakure cujos membros têm características parecidas com tubarões: dentes afiados e pontiagudos, marcas faciais que parecem brânquias. Especialistas em Suiton e mortais em áreas com grande quantidade de água. Predadores Aquáticos: podem respirar debaixo d'água e se movem com dobro do deslocamento. Pele dá dureza de corpo natural. Fonte: Livro de Hijutsus p. 8.",
       "benefits": {
-        "restrictedAptitudes": ["chakra_expandido", "predador_aquatico", "elemento_natural_suiton", "reserva_de_agua"],
+        "restrictedAptitudes": [
+          "chakra_expandido",
+          "predador_aquatico",
+          "elemento_natural_suiton",
+          "reserva_de_agua"
+        ],
         "exclusiveInvocation": "Tubarão (Kuchiyose como Poder Comum)"
       }
     },
     {
       "code": "hozuki",
       "name": "Hozuki",
-      "village": "kiri",
       "shortDescription": "Clã de Kirigakure. Pode liquidificar o próprio corpo, tornando-se imune a ataques físicos.",
       "description": "Clã de Kirigakure com a habilidade única de hidratificar/liquidificar o próprio corpo (Suika no Jutsu). Em estado líquido, o corpo se torna intangível: imune a danos físicos comuns mas vulnerável a Raiton e técnicas que afetam água. Membros precisam manter hidratação constante. Fonte: Livro de Hijutsus p. 10-13.",
       "benefits": {
-        "restrictedAptitudes": ["suika", "imunidade_fluida"]
+        "restrictedAptitudes": [
+          "suika",
+          "imunidade_fluida"
+        ]
       }
     },
     {
       "code": "kaguya",
       "name": "Kaguya",
-      "village": null,
       "shortDescription": "Clã bárbaro extinto. Kekkei genkai Shikotsumyaku permite manipular e remover ossos do corpo como armas.",
       "description": "Clã de bárbaros que amavam a guerra e se recusavam a desistir, lutando por diversão. Possuíam a kekkei genkai Shikotsumyaku (Pulso dos Ossos Mortais), habilidade poderosa e rara mesmo dentro do clã. Permite remover ossos do corpo e moldá-los como armas (lâminas, lanças, projéteis), regenerando-os quase imediatamente. Praticamente extinto após tentar tomar Kirigakure à força. Fonte: Livro de Hijutsus p. 14-17.",
       "benefits": {
-        "restrictedAptitudes": ["shikotsumyaku", "artesao_de_ossos", "regeneracao"]
+        "restrictedAptitudes": [
+          "shikotsumyaku",
+          "artesao_de_ossos",
+          "regeneracao"
+        ]
       }
     },
     {
       "code": "yotsuki",
       "name": "Yotsuki",
-      "village": "kumo",
       "shortDescription": "Clã da Vila Oculta da Nuvem. Espadachins lendários com técnicas Raiton e a aptidão Lâmina da Lua.",
       "description": "Clã da Vila Oculta da Nuvem (Kumogakure). Durante o mandato do Primeiro Raikage, jurou lealdade à Vila e recebeu terras no Vale das Nuvens, região montanhosa e úmida onde treina o jinchuuriki do Hachibi. Membros são conhecidos pela lealdade absoluta — nunca traem ou revelam informações de companheiros. Possuem a habilidade inigualável de esgrima e domínio de Raiton. Fonte: Livro de Hijutsus p. 18.",
       "benefits": {
         "hijutsuOptions": [
-          { "name": "Tensai + Lâmina da Lua", "type": "tensai" }
+          {
+            "name": "Tensai + Lâmina da Lua",
+            "type": "tensai"
+          }
         ]
       }
     }

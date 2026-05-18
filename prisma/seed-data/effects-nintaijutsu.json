@@ -1,0 +1,277 @@
+{
+  "_meta": {
+    "description": "Lote 7j — 8 effects do Nintaijutsu (Força Bruta, Elbow, Straight, Lariat, Hell Stab, Guillotine Drop, Linger Bomb, Reverse Chop). Hell Stab requer aptidão Armadura de Raios.",
+    "sources": [
+      "Livro de Hijutsus p. 62-64"
+    ],
+    "extractedAt": "2026-05-14",
+    "schemaVersion": 1,
+    "appliesToTable": "effects",
+    "expectedItemCount": 8
+  },
+  "data": [
+    {
+      "code": "forca_bruta",
+      "name": "Força Bruta",
+      "minLevel": 1,
+      "availableFor": [
+        "nintaijutsu"
+      ],
+      "shortDescription": "Nintaijutsu Nv 1. Golpe rápido com benefícios de Punho de Ferro. ÚNICO que usa aptidões de manobra + dano comum NÃO se aplica.",
+      "description": "Ataca com força bruta e velocidade. Golpes rápidos pra destruir oponente em um ataque. Recebe benefícios da aptidão Punho de Ferro — logo, dano comum do poder NÃO se aplica. Pode receber bônus de dano (Dano Extra) e PODE ser usado com aptidões de manobra (único efeito do Nintaijutsu que permite). Fonte: Livro de Hijutsus p. 62.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "toque",
+        "chakraCost": 0,
+        "duration": "INSTANTANEA"
+      },
+      "rules": {
+        "type": "tecnica_nintaijutsu",
+        "prerequisites": {
+          "powers": {
+            "nintaijutsu": 1
+          }
+        },
+        "appliesPunhoDeFerro": true,
+        "doesNotUseDanoComumDoPoder": true,
+        "allowsManobraAptitudes": true,
+        "allowsDamageBonusAptitudes": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "elbow",
+      "name": "Elbow",
+      "minLevel": 2,
+      "availableFor": [
+        "nintaijutsu"
+      ],
+      "shortDescription": "Nintaijutsu Nv 2. Cotovelada. Vigor (Dif padrão +2) ou arremessado 5m+1m/For. Nv 5: arremessa metade mesmo se passar.",
+      "description": "Cotovelada ultrapotente. Ataque desarmado com Força Bruta sem aptidões de manobra. Alvo testa Vigor (Dif padrão +2) ou é arremessado 5m + 1m por Força. NÃO fica caído. Evolução Nv 5: mesmo passando, alvo arremessado pela metade da distância. Fonte: Livro de Hijutsus p. 63.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "toque",
+        "duration": "INSTANTANEA"
+      },
+      "rules": {
+        "type": "tecnica_nintaijutsu",
+        "prerequisites": {
+          "powers": {
+            "nintaijutsu": 2
+          }
+        },
+        "appliesForcaBruta": true,
+        "noManobraAptitudes": true,
+        "resistanceTest": {
+          "attribute": "vig",
+          "difficulty": "padrao + 2"
+        },
+        "onFailure": "arremessado_5m_+_1m_por_for",
+        "noKnockdown": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 5,
+          "requires": "nintaijutsu_5",
+          "name": "Elbow Nv 5",
+          "description": "Mesmo passando no Vigor, alvo é arremessado pela metade da distância."
+        }
+      ]
+    },
+    {
+      "code": "straight",
+      "name": "Straight",
+      "minLevel": 3,
+      "availableFor": [
+        "nintaijutsu"
+      ],
+      "shortDescription": "Nintaijutsu Nv 3. Avanço rápido + soco reto. Vigor ou arremessado 10m+2m/For + caído. Nv 6: +2 Agi finta acelerada.",
+      "description": "Após correr em super velocidade, ataca com soco reto. Realiza Avanço Rápido + ataque com dano comum. Alvo testa Vigor ou é arremessado 10m + 2m por Força, FICANDO CAÍDO. Evolução Nv 6: +2 em Agilidade no teste de finta acelerada durante avanço rápido. Fonte: Livro de Hijutsus p. 63.",
+      "stats": {
+        "action": "COMPLETA",
+        "range": "toque_apos_avanco_rapido",
+        "duration": "INSTANTANEA"
+      },
+      "rules": {
+        "type": "tecnica_nintaijutsu",
+        "prerequisites": {
+          "powers": {
+            "nintaijutsu": 3
+          }
+        },
+        "requiresAvancoRapido": true,
+        "resistanceTest": {
+          "attribute": "vig"
+        },
+        "onFailure": "arremessado_10m_+_2m_por_for + caido"
+      },
+      "evolutions": [
+        {
+          "atLevel": 6,
+          "requires": "nintaijutsu_6",
+          "name": "Straight Nv 6",
+          "description": "+2 em Agilidade no teste de finta acelerada durante avanço rápido."
+        }
+      ]
+    },
+    {
+      "code": "lariat",
+      "name": "Lariat",
+      "minLevel": 4,
+      "availableFor": [
+        "nintaijutsu"
+      ],
+      "shortDescription": "Nintaijutsu Nv 4. Avanço rápido + +1 dano. Obrigatório continuar 5m+ após ataque. Nv 8: +1 dano por 5m antes (max +3).",
+      "description": "Pega impulso pra desferir golpe com antebraço. Avanço rápido + ataque com dano comum +1. Após ataque, OBRIGADO a continuar correndo pelo menos 5m antes de parar. Se não há deslocamento bastante, efeito não pode ser usado. Evolução Nv 8: +1 bônus dano por 5m deslocados antes do ataque (max +3). Fonte: Livro de Hijutsus p. 63.",
+      "stats": {
+        "action": "COMPLETA",
+        "range": "toque_apos_avanco_rapido",
+        "duration": "INSTANTANEA"
+      },
+      "rules": {
+        "type": "tecnica_nintaijutsu",
+        "prerequisites": {
+          "powers": {
+            "nintaijutsu": 4
+          }
+        },
+        "requiresAvancoRapido": true,
+        "damageBonus": 1,
+        "mandatoryPostAttackMovement": "5m_minimo",
+        "blockedIfInsufficientMovement": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 8,
+          "requires": "nintaijutsu_8",
+          "name": "Lariat Nv 8",
+          "description": "+1 bônus dano por 5m deslocados antes do ataque, max +3 dano."
+        }
+      ]
+    },
+    {
+      "code": "hell_stab",
+      "name": "Hell Stab",
+      "minLevel": 5,
+      "availableFor": [
+        "nintaijutsu"
+      ],
+      "shortDescription": "Nintaijutsu Nv 5. Requer Armadura de Raios. Mesma regra Lâmina de Raios Nv 5 (Raiton) mas usa Força. Nv 7 e Nv 9 evoluções.",
+      "description": "Concentra chakra elétrico nas pontas dos dedos pra perfurar alvo sobrepujando defesa. Nível de perfuração aumenta com menos dedos usados (1 dedo = mais letal). Funciona igual Lâmina de Raios Nv 5 do Raiton, mas usando Força no cálculo de dano. Evoluções Nv 7 e Nv 9 espelham Lâmina de Raios. Nv 9: também ganha Domínio do Raio grátis. Fonte: Livro de Hijutsus p. 63-64.",
+      "stats": {
+        "action": "varia_por_lamina_de_raios",
+        "range": "toque",
+        "duration": "ver_lamina_de_raios"
+      },
+      "rules": {
+        "type": "tecnica_nintaijutsu",
+        "prerequisites": {
+          "powers": {
+            "nintaijutsu": 5
+          },
+          "aptitudes": [
+            "armadura_de_raios"
+          ]
+        },
+        "inheritsRulesFrom": "lamina_de_raios_nv5",
+        "useStrengthInsteadOfSpirit": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 7,
+          "requires": "nintaijutsu_7",
+          "name": "Hell Stab Nv 7",
+          "description": "Mesmas regras da Lâmina de Raios Nv 7."
+        },
+        {
+          "atLevel": 9,
+          "requires": "nintaijutsu_9",
+          "name": "Hell Stab Nv 9",
+          "description": "Mesmas regras da Lâmina de Raios Nv 9. Adicionalmente, recebe Domínio do Raio grátis pra este efeito."
+        }
+      ]
+    },
+    {
+      "code": "guillotine_drop",
+      "name": "Guillotine Drop",
+      "minLevel": 7,
+      "availableFor": [
+        "nintaijutsu"
+      ],
+      "shortDescription": "Nintaijutsu Nv 7. Após salto, chute de cima com calcanhar. Dano comum. Vigor ou esmagado contra chão (atordoado + caído 1 turno).",
+      "description": "Após um salto, martela alvo com chute de cima pra baixo com calcanhar. Dano comum. Vigor ou ESMAGADO contra chão (atordoado + caído por 1 turno). Fonte: Livro de Hijutsus p. 64.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "toque_apos_salto",
+        "duration": "INSTANTANEA"
+      },
+      "rules": {
+        "type": "tecnica_nintaijutsu",
+        "prerequisites": {
+          "powers": {
+            "nintaijutsu": 7
+          }
+        },
+        "resistanceTest": {
+          "attribute": "vig"
+        },
+        "onFailure": "atordoado_e_caido_1_turno"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "linger_bomb",
+      "name": "Linger Bomb",
+      "minLevel": 9,
+      "availableFor": [
+        "nintaijutsu"
+      ],
+      "shortDescription": "Nintaijutsu Nv 9. Agarrar + arremessa no chão. Dano comum com Força INTEGRAL (sem divisão). NÃO recebe bônus de dano.",
+      "description": "Agarra oponente e arremessa no chão com potência brutal. Teste de Agarrar. Sucesso = joga pra baixo causando dano comum do poder com atributo Força INTEGRAL (sem divisão por 2). Em contrapartida, NÃO recebe bônus de dano de qualquer tipo (mesmo de aumento de Força como Hachimon 1). Fonte: Livro de Hijutsus p. 64.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "toque",
+        "duration": "INSTANTANEA",
+        "rollType": "agarrar"
+      },
+      "rules": {
+        "type": "tecnica_nintaijutsu",
+        "prerequisites": {
+          "powers": {
+            "nintaijutsu": 9
+          }
+        },
+        "manobra": "agarrar",
+        "useStrengthFullNotDivided": true,
+        "noDamageBonusOfAnyKind": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "reverse_chop",
+      "name": "Reverse Chop",
+      "minLevel": 10,
+      "availableFor": [
+        "nintaijutsu"
+      ],
+      "shortDescription": "Nintaijutsu Nv 10. Após salto, martela alvo com mão de cima pra baixo. Regras de Guillotine Drop mas dano sempre Grau 3 mínimo.",
+      "description": "Após salto, martela alvo com golpe forte com mão de cima pra baixo enterrando no solo. Mesmas regras do Guillotine Drop. Potência ampliada pelo salto garante NUNCA causar menos que Grau 3 de dano. Fonte: Livro de Hijutsus p. 64.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "toque_apos_salto",
+        "duration": "INSTANTANEA"
+      },
+      "rules": {
+        "type": "tecnica_nintaijutsu",
+        "prerequisites": {
+          "powers": {
+            "nintaijutsu": 10
+          }
+        },
+        "inheritsRulesFrom": "guillotine_drop",
+        "minimumDamageGrade": 3
+      },
+      "evolutions": []
+    }
+  ]
+}

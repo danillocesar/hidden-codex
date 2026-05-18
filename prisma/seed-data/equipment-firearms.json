@@ -1,0 +1,228 @@
+{
+  "_meta": {
+    "description": "Lote 6c — Armas de Fogo do Guia Avançado. 5 armas + 1 munição = 6 itens. Sistema novo: regras de pólvora (Falha de Pólvora, Arma Danificada, Recarga Rápida, Manuseio difficulty) modeladas no campo effects.gunpowderRules de cada arma. Disparador Oculto também incluído neste lote por similaridade mecânica (sistema de disparo, mas usa senbons, não pólvora).",
+    "sources": [
+      "Guia Avançado do Shinobi p. 56-58 (Armas de Fogo + regras de pólvora)",
+      "Guia Avançado do Shinobi p. 63 (Disparador Oculto)",
+      "Guia Avançado do Shinobi p. 73 (Tabela)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "expectedItemCount": 7,
+    "unmodeledAptitudes": [
+      "usar_arma_disparador_oculto"
+    ],
+    "unmodeledAptitudesNotes": "1 variante parametrizada de 'usar_arma' (5a) para o Disparador Oculto — não é arma de fogo, usa senbons. Mesma pendência arquitetural do 6a/6b. As 5 firearms usam 'usar_polvora' (5d patches) — ref real, sem entrada dormente.",
+    "globalGunpowderRules": {
+      "description": "Regras globais aplicáveis a TODAS armas de fogo. Motor pode acessar essas regras compartilhadas via campo effects.gunpowderRulesRef.",
+      "reload": "Ação de movimento padrão. Recarga Rápida (com Saque Rápido + Usar Pólvora): teste Prestidigitação vs Manuseio = ação livre.",
+      "failureChances": [
+        "Falha crítica (2/3) no teste de CD",
+        "Arma alvejada diretamente por ataque com Grau 2+ de dano",
+        "Arma usada pra Bloquear",
+        "Falha em teste de Recarga Rápida"
+      ],
+      "damagedPenalty": "-1 CD enquanto Danificada",
+      "permanentDestruction": "Arma já Danificada que sofre nova Falha de Pólvora = destruída permanentemente",
+      "repair": "Aptidão Usar Pólvora + cena de trabalho + teste de Mecanismo vs Manuseio da arma",
+      "noise": "Disparos são barulhentos. Detectar shinobi que disparou = teste de Perceber Dif 14",
+      "createArmaRequirement": "Só pode criar via Criar Arma Nv 6 + aptidão Usar Pólvora",
+      "energizeAllowed": "Pode aplicar Energizar sem pré-req adicional"
+    }
+  },
+  "data": [
+    {
+      "code": "pistola_de_pederneira_pequena",
+      "name": "Pistola de Pederneira Pequena",
+      "kind": "WEAPON",
+      "subtype": "fogo",
+      "category": "DISPARO",
+      "price": 100,
+      "damage": "+1",
+      "range": "20m",
+      "critRange": "15-16",
+      "slots": { "items": 2, "compartments": 1 },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "aptitudes": ["usar_polvora"]
+      },
+      "effects": {
+        "isFirearm": true,
+        "manuseio": 10,
+        "ambidestriaCompatible": true,
+        "ambidestriaReloadBenefit": "1 Recarga Rápida recarrega ambas",
+        "requiresAmmo": "municao_arma_de_fogo",
+        "gunpowderRulesRef": true,
+        "compatibleAptitudes": ["energizar"]
+      },
+      "shortDescription": "Pistola simples e leve. Manuseio 10. Permite Ambidestria.",
+      "description": "Pistola de pólvora simples, leve e de fácil manuseio e conservação, porém baixo dano. Câmara onde se deposita pólvora e projétil, dispositivo que bate sílex pra gerar faísca. Pode ser usada com Ambidestria (par + Ambidestria = 1 Recarga Rápida pra ambas). Só requer aptidão Usar Pólvora. Manuseio 10. Fonte: GAS p. 57."
+    },
+    {
+      "code": "pistola_de_pederneira",
+      "name": "Pistola de Pederneira",
+      "kind": "WEAPON",
+      "subtype": "fogo",
+      "category": "DISPARO",
+      "price": 200,
+      "damage": "+2",
+      "range": "25m",
+      "critRange": "15-16",
+      "slots": { "items": 2, "compartments": 1 },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes": { "des": 8 },
+        "aptitudes": ["usar_polvora"]
+      },
+      "effects": {
+        "isFirearm": true,
+        "manuseio": 14,
+        "ambidestriaCompatible": true,
+        "ambidestriaReloadBenefit": "1 Recarga Rápida recarrega ambas",
+        "requiresAmmo": "municao_arma_de_fogo",
+        "gunpowderRulesRef": true,
+        "compatibleAptitudes": ["energizar"]
+      },
+      "shortDescription": "Pistola padrão. Manuseio 14. Requer Des 8 + Usar Pólvora.",
+      "description": "Pistola de pólvora padrão, de fácil porte e manuseio para a maior parte das ocasiões, porém não possui o maior dos alcances. Permite Ambidestria (par + Ambidestria = 1 Recarga Rápida pra ambas). Manuseio 14. Fonte: GAS p. 58."
+    },
+    {
+      "code": "bacamarte",
+      "name": "Bacamarte",
+      "kind": "WEAPON",
+      "subtype": "fogo",
+      "category": "DISPARO",
+      "price": 250,
+      "damage": "+4(+5)[+6]",
+      "range": "20(10)m",
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes": { "des": 10 },
+        "aptitudes": ["usar_polvora"]
+      },
+      "effects": {
+        "isFirearm": true,
+        "manuseio": 18,
+        "twoHanded": true,
+        "shortRangeBonus": {
+          "withinMeters": 10,
+          "damageBonus": "+1",
+          "withDes12": "+2"
+        },
+        "requiresAmmo": "municao_arma_de_fogo",
+        "gunpowderRulesRef": true,
+        "compatibleAptitudes": ["energizar"]
+      },
+      "shortDescription": "Cano curto e largo, curta distância. +1 dano até 10m (+2 com Des 12). Duas mãos.",
+      "description": "Arma de fogo de cano curto e largo, específica pra curta distância. Projéteis normalmente são múltiplos pedaços de chumbo/ferro pra causar mais dano. Caso alvo esteja a no máximo 10m: +1 dano de arma (+2 com Des 12). Duas mãos. Manuseio 18. Fonte: GAS p. 58."
+    },
+    {
+      "code": "arcabuz",
+      "name": "Arcabuz",
+      "kind": "WEAPON",
+      "subtype": "fogo",
+      "category": "DISPARO",
+      "price": 250,
+      "damage": "+4",
+      "range": "10m + 2x Destreza",
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes": { "des": 10 },
+        "aptitudes": ["usar_polvora"]
+      },
+      "effects": {
+        "isFirearm": true,
+        "manuseio": 16,
+        "twoHanded": true,
+        "rangeFormula": "10 + 2 * destreza (em metros)",
+        "requiresAmmo": "municao_arma_de_fogo",
+        "gunpowderRulesRef": true,
+        "compatibleAptitudes": ["energizar"]
+      },
+      "shortDescription": "Cano médio. Alcance escala com Destreza. Duas mãos. Manuseio 16.",
+      "description": "Arma de fogo de cano médio. Arma de fogo padrão de muitos soldados. Maior alcance e dano consistente. Duas mãos. Manuseio 16. Fonte: GAS p. 58."
+    },
+    {
+      "code": "mosquete",
+      "name": "Mosquete",
+      "kind": "WEAPON",
+      "subtype": "fogo",
+      "category": "DISPARO",
+      "price": 500,
+      "damage": "+5",
+      "range": "15m + 3x Destreza",
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes": { "des": 12 },
+        "aptitudes": ["usar_polvora"]
+      },
+      "effects": {
+        "isFirearm": true,
+        "manuseio": 22,
+        "twoHanded": true,
+        "rangeFormula": "15 + 3 * destreza (em metros)",
+        "requiresAmmo": "municao_arma_de_fogo",
+        "gunpowderRulesRef": true,
+        "compatibleAptitudes": ["energizar"],
+        "penetrationCapability": "capaz de penetrar boas armaduras"
+      },
+      "shortDescription": "Cano fino e longo. Evolução do arcabuz. Penetra armaduras. Manuseio 22.",
+      "description": "Arma de fogo de cano fino e longo, evolução do arcabuz. Uma das mais poderosas que alguém pode utilizar, apesar da dificuldade. Capaz de penetrar boas armaduras. Duas mãos. Manuseio 22. Fonte: GAS p. 58."
+    },
+    {
+      "code": "municao_arma_de_fogo",
+      "name": "Munição p/ Arma de Fogo",
+      "kind": "AMMO",
+      "subtype": "municao",
+      "category": "MUNICAO",
+      "price": 1,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": { "items": 20, "compartments": 1 },
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "compatibleWith": ["pistola_de_pederneira_pequena", "pistola_de_pederneira", "bacamarte", "arcabuz", "mosquete"]
+      },
+      "shortDescription": "Munição genérica pra armas de fogo. 20 por compartimento.",
+      "description": "Munição genérica pra todas as armas de fogo. Fonte: GAS p. 59 + 73 (tabela)."
+    },
+    {
+      "code": "disparador_oculto",
+      "name": "Disparador Oculto",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "DISPARO",
+      "price": 15,
+      "damage": "+4",
+      "range": "15m",
+      "critRange": "15-16",
+      "slots": { "items": 2, "compartments": 1 },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes": { "des": 10 },
+        "aptitudes": ["usar_arma_disparador_oculto"]
+      },
+      "effects": {
+        "isHidden": true,
+        "prestidigitacaoBonus": 2,
+        "prestidigitacaoOpposes": "prontidao",
+        "ambushVulnerability": "Pessoas que não sabem da existência ficam suscetíveis a Ataque Furtivo",
+        "loadingAction": "parcial",
+        "loadingFreeWithSaqueRapido": true,
+        "loadProjectiles": 3,
+        "ammoUsed": "senbon",
+        "isNotFirearm": "NÃO é arma de fogo — usa senbons, não pólvora"
+      },
+      "shortDescription": "Disparador oculto de senbons. +2 Prestidigitação pra esconder. Permite Ataque Furtivo.",
+      "description": "Disparador de senbons que pode ser escondido nos braços e pernas, por debaixo de mangas ou saias. +2 bônus de Prestidigitação pra ocultar (contra Prontidão). Pessoas que não sabem da existência: suscetíveis a Ataque Furtivo. Necessário armar 3 senbons no disparador pra causar dano: ação parcial (livre com Saque Rápido). NÃO é arma de fogo — não sofre regras de pólvora, mas funciona como disparador de senbons. Fonte: GAS p. 62-63."
+    }
+  ]
+}

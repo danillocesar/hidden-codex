@@ -1,0 +1,268 @@
+{
+  "_meta": {
+    "description": "Lote 7e1 — Aptidões Uchiha: hipnose_sharingan (nova, 9 modos via subTechniques) + upsert nidan/sandan_sharingan (refator de fields amorfos pra subTechniques conforme SCHEMA-PATTERNS §5). Mímica Sharingan vira 3 subTechniques; Reverter Ilusão vira 1 subTechnique no Sandan.",
+    "sources": [
+      "Livro Básico p. 182 (Nidan: Visão Acelerada, Foco, Olhar Hipnótico)",
+      "Livro Básico p. 183-184 (Sandan: Visão Acelerada Maior, Previsão Perfeita, Reverter Ilusão)",
+      "Livro Básico p. 185-186 (Mímica Sharingan)",
+      "Livro Básico p. 186-187 (Hipnose Sharingan)"
+    ],
+    "extractedAt": "2026-05-14",
+    "schemaVersion": 1,
+    "appliesToTable": "aptitudes",
+    "expectedItemCount": 3,
+    "intentionalUpserts": [
+      "nidan_sharingan",
+      "sandan_sharingan"
+    ],
+    "intentionalUpsertsNotes": "Refator de fields amorfos pra subTechniques[] conforme SCHEMA-PATTERNS §5. Mímica Sharingan (Nidan) e Reverter Ilusão (Sandan) eram fields; viram subTechniques tipadas. Conteúdo factual idêntico ao anterior, apenas estrutura mudou. Também adicionados pré-reqs de Per (6 pra Nidan, 9 pra Sandan) que estavam faltando.",
+    "unmodeledPowers": [],
+    "unmodeledAptitudes": [],
+    "phase7e1Closure": "Mangekyou Sharingan stack completo: power virtual mangekyou_sharingan + 6 effects + aptidão Hipnose Sharingan + refator de Nidan/Sandan."
+  },
+  "data": [
+    {
+      "code": "hipnose_sharingan",
+      "name": "Hipnose Sharingan",
+      "category": "RESTRITA",
+      "shortDescription": "Genjutsu KG do Sandan. 9 modos: ConseguirInfo, AlterarAtitude, Nocautear, Paralisar, ControlarMente, ControlarBijuu (PdM), RoubarTécnica, FalsaMorte, SobreporGenjutsu.",
+      "description": "Técnicas de ilusão exclusivas do Sandan Sharingan. Funciona via Olhar Hipnótico (alcance 9m, contato visual). Dificuldade = 8 + Nível Int + (Ilusão Profunda inclusa). Tipo: Genjutsu/KG/Doujutsu. Selos: Não. Alcance: 9m. Custo de Chakra: 5. Pré-req: Sandan Sharingan + Fascinar + Ilusão Profunda. Fonte: Livro Básico p. 186-187.",
+      "prerequisites": {
+        "clans": [
+          "uchiha"
+        ],
+        "aptitudes": [
+          "sandan_sharingan",
+          "fascinar",
+          "ilusao_profunda"
+        ]
+      },
+      "effects": {
+        "type": "genjutsu_kekkei_genkai_doujutsu",
+        "rangeM": 9,
+        "chakraCost": 5,
+        "selos": false,
+        "difficulty": "8 + Nivel Int + Ilusao Profunda",
+        "subTechniques": [
+          {
+            "code": "hipnose_conseguir_informacao",
+            "name": "Conseguir Informação",
+            "subType": "active_ability",
+            "action": "1_rodada",
+            "duration": "continua",
+            "description": "Alvo entra em transe e responde qualquer pergunta que souber."
+          },
+          {
+            "code": "hipnose_alterar_atitude",
+            "name": "Alterar Atitude",
+            "subType": "active_ability",
+            "action": "1_rodada",
+            "duration": "continua",
+            "description": "Altera atitude de alvo capanga em qualquer escala. Ver p. 54.",
+            "targetRestriction": "capanga"
+          },
+          {
+            "code": "hipnose_nocautear",
+            "name": "Nocautear",
+            "subType": "active_attack",
+            "action": "padrao",
+            "duration": "instantanea",
+            "description": "Vítima fica inconsciente.",
+            "targetRestriction": "capanga"
+          },
+          {
+            "code": "hipnose_paralisar",
+            "name": "Paralisar",
+            "subType": "active_attack",
+            "action": "padrao",
+            "duration": "continua",
+            "prerequisites": {
+              "attributes": {
+                "int": 10
+              }
+            },
+            "description": "Ilusão de prisão física. Regras do efeito Paralisar do Magen. Nível do efeito = maior permitido pela campanha. Custo de chakra = correspondente ao nível do efeito (em vez do custo padrão da Hipnose)."
+          },
+          {
+            "code": "hipnose_controlar_mente",
+            "name": "Controlar Mente",
+            "subType": "active_attack",
+            "action": "padrao",
+            "duration": "continua",
+            "description": "Mente da vítima sob seu controle, comanda todas ações.",
+            "targetRestriction": "capanga"
+          },
+          {
+            "code": "hipnose_controlar_bijuu",
+            "name": "Controlar Bijuu",
+            "subType": "active_attack",
+            "action": "padrao",
+            "duration": "permanente",
+            "description": "Funciona como Controlar Mente, mas em UMA Bijuu. Bijuu vira invocação pessoal seguindo regras Kuchiyose Comum (mesmo sem o poder).",
+            "restriction": "somente_PdM",
+            "targetRestriction": "1_bijuu"
+          },
+          {
+            "code": "hipnose_roubar_tecnica",
+            "name": "Roubar Técnica",
+            "subType": "active_attack",
+            "action": "completa",
+            "duration": "instantanea",
+            "description": "Faz alvo usar técnica mais poderosa em próxima ação que possa ser copiada pela Mímica Sharingan. Jutsu é copiado e usado imediatamente contra o alvo antes que ele complete a execução. Alvo defende desprevenido. Custo: hipnose + chakra do jutsu roubado.",
+            "additionalCost": "chakra_do_jutsu_roubado",
+            "requires": "tecnica_copiavel_pela_mimica_sharingan"
+          },
+          {
+            "code": "hipnose_falsa_morte",
+            "name": "Falsa Morte",
+            "subType": "active_reaction",
+            "action": "movimento",
+            "duration": "instantanea",
+            "description": "Quando alvo de ataque/poder, aplica genjutsu fazendo inimigo crer que ataque teve sucesso e usuário morreu. Inimigo sem direito a resistência, ataque interrompido temporariamente, usuário escapa pelo deslocamento padrão. Sem testes. 1x por cena.",
+            "scenelyLimit": 1,
+            "noResistanceTest": true
+          },
+          {
+            "code": "hipnose_sobrepor_genjutsu",
+            "name": "Sobrepor Genjutsu",
+            "subType": "active_ability",
+            "action": "padrao",
+            "duration": "instantanea",
+            "description": "Liberta alguém vítima de genjutsu, sobrepondo outra ilusão. Requer teste de Inteligência, funciona como Kai básico mas à distância com contato visual."
+          }
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "nidan_sharingan",
+      "name": "Nidan Sharingan",
+      "category": "RESTRITA",
+      "shortDescription": "Sharingan 2º estágio. Visão Acelerada + Foco Aprimorado + Olhar Hipnótico + Mímica Sharingan (3 subTechniques).",
+      "description": "Segundo estágio do Sharingan. Aparência: duas vírgulas negras. Benefícios adicionais ao Sharingan: Visão Acelerada (Intuição + 2 Prontidão vs Fintar), Foco Aprimorado (não pode ser flanqueado), Olhar Hipnótico (genjutsus oculares 9m sem Concentração; Fascinar +1 Dif via contato visual; Resistir à Ilusão +2), Mímica Sharingan (Anular Técnica sem contra-técnica, Copiar Técnica, Memorizar Técnica). Fonte: Livro Básico p. 182, 185-186.",
+      "prerequisites": {
+        "clans": [
+          "uchiha"
+        ],
+        "aptitudes": [
+          "sharingan"
+        ],
+        "attributes": {
+          "per": 6
+        }
+      },
+      "effects": {
+        "type": "doujutsu_enhancement",
+        "augmentsAptitude": "sharingan",
+        "passiveBenefits": {
+          "visaoAcelerada": "ganha_aptidao_Intuicao_gratis + 2_prontidao_vs_fintar",
+          "focoAprimorado": "nao_pode_ser_flanqueado",
+          "olharHipnotico": {
+            "rangeM": 9,
+            "noConcentrationTestInClose": true,
+            "fascinarBonus": "+1_dificuldade",
+            "fascinarRepeatableInScene": true,
+            "fascinarImmunity1TurnAfterRelease": true,
+            "resistirIlusao": "+2_resistencia_genjutsu_ocular",
+            "lookAvoidanceRule": "alvo_que_recusa_olhar_sofre_camuflagem_parcial (a menos que tenha Lutar As Cegas Nv 2)"
+          }
+        },
+        "subTechniques": [
+          {
+            "code": "mimica_anular_tecnica",
+            "name": "Mímica Sharingan: Anular Técnica",
+            "subType": "active_reaction",
+            "description": "Usa manobra Anular Técnica mesmo sem contra-técnica apropriada. Copia a usada pelo adversário, pagando mesmo custo de chakra.",
+            "chakraCost": "igual_da_tecnica_anulada"
+          },
+          {
+            "code": "mimica_copiar_tecnica",
+            "name": "Mímica Sharingan: Copiar Técnica",
+            "subType": "active_ability",
+            "action": "completa",
+            "description": "Copia técnica anulada ou analisada com Sharingan. Análise = ação completa, anunciada durante execução adversária. Pode reutilizar por 1 semana. Limite: 1 técnica por 4 Int completos (máx 5). Parâmetros da cópia são do momento da cópia, imutáveis. Bonificações de aptidões/poderes restritos NÃO copiadas.",
+            "duration": "1_semana",
+            "limit": "1_por_4_Int_completos_max_5",
+            "restrictions": [
+              "nao_copia_hijutsu_ou_cla",
+              "respeita_limite_de_poder",
+              "atende_pre_reqs"
+            ]
+          },
+          {
+            "code": "mimica_memorizar_tecnica",
+            "name": "Mímica Sharingan: Memorizar Técnica",
+            "subType": "active_ability",
+            "description": "Memoriza 1 técnica Copiada. Deixa de contar no limite. Substituível à vontade. Opcional: aprende permanentemente pagando 2 pontos de poder (vira aptidão na ficha, mas não pode ser pré-req de outras técnicas).",
+            "permanentCost": "2_pontos_de_poder"
+          }
+        ],
+        "mimicaSharinganRestrictions": {
+          "copiavel": [
+            "efeito_de_poder",
+            "aptidao_shinobi",
+            "aptidao_de_manobra",
+            "nivel_1_de_qualquer_poder_comum"
+          ],
+          "naoCopiavel": [
+            "hijutsu",
+            "tecnicas_de_cla"
+          ],
+          "respeitaLimiteDePoder": true,
+          "respeitaPreReqs": true,
+          "permiteCopiarElementoNaoPossuido": "apenas_elementos_basicos_doton_fuuton_katon_raiton_suiton",
+          "novoElemento": "ganha_direito_a_uma_nova_afinidade_elemental_comprar_mais_um_poder_de_ninjutsu_elemental"
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "sandan_sharingan",
+      "name": "Sandan Sharingan",
+      "category": "RESTRITA",
+      "shortDescription": "Sharingan 3º estágio. Visão Acelerada Maior + Previsão Perfeita + Reverter Ilusão. Habilita Hipnose Sharingan.",
+      "description": "Terceiro estágio do Sharingan. Três vírgulas negras. Benefícios adicionais: Visão Acelerada Maior (imune a finta acelerada, ataque oportuno contra acelerados), Previsão Perfeita (manobras de previsão em ataque oportuno/desprevenido, Superar Técnica sem penalidade de precisão), Reverter Ilusão (Percepção em vez de Inteligência pra detectar ilusão; se sucesso, retorna ao conjurador). Habilita Hipnose Sharingan (aptidão separada). Fonte: Livro Básico p. 182-184.",
+      "prerequisites": {
+        "clans": [
+          "uchiha"
+        ],
+        "aptitudes": [
+          "nidan_sharingan"
+        ],
+        "attributes": {
+          "per": 9
+        }
+      },
+      "effects": {
+        "type": "doujutsu_enhancement",
+        "augmentsAptitude": "sharingan",
+        "passiveBenefits": {
+          "visaoAceleradaMaior": "imune_a_finta_acelerada + ataque_oportuno_contra_acelerados",
+          "previsaoPerfeita": "todas_manobras_de_previsao_em_ataque_oportuno_ou_desprevenido + superar_tecnica_sem_penalidade_de_precisao"
+        },
+        "subTechniques": [
+          {
+            "code": "reverter_ilusao",
+            "name": "Reverter Ilusão",
+            "subType": "active_reaction",
+            "action": "padrao",
+            "description": "Usa Percepção no lugar de Inteligência pra detectar ataque de ilusão inimigo. Se sucesso, ilusão retorna ao conjurador via Olhar Hipnótico. Conjurador resiste enquanto Uchiha é imune.",
+            "skillSubstitution": "percepcao_substitui_inteligencia",
+            "onSuccess": "ilusao_retorna_ao_conjurador",
+            "chakraCost": "igual_da_ilusao",
+            "maxDistanceM": 9,
+            "ineligibleFor": [
+              "tsukuyomi"
+            ],
+            "appliesToHijutsu": true,
+            "requiresAloneAsTarget": true
+          }
+        ],
+        "unlocks": [
+          "hipnose_sharingan"
+        ]
+      },
+      "evolutions": []
+    }
+  ]
+}

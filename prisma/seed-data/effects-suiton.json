@@ -37,7 +37,7 @@
         "chakraCost": "nivel_usado"
       },
       "rules": {
-        "prerequisites": { "aptitudes": ["lutar_as_cegas"], "alternatives": ["habilidade_de_sensor"] },
+        "prerequisites": { "aptitudes_one_of": ["lutar_as_cegas", "sensor"] },
         "imaginaryHardness": true,
         "hardnessValue": "padrao_do_poder",
         "destroyableByAreaAttacks": ["katon", "fuuton"],

@@ -1,0 +1,78 @@
+{
+  "_meta": {
+    "description": "Lote 7g — Effects exclusivos do Senninka (Corrente Nv 3 + Transferência Celular Nv 6).",
+    "sources": [
+      "Livro de Hijutsus p. 81-82"
+    ],
+    "extractedAt": "2026-05-14",
+    "schemaVersion": 1,
+    "appliesToTable": "effects",
+    "expectedItemCount": 2
+  },
+  "data": [
+    {
+      "code": "corrente",
+      "name": "Corrente (Senninka)",
+      "minLevel": 3,
+      "availableFor": [
+        "senninka"
+      ],
+      "shortDescription": "Senninka Nv 3. Estica braço até 10m. Agarrar à distância sem penalidades de precisão.",
+      "description": "Estica braço até distância de 10m. Permite realizar manobra Agarrar à distância sem penalidades de precisão comuns. Testes da manobra ainda são feitos com CC, sem alterações. Ação parcial, alcance pessoal, duração contínua. Fonte: Livro de Hijutsus p. 81.",
+      "stats": {
+        "action": "PARCIAL",
+        "range": "10m_estendido",
+        "duration": "CONTINUA",
+        "selos": false
+      },
+      "rules": {
+        "type": "tecnica_senninka",
+        "prerequisites": {
+          "powers": {
+            "senninka": 3
+          }
+        },
+        "manobra": "agarrar_a_distancia_sem_penalidades_de_precisao",
+        "rollType": "CC"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "transferencia_celular",
+      "name": "Transferência Celular",
+      "minLevel": 6,
+      "availableFor": [
+        "senninka"
+      ],
+      "shortDescription": "Senninka Nv 6. Apêndice fino absorve células curando ferimentos. Mata alvo. Também doa Vit pra alvo Juuinka-compatível.",
+      "description": "Faz surgir apêndice fino (estaca) da mão, insere no alvo, absorve células. Cura ferimentos e restaura Vit. Sem testes. SOMENTE em alvos FORA DE COMBATE. Transfere TODA a Vit restante do alvo (mesmo negativa) → matando-o. Inverso possível: doa Vit pra alvo compatível com Juuinka. Max 15 Vit transferida. Corpo do usuário reduz tamanho (como rejuvenescido). Sem penalidades, revertido ao próximo uso de absorver Vit. Não pode transferir enquanto reduzido. Fonte: Livro de Hijutsus p. 82.",
+      "stats": {
+        "action": "1_rodada",
+        "range": "toque",
+        "duration": "INSTANTANEA",
+        "selos": false
+      },
+      "rules": {
+        "type": "tecnica_senninka",
+        "prerequisites": {
+          "powers": {
+            "senninka": 6
+          },
+          "narrative": "alvo_fora_de_combate"
+        },
+        "absorveMode": {
+          "transfersAllRemainingVit": true,
+          "killsTarget": true,
+          "healsUserOfPermanentInjuries": true
+        },
+        "doaMode": {
+          "requiresCompatibilityWithJuuinka": true,
+          "maxVitTransferred": 15,
+          "userBodyShrinks": true,
+          "userBodyShrinksNote": "Reduz tamanho como rejuvenescido. Sem penalidades. Revertido quando absorver Vit de algum alvo. Não pode transferir reduzido."
+        }
+      },
+      "evolutions": []
+    }
+  ]
+}

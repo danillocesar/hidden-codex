@@ -1,0 +1,162 @@
+{
+  "_meta": {
+    "description": "Lote 7f — Power Jinchuuriki (Hijutsu Kinjutsu). Fecha 4 refs dormentes (aoi_katon, sabaku_hijutsu, sanbi_suiton, yonbi_youton) que já modelavam Bijuus 1-4. Tabelas específicas por Bijuu (Ichibi-Kyuubi) ficam em lotes separados (próximos 7f2-7f3).",
+    "sources": [
+      "Livro Básico p. 213 (resumo)",
+      "Livro de Hijutsus p. 22-30 (Jinchuuriki completo: regras gerais, modos, técnicas, Shukaku/Ichibi tabela exemplo)"
+    ],
+    "extractedAt": "2026-05-14",
+    "schemaVersion": 1,
+    "appliesToTable": "powers",
+    "expectedItemCount": 1,
+    "resolvesDormantRefs": [
+      "jinchuuriki"
+    ],
+    "resolvesDormantRefsNote": "4 powers em powers-orphans.json (aoi_katon, sabaku_hijutsu, sanbi_suiton, yonbi_youton) declaravam 'jinchuuriki' em _meta.unmodeledPowers. Este lote resolve. Validador agora detecta o power."
+  },
+  "data": [
+    {
+      "code": "jinchuuriki",
+      "name": "Jinchuuriki",
+      "translation": "Poder do Sacrifício Humano",
+      "category": "RESTRITO",
+      "element": null,
+      "shortDescription": "Hijutsu Kinjutsu. Ninja que possui Bijuu selada no corpo. 10 níveis. Cada Bijuu tem tabela própria de benefícios. Sistema de Modos (Presença/Manto/Modo/Forma Bijuu) + custo Vit + duração segura + teste de domínio.",
+      "description": "Jinchuuriki é alcunha pra ninja com Bijuu (Besta de Cauda) selada. Cada Bijuu tem tabela própria de benefícios por nível (modeladas separadamente em power-orphans e lotes futuros). Tipo: Ninjutsu/Kinjutsu. Selos: Não. Modos do poder usam ação parcial + estado prévio. Custo de chakra dos modos: ZERO (mas custa Vitalidade). Técnicas (Bijuudama etc.) gastam chakra ou Vit. Cada Bijuu pode adicionar poder elemental embutido (Ichibi+Sabaku Hijutsu, Nibi+Aoi Katon, Sanbi+Sanbi Suiton, Yonbi+Yonbi Youton). Fonte: Livro Básico p. 213 + Livro de Hijutsus p. 22-30.",
+      "stats": {
+        "rangeFormula": {
+          "category": "Pessoal",
+          "modeDependent": true
+        },
+        "actionFormula": {
+          "presencaBijuu": "livre",
+          "outrosModos": "parcial",
+          "tecnicas": "varia"
+        },
+        "chakraCostFormula": {
+          "modos": 0,
+          "tecnicas": "varia (chakra OR vitalidade)"
+        },
+        "selosDefault": false,
+        "keyAttribute": "esp",
+        "elementAdvantage": [],
+        "elementDisadvantage": [],
+        "vitDamagePerTurnFormula": "nivel_usado_do_poder",
+        "vitDamageOnActivation": true,
+        "vitDamageNotInPresencaOrFormaBijuu": true
+      },
+      "rules": {
+        "selosDefault": false,
+        "type": "ninjutsu_kinjutsu",
+        "prerequisites": {
+          "narrative": "ser_jinchuuriki_selado_com_bijuu"
+        },
+        "perBijuuBenefitsTable": true,
+        "perBijuuBenefitsTableNote": "Cada Bijuu (Ichibi-Kyuubi) tem tabela própria de benefícios por nível. Modeladas em powers-orphans (sabaku_hijutsu/aoi_katon/sanbi_suiton/yonbi_youton — bijuus 1/2/3/4) + lote 7f futuro (bijuus 5-9).",
+        "modes": {
+          "presenca_bijuu": {
+            "unlockLevel": 2,
+            "action": "livre",
+            "duration": "continua"
+          },
+          "manto_bijuu": {
+            "unlockLevel": 3,
+            "action": "parcial",
+            "duration": "continua",
+            "requiresPriorMode": "presenca_bijuu",
+            "canUseAtLevel": 2,
+            "canUseAtLevel2Note": "Pode usar em Nv 2 com 1 cauda."
+          },
+          "modo_bijuu": {
+            "unlockLevel": "variavel_por_bijuu",
+            "action": "parcial",
+            "duration": "continua",
+            "requiresPriorMode": "manto_bijuu",
+            "blocksSelosMao": true,
+            "blocksOtherTechniques": true
+          },
+          "forma_bijuu": {
+            "unlockLevel": "variavel_por_bijuu",
+            "requiresControleTotal": true,
+            "duration": "sustentada",
+            "blocksSelosMao": true,
+            "blocksBracoDeChakra": true
+          }
+        },
+        "modesNonCumulativeUnlessTextSays": true,
+        "transformacaoParcial": {
+          "requires": [
+            "forma_bijuu",
+            "controle_total",
+            "presenca_bijuu_ativa"
+          ],
+          "exclusiveWithOtherModes": true
+        },
+        "duracaoSegura": {
+          "formula": "1_turno + 1_por_nivel_do_poder",
+          "afterExpiration": "dano_vit_dobrado + presenca_bijuu_passa_a_causar_dano"
+        },
+        "vitDamage": {
+          "perTurn": "nivel_usado_do_poder",
+          "onActivation": true,
+          "exempt": [
+            "presenca_bijuu",
+            "forma_bijuu (sem_transformacao_forcada)"
+          ]
+        },
+        "testeDeDominio": {
+          "trigger": [
+            "vit_zero_durante_uso",
+            "estresse_emocional_criterio_mestre"
+          ],
+          "test": "2_dados_vs_dif_9_sem_precisao",
+          "failConsequence": "transformacao_forcada_modo_bijuu + libera_cauda + disputa_mental",
+          "subsequentTurnsDifIncrement": 1,
+          "subsequentTurnsCount": 3,
+          "failureThreshold": "falhar_em_2_dos_3_testes",
+          "ultimateFailure": "perde_consciencia_total_vira_PdM + bijuu_dominante",
+          "transformProgressionByMestre": true,
+          "deathOnTransformComplete": true,
+          "successConsequence": "transformacao_contida + exausto_resto_do_dia + nao_pode_reusar_ate_descansar",
+          "retryDuringExhaustionTriggersTransformForced": true
+        },
+        "deathOfJinchuuriki": {
+          "ifDueToLoseControle": "bijuu_se_liberta",
+          "otherCauses": "chakra_da_bijuu_se_dispersa_pelo_mundo_ate_juntar_novamente_bijuu_renasce_livre"
+        },
+        "controleTotal": {
+          "unlockLevel": "variavel_por_bijuu_via_tabela",
+          "noVitDamageOnModes": true,
+          "chakraCostOnceWhilePowerActive": "nivel_total_do_poder",
+          "noChakraToSwitchModes": true,
+          "duracaoSeguraRemoved": true,
+          "noVitToPayTechniques": true,
+          "allowsBijuuToTalkInFormaBijuu": true,
+          "mestreCanDelayOrCondition": true
+        },
+        "liberarGenjutsu": {
+          "requires": "controle_total",
+          "trigger": "capturado_em_genjutsu",
+          "action": "kai_via_bijuu",
+          "result": "sucesso_automatico_libera_ilusao",
+          "noActionCost": true,
+          "onceAt2ndTurnUnderIllusion": true
+        },
+        "tecnicasGerais": [
+          "chakra_bijuu",
+          "potencia_da_besta",
+          "onda_de_chakra",
+          "braco_de_chakra",
+          "disparo_de_chakra",
+          "bijuudama",
+          "transformacao_parcial"
+        ],
+        "noTechniqueAptitudesAllowed": true,
+        "noTechniqueAptitudesNote": "Não é possível usar aptidões de técnicas com técnicas gerais do Jinchuuriki (RAW Hijutsus p.22).",
+        "chakraInfiniteForBijuu": true,
+        "chakraInfiniteForBijuuNote": "Quando se cria ficha da Bijuu (NC 20, sem aptidões, único power Jinchuuriki Nv 10, somente Forma Bijuu + técnicas dela), Vit e Chakra são infinitos. Bijuu só é derrotada selando-a.",
+        "associatedEffects": "presenca_bijuu, manto_bijuu, modo_bijuu, forma_bijuu, transformacao_parcial, chakra_bijuu, potencia_da_besta, onda_de_chakra, braco_de_chakra, disparo_de_chakra, bijuudama (effects-jinchuuriki.json)"
+      }
+    }
+  ]
+}

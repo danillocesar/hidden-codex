@@ -1,0 +1,901 @@
+{
+  "_meta": {
+    "description": "Lote 6d — Armas NOVAS introduzidas pelo GAS + REVISÕES de armas existentes do Livro Básico. As revisões SOBRESCREVEM as entradas do Lote 6a (mesmo code). As novas são adicionadas. Estratégia de patch via UPSERT: o seed reaplica e atualiza. Inclui: Gládio, Tachi, Chakram, Kusarigama, Lâmina Oculta, Pá de Monge, Shuang Gou, Tekko-Kagi, Yari, Ōtsuchi, Arco Longo (novas); Cimitarra, Florete, Ninja-tō, Nunchaku, Machado, Martelo de Guerra, Leque Gigante, Espada de Duas Lâminas, Chicote, Corrente com Cravos, Espada Longa, Besta Pesada (revisões expandidas).",
+    "sources": [
+      "Guia Avançado do Shinobi p. 59-70 (Novos Equipamentos e Revisões)",
+      "Guia Avançado do Shinobi p. 70-73 (Tabelas)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "expectedItemCount": 23,
+    "notes": "Armas com asterisco (*) no GAS são revisões. As demais são novas. Cada revisão tem _gasReview: true em effects, e a versão original do 6a fica obsoleta. Aplicar este lote DEPOIS do 6a.",
+    "intentionalUpserts": [
+      "cimitarra",
+      "florete",
+      "ninja_to",
+      "nunchaku",
+      "machado",
+      "martelo_de_guerra",
+      "leque_gigante",
+      "espada_de_duas_laminas",
+      "chicote",
+      "corrente_com_cravos",
+      "espada_longa",
+      "besta_pesada"
+    ],
+    "intentionalUpsertsNotes": "12 codes do Lote 6a sobrescritos por revisões do GAS via upsert. Ordem em EQUIPMENT_FILES garante que 6d roda depois do 6a (estado final = revisão GAS).",
+    "unmodeledAptitudes": [
+      "guerreiro_longas",
+      "usar_arma_arco_longo",
+      "usar_arma_besta_pesada",
+      "usar_arma_chakram",
+      "usar_arma_chicote",
+      "usar_arma_cimitarra",
+      "usar_arma_corrente_com_cravos",
+      "usar_arma_espada_de_duas_laminas",
+      "usar_arma_espada_longa",
+      "usar_arma_florete",
+      "usar_arma_kusarigama",
+      "usar_arma_lamina_oculta",
+      "usar_arma_leque_gigante",
+      "usar_arma_machado",
+      "usar_arma_martelo_de_guerra",
+      "usar_arma_ninja_to",
+      "usar_arma_nunchaku",
+      "usar_arma_otsuchi",
+      "usar_arma_pa_de_monge",
+      "usar_arma_shuang_gou",
+      "usar_arma_tachi",
+      "usar_arma_tekko_kagi",
+      "usar_arma_yari"
+    ],
+    "unmodeledAptitudesNotes": "10 variantes parametrizadas de 'usar_arma' (5a) para armas novas do GAS + 1 nova ref pra revisão da Ninja-tō (que passou de Simples sem usar_arma pra Marcial Leve com usar_arma_ninja_to). Gládio continua Simples sem 'usar_arma'. As outras 11 revisões usam codes já presentes no _meta.unmodeledAptitudes do 6a — sem duplicação aqui. Refs reais resolvidas: 'guerreiro_longas' (5a), 'arremessar' (5c).",
+    "unmodeledAptitudesNote": "Refs parametrizadas: padrão <aptidao>_<parametro>. Aptidões 'usar_arma' e 'guerreiro' existem como bases — sufixos são parâmetros que motor de regras interpreta. Padrão de dívida técnica documentado em SCHEMA-PATTERNS.",
+    "audit": [
+      {
+        "date": "2026-05-14",
+        "phase": "7f2-cleanup",
+        "change": "Declarado 11 refs parametrizadas em unmodeledAptitudes. Resolve PRE-REQ APT MISSING do validador (refs pré-existentes do lote 6d)."
+      }
+    ]
+  },
+  "data": [
+    {
+      "code": "gladio",
+      "name": "Gládio",
+      "kind": "WEAPON",
+      "subtype": "simples",
+      "category": "LEVE",
+      "price": 8,
+      "damage": "+2",
+      "range": null,
+      "critRange": "15-16",
+      "slots": {
+        "items": 1,
+        "compartments": 1
+      },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes_one_of": {
+          "for": 8,
+          "des": 8
+        }
+      },
+      "effects": {
+        "_newInGAS": true,
+        "compatibleAptitudes": [
+          "acuidade"
+        ]
+      },
+      "shortDescription": "GAS. Mais antiga espada curta de dois gumes. Golpes perfurantes simples.",
+      "description": "GAS. A mais antiga espada curta de dois gumes da humanidade. Usada primariamente para realizar golpes perfurantes simples. Fonte: GAS p. 64."
+    },
+    {
+      "code": "tachi",
+      "name": "Tachi",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "LEVE",
+      "price": 100,
+      "damage": "+2",
+      "range": null,
+      "critRange": "15-16",
+      "slots": {
+        "items": 1,
+        "compartments": 2
+      },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes": {
+          "for": 6
+        },
+        "aptitudes": [
+          "usar_arma_tachi"
+        ],
+        "narrative": "NC 6+"
+      },
+      "effects": {
+        "_newInGAS": true,
+        "twoHanded": true,
+        "minNC": 6,
+        "isMostPowerfulGeninWeapon": true
+      },
+      "shortDescription": "GAS NC6. Predecessora da katana. Duas mãos, Força 6. Arma mais poderosa pra Genin.",
+      "description": "GAS. Considerada a predecessora da katana, sendo a principal arma do período Kotou (entre 900 e 1596). Aparência parecida com a sucessora, diferenciando em tamanho, ângulo da lâmina e posição do mei (gravações). Diferença das outras armas marciais leves: necessita de duas mãos e apenas Força 6 pra empunhar. Arma mais poderosa que um Genin consegue utilizar. Fonte: GAS p. 68."
+    },
+    {
+      "code": "chakram",
+      "name": "Chakram",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "MEDIANA",
+      "price": 10,
+      "damage": "+3/+1 [+5]",
+      "range": "20m",
+      "critRange": "15-16",
+      "slots": {
+        "items": 2,
+        "compartments": 1
+      },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes_one_of": {
+          "for": 10,
+          "des": 10
+        },
+        "aptitudes": [
+          "usar_arma_chakram"
+        ]
+      },
+      "effects": {
+        "_newInGAS": true,
+        "isPair": true,
+        "ambidestriaPairDamage": 4,
+        "oneHanded": true,
+        "throwableDamage": 5,
+        "throwLimit": "não pode arremessar 2 juntos",
+        "compatibleAptitudes": [
+          "acuidade",
+          "ambidestria"
+        ]
+      },
+      "shortDescription": "GAS. Círculo afiado. CC +3, +4 com par (Ambidestria), arremesso +5.",
+      "description": "GAS. Arma do subcontinente indiano. Círculo perfeito de metal afiado na circunferência externa. Pode ser arremessada OU usada com empunhadura como arma de mão. Individual: +3 dano. Par com Ambidestria: +4. Arremesso: +5 (não pode arremessar 2 juntos). Apesar de mediana, pode ser usada com uma mão só. Acuidade se aplica. Fonte: GAS p. 61."
+    },
+    {
+      "code": "kusarigama",
+      "name": "Kusarigama",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "MEDIANA",
+      "price": 20,
+      "damage": "+1/+1 (+3)",
+      "range": "6m",
+      "critRange": "15-16",
+      "slots": {
+        "items": 1,
+        "compartments": 1
+      },
+      "damageType": "corte_esmagamento",
+      "prerequisites": {
+        "attributes_one_of": {
+          "for": 10,
+          "des": 10
+        },
+        "aptitudes": [
+          "usar_arma_kusarigama"
+        ]
+      },
+      "effects": {
+        "_newInGAS": true,
+        "isPair": true,
+        "ambidestriaPairDamage": 3,
+        "kamaDamageType": "corte",
+        "kusariDamageType": "esmagamento",
+        "ambidestriaChooseType": true,
+        "desarmarSemPenalidade": true,
+        "agarrarSemPenalidade": true,
+        "derrubarSemPenalidade": true,
+        "rangedAttackDistance": "6m",
+        "compatibleAptitudes": [
+          "acuidade"
+        ]
+      },
+      "shortDescription": "GAS. Kama + peso por corrente. Par +3 com Ambidestria. Desarmar/Agarrar/Derrubar grátis.",
+      "description": "GAS. Consiste numa Kama e um peso de metal (kusari fudo) conectados por uma corrente. Uma das armas mais clássicas do arsenal shinobi por seu potencial de manipular o oponente e facilidade de ser escondida. Arma assinatura do Sanshōuo no Hanzō. Pode usar só foice OU só peso com uma mão; com Ambidestria nas 2 mãos: +3 dano. Pode realizar Desarmar/Agarrar/Derrubar sem penalidades. Kama = Corte, peso = Esmagamento, Ambidestria = escolhe. Alcance 6m. Acuidade se aplica. Fonte: GAS p. 64-65."
+    },
+    {
+      "code": "lamina_oculta",
+      "name": "Lâmina Oculta",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "MEDIANA",
+      "price": 10,
+      "damage": "+3/+1",
+      "range": null,
+      "critRange": "15-16",
+      "slots": {
+        "items": 2,
+        "compartments": 1
+      },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes_one_of": {
+          "for": 10,
+          "des": 10
+        },
+        "aptitudes": [
+          "usar_arma_lamina_oculta"
+        ]
+      },
+      "effects": {
+        "_newInGAS": true,
+        "isHidden": true,
+        "prestidigitacaoBonus": 2,
+        "ambushVulnerability": "Pessoas que não sabem da existência ficam suscetíveis a Ataque Furtivo",
+        "singleHandDamage": 3,
+        "ambidestriaPairDamage": 4,
+        "cannotBlock": true,
+        "compatibleAptitudes": [
+          "acuidade",
+          "ambidestria"
+        ]
+      },
+      "shortDescription": "GAS. Braçadeira com lâmina retrátil escondida. +2 Prestidigitação. NÃO pode bloquear.",
+      "description": "GAS. Consiste numa braçadeira com lâmina retrátil que pode ser escondida facilmente. +2 bônus de Prestidigitação pra esconder (oposto contra Prontidão). Pessoas que não sabem: suscetíveis a Ataque Furtivo. Uma lâmina = +3 dano. Duas com Ambidestria = +4. Só par com outra Lâmina Oculta. NÃO pode bloquear. Acuidade se aplica. Fonte: GAS p. 65."
+    },
+    {
+      "code": "pa_de_monge",
+      "name": "Pá de Monge",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "MEDIANA",
+      "price": 15,
+      "damage": "+2/+2",
+      "range": null,
+      "critRange": "15-16",
+      "slots": {
+        "items": 1,
+        "compartments": 1
+      },
+      "damageType": "esmagamento_corte_perfuracao",
+      "prerequisites": {
+        "attributes_one_of": {
+          "for": 10,
+          "des": 10
+        },
+        "aptitudes": [
+          "usar_arma_pa_de_monge"
+        ]
+      },
+      "effects": {
+        "_newInGAS": true,
+        "isDoubleWeapon": true,
+        "switchableDamageType": "Esmagamento padrão; Afiar uma ou ambas as hastes = Corte ou Perfuração",
+        "switchAction": "1 minuto pra afiar/retirar fio",
+        "ambidestriaCritDouble": "Crítico com Ambidestria = 2 efeitos de crítico (Especialização de Crítico)",
+        "desarmarSemPenalidade": true,
+        "derrubarSemPenalidade": true,
+        "compatibleAptitudes": [
+          "acuidade"
+        ]
+      },
+      "shortDescription": "GAS. Bastão com pá + lua crescente. Esmagamento ou Corte/Perfuração (afiável).",
+      "description": "GAS. Bastão contendo uma pá numa ponta e uma lua crescente na ponta oposta. Usada por monges budistas em viagens pra dar descanso digno aos mortos. Tradicionalmente sem fio = Esmagamento. Pode afiar um dos lados = Corte ou Perfuração (qualquer combinação de 2 tipos). Afiar/retirar fio = 1 minuto. Com Ambidestria + crítico = 2 efeitos de crítico (Especialização de Crítico). Desarmar/Derrubar sem penalidades. Acuidade se aplica. Fonte: GAS p. 67."
+    },
+    {
+      "code": "shuang_gou",
+      "name": "Shuang Gou",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "MEDIANA",
+      "price": 10,
+      "damage": "+1/+1 (+3)",
+      "range": null,
+      "critRange": "15-16",
+      "slots": {
+        "items": 2,
+        "compartments": 1
+      },
+      "damageType": "corte_perfuracao",
+      "prerequisites": {
+        "attributes_one_of": {
+          "for": 10,
+          "des": 10
+        },
+        "aptitudes": [
+          "usar_arma_shuang_gou"
+        ]
+      },
+      "effects": {
+        "_newInGAS": true,
+        "isPair": true,
+        "oneHanded": true,
+        "singleDamage": 1,
+        "ambidestriaPairDamage": 3,
+        "alsoKnownAs": "Espada Gancho de Tigre / Espadas do Sol e da Lua",
+        "desarmarSemPenalidade": true,
+        "agarrarSemPenalidade": true,
+        "derrubarSemPenalidade": true,
+        "compatibleAptitudes": [
+          "acuidade",
+          "ambidestria"
+        ]
+      },
+      "shortDescription": "GAS. Espadas-gancho em par. +1 cada, +3 em par. Desarmar/Agarrar/Derrubar grátis.",
+      "description": "GAS. Espada Gancho de Tigre ou Espadas do Sol e da Lua. Usadas em par. Lâmina se curva em gancho pra perfurar, prender inimigos/armas ou derrubá-los. Lâminas de trás naturalmente cortantes. Apesar de mediana, pode ser usada com uma mão só. Feitas pra serem usadas juntas: +1 sozinha, +3 em par. Só par com outra Shuang Gou. Desarmar/Agarrar/Derrubar sem penalidades. Acuidade se aplica. Fonte: GAS p. 68."
+    },
+    {
+      "code": "tekko_kagi",
+      "name": "Tekko-Kagi",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "MEDIANA",
+      "price": 15,
+      "damage": "+3/+1",
+      "range": null,
+      "critRange": "15-16",
+      "slots": {
+        "items": 2,
+        "compartments": 1
+      },
+      "damageType": "corte_perfuracao",
+      "prerequisites": {
+        "attributes_one_of": {
+          "for": 10,
+          "des": 10
+        },
+        "aptitudes": [
+          "usar_arma_tekko_kagi"
+        ]
+      },
+      "effects": {
+        "_newInGAS": true,
+        "isPair": true,
+        "oneHanded": true,
+        "ambidestriaPairDamage": 4,
+        "cannotBeDisarmed": true,
+        "noSaqueRapidoBenefits": true,
+        "climbBonus": {
+          "single": 1,
+          "pair": 2
+        },
+        "userChoosesDamageType": true,
+        "desarmarSemPenalidade": true,
+        "agarrarSemPenalidade": true,
+        "compatibleAptitudes": [
+          "acuidade"
+        ]
+      },
+      "shortDescription": "GAS. Garras de mão. +3 sozinha, +4 par. +Atletismo Escalar. Não pode ser desarmada.",
+      "description": "GAS. Garras de mão, originalmente ferramenta de agricultura pra cortar ervas daninhas. Shinobis adaptaram como armas e ferramentas de escalada. Apesar de mediana, pode usar com uma mão só. Par com Ambidestria: dano 3→4. Só par com outra Tekko-Kagi. Por estar presa nas mãos: NÃO pode ser desarmada, mas NUNCA recebe Saque Rápido. +1 (par: +2) precisão em Atletismo pra Escalar. Pode causar Corte ou Perfuração (escolha do usuário). Desarmar/Agarrar sem penalidades. Acuidade se aplica. Fonte: GAS p. 69."
+    },
+    {
+      "code": "yari",
+      "name": "Yari",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "LONGA",
+      "price": 50,
+      "damage": "+4",
+      "range": "2m",
+      "critRange": "15-16",
+      "slots": {
+        "items": 1,
+        "compartments": 2
+      },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes_one_of": {
+          "for": 10,
+          "des": 10
+        },
+        "aptitudes": [
+          "usar_arma_yari"
+        ]
+      },
+      "effects": {
+        "_newInGAS": true,
+        "ignoreDurezaCorpo": 1,
+        "ignoreDurezaNoStacking": "não acumula com outras formas de ignorar dureza"
+      },
+      "shortDescription": "GAS. Lança japonesa (Soujutsu). Ignora 1 dureza de corpo.",
+      "description": "GAS. As lanças japonesas, utilizadas desde os primórdios através do Soujutsu. Por atacar com grande precisão em um único ponto, ignora 1 ponto de dureza de corpo (não cumulativo com outras formas de ignorar dureza). Fonte: GAS p. 69."
+    },
+    {
+      "code": "otsuchi",
+      "name": "Ōtsuchi",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "LONGA",
+      "price": 50,
+      "damage": "+4",
+      "range": "2m",
+      "critRange": "15-16",
+      "slots": {
+        "items": 1,
+        "compartments": 2
+      },
+      "damageType": "esmagamento",
+      "prerequisites": {
+        "attributes_one_of": {
+          "for": 10,
+          "des": 10
+        },
+        "aptitudes": [
+          "usar_arma_otsuchi",
+          "guerreiro_longas",
+          "arremessar"
+        ]
+      },
+      "effects": {
+        "_newInGAS": true,
+        "arremessoExtraDistance": "+6m",
+        "arremessoMaxDistance": "16m",
+        "arremessoMaxColisaoDamage": 16
+      },
+      "shortDescription": "GAS. Martelo de madeira gigante samurai. Arremessar +6m alcance, 16 dano colisão.",
+      "description": "GAS. Grande martelo de guerra feito de madeira, usado por samurais na era feudal. Apesar de madeira, função principal era demolição de estruturas. Ao usar aptidão Arremessar: +6m alcance, máximo 16m, dano máximo de colisão 16. Ainda precisa Guerreiro + Arremessar pra não sofrer penalidades. Fonte: GAS p. 66-67."
+    },
+    {
+      "code": "arco_longo",
+      "name": "Arco Longo",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "DISPARO",
+      "price": 100,
+      "damage": "+2",
+      "range": "15m + 3x Destreza",
+      "critRange": "15-16",
+      "slots": {
+        "items": 1,
+        "compartments": 1
+      },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes": {
+          "des": 10
+        },
+        "aptitudes": [
+          "usar_arma_arco_longo"
+        ]
+      },
+      "effects": {
+        "_newInGAS": true,
+        "twoHanded": true,
+        "requiresAmmo": "flechas",
+        "rangeFormula": "15 + 3 * destreza (em metros)"
+      },
+      "shortDescription": "GAS. Arco da altura de pessoa. Alcance massivo (15m + 3xDes). Duas mãos.",
+      "description": "GAS. Este arco reforçado tem a altura de uma pessoa. Próprio para campos de batalha e áreas abertas — alcance permite atingir inimigo a grandes distâncias. Duas mãos. Fonte: GAS p. 59-60."
+    },
+    {
+      "code": "ninja_to",
+      "name": "Ninja-tō",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "LEVE",
+      "price": 20,
+      "damage": "+1",
+      "range": null,
+      "critRange": "14-15-16",
+      "slots": {
+        "items": 1,
+        "compartments": 1
+      },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes_one_of": {
+          "for": 10,
+          "des": 10
+        },
+        "aptitudes": [
+          "usar_arma_ninja_to"
+        ]
+      },
+      "effects": {
+        "_gasReview": true,
+        "_changesFromBasic": "Reclassificada de SIMPLES MEDIANA pra MARCIAL LEVE. Dano +3 → +1. Crítico 15-16 → 14-15-16",
+        "extendedCritRange": true,
+        "compatibleAptitudes": [
+          "acuidade"
+        ]
+      },
+      "shortDescription": "GAS revisão. Sabre ninja. Reclassificada como MARCIAL LEVE. Dano +1, crítico 14-15-16.",
+      "description": "GAS REVISÃO. Sabre ninja. Forma reta sacada nas costas em corte vertical. **MUDANÇAS DO GAS**: reclassificada de Simples Mediana pra Marcial Leve, dano +3→+1, crítico ampliado 15-16→14-15-16. Acuidade se aplica. Fonte: GAS p. 66."
+    },
+    {
+      "code": "nunchaku",
+      "name": "Nunchaku",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "LEVE",
+      "price": 2,
+      "damage": "+2 (Ou Punho de Ferro até +3)",
+      "range": null,
+      "critRange": "15-16",
+      "slots": {
+        "items": 1,
+        "compartments": 1
+      },
+      "damageType": "esmagamento",
+      "prerequisites": {
+        "attributes_one_of": {
+          "for": 10,
+          "des": 10
+        },
+        "aptitudes": [
+          "usar_arma_nunchaku"
+        ]
+      },
+      "effects": {
+        "_gasReview": true,
+        "countsAsAtaqueDesarmado": "Pra critérios de receber benefícios (incluindo Lutador) ou usar aptidões de manobra",
+        "punhoDeFerroSubstitution": "Pode substituir dano por Punho de Ferro até +3",
+        "incompatibleWithAmbidestriaWhenPunhoFerro": true,
+        "punhoFerroMaxLimit": "Empunhando Nunchaku: NÃO pode usar Punho de Ferro com Dano +4",
+        "bloqueioBonus": 1,
+        "bloqueioBonusNotStackableWithAmbidestria": true,
+        "agarrarSemPenalidade": true,
+        "desarmarSemPenalidade": true,
+        "noLutadorRequired": true
+      },
+      "shortDescription": "GAS revisão. Conta como Ataque Desarmado pra Lutador. Bloqueio +1. Agarrar/Desarmar sem Lutador.",
+      "description": "GAS REVISÃO. Formado por dois bastões curtos ligados por corrente. Nunchaku também é considerado 'Ataque Desarmado' pra critérios de receber benefícios (incluindo Lutador) ou usar aptidões de manobra. Opcionalmente pode substituir dano por Punho de Ferro até +3, se possuir (incompatível com Ambidestria). Empunhando Nunchaku: NÃO pode usar Punho de Ferro com dano +4. +1 Bloquear ataques armados/desarmados/técnicas de toque (não cumulativo com Ambidestria). Pode Agarrar/Desarmar sem penalidades MESMO SEM Lutador. Fonte: GAS p. 66-67."
+    },
+    {
+      "code": "cimitarra",
+      "name": "Cimitarra",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "MEDIANA",
+      "price": 20,
+      "damage": "+2",
+      "range": null,
+      "critRange": "14-15-16",
+      "slots": {
+        "items": 1,
+        "compartments": 1
+      },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes_one_of": {
+          "for": 10,
+          "des": 10
+        },
+        "aptitudes": [
+          "usar_arma_cimitarra"
+        ]
+      },
+      "effects": {
+        "_gasReview": true,
+        "extendedCritRange": true,
+        "criticalBleedRate": "Acerto crítico causa 1 nível de sangramento pra cada 3 dano base (em vez de 4)",
+        "noAtropelarComGuerreiro": true
+      },
+      "shortDescription": "GAS revisão. Lâmina curva. Crítico 14-15-16. Sangramento por 3 dano (não 4). Sem atropelar.",
+      "description": "GAS REVISÃO. Espada com lâmina curva, leve e muito afiada. Especializada em cortes profundos: acerto crítico causa 1 nível de sangramento pra cada 3 dano base (em vez de 4). Mesmo com Guerreiro, NÃO é possível atropelar com Cimitarra. Fonte: GAS p. 62."
+    },
+    {
+      "code": "florete",
+      "name": "Florete",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "MEDIANA",
+      "price": 20,
+      "damage": "+2",
+      "range": null,
+      "critRange": "14-15-16",
+      "slots": {
+        "items": 1,
+        "compartments": 1
+      },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes_one_of": {
+          "for": 10,
+          "des": 10
+        },
+        "aptitudes": [
+          "usar_arma_florete"
+        ]
+      },
+      "effects": {
+        "_gasReview": true,
+        "extendedCritRange": true,
+        "criticalDefesaDebilitada": "Acerto crítico: Defesa Debilitada (-1) NÃO pode ser retirada com ação completa",
+        "noAcuidadePenalty": "Sem Acuidade: -1 dano base",
+        "noAtropelarComGuerreiro": true,
+        "compatibleAptitudes": [
+          "acuidade"
+        ]
+      },
+      "shortDescription": "GAS revisão. Crítico mantém Defesa Debilitada (sem remoção). Sem Acuidade: -1 dano. Sem atropelar.",
+      "description": "GAS REVISÃO. Lâmina leve e fina, muito precisa. Especializada em achar aberturas: acerto crítico causa Defesa Debilitada (-1) que NÃO pode ser removida com ação completa. Acuidade se aplica; sem Acuidade: -1 dano base. Mesmo com Guerreiro, NÃO atropela com Florete. Fonte: GAS p. 64."
+    },
+    {
+      "code": "espada_longa",
+      "name": "Espada Longa",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "MEDIANA",
+      "price": 15,
+      "damage": "+4",
+      "range": null,
+      "critRange": "15-16",
+      "slots": {
+        "items": 1,
+        "compartments": 1
+      },
+      "damageType": "corte_perfuracao",
+      "prerequisites": {
+        "attributes_one_of": {
+          "for": 10,
+          "des": 10
+        },
+        "aptitudes": [
+          "usar_arma_espada_longa"
+        ]
+      },
+      "effects": {
+        "_gasReview": true,
+        "_changesFromBasic": "Tipo de dano expandido: Corte → Corte/Perfuração",
+        "switchableDamageType": "Pode cortar OU perfurar"
+      },
+      "shortDescription": "GAS revisão. Pode cortar OU perfurar (corte/perfuração).",
+      "description": "GAS REVISÃO. Espada de dois gumes com lâmina reta medindo entre 80cm e 1m. Pode ser usada tanto pra cortar quanto pra perfurar (escolha do usuário). Fonte: GAS p. 63."
+    },
+    {
+      "code": "chicote",
+      "name": "Chicote",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "MEDIANA",
+      "price": 1,
+      "damage": "+1",
+      "range": "6m",
+      "critRange": "15-16",
+      "slots": {
+        "items": 1,
+        "compartments": 1
+      },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes_one_of": {
+          "for": 10,
+          "des": 10
+        },
+        "aptitudes": [
+          "usar_arma_chicote"
+        ]
+      },
+      "effects": {
+        "_gasReview": true,
+        "_changesFromBasic": "Dano +0 → +1. Alcance 4m → 6m. Adicionada manobra Agarrar.",
+        "enrolaInimigo": true,
+        "agarrarSemPenalidade": true,
+        "desarmarSemPenalidade": true,
+        "derrubarSemPenalidade": true,
+        "compatibleAptitudes": [
+          "acuidade"
+        ]
+      },
+      "shortDescription": "GAS revisão. Atinge até 6m (era 4m), dano +1 (era +0). Agarrar/Desarmar/Derrubar.",
+      "description": "GAS REVISÃO. Atinge inimigo a até 6m. Pode se enroscar nas mãos, pernas ou armas do adversário, permitindo Agarrar (NOVO!), Desarmar e Derrubar sem penalidades. Acuidade se aplica. Fonte: GAS p. 61-62."
+    },
+    {
+      "code": "corrente_com_cravos",
+      "name": "Corrente com Cravos",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "MEDIANA",
+      "price": 25,
+      "damage": "+2",
+      "range": "6m",
+      "critRange": "15-16",
+      "slots": {
+        "items": 1,
+        "compartments": 1
+      },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes_one_of": {
+          "for": 10,
+          "des": 10
+        },
+        "aptitudes": [
+          "usar_arma_corrente_com_cravos"
+        ]
+      },
+      "effects": {
+        "_gasReview": true,
+        "_changesFromBasic": "Dano +1 → +2. Alcance 4m → 6m. Adicionada manobra Agarrar.",
+        "enrolaInimigo": true,
+        "agarrarSemPenalidade": true,
+        "desarmarSemPenalidade": true,
+        "derrubarSemPenalidade": true
+      },
+      "shortDescription": "GAS revisão. Atinge até 6m (era 4m), dano +2 (era +1). Agarrar/Desarmar/Derrubar.",
+      "description": "GAS REVISÃO. Atinge inimigo a até 6m. Pode se enroscar pra Agarrar (NOVO!), Desarmar, Derrubar sem penalidades. Fonte: GAS p. 62."
+    },
+    {
+      "code": "machado",
+      "name": "Machado",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "MEDIANA",
+      "price": 10,
+      "damage": "+4(+2)",
+      "range": null,
+      "critRange": "15-16",
+      "slots": {
+        "items": 1,
+        "compartments": 1
+      },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes_one_of": {
+          "for": 10,
+          "des": 10
+        },
+        "aptitudes": [
+          "usar_arma_machado"
+        ]
+      },
+      "effects": {
+        "_gasReview": true,
+        "_changesFromBasic": "Dano +3 → +4 base. Ataque brutal opcional com penalidade.",
+        "brutalAttack": {
+          "action": "padrao + movimento",
+          "damageBonus": 2,
+          "blocksManobras": true
+        }
+      },
+      "shortDescription": "GAS revisão. Dano +4. Ataque brutal (padrão+movimento) +2 dano sem manobras.",
+      "description": "GAS REVISÃO. Diferente de uma machadinha — arma capaz de causar ferimentos terríveis. Pode usar ação de movimento + ação padrão pra ataque brutal: +2 dano. NÃO pode usar aptidões de manobra ao atacar dessa forma (mesmo permitidas). Fonte: GAS p. 65."
+    },
+    {
+      "code": "martelo_de_guerra",
+      "name": "Martelo de Guerra",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "MEDIANA",
+      "price": 12,
+      "damage": "+3",
+      "range": null,
+      "critRange": "15-16",
+      "slots": {
+        "items": 1,
+        "compartments": 1
+      },
+      "damageType": "esmagamento",
+      "prerequisites": {
+        "attributes_one_of": {
+          "for": 10,
+          "des": 10
+        },
+        "aptitudes": [
+          "usar_arma_martelo_de_guerra"
+        ]
+      },
+      "effects": {
+        "_gasReview": true,
+        "_changesFromBasic": "Adicionado: ignora 2 dureza de objetos e corpos",
+        "ignoreDureza": 2
+      },
+      "shortDescription": "GAS revisão. Ignora 2 dureza de objetos e corpos.",
+      "description": "GAS REVISÃO. Ferramenta modificada pra combate, muito eficiente contra inimigos resistentes a corte/perfuração. Ignora 2 pontos de dureza de objetos e corpos. Fonte: GAS p. 66."
+    },
+    {
+      "code": "leque_gigante",
+      "name": "Leque Gigante",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "LONGA",
+      "price": 100,
+      "damage": "+2 (+4)",
+      "range": "2m",
+      "critRange": "15-16",
+      "slots": {
+        "items": 1,
+        "compartments": 2
+      },
+      "damageType": "esmagamento",
+      "prerequisites": {
+        "attributes": {
+          "des": 8
+        },
+        "aptitudes": [
+          "usar_arma_leque_gigante"
+        ]
+      },
+      "effects": {
+        "_gasReview": true,
+        "_changesFromBasic": "Alcance agora 2m. Afiar/Energizar Fuuton aumenta dano pra +4. Adiciona Técnica Poderosa e Domínio do Vento grátis. Permite Flutuar.",
+        "fuutonNoSeals": true,
+        "fuutonFlutuar": "Permite comprar e usar efeito exclusivo Flutuar",
+        "freeAptitudesForFuuton": [
+          "potencializar",
+          "tecnica_poderosa",
+          "dominio_do_vento"
+        ],
+        "afiarBonus": "Aplica Afiar (Fuuton) mesmo não sendo corte/perfuração. Afiado ou Energizado: dano +2 → +4",
+        "lowMinimumStrength": "Apesar de Longa, só requer Des 8",
+        "cannotBeCreated": "Não pode ser criado pelo efeito Criar Arma",
+        "rangeNow": "2m",
+        "compatibleAptitudes": [
+          "acuidade"
+        ]
+      },
+      "shortDescription": "GAS revisão. Alcance 2m. Afiar/Energizar = +4. Téc. Poderosa, Dom. Vento e Flutuar grátis.",
+      "description": "GAS REVISÃO EXPANDIDA. Arma longa rara de Suna. Suportes de aço, tecido reforçado. Fechado = esmagamento. Aberto = ventanias com chakra. Executa Fuuton sem selos. Permite efeito exclusivo 'Flutuar'. **EXPANDIDO**: permite usar Potencializar, Técnica Poderosa OU Domínio do Vento pra Fuuton gratuitamente (sem precisar comprar). Pode receber Afiar (Fuuton) mesmo não sendo corte/perfuração. Afiado OU Energizado por Fuuton: dano +2 → +4. Apesar de Longa, só requer Des 8. NÃO pode ser criado por Criar Arma. Acuidade se aplica. Alcance: 2m. Fonte: GAS p. 65."
+    },
+    {
+      "code": "espada_de_duas_laminas",
+      "name": "Espada de Duas Lâminas",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "PESADA",
+      "price": 100,
+      "damage": "+2/+2 (+5)",
+      "range": null,
+      "critRange": "15-16",
+      "slots": {
+        "items": 1,
+        "compartments": 2
+      },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes": {
+          "for": 12
+        },
+        "aptitudes": [
+          "usar_arma_espada_de_duas_laminas"
+        ]
+      },
+      "effects": {
+        "_gasReview": true,
+        "_changesFromBasic": "Adicionado: com Ambidestria, dano muda pra +5 (em vez de só somar +2/+2).",
+        "isDoubleWeapon": true,
+        "needsAmbidestriaForDoubleDamage": true,
+        "ambidestriaDamage": 5
+      },
+      "shortDescription": "GAS revisão. Com Ambidestria: dano +5 (não só soma +2/+2).",
+      "description": "GAS REVISÃO. Arma dupla pesada. Duas espadas longas em lados opostos do mesmo cabo. Ao usar as duas lâminas juntas com Ambidestria, arma fica mais mortal que apenas 2 espadas: dano muda pra +5 (em vez de +2/+2). Fonte: GAS p. 63."
+    },
+    {
+      "code": "besta_pesada",
+      "name": "Besta Pesada",
+      "kind": "WEAPON",
+      "subtype": "marcial",
+      "category": "DISPARO",
+      "price": 50,
+      "damage": "+5",
+      "range": "35m",
+      "critRange": "15-16",
+      "slots": {
+        "items": 1,
+        "compartments": 1
+      },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes": {
+          "des": 10
+        },
+        "aptitudes": [
+          "usar_arma_besta_pesada"
+        ]
+      },
+      "effects": {
+        "_gasReview": true,
+        "_changesFromBasic": "Dano +4 → +5",
+        "twoHanded": true,
+        "requiresAmmo": "virotes",
+        "reloadAction": "padrao",
+        "ammoSharesSlot": true
+      },
+      "shortDescription": "GAS revisão. Dano +5 (era +4). Mantém demais regras.",
+      "description": "GAS REVISÃO. Versão maior e mais potente da besta leve. Recarga = ação padrão. Duas mãos. **Dano atualizado: +5** (era +4 no Livro Básico). Fonte: GAS p. 60."
+    }
+  ]
+}

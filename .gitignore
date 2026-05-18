@@ -43,3 +43,6 @@ pnpm-debug.log*
 .DS_Store
 Thumbs.db
 *.swp
+
+# Cursor MCP config (contém bearer tokens locais — nunca commitar)
+.cursor/mcp.json

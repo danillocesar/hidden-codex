@@ -1,6 +1,10 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { LoginButton } from '@/components/auth/LoginButton';
+import { Eyebrow } from '@/components/ui/eyebrow';
+import { Heading } from '@/components/ui/heading';
+import { Section } from '@/components/ui/section';
+import { Text } from '@/components/ui/text';
 
 /**
  * Tela de login. O middleware redireciona direto pra `/dashboard` quando já há
@@ -12,16 +16,20 @@ import { LoginButton } from '@/components/auth/LoginButton';
 export default function LoginPage() {
   return (
     <main className="flex min-h-screen items-center justify-center px-6 py-20">
-      <section className="relative z-10 w-full max-w-md border border-border bg-bg-card p-10 text-center shadow-hero">
-        <span className="font-display text-[10px] uppercase tracking-[0.4em] text-ice-deep">
+      <Section
+        as="div"
+        tone="default"
+        className="relative z-10 w-full max-w-md p-10 text-center shadow-hero"
+      >
+        <Eyebrow tone="deep" size="sm" className="tracking-[0.4em]">
           Acesso
-        </span>
-        <h1 className="mt-2 font-serif text-4xl font-light text-ink">
+        </Eyebrow>
+        <Heading level={1} className="mt-2 text-4xl">
           Entre na <span className="italic text-ice-bright">Forja</span>
-        </h1>
-        <p className="mt-6 font-body text-sm leading-relaxed text-ink-muted">
+        </Heading>
+        <Text variant="muted" className="mt-6 font-body leading-relaxed">
           Use sua conta Google. A sessão dura 7 dias.
-        </p>
+        </Text>
 
         <div className="mt-8">
           <Suspense fallback={null}>
@@ -35,7 +43,7 @@ export default function LoginPage() {
         >
           ← Voltar
         </Link>
-      </section>
+      </Section>
     </main>
   );
 }

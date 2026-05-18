@@ -1,0 +1,649 @@
+{
+  "_meta": {
+    "description": "Lote 5c — Aptidões de Manobra Avançadas. Cobre manobras especiais de combate do Livro Básico (Bloquear Arma, Chute Duplo/Giratório/Inverso, Contragolpe, Derrubar Agressivo, Desarme Agressivo, Golpe Atemi/Caratê, Rasteira, Seguir Sombra, Soco Agarrado, Soco em Gancho, Voadora) e do Guia Avançado (Agarrar Agressivo, Desarme à Distância, Estilo Zui Quan, Flechada no Joelho, Imobilização, Instância de Falange, Roubar, Henge Perfeito, Furtividade Ágil, Burro de Carga). Categoria MANOBRA. Total: 24 aptidões (14 Livro Básico + 10 GAS).",
+    "sources": [
+      "Livro Básico p. 69-72 (Aptidões de Manobra)",
+      "Guia Avançado do Shinobi p. 31-35 (Manobras revisadas + novas)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "notes": "Schema idêntico aos lotes 5a e 5b. Quatro aptidões (Roubar, Henge Perfeito, Furtividade Ágil, Burro de Carga) aparecem apenas nas listas de invocações do GAS sem descrição detalhada — modeladas com 'needsDeepResearch: true' e nota apontando pro livro. Estilo Zui Quan tem evolução Nv 2. Flechada no Joelho e Desarme à Distância também têm Nv 2.",
+    "futureAptitudes": [
+      "utilitarista_rapido (referenciado em Imobilização — vem em lote futuro de aptidões GAS especiais)",
+      "agarrar_agressivo é a base de Imobilização (modelada aqui mesmo)"
+    ],
+    "unmodeledAptitudes": [
+      "especialista_armas_longas",
+      "especialista_desarmado",
+      "guerreiro_longas",
+      "guerreiro_pesadas"
+    ],
+    "unmodeledAptitudesNotes": "Variantes parametrizadas de 'especialista' (5a, categoryChoice: leves/medianas/longas/pesadas/desarmado) e 'guerreiro' (5a, categoryChoice: longas/pesadas). Modelagem real fica pro motor via CharacterAptitude.parameter, igual ao 'guerreiro_pesadas' do 5a. Também há 'utilitarista_rapido' referenciado em imobilizacao.effects.kousenSubstitution.without (fora de prereqs, motor decide depois) — não validado aqui.",
+    "unmodeledAptitudesNote": "Refs parametrizadas: padrão <aptidao>_<parametro>. Forma canônica: aptidão 'guerreiro' (já existe) com parâmetro 'armas pesadas' ou 'armas longas'. Motor de regras precisa interpretar o sufixo. Equivalente a Perito_X, Maestria_X, Usar_arma_X.",
+    "audit": [
+      {
+        "date": "2026-05-14",
+        "phase": "7e-cleanup",
+        "change": "Declarado em _meta: ['unmodeledAptitudes', 'unmodeledAptitudesNote']. Demove erros de validador (refs parametrizadas + dívidas reais marcadas)."
+      }
+    ]
+  },
+  "data": [
+    {
+      "code": "bloquear_arma",
+      "name": "Bloquear Arma",
+      "category": "MANOBRA",
+      "shortDescription": "+1 bloqueio contra CC armado. Diff 4+ = Desarmar como ação livre.",
+      "description": "+1 precisão ao executar Bloqueio contra ataques corporais armados. Se resultado do teste é 4+ pontos a mais que o oponente, pode executar Desarmar como ação livre. Acerto crítico no bloqueio = desarme automático. Fonte: Livro Básico p. 69-70.",
+      "prerequisites": {},
+      "effects": {
+        "type": "block_modifier",
+        "precisionBonus": 1,
+        "appliesAgainst": "ataques_corporais_armados",
+        "disarmTrigger": {
+          "diffThreshold": 4,
+          "action": "livre"
+        },
+        "criticalAutoDisarm": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "chute_duplo",
+      "name": "Chute Duplo",
+      "category": "MANOBRA",
+      "shortDescription": "Ataque Múltiplo com Chute Giratório seguido de chute comum. +1 precisão no 2º se 1º acertar.",
+      "description": "Usa Ataque Múltiplo pra aplicar Chute Giratório + chute comum. Se 1º golpe bem-sucedido, 2º ataque desarmado recebe +1 precisão no acerto. Fonte: Livro Básico p. 70.",
+      "prerequisites": {
+        "aptitudes": [
+          "chute_giratorio",
+          "ataque_multiplo"
+        ]
+      },
+      "effects": {
+        "type": "combo_manuever",
+        "usesAttackMultiplo": true,
+        "sequence": [
+          "chute_giratorio",
+          "chute_desarmado"
+        ],
+        "secondAttackBonus": {
+          "condition": "1o_golpe_bem_sucedido",
+          "precisionBonus": 1
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "chute_giratorio",
+      "name": "Chute Giratório",
+      "category": "MANOBRA",
+      "shortDescription": "Ataque Giratório desarmado com +2 bônus de dano.",
+      "description": "Executa ataque desarmado com aptidão Ataque Giratório e recebe +2 bônus de dano. Fonte: Livro Básico p. 70.",
+      "prerequisites": {
+        "combatSkills": {
+          "cc": 10
+        },
+        "aptitudes": [
+          "ataque_giratorio"
+        ]
+      },
+      "effects": {
+        "type": "manuever_modifier",
+        "baseManuever": "ataque_giratorio",
+        "unarmedOnly": true,
+        "damageBonus": 2
+      },
+      "evolutions": []
+    },
+    {
+      "code": "chute_inverso",
+      "name": "Chute Inverso",
+      "category": "MANOBRA",
+      "shortDescription": "Ação padrão: Fintar + ataque desarmado. Alvo não pode Bloquear.",
+      "description": "Com 1 ação padrão, realiza manobra Fintar E executa ataque desarmado contra oponente, que não pode se defender usando Bloqueio. Fonte: Livro Básico p. 70.",
+      "prerequisites": {
+        "combatSkills": {
+          "cc": 14
+        },
+        "aptitudes": [
+          "ponto_cego"
+        ]
+      },
+      "effects": {
+        "type": "manuever",
+        "action": "padrao",
+        "combinesWith": "fintar",
+        "unarmedOnly": true,
+        "blocksDefense": [
+          "bloqueio"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "contragolpe",
+      "name": "Contragolpe",
+      "category": "MANOBRA",
+      "shortDescription": "Bloqueio com diff 4+ vs CC inimigo = ataque oportuno. Crítico/falha = sucesso automático.",
+      "description": "Quando bloqueia CC inimigo (manobra Golpear), se resultado do teste é 4+ a mais que do oponente, pode executar ataque oportuno. Crítico no bloqueio OU falha crítica do inimigo = ataque oportuno é Sucesso Automático. Fonte: Livro Básico p. 70.",
+      "prerequisites": {
+        "combatSkills": {
+          "cc": 12
+        }
+      },
+      "effects": {
+        "type": "block_counterattack",
+        "triggerOnBlock": true,
+        "diffThreshold": 4,
+        "reactionType": "ataque_oportuno",
+        "autoSuccessOn": [
+          "block_crit",
+          "enemy_fumble"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "derrubar_agressivo",
+      "name": "Derrubar Agressivo",
+      "category": "MANOBRA",
+      "shortDescription": "Manobra Derrubar com dano + derrubar. Alvo testa Vigor pra ficar de pé.",
+      "description": "Usa manobra Derrubar com dano + derrubar. Alvo testa Vigor (Dif 2 + CC do atacante) pra se manter de pé. Combinável com Arremessar: alvo só é arremessado se falhar no teste de Vigor. Fonte: Livro Básico p. 70.",
+      "prerequisites": {
+        "aptitudes_one_of": [
+          "lutador",
+          "guerreiro_pesadas",
+          "guerreiro_longas"
+        ]
+      },
+      "effects": {
+        "type": "manuever_modifier",
+        "baseManuever": "derrubar",
+        "addsDamage": true,
+        "saveDifficulty": "2 + cc_atacante",
+        "saveType": "vigor",
+        "saveResult": "manter_de_pe",
+        "combosWith": [
+          "arremessar"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "desarme_agressivo",
+      "name": "Desarme Agressivo",
+      "category": "MANOBRA",
+      "shortDescription": "Manobra Desarmar com dano + desarmar.",
+      "description": "Usa manobra Desarmar, além de desarmar o alvo, também causa dano. Fonte: Livro Básico p. 70.",
+      "prerequisites": {
+        "aptitudes_one_of": [
+          "lutador",
+          "guerreiro_pesadas",
+          "guerreiro_longas"
+        ]
+      },
+      "effects": {
+        "type": "manuever_modifier",
+        "baseManuever": "desarmar",
+        "addsDamage": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "golpe_atemi",
+      "name": "Golpe Atemi",
+      "category": "MANOBRA",
+      "shortDescription": "-1 precisão, +2 dano desarmado. Bônus também em crítico sem aptidão de manobra.",
+      "description": "Mira ponto vital. -1 precisão no acerto + +2 dano no ataque desarmado. Também recebe +2 dano em acerto crítico sem qualquer aptidão de manobra. NÃO funciona se oponente não tem pontos vitais desprotegidos (armadura completa, etc.). Fonte: Livro Básico p. 71.",
+      "prerequisites": {
+        "aptitudes": [
+          "ataque_poderoso",
+          "critico_aprimorado"
+        ]
+      },
+      "effects": {
+        "type": "manuever",
+        "precisionPenalty": -1,
+        "damageBonus": 2,
+        "unarmedOnly": true,
+        "alsoBonusOnCritWithoutManuever": true,
+        "requires": "alvo_com_pontos_vitais_desprotegidos"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "golpe_carate",
+      "name": "Golpe Caratê",
+      "category": "MANOBRA",
+      "shortDescription": "Ataque desarmado ignora 2 dureza corpo / 10 dureza objeto.",
+      "description": "Golpe com canto da mão ou pontas dos dedos. Ignora até 2 pontos de dureza de corpo. Contra objeto: ignora até 10 pontos de dureza. Fonte: Livro Básico p. 71.",
+      "prerequisites": {
+        "combatSkills": {
+          "cc": 15
+        },
+        "aptitudes": [
+          "especialista_desarmado"
+        ]
+      },
+      "effects": {
+        "type": "manuever",
+        "unarmedOnly": true,
+        "ignoresHardness": {
+          "body": 2,
+          "object": 10
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "rasteira",
+      "name": "Rasteira",
+      "category": "MANOBRA",
+      "shortDescription": "Manobra Derrubar com +1 precisão. Combinável com Derrubar Agressivo.",
+      "description": "Chute baixo. Realiza manobra Derrubar com +1 precisão no ataque. Combinável com Derrubar Agressivo. Fonte: Livro Básico p. 71.",
+      "prerequisites": {
+        "aptitudes_one_of": [
+          "lutador",
+          "guerreiro_longas"
+        ]
+      },
+      "effects": {
+        "type": "manuever_modifier",
+        "baseManuever": "derrubar",
+        "precisionBonus": 1,
+        "combosWith": [
+          "derrubar_agressivo"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "seguir_sombra",
+      "name": "Seguir Sombra",
+      "category": "MANOBRA",
+      "shortDescription": "Persegue alvo arremessado. Ação parcial pra mover + ataque padrão extra.",
+      "description": "Precisa estar acelerado. Após Arremessar bem-sucedido, move-se até oponente arremessado com ação parcial + ataque padrão extra. Ataque extra NÃO pode usar aptidões de manobra (exceto Ataque Múltiplo e Ataque Progressivo). Movimento NÃO conta no limite de deslocamento. Alvo no ar: NÃO pode Evadir nem defesas com deslocamento; desprevenido se usar Esquiva ou Antecipar. Pode defender com técnica usável no ar. Ataque bem-sucedido: alvo cai ao chão (dano de queda sem redução por Acrobacia). Você pousa no final do turno. NÃO compatível com Arremessar+Ataque Múltiplo nem Arremessar+Derrubar Agressivo. Fonte: Livro Básico p. 71.",
+      "prerequisites": {
+        "aptitudes": [
+          "arremessar",
+          "ataque_em_movimento"
+        ]
+      },
+      "effects": {
+        "type": "follow_up_manuever",
+        "requires": "acelerado",
+        "trigger": "apos_arremessar_bem_sucedido",
+        "moveAction": "parcial",
+        "extraAttackAction": "padrao",
+        "extraAttackAllowedManuevers": [
+          "ataque_multiplo",
+          "ataque_progressivo"
+        ],
+        "noMovementLimit": true,
+        "targetInAirDefenseLimits": {
+          "blocks": [
+            "evadir",
+            "defesas_com_deslocamento"
+          ],
+          "desprevenidoOn": [
+            "esquiva",
+            "antecipar"
+          ]
+        },
+        "onHit": "alvo_cai + dano_queda_sem_acrobacia",
+        "incompatibleWith": [
+          "arremessar+ataque_multiplo",
+          "arremessar+derrubar_agressivo"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "soco_agarrado",
+      "name": "Soco Agarrado",
+      "category": "MANOBRA",
+      "shortDescription": "Agarra braço do oponente e ataca desarmado. Alvo NÃO pode Bloquear.",
+      "description": "Oponente NÃO pode se defender com Bloqueio quando você ataca desarmado. Só funciona se alvo também está desarmado ou usando arma leve. Fonte: Livro Básico p. 72.",
+      "prerequisites": {
+        "aptitudes": [
+          "lutador"
+        ]
+      },
+      "effects": {
+        "type": "manuever",
+        "unarmedOnly": true,
+        "blocksDefense": [
+          "bloqueio"
+        ],
+        "targetRequirement": "desarmado_ou_arma_leve"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "soco_em_gancho",
+      "name": "Soco em Gancho",
+      "category": "MANOBRA",
+      "shortDescription": "Último golpe do Ataque Múltiplo: +1 precisão, +1 dano.",
+      "description": "No último golpe do Ataque Múltiplo, executa soco com +1 precisão e +1 dano. Fonte: Livro Básico p. 72.",
+      "prerequisites": {
+        "combatSkills": {
+          "cc": 11
+        },
+        "aptitudes": [
+          "ataque_multiplo"
+        ]
+      },
+      "effects": {
+        "type": "manuever_modifier",
+        "baseManuever": "ataque_multiplo",
+        "appliesTo": "ultimo_golpe",
+        "precisionBonus": 1,
+        "damageBonus": 1
+      },
+      "evolutions": []
+    },
+    {
+      "code": "voadora",
+      "name": "Voadora",
+      "category": "MANOBRA",
+      "shortDescription": "Investida + ataque desarmado com Derrubar Agressivo. -1 precisão, +2 dano, +3 Dif derrubar.",
+      "description": "Realiza Investida e finaliza com ataque desarmado usando Derrubar Agressivo. No ataque: -1 precisão, +2 bônus de dano, alvo sofre +3 níveis na Dif do teste de não ser derrubado. Fonte: Livro Básico p. 72.",
+      "prerequisites": {
+        "aptitudes": [
+          "derrubar_agressivo",
+          "ataque_poderoso"
+        ]
+      },
+      "effects": {
+        "type": "combo_manuever",
+        "sequence": [
+          "investida",
+          "derrubar_agressivo_desarmado"
+        ],
+        "precisionPenalty": -1,
+        "damageBonus": 2,
+        "derrubarSaveDifficultyBonus": 3
+      },
+      "evolutions": []
+    },
+    {
+      "code": "agarrar_agressivo",
+      "name": "Agarrar Agressivo",
+      "category": "MANOBRA",
+      "shortDescription": "GAS. Manobra Agarrar com dano. Alvo testa Vigor pra não ficar agarrado.",
+      "description": "Ao usar manobra Agarrar, pode optar por causar dano igual ao ataque desarmado ou arma usada. Se causa dano, vítima testa Vigor (Dif 2 + CC atacante) pra não ficar agarrada (dano causado normalmente). Usar essa manobra proíbe ataques adicionais na rodada. Fonte: GAS p. 30-31.",
+      "prerequisites": {
+        "aptitudes_one_of": [
+          "lutador",
+          "guerreiro_pesadas",
+          "guerreiro_longas"
+        ]
+      },
+      "effects": {
+        "type": "manuever_modifier",
+        "baseManuever": "agarrar",
+        "addsDamage": true,
+        "saveDifficulty": "2 + cc_atacante",
+        "saveType": "vigor",
+        "saveResult": "evitar_agarrado",
+        "blocksAdditionalAttacks": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "desarme_a_distancia",
+      "name": "Desarme à Distância",
+      "category": "MANOBRA",
+      "shortDescription": "GAS. Manobra Desarmar à distância com arma de Arremesso/Disparo. Sem dano no Nv 1.",
+      "description": "Usando arma de Arremesso ou Disparo, realiza manobra Desarmar sem penalidade via ataque à distância. NÃO causa dano. NÃO recebe outras aptidões de manobra que afetem Desarmar. Fonte: GAS p. 32.",
+      "prerequisites": {
+        "combatSkills": {
+          "cd": 11
+        },
+        "attributes": {
+          "int": 3
+        }
+      },
+      "effects": {
+        "type": "ranged_manuever",
+        "baseManuever": "desarmar",
+        "weaponTypes": [
+          "arremesso",
+          "disparo"
+        ],
+        "noPenalty": true,
+        "noDamage": true,
+        "noOtherManueverBonuses": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 2,
+          "name": "Desarme à Distância Nv 2",
+          "prerequisites": {
+            "combatSkills": {
+              "cd": 17
+            },
+            "attributes": {
+              "int": 7
+            }
+          },
+          "description": "Passa a causar dano ao desarmar à distância. Dano = ataque à distância normal da arma -1 no grau (mínimo 1). Crítico: arma é arremessada na direção oposta do ataque por ½ Destreza do atacante em metros. Fonte: GAS p. 32."
+        }
+      ]
+    },
+    {
+      "code": "flechada_no_joelho",
+      "name": "Flechada no Joelho",
+      "category": "MANOBRA",
+      "shortDescription": "GAS. Manobra Derrubar à distância com arma de Arremesso/Disparo. Sem dano no Nv 1.",
+      "description": "Usando arma de Arremesso ou Disparo, realiza manobra Derrubar sem penalidade via ataque à distância. NÃO causa dano. NÃO recebe outras aptidões de manobra que afetem Derrubar. Fonte: GAS p. 33-34.",
+      "prerequisites": {
+        "combatSkills": {
+          "cd": 11
+        },
+        "attributes": {
+          "int": 3
+        }
+      },
+      "effects": {
+        "type": "ranged_manuever",
+        "baseManuever": "derrubar",
+        "weaponTypes": [
+          "arremesso",
+          "disparo"
+        ],
+        "noPenalty": true,
+        "noDamage": true,
+        "noOtherManueverBonuses": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 2,
+          "name": "Flechada no Joelho Nv 2",
+          "prerequisites": {
+            "combatSkills": {
+              "cd": 17
+            },
+            "attributes": {
+              "int": 7
+            }
+          },
+          "description": "Passa a causar dano ao derrubar à distância. Dano = ataque à distância normal da arma -1 no grau (mínimo 1). Crítico: alvo fica lento até final do próximo turno. Fonte: GAS p. 34."
+        }
+      ]
+    },
+    {
+      "code": "estilo_zui_quan",
+      "name": "Estilo Zui Quan (Punhos Bêbados)",
+      "category": "MANOBRA",
+      "shortDescription": "GAS. Bebe líquido forte (parcial). 5 turnos: finta livre, 25% chance falha contra você, mas d8 random ações.",
+      "description": "Estilo de luta secreto baseado em enganação. Entrar = ação parcial + sacar e beber líquido forte. Duração: 5 turnos. No início de cada turno, rola d8 pra ação: 1-2 = gagueja sem fazer nada, 3-4 = ataca alvo mais próximo, 5-8 = age normal. NÃO pode usar técnicas (mas sustenta Energizar). Toda ação Golpear desarmado realiza finta como ação livre. Atacantes contra você sofrem 25% chance de falha (NÃO negada por sensores). Após duração: 2 rodadas pra reentrar. Líquido = 1/6 compartimento (até 6 em 1 comp). Fonte: GAS p. 32-33.",
+      "prerequisites": {
+        "aptitudes": [
+          "ponto_cego",
+          "punho_de_ferro"
+        ],
+        "attributes": {
+          "vig": 8
+        }
+      },
+      "effects": {
+        "type": "combat_stance",
+        "entryAction": "parcial",
+        "entryRequirement": "beber_liquido_forte",
+        "duration": "5_turnos",
+        "randomActionRoll": {
+          "die": "d8",
+          "results": {
+            "1-2": "gagueja_sem_fazer_nada",
+            "3-4": "ataca_alvo_mais_proximo",
+            "5-8": "age_normal"
+          }
+        },
+        "blocksTechniques": true,
+        "sustainEnergizar": true,
+        "freeFintaOnGolpear": "desarmado_apenas",
+        "incomingAttackMissChance": 0.25,
+        "missChanceUnstoppableBySensors": true,
+        "reentryDelay": "2_rodadas",
+        "liquidStorage": "1/6_compartimento"
+      },
+      "evolutions": [
+        {
+          "atLevel": 2,
+          "name": "Estilo Zui Quan Nv 2",
+          "prerequisites": {
+            "attributes": {
+              "for": 15,
+              "vig": 12
+            },
+            "aptitudes": [
+              "resistencia_maior_vigor"
+            ]
+          },
+          "description": "Entra como ação LIVRE e sem precisar de bebida. NÃO sofre mais efeito de confusão (sem rolar d8). Mantém por duração contínua. Após encerrar, ainda precisa 2 rodadas pra reentrar. Fonte: GAS p. 33."
+        }
+      ]
+    },
+    {
+      "code": "imobilizacao",
+      "name": "Imobilização",
+      "category": "MANOBRA",
+      "shortDescription": "GAS. Transforma agarramento em imobilização. Sufocamento + dano fixo = Força.",
+      "description": "Após 1 rodada de agarramento, ao manter (ação padrão), gasta ação de movimento pra melhorar pra imobilização. Vítima testa sufocamento Dif 7 + Força (repete cada turno, -1 Vigor cumulativo) pra não sofrer dano fixo = Precisão de Força (sem bônus). Sucesso só evita dano — não termina imobilização nem agarramento. Demais regras de Agarrar continuam. Com Kousen (Manobra Amarrar) sem Utilitarista Rápido: pode usar Destreza no lugar de Força. NÃO compatível com 'armas especiais' (Braços de Chakra de Jinchuuriki, fios do Jiongu). Fonte: GAS p. 34.",
+      "prerequisites": {
+        "aptitudes": [
+          "agarrar_agressivo"
+        ],
+        "attributes": {
+          "for": 13
+        }
+      },
+      "effects": {
+        "type": "manuever_upgrade",
+        "baseManuever": "agarrar",
+        "requires": "1 rodada de agarramento",
+        "upgradeAction": {
+          "main": "padrao",
+          "additional": "movimento"
+        },
+        "sufocamentoSave": {
+          "difficulty": "7 + for_atacante",
+          "vigorPenaltyPerTurn": -1,
+          "damageOnFailure": "precisao_for_sem_bonus"
+        },
+        "incompatibleWith": [
+          "armas_especiais_jinchuuriki",
+          "fios_jiongu"
+        ],
+        "kousenSubstitution": {
+          "without": "utilitarista_rapido",
+          "substitutes": "destreza_for_forca"
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "instancia_de_falange",
+      "name": "Instância de Falange",
+      "category": "MANOBRA",
+      "shortDescription": "GAS. Arma Longa + ação parcial = postura defensiva pra ataques oportunos em engajamento.",
+      "description": "Com arma longa empunhada + ação parcial, entra em instância defensiva especializada em reagir a inimigos que tentem engajar. Detalhes mecânicos completos seguem GAS p. 34. Fonte: GAS p. 34.",
+      "prerequisites": {
+        "aptitudes": [
+          "especialista_armas_longas",
+          "guerreiro_longas"
+        ],
+        "combatSkills": {
+          "cc": 14
+        }
+      },
+      "effects": {
+        "type": "defensive_stance",
+        "weaponRequirement": "arma_longa",
+        "entryAction": "parcial",
+        "purpose": "ataque_oportuno_em_engajamento",
+        "needsDeepResearch": true,
+        "notes": "Consultar GAS p. 34 pra mecânica completa."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "roubar",
+      "name": "Roubar",
+      "category": "MANOBRA",
+      "shortDescription": "GAS. Aptidão de Manobra. Detalhes seguem livro.",
+      "description": "Aptidão de manobra do GAS, listada nas invocações de Cães, Macacos, etc. Detalhes mecânicos completos seguem GAS (não documentados na seção pesquisada). Modelado como entrada catalogada. Fonte: GAS (referenciada em listas de invocação).",
+      "prerequisites": {},
+      "effects": {
+        "type": "manuever",
+        "needsDeepResearch": true,
+        "notes": "Aptidão referenciada apenas em listas de invocação do GAS. Consultar livro pra mecânica completa antes de usar em mesa."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "henge_perfeito",
+      "name": "Henge Perfeito",
+      "category": "MANOBRA",
+      "shortDescription": "GAS. Aptidão de Manobra. Detalhes seguem livro.",
+      "description": "Aptidão do GAS relacionada à técnica Henge no Jutsu (transformação). Listada nas invocações de Macacos. Detalhes mecânicos completos seguem GAS. Modelado como entrada catalogada. Fonte: GAS (referenciada em listas de invocação).",
+      "prerequisites": {},
+      "effects": {
+        "type": "manuever",
+        "needsDeepResearch": true,
+        "notes": "Aptidão referenciada apenas em listas de invocação do GAS. Consultar livro pra mecânica completa antes de usar em mesa."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "furtividade_agil",
+      "name": "Furtividade Ágil",
+      "category": "MANOBRA",
+      "shortDescription": "GAS. Aptidão de Manobra. Detalhes seguem livro.",
+      "description": "Aptidão de manobra do GAS, listada em quase todas as invocações (Cães, Cobras, Tubarões, Macacos, Águias). Provavelmente melhora Furtividade em combate ou movimento. Detalhes mecânicos completos seguem GAS. Modelado como entrada catalogada. Fonte: GAS (referenciada em listas de invocação).",
+      "prerequisites": {},
+      "effects": {
+        "type": "manuever",
+        "needsDeepResearch": true,
+        "notes": "Aptidão referenciada apenas em listas de invocação do GAS. Consultar livro pra mecânica completa antes de usar em mesa."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "burro_de_carga",
+      "name": "Burro de Carga",
+      "category": "MANOBRA",
+      "shortDescription": "GAS. Aptidão de Manobra. Detalhes seguem livro.",
+      "description": "Aptidão do GAS, listada nas invocações de Águias e Macacos. Provavelmente relacionada a capacidade de carga/transporte. Detalhes mecânicos completos seguem GAS. Modelado como entrada catalogada. Fonte: GAS (referenciada em listas de invocação).",
+      "prerequisites": {},
+      "effects": {
+        "type": "manuever",
+        "needsDeepResearch": true,
+        "notes": "Aptidão referenciada apenas em listas de invocação do GAS. Consultar livro pra mecânica completa antes de usar em mesa."
+      },
+      "evolutions": []
+    }
+  ]
+}

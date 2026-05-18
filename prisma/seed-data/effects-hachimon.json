@@ -20,6 +20,25 @@
     },
     "unmodeledPowers": [
       "hachimon_tonkou"
+    ],
+    "unmodeledAptitudes": [],
+    "unmodeledAptitudesNote": "DÍVIDA REAL — Armadura de Raios é aptidão Hijutsu de Nintaijutsu (Livro de Hijutsus p. 64-65, 3 níveis evolutivos com pré-req Nintaijutsu 5/6/8 + Esp 6/9/14). Modelar quando Nintaijutsu entrar no escopo (Task #13 do roadmap).",
+    "audit": [
+      {
+        "date": "2026-05-14",
+        "phase": "7e-cleanup",
+        "change": "Declarado em _meta: ['unmodeledAptitudes', 'unmodeledAptitudesNote']. Demove erros de validador (refs parametrizadas + dívidas reais marcadas)."
+      },
+      {
+        "date": "2026-05-14",
+        "phase": "7j-cleanup",
+        "change": "Removido 'armadura_de_raios' de unmodeledAptitudes (agora modelado em aptitudes-nintaijutsu.json)."
+      },
+      {
+        "date": "2026-05-14",
+        "phase": "7j-correction",
+        "change": "REMOVIDAS 7 técnicas (Elbow, Straight, Lariat, Hell Stab, Guillotine Drop, Linger Bomb, Reverse Chop). RAW (Livro de Hijutsus p. 62-64): essas técnicas são do Nintaijutsu, NÃO do Hachimon Tonkou. Erro factual de lote 4c. Versão canônica agora em effects-nintaijutsu.json com prereqs corretos (Hell Stab requer Armadura de Raios). Removidos 7 entries."
+      }
     ]
   },
   "data": [
@@ -245,199 +264,6 @@
           "durationTurns": 3,
           "deathAfter": true
         }
-      },
-      "evolutions": []
-    },
-    {
-      "code": "elbow",
-      "name": "Elbow",
-      "minLevel": 2,
-      "availableFor": [
-        "hachimon_tonkou"
-      ],
-      "shortDescription": "Cotovelada. Ataque desarmado com Força Bruta. Arremessa alvo 5m + 1m/For.",
-      "description": "Com cotovelada ultrapotente, envia inimigo pra longe. Ataque desarmado com Força Bruta, sem aptidão de manobra. Alvo atingido testa Vigor (Dif padrão +2) ou é arremessado 5m + 1m por Força (não cai). Fonte: Livro de Hijutsus p. 63.",
-      "stats": {
-        "action": "PADRAO",
-        "range": "toque",
-        "damage": "comum_do_poder (força bruta)",
-        "duration": "INSTANTANEA",
-        "rollType": "CC"
-      },
-      "rules": {
-        "throwsTargetOnFailedVigor": "5m + 1m por Força",
-        "vigorDifficulty": "padrao +2",
-        "noFall": true
-      },
-      "evolutions": [
-        {
-          "atLevel": 5,
-          "name": "Elbow Nv 5",
-          "description": "Mesmo que alvo passe no Vigor, ainda é afastado pela metade da distância do efeito."
-        }
-      ]
-    },
-    {
-      "code": "straight",
-      "name": "Straight",
-      "minLevel": 3,
-      "availableFor": [
-        "hachimon_tonkou"
-      ],
-      "shortDescription": "Soco reto após avanço rápido. Dano comum. Arremessa alvo 10m + 2m/For, caído.",
-      "description": "Após correr em super velocidade, ataca com soco reto causando dano comum do poder. Alvo testa Vigor pra não ser arremessado 10m + 2m por Força, ficando caído. Ação completa. Fonte: Livro de Hijutsus p. 63.",
-      "stats": {
-        "action": "COMPLETA",
-        "range": "toque",
-        "damage": "comum_do_poder",
-        "duration": "INSTANTANEA",
-        "rollType": "CC"
-      },
-      "rules": {
-        "requiresAvancoRapido": true,
-        "throwsTargetOnFailedVigor": "10m + 2m por Força",
-        "leavesTargetCaido": true
-      },
-      "evolutions": [
-        {
-          "atLevel": 6,
-          "name": "Straight Nv 6",
-          "description": "Recebe +2 em Agilidade no teste de finta acelerada durante avanço rápido."
-        }
-      ]
-    },
-    {
-      "code": "lariat",
-      "name": "Lariat",
-      "minLevel": 4,
-      "availableFor": [
-        "hachimon_tonkou"
-      ],
-      "shortDescription": "Golpe brutal com antebraço após corrida. Dano comum +1. Obriga continuar correndo +5m.",
-      "description": "Após percorrer distância pegando impulso, desfere golpe com antebraço. Avanço rápido + ataque causando dano comum +1 bônus. Após o ataque, é OBRIGADO a continuar correndo por pelo menos +5m antes de parar. Se não houver deslocamento suficiente, efeito não pode ser usado. Ação completa. Fonte: Livro de Hijutsus p. 63.",
-      "stats": {
-        "action": "COMPLETA",
-        "range": "toque",
-        "damage": "comum_do_poder +1",
-        "duration": "INSTANTANEA",
-        "rollType": "CC"
-      },
-      "rules": {
-        "requiresAvancoRapido": true,
-        "mandatoryContinueRunning": "+5m após ataque"
-      },
-      "evolutions": [
-        {
-          "atLevel": 8,
-          "name": "Lariat Nv 8",
-          "description": "+1 de bônus de dano pra cada 5m deslocados antes do ataque, até máximo de +3."
-        }
-      ]
-    },
-    {
-      "code": "hell_stab",
-      "name": "Hell Stab",
-      "minLevel": 5,
-      "availableFor": [
-        "hachimon_tonkou"
-      ],
-      "shortDescription": "Perfuração com dedos cobertos de chakra elétrico. Funciona como Lâmina de Raios Nv 5 com Força. Pré-req: Armadura de Raios.",
-      "description": "Concentra chakra elétrico nas pontas dos dedos de uma mão e executa movimento de impulso, perfurando alvo e sobrepujando defesa. Nível de perfuração aumenta com quantidade de dedos usados. Funciona como Lâmina de Raios Nv 5, mas usa Força no cálculo de dano. Pré-requisito: Aptidão Armadura de Raios. Fonte: Livro de Hijutsus p. 63-64.",
-      "stats": {
-        "action": "MOVIMENTO + PADRAO (como Lâmina de Raios Nv 5)",
-        "range": "toque",
-        "damage": "comum_do_poder (com Força)",
-        "duration": "INSTANTANEA",
-        "rollType": "CC"
-      },
-      "rules": {
-        "prerequisites": {
-          "aptitudes": [
-            "armadura_de_raios"
-          ]
-        },
-        "basedOn": "lamina_de_raios_nv_5",
-        "usesForceForDamage": true
-      },
-      "evolutions": [
-        {
-          "atLevel": 7,
-          "name": "Hell Stab Nv 7",
-          "description": "Funciona como Lâmina de Raios Nv 7."
-        },
-        {
-          "atLevel": 9,
-          "name": "Hell Stab Nv 9",
-          "description": "Funciona como Lâmina de Raios Nv 9. Adicionalmente, recebe gratuitamente benefícios de Domínio do Raio pra este efeito."
-        }
-      ]
-    },
-    {
-      "code": "guillotine_drop",
-      "name": "Guillotine Drop",
-      "minLevel": 7,
-      "availableFor": [
-        "hachimon_tonkou"
-      ],
-      "shortDescription": "Chute de cima pra baixo após salto. Dano comum. Vigor ou esmagado contra chão (atordoado + caído).",
-      "description": "Após salto, martela alvo com chute de cima pra baixo usando calcanhar. Causa dano comum do poder. Alvo testa Vigor ou é esmagado contra chão, ficando atordoado e caído por 1 turno. Ação padrão. Fonte: Livro de Hijutsus p. 64.",
-      "stats": {
-        "action": "PADRAO",
-        "range": "toque",
-        "damage": "comum_do_poder",
-        "duration": "INSTANTANEA",
-        "rollType": "CC"
-      },
-      "rules": {
-        "vigorTestOrConditions": [
-          "atordoado",
-          "caido"
-        ],
-        "conditionDuration": "1 turno"
-      },
-      "evolutions": []
-    },
-    {
-      "code": "linger_bomb",
-      "name": "Linger Bomb",
-      "minLevel": 9,
-      "availableFor": [
-        "hachimon_tonkou"
-      ],
-      "shortDescription": "Agarra e arremessa alvo no chão com Força integral. Sem bônus de dano.",
-      "description": "Agarra oponente e arremessa no chão com potência brutal, aniquilando completamente. Teste de Agarrar. Se bem-sucedido, joga pra baixo causando dano comum do poder com Força INTEGRAL (sem divisão). Não recebe bônus de dano de qualquer tipo (mesmo bônus vindos de aumento de Força, como Hachimon 1). Ação padrão. Fonte: Livro de Hijutsus p. 64.",
-      "stats": {
-        "action": "PADRAO",
-        "range": "toque",
-        "damage": "comum_do_poder (Força integral)",
-        "duration": "INSTANTANEA",
-        "rollType": "agarrar"
-      },
-      "rules": {
-        "fullForceNoDivision": true,
-        "noDamageBonuses": true
-      },
-      "evolutions": []
-    },
-    {
-      "code": "reverse_chop",
-      "name": "Reverse Chop",
-      "minLevel": 10,
-      "availableFor": [
-        "hachimon_tonkou"
-      ],
-      "shortDescription": "Golpe martelado com mão após salto. Como Guillotine Drop. Mínimo grau 3 de dano.",
-      "description": "Após salto, martela alvo com golpe forte de cima pra baixo com mão, enterrando-o no solo. Segue regras de Guillotine Drop. Potência ampliada pelo salto garante que nunca cause menos que Grau 3 de dano. Fonte: Livro de Hijutsus p. 64.",
-      "stats": {
-        "action": "PADRAO",
-        "range": "toque",
-        "damage": "comum_do_poder",
-        "duration": "INSTANTANEA",
-        "rollType": "CC"
-      },
-      "rules": {
-        "basedOn": "guillotine_drop",
-        "minimumDamageGrade": 3
       },
       "evolutions": []
     }

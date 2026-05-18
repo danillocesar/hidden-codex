@@ -1,0 +1,858 @@
+{
+  "_meta": {
+    "description": "Lote 7f2c — 20 effects técnicos específicos dos Jinchuurikis. Inclui correção factual: nekozume foi MOVIDO de effects-aoi-katon.json (onde estava incorretamente como effect do Aoi Katon) pra cá com availableFor:['jinchuuriki'] e prereq aptidão jinchuuriki_matatabi (RAW Hijutsus p.35). Effects de Gobi Futton e Rokubi Suiton referenciam os powers novos do 7f2b.",
+    "sources": [
+      "Livro de Hijutsus p. 29-52 (capítulo Bijuus técnicas)"
+    ],
+    "extractedAt": "2026-05-14",
+    "schemaVersion": 1,
+    "appliesToTable": "effects",
+    "expectedItemCount": 20,
+    "intentionalUpserts": [
+      "nekozume"
+    ],
+    "intentionalUpsertsNotes": "Nekozume MOVIDO de effects-aoi-katon.json pra cá. Versão antiga será REMOVIDA do aoi-katon (RAW: técnica é do Jinchuuriki Matatabi quando usa Potência da Besta, não do power Aoi Katon).",
+    "unmodeledAptitudes": [],
+    "unmodeledPowers": [],
+    "phase7f2cClosure": "Effects técnicos das 9 Bijuus modelados. Nekozume corrigido. Próximo: 7f2d (equipamentos: Soprador de Bolhas, Armadura a Vapor)."
+  },
+  "data": [
+    {
+      "code": "nekozume",
+      "name": "Nekozume (Garras de Gato)",
+      "minLevel": 4,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Técnica do Jinchuuriki Matatabi (Nv 4). Garras de chakra das unhas. Funciona com Potência da Besta. Dano vira corte + Crítico Aprimorado grátis.",
+      "description": "Quando usa Potência da Besta, materializa garras de chakra a partir das unhas das mãos ou pés. Garra Felina segue todas as regras da Potência da Besta usada (comum ou Maior). Dano passa a ser do tipo CORTE. Recebe gratuitamente benefícios da aptidão Crítico Aprimorado (se possuir pré-requisitos). RAW: técnica do Jinchuuriki Matatabi, NÃO do Aoi Katon (corrige modelagem prévia em effects-aoi-katon.json). Fonte: Livro de Hijutsus p. 35.",
+      "stats": {
+        "action": "LIVRE",
+        "range": "pessoal",
+        "duration": "CONTINUA",
+        "chakraCost": 0,
+        "selos": false
+      },
+      "rules": {
+        "type": "tecnica_jinchuuriki_bijuu_especifica",
+        "prerequisites": {
+          "aptitudes": [
+            "jinchuuriki_matatabi"
+          ],
+          "powers": {
+            "jinchuuriki": 4
+          },
+          "effects": [
+            "potencia_da_besta"
+          ]
+        },
+        "modifiesPotenciaDaBesta": true,
+        "damageType": "corte",
+        "grants": [
+          "critico_aprimorado"
+        ],
+        "grantsBypassesPrereq": true,
+        "grantsBypassesPrereqNote": "Jinchuuriki Matatabi concede Crítico Aprimorado quando usa Potência da Besta com Nekozume. Pré-requisitos do Crítico Aprimorado devem ser atendidos (RAW: 'se possuir os pré-requisitos')."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "sangosho",
+      "name": "Sangoshō (Soco do Coral)",
+      "minLevel": 4,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Jinchuuriki Isobu Nv 4. Requer Modo Bijuu (não outros). Contamina alvo com corais que crescem. Vítima fica lenta. Vigor (Dif 9+2x nv) ou impedida → indefesa.",
+      "description": "Pra usar, precisa estar utilizando o Modo Bijuu (NÃO pode ser usada com Manto/Forma). Realiza ataque corpo-a-corpo desarmado no oponente. Não causa dano direto, mas contamina inimigo com corais que crescem rapidamente. Alvo fica lento e debilitado o resto da cena. A partir do 2º turno, vítima tem direito a teste de Força (Dif 9 + 2x nível Jinchuuriki) — sucesso quebra corais e liberta. Pode também atacar os corais (Absorção 1, dureza 2x nível). Fonte: Livro de Hijutsus p. 37.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "toque",
+        "damage": "nenhum_direto",
+        "duration": "INSTANTANEA_efeito_continuo",
+        "selos": false,
+        "rollType": "CC"
+      },
+      "rules": {
+        "type": "tecnica_jinchuuriki_bijuu_especifica",
+        "prerequisites": {
+          "aptitudes": [
+            "jinchuuriki_isobu"
+          ],
+          "powers": {
+            "jinchuuriki": 4
+          },
+          "effects": [
+            "modo_bijuu"
+          ],
+          "narrative": "modo_bijuu_obrigatorio_nao_manto_nem_forma"
+        },
+        "exclusiveModeBijuu": true,
+        "noDirectDamage": true,
+        "victimEffects": [
+          "lento",
+          "debilitado",
+          "rest_of_scene"
+        ],
+        "escapeTest": {
+          "attribute": "for",
+          "difficulty": "9 + 2x nivel jinchuuriki",
+          "frequency": "inicio_de_cada_turno_a_partir_do_2"
+        },
+        "coralsStats": {
+          "absorption": 1,
+          "hardness": "2x_nivel_jinchuuriki"
+        }
+      },
+      "evolutions": [
+        {
+          "atLevel": 2,
+          "requires": "jinchuuriki_6",
+          "name": "Sangoshō Nv 2",
+          "description": "Corais se espalham mais rapidamente, atingem tronco e pernas. Vítima fica IMPEDIDA pela duração da técnica."
+        },
+        {
+          "atLevel": 3,
+          "requires": "jinchuuriki_10",
+          "name": "Sangoshō Nv 3",
+          "description": "Se vítima não conseguir se livrar dos corais até fim do 2º turno, eles se espalham ainda mais rapidamente e ela fica INDEFESA pela duração da técnica."
+        }
+      ]
+    },
+    {
+      "code": "kagenade",
+      "name": "Kagenade (Arrancada das Sombras)",
+      "minLevel": 5,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Jinchuuriki Isobu Nv 5. Requer Forma Bijuu. Enrola e avança como bola de espinhos. Regras do Nikudan Hari Sensha (clã Akimichi).",
+      "description": "Na Forma Bijuu, jinchuuriki se enrola e avança contra oponentes como gigantesca bola de espinhos. Técnica possui as mesmas regras do Nikudan Hari Sensha do clã Akimichi (Livro Básico p. 152). Fonte: Livro de Hijutsus p. 37.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "varia_por_nikudan_hari_sensha",
+        "duration": "INSTANTANEA",
+        "selos": false
+      },
+      "rules": {
+        "type": "tecnica_jinchuuriki_bijuu_especifica",
+        "prerequisites": {
+          "aptitudes": [
+            "jinchuuriki_isobu"
+          ],
+          "powers": {
+            "jinchuuriki": 5
+          },
+          "effects": [
+            "forma_bijuu"
+          ]
+        },
+        "inheritsRulesFrom": "nikudan_hari_sensha"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "ebulicao",
+      "name": "Ebulição",
+      "minLevel": 2,
+      "availableFor": [
+        "gobi_futton"
+      ],
+      "shortDescription": "Gobi Futton Nv 2. Onda de vapor meia-esfera 2m. Dano 2/nível (2d). Vigor/Prontidão (Dif 8+2x nv) escapa.",
+      "description": "Projeta onda de vapor ao redor em formato de meia-esfera ou círculo com centro em si próprio. Atingidos têm direito a reação: teste de Agilidade ou Prontidão (Dif 8 + 2x nível Jinchuuriki) pra evitá-la. Impedidos ou em condição que impeça deslocamento NÃO têm direito ao teste. Atingidos sofrem 2 dano base por nível do poder (rolar 2 dados pro grau de dano). Pode escolher livremente o nível usado (mínimo 2, máximo igual ao Jinchuuriki). Custo: nível usado em chakra. Fonte: Livro de Hijutsus p. 42.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "meia_esfera_ou_circulo_2m_diametro_de_si",
+        "damage": "2_por_nivel_do_poder_2_dados",
+        "duration": "INSTANTANEA",
+        "chakraCost": "nivel_do_poder_jinchuuriki_minimo_2"
+      },
+      "rules": {
+        "type": "tecnica_gobi_futton",
+        "prerequisites": {
+          "powers": {
+            "gobi_futton": 2
+          }
+        },
+        "noAttackTest": true,
+        "defenseReaction": {
+          "test": {
+            "attributes_one_of": [
+              "agi",
+              "pro"
+            ],
+            "difficulty": "8 + 2x nivel jinchuuriki"
+          },
+          "noDefenseIfImpedidoOrUnableToMove": true
+        },
+        "userPicksLevelUsed": {
+          "min": 2,
+          "max": "nivel_jinchuuriki"
+        },
+        "compatibleWithBijuuModes": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 4,
+          "requires": "gobi_futton_4",
+          "name": "Ebulição 2",
+          "description": "Dificuldade +1, dano base +2. Nível mínimo usado passa a ser 4."
+        }
+      ]
+    },
+    {
+      "code": "aceleracao_vapor",
+      "name": "Aceleração-Vapor",
+      "minLevel": 5,
+      "availableFor": [
+        "gobi_futton"
+      ],
+      "shortDescription": "Gobi Futton Nv 5. Requer Armadura a Vapor. Sem penalidades de armadura pesada. Acelerado. Custo 3 chakra.",
+      "description": "Libera vapor em alta pressão pela fornalha da Armadura a Vapor, permitindo mover-se instantaneamente em alta velocidade. Enquanto efeito durar: sem penalidades de precisão pela armadura pesada + considerado acelerado. NÃO pode ser usada junto com Manto/Modo/Forma Bijuu (regra do Gobi Futton). Fonte: Livro de Hijutsus p. 42.",
+      "stats": {
+        "action": "PARCIAL",
+        "range": "pessoal",
+        "duration": "SUSTENTADA",
+        "chakraCost": 3
+      },
+      "rules": {
+        "type": "tecnica_gobi_futton",
+        "prerequisites": {
+          "powers": {
+            "gobi_futton": 5
+          },
+          "narrative": "armadura_a_vapor_equipada"
+        },
+        "requiresEquipment": "armadura_a_vapor",
+        "noBijuuModeUsage": true,
+        "benefits": {
+          "noHeavyArmorPenalty": true,
+          "acelerado": true
+        }
+      },
+      "evolutions": [
+        {
+          "atLevel": 8,
+          "requires": "gobi_futton_8",
+          "name": "Aceleração-Vapor 2",
+          "description": "Também recebe +3 em Agilidade pra testes (Fintar) e cálculo de deslocamento."
+        }
+      ]
+    },
+    {
+      "code": "forca_vapor",
+      "name": "Força-Vapor",
+      "minLevel": 5,
+      "availableFor": [
+        "gobi_futton"
+      ],
+      "shortDescription": "Gobi Futton Nv 5. Requer Armadura a Vapor. Força +4 em testes e dano de ataques desarmados. Combina com Aceleração-Vapor.",
+      "description": "Libera vapor em alta pressão pela fornalha da Armadura a Vapor pra aumentar poder de ataques desarmados. Recebe Força +4 nos testes de atributo e cálculo de dano de ataques desarmados. Caso possua Aceleração-Vapor, pode sustentar ambos simultaneamente como ação livre. Fonte: Livro de Hijutsus p. 42-43.",
+      "stats": {
+        "action": "PARCIAL",
+        "range": "pessoal",
+        "duration": "SUSTENTADA",
+        "chakraCost": 4
+      },
+      "rules": {
+        "type": "tecnica_gobi_futton",
+        "prerequisites": {
+          "powers": {
+            "gobi_futton": 5
+          },
+          "narrative": "armadura_a_vapor_equipada"
+        },
+        "requiresEquipment": "armadura_a_vapor",
+        "noBijuuModeUsage": true,
+        "benefits": {
+          "strBonus": 4,
+          "appliesToUnarmedAttackTests": true,
+          "appliesToUnarmedAttackDamage": true
+        },
+        "combinableWithAceleracaoVapor": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 7,
+          "requires": "gobi_futton_7",
+          "name": "Força-Vapor 2",
+          "description": "Força +5 / custo 5 chakra."
+        },
+        {
+          "atLevel": 9,
+          "requires": "gobi_futton_9",
+          "name": "Força-Vapor 3",
+          "description": "Força +6 / custo 6 chakra."
+        },
+        {
+          "atLevel": 10,
+          "requires": "gobi_futton_10",
+          "name": "Força-Vapor 4",
+          "description": "Força +8 / custo 7 chakra."
+        }
+      ]
+    },
+    {
+      "code": "tsunoori",
+      "name": "Tsunoori (Investida do Chifre)",
+      "minLevel": 8,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Jinchuuriki Kokuō Nv 8. Forma Bijuu. Investida com chifres + Atropelar + Dano de Arma 6. Vigor (Dif 2+CC) ou derrubado. Custo 4 chakra.",
+      "description": "Na Forma Bijuu, avança rapidamente contra inimigo e atinge com chifres, usando força e carga de velocidade. Ataque combina manobra Atropelar + dano. Ataque com chifres: Dano de Arma 6. Alvo testa Vigor (Dif 2 + CC do personagem) pra não ser derrubado. Custo: 4 chakra. Fonte: Livro de Hijutsus p. 41.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "investida",
+        "damage": "ataque_corporal+dano_de_arma_6",
+        "duration": "INSTANTANEA",
+        "chakraCost": 4
+      },
+      "rules": {
+        "type": "tecnica_jinchuuriki_bijuu_especifica",
+        "prerequisites": {
+          "aptitudes": [
+            "jinchuuriki_kokuo"
+          ],
+          "powers": {
+            "jinchuuriki": 8
+          },
+          "effects": [
+            "forma_bijuu"
+          ]
+        },
+        "manobra": "atropelar_combinada_com_ataque",
+        "armDamage": 6,
+        "knockdownTest": {
+          "attribute": "vig",
+          "difficulty": "2 + CC do personagem"
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "corrosao_da_lesma",
+      "name": "Corrosão da Lesma",
+      "minLevel": 8,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Jinchuuriki Saiken Nv 8. Forma Bijuu. Névoa corrosiva área. Dano 2/nível por turno por 3 turnos. Esquiva/Antecipar = min grau 2.",
+      "description": "Na Forma Bijuu, dispersa de sua boca névoa corrosiva que se espalha por área circular. Atingidos sofrem dano base 2 por nível do poder. Min grau 2 se alvo defendeu com Esquiva/Antecipar (e ataque teve grau 2+). Névoa fica na área 3 turnos. No início de cada turno do usuário, todos na área sofrem 2 dano fixo por nível. Névoa tem dureza imaginária = padrão do poder; ataques em área (Katon/Fuuton) reduzem dureza; dureza zero dissipa. Hiruma (Superfície Sanguessuga): no Modo Bijuu, expele líquido corrosivo + Agarrar; vítima sofre 2 dano fixo/nível início de cada turno. Fonte: Livro de Hijutsus p. 44.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "areaOfEffect": "circulo_4m_diametro_por_nivel_do_poder",
+        "damage": "2_por_nivel_do_poder_base",
+        "duration": "CONTINUA_3_turnos",
+        "selos": false
+      },
+      "rules": {
+        "type": "tecnica_jinchuuriki_bijuu_especifica",
+        "prerequisites": {
+          "aptitudes": [
+            "jinchuuriki_saiken"
+          ],
+          "powers": {
+            "jinchuuriki": 8
+          },
+          "effects": [
+            "forma_bijuu"
+          ]
+        },
+        "minGradeOnAreaDefense": {
+          "grade": 2,
+          "ifAttackWasGrade2plus": true,
+          "vsDefenses": [
+            "esquiva",
+            "antecipar"
+          ]
+        },
+        "ongoingDamagePerTurn": "2_por_nivel_fixo",
+        "scenicDuration": "3_turnos_na_area",
+        "imaginaryDuroza": "padrao_do_poder_reduzida_por_ataques_em_area",
+        "subTechniques": [
+          {
+            "code": "hiruma_superficie_sanguessuga",
+            "name": "Hiruma (Superfície Sanguessuga)",
+            "subType": "active_attack",
+            "description": "No Modo Bijuu, expele líquido corrosivo via Agarrar. Vítima sofre 2 dano fixo por nível início de cada turno dela.",
+            "requiresMode": "modo_bijuu",
+            "manobra": "agarrar"
+          }
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "bolha_tinta",
+      "name": "Bolha de Tinta",
+      "minLevel": 2,
+      "availableFor": [
+        "rokubi_suiton"
+      ],
+      "shortDescription": "Rokubi Suiton Nv 2. Sopra bolhas que cercam o rosto do alvo. Estouram com nuvem de pó vermelho. Cego por 1 turno.",
+      "description": "Sopra bolhas e cerca o rosto do alvo. Bolhas estouram, criam nuvem de pó vermelho. Alvo fica CEGO por 1 turno. Fácil de evitar — alvo afetado pela 2ª vez na mesma cena tem sucesso automático. Evolução: Nv 5 — pode usar contra mais de 1 alvo, máximo 1 alvo por 2 níveis no poder. Alvos devem estar a no máximo 4m de distância entre si. Fonte: Livro de Hijutsus p. 45.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "target": "1_criatura",
+        "damage": "comum_do_poder",
+        "duration": "INSTANTANEA"
+      },
+      "rules": {
+        "type": "tecnica_rokubi_suiton",
+        "prerequisites": {
+          "powers": {
+            "rokubi_suiton": 2
+          },
+          "narrative": "soprador_de_bolhas_equipado"
+        },
+        "effectsBlind": "1_turno",
+        "evasionAutoSuccessOnSecondUseSameScene": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 5,
+          "requires": "rokubi_suiton_5",
+          "name": "Bolha de Tinta Nv 5",
+          "description": "Pode usar contra múltiplos alvos. Máx 1 alvo por 2 níveis no poder. Alvos a no máx 4m entre si."
+        }
+      ]
+    },
+    {
+      "code": "sopro_acido",
+      "name": "Sopro Ácido",
+      "minLevel": 4,
+      "availableFor": [
+        "rokubi_suiton"
+      ],
+      "shortDescription": "Rokubi Suiton Nv 4. Bolhas que estouram em líquido corrosivo. Regras do Sopro Destrutivo de Ninpou.",
+      "description": "Sopra bolhas que avançam pela área. Quando contato com algo, estouram e deixam líquido altamente corrosivo. Mesmas regras e evoluções do Sopro Destrutivo de Ninpou. Fonte: Livro de Hijutsus p. 45.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "areaOfEffect": "cone",
+        "damage": "comum_do_poder",
+        "duration": "INSTANTANEA"
+      },
+      "rules": {
+        "type": "tecnica_rokubi_suiton",
+        "prerequisites": {
+          "powers": {
+            "rokubi_suiton": 4
+          },
+          "narrative": "soprador_de_bolhas_equipado"
+        },
+        "inheritsRulesFrom": "sopro_destrutivo",
+        "inheritsEvolutionsFrom": "sopro_destrutivo"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "bolha_sufocante",
+      "name": "Bolha Sufocante",
+      "minLevel": 5,
+      "availableFor": [
+        "rokubi_suiton"
+      ],
+      "shortDescription": "Rokubi Suiton Nv 5. Bolhas circulares que envolvem cabeça do alvo. Sufocamento contínuo.",
+      "description": "Sopra várias bolhas ao redor numa área circular de tamanho comum do poder. Quando bolha atinge cabeça de um alvo, cresce e envolve completamente, sufocando-o. Dano fixo de sufocamento = dano comum do poder. Pra se libertar: vítima precisa causar qualquer dano à bolha (dureza comum do poder). Fonte: Livro de Hijutsus p. 45-46.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "toque",
+        "areaOfEffect": "circulo_comum_do_poder",
+        "damage": "sufocamento_fixo_comum_do_poder",
+        "duration": "CONTINUA"
+      },
+      "rules": {
+        "type": "tecnica_rokubi_suiton",
+        "prerequisites": {
+          "powers": {
+            "rokubi_suiton": 5
+          },
+          "narrative": "soprador_de_bolhas_equipado"
+        },
+        "victimEscape": "causar_qualquer_dano_a_bolha",
+        "bubbleDuroza": "comum_do_poder"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "bolha_flutuante",
+      "name": "Bolha Flutuante",
+      "minLevel": 7,
+      "availableFor": [
+        "rokubi_suiton"
+      ],
+      "shortDescription": "Rokubi Suiton Nv 7. Pré-req Barreira 6. Bolha de transporte aéreo. Voo igual ao Esp do usuário. Carrega 2 pessoas. Custo 2 chakra.",
+      "description": "Cria bolha leve e resistente, capaz de ser levada pelo vento mesmo com peso. Ao entrar, levita e usa como transporte por grandes distâncias. Suporta até 2 pessoas. Criatura dentro recebe perícia Voo (nível = Espírito do usuário). Distância de deslocamento da bolha: 10m + 1m por nível do poder. Bolha tem dobro da dureza padrão — destruída se receber dano suficiente. Lutar de dentro: regras de Combate Aéreo (Livro Básico p. 270); atacar de dentro DANIFICA a dureza completamente, destruindo-a. Não cai se ficar impedido, mas cai se bolha destruída. Fonte: Livro de Hijutsus p. 46.",
+      "stats": {
+        "action": "COMPLETA",
+        "range": "pessoal",
+        "duration": "CONCENTRACAO",
+        "chakraCost": 2
+      },
+      "rules": {
+        "type": "tecnica_rokubi_suiton",
+        "prerequisites": {
+          "powers": {
+            "rokubi_suiton": 7
+          },
+          "narrative": "soprador_de_bolhas_equipado",
+          "_barreiraNv6Note": "RAW Hijutsus p.46: 'Pré-requisito: Barreira Nv 6'. Efeito 'barreira' precisa estar disponível no power Rokubi Suiton no nível 6 — verificação fica no motor de regras, não no schema."
+        },
+        "capacity": 2,
+        "grantsTemporary": {
+          "voo": "nivel_espirito_do_usuario"
+        },
+        "movementM": "10 + 1_por_nivel_do_poder",
+        "duroza": "2x_padrao_do_poder",
+        "combatRules": "combate_aereo_p270_livro_basico",
+        "attackingFromInsideDestroysBubble": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "po_de_prata",
+      "name": "Pó de Prata",
+      "minLevel": 2,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Jinchuuriki Chōmei Nv 2. Pó brilhante área circular. Atingidos testam Vigor (Dif 8+2x nv) ou cegos 1 turno. Sem Esquiva/Antecipar.",
+      "description": "Produz pó brilhante e dispersa pelo ambiente via boca (ou asas, na Forma Bijuu). Brilho cega todos na área. Área: círculo de 2m diâmetro por nível Jinchuuriki. Atingidos têm direito a ação defensiva contra CD do usuário — NÃO podem usar Esquiva ou Antecipar. Atingidos testam Vigor (Dif 8 + 2x nível). Falha = cegos por 1 turno. Evolução: Nv 2 (Jinchuuriki 10) — cegos pelo resto da cena. A partir do 2º turno, novo teste a cada turno pra recuperar. Fonte: Livro de Hijutsus p. 47.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "areaOfEffect": "circulo_2m_diametro_por_nivel_jinchuuriki",
+        "duration": "INSTANTANEA",
+        "rollType": "CD"
+      },
+      "rules": {
+        "type": "tecnica_jinchuuriki_bijuu_especifica",
+        "prerequisites": {
+          "aptitudes": [
+            "jinchuuriki_chomei"
+          ],
+          "powers": {
+            "jinchuuriki": 2
+          }
+        },
+        "noEsquivaNoAntecipar": true,
+        "resistanceTest": {
+          "attribute": "vig",
+          "difficulty": "8 + 2x nivel jinchuuriki"
+        },
+        "onFailure": "cego_1_turno"
+      },
+      "evolutions": [
+        {
+          "atLevel": 2,
+          "requires": "jinchuuriki_10",
+          "name": "Pó de Prata Nv 2",
+          "description": "Falha no teste = cegos pelo resto da cena. A partir do 2º turno, novo teste a cada turno pra recuperar."
+        }
+      ]
+    },
+    {
+      "code": "rede_de_fios",
+      "name": "Rede de Fios",
+      "minLevel": 6,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Jinchuuriki Chōmei Nv 6. Rede teia de aranha. Falha = impedido. Dureza 2/nível. Nv 2 sustentada + 2x uso = indefeso.",
+      "description": "Produz rede de fios semelhante a teia de aranha. Fios são chakra materializado, dispersos pela boca ou mãos. Usos diversos: carregar objetos, prender inimigos. Inimigos capturados (que falhem em defesa) ficam IMPEDIDOS. Em seu turno, vítima pode destruir fios (dureza 2 por nível Jinchuuriki) OU se libertar via teste de Força ou Escapar. Qualquer escolha exige ação padrão. Pode libertar via outro efeito sem mobilidade dos pés. Ataque em área danifica fios (reduz dureza). Evolução: Nv 2 (Jinchuuriki 8) — duração Sustentada, usar 2x sobre mesmo alvo deixa indefeso. Fonte: Livro de Hijutsus p. 47-48.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "areaOfEffect": "esfera_1m_diametro_max_por_nivel_jinchuuriki",
+        "duration": "CONCENTRACAO"
+      },
+      "rules": {
+        "type": "tecnica_jinchuuriki_bijuu_especifica",
+        "prerequisites": {
+          "aptitudes": [
+            "jinchuuriki_chomei"
+          ],
+          "powers": {
+            "jinchuuriki": 6
+          }
+        },
+        "onFailedDefense": "impedido",
+        "fioDuroza": "2_por_nivel_jinchuuriki",
+        "victimEscape": [
+          "destruir_fios",
+          "for_ou_escapar",
+          "efeito_sem_mobilidade_dos_pes"
+        ],
+        "areaAttackReducesDuroza": true
+      },
+      "evolutions": [
+        {
+          "atLevel": 2,
+          "requires": "jinchuuriki_8",
+          "name": "Rede de Fios Nv 2",
+          "description": "Duração passa pra Sustentada. Usar 2x sobre mesmo alvo deixa-o INDEFESO."
+        }
+      ]
+    },
+    {
+      "code": "casulo_de_fios",
+      "name": "Casulo de Fios",
+      "minLevel": 9,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Jinchuuriki Chōmei Nv 9. Esfera 2m/nível. Dureza 6+2x nível. Drenagem externa de chakra reduzida pela metade.",
+      "description": "Cria diversos fios finos que se unem ao redor, formando casulo resistente. Dureza 6 + 2x nível Jinchuuriki. Você e qualquer um dentro do casulo sob drenagem externa de chakra: drenagem é reduzida pela metade. Fonte: Livro de Hijutsus p. 48.",
+      "stats": {
+        "action": "MOVIMENTO",
+        "areaOfEffect": "esfera_2m_diametro_max_por_nivel_jinchuuriki",
+        "duration": "CONTINUA"
+      },
+      "rules": {
+        "type": "tecnica_jinchuuriki_bijuu_especifica",
+        "prerequisites": {
+          "aptitudes": [
+            "jinchuuriki_chomei"
+          ],
+          "powers": {
+            "jinchuuriki": 9
+          }
+        },
+        "duroza": "6 + 2x nivel jinchuuriki",
+        "chakraDrainReductionHalf": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "tinta_do_polvo",
+      "name": "Tinta do Polvo",
+      "minLevel": 2,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Jinchuuriki Gyuki Nv 2. Tinta escura via chakra bijuu. Sub: Névoa de Tinta + Sumi Bunshin (clone) + Selamento do Polvo (Nv 10).",
+      "description": "Produz tinta extremamente escura a partir do chakra bijuu. Pode ser dispersa em forma de neblina (dificulta visão) ou usada dentro da água. Subtechs: Névoa de Tinta (funciona como Névoa Nv 2 de Suiton, dureza usa nível Jinchuuriki); Sumi Bunshin (clone usando aptidão Clone — ainda precisa ser comprada — regras do Mizu Bunshin); Selamento do Polvo (Nv 10, ação completa, desfaz Sumi Bunshin agarrando alvo, tinta escorre e endurece deixando alvo paralisado; em Forma Bijuu pode criar máximo clones e agarrar com manobra, capangas apenas). Fonte: Livro de Hijutsus p. 49-50.",
+      "stats": {
+        "action": "varia_por_subtecnica",
+        "range": "varia",
+        "duration": "varia"
+      },
+      "rules": {
+        "type": "tecnica_jinchuuriki_bijuu_especifica",
+        "prerequisites": {
+          "aptitudes": [
+            "jinchuuriki_gyuki"
+          ],
+          "powers": {
+            "jinchuuriki": 2
+          }
+        },
+        "subTechniques": [
+          {
+            "code": "nevoa_de_tinta",
+            "name": "Névoa de Tinta",
+            "subType": "active_ability",
+            "description": "Funciona como Névoa Nv 2 de Suiton, usando nível Jinchuuriki nos cálculos de dureza."
+          },
+          {
+            "code": "sumi_bunshin",
+            "name": "Sumi Bunshin",
+            "subType": "active_ability",
+            "description": "Cria cópias de si mesmo com tinta do polvo (regras do Mizu Bunshin). Requer aptidão Clone comprada separadamente.",
+            "requiresAptitude": "clone"
+          },
+          {
+            "code": "selamento_do_polvo",
+            "name": "Selamento do Polvo",
+            "subType": "active_attack",
+            "requires": {
+              "powers": {
+                "jinchuuriki": 10
+              }
+            },
+            "description": "Ação completa: desfaz um Sumi Bunshin que esteja agarrando alvo. Tinta escorre pelo corpo do inimigo e endurece, deixando-o paralisado. Em Forma Bijuu: ação completa cria máximo clones possíveis + agarra alvos no alcance. Clones realizam testes de ataque normalmente, somente em capangas."
+          }
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "cauda_morta",
+      "name": "Cauda Morta",
+      "minLevel": 9,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Jinchuuriki Gyuki Nv 9 + Controle Total. Em Transformação Parcial, solta cauda e vira Clone imóvel 1 dia ou até dano. Uso extra de Kawarimi.",
+      "description": "Em Transformação Parcial, solta a cauda criada e transforma em Clone (regras da aptidão Clone). É imóvel e dura 1 dia ou até sofrer qualquer dano. Pode usar como uso extra de Kawarimi no Jutsu na cena. Fonte: Livro de Hijutsus p. 50.",
+      "stats": {
+        "action": "LIVRE",
+        "range": "transformacao_parcial",
+        "duration": "1_DIA_OU_ATE_DANO"
+      },
+      "rules": {
+        "type": "tecnica_jinchuuriki_bijuu_especifica",
+        "prerequisites": {
+          "aptitudes": [
+            "jinchuuriki_gyuki"
+          ],
+          "powers": {
+            "jinchuuriki": 9
+          },
+          "effects": [
+            "transformacao_parcial"
+          ],
+          "narrative": "controle_total"
+        },
+        "createsImmobileClone": true,
+        "cloneRulesFrom": "clone_aptitude",
+        "providesExtraKawarimiUse": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "tornado_do_polvo",
+      "name": "Tornado do Polvo",
+      "minLevel": 10,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Jinchuuriki Gyuki Nv 10. Forma Bijuu. Enrola e gira em alta velocidade = tornado. Regras da Onda de Chakra mas com dobro da área.",
+      "description": "Na Forma Bijuu, jinchuuriki se enrola em suas caudas e gira em alta velocidade, fazendo surgir imenso tornado que devasta floresta inteira. Mesmas regras da Onda de Chakra do Jinchuuriki, mas com DOBRO da área de efeito. Fonte: Livro de Hijutsus p. 50.",
+      "stats": {
+        "action": "PADRAO",
+        "areaOfEffect": "dobro_da_onda_de_chakra",
+        "damage": "2x_nivel_do_poder",
+        "duration": "INSTANTANEA"
+      },
+      "rules": {
+        "type": "tecnica_jinchuuriki_bijuu_especifica",
+        "prerequisites": {
+          "aptitudes": [
+            "jinchuuriki_gyuki"
+          ],
+          "powers": {
+            "jinchuuriki": 10
+          },
+          "effects": [
+            "forma_bijuu"
+          ]
+        },
+        "inheritsRulesFrom": "onda_de_chakra",
+        "areaModifier": "2x"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "cura_da_raposa",
+      "name": "Cura da Raposa",
+      "minLevel": 2,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Jinchuuriki Kurama Nv 2. Passive. Recuperação Chakra/Vit dobrada. Cura sangrando 1/turno auto. +2 resist doenças/venenos. Cura em Frenesi (custos/danos pela metade até Controle Total).",
+      "description": "Raposa Demoníaca concede regeneração absurda, forçando reprodução acelerada das células do corpo. Recuperação de Energia: recuperação de Chakra e Vit DOBRADA. Aplica em técnicas de cura (Iryou Ninjutsu), mas NÃO em técnicas/itens que forçam produção (Pílulas do Soldado). Cura de Sangramento: 1 nível por turno auto + teste padrão de Vigor pode recuperar mais 1 nível adicional. Cura em Frenesi: custos e danos Vit por uso do power Jinchuuriki são reduzidos PELA METADE. Em contrapartida, fica exausto fim de cena após uso (se usou Manto/Modo/Forma). Cansaço cumulativo com penalidades de Teste de Domínio falho. **Cura em Frenesi deixa de existir quando atinge Controle Total.** Fonte: Livro de Hijutsus p. 50-52.",
+      "stats": {
+        "action": "NENHUMA",
+        "range": "pessoal",
+        "duration": "PERMANENTE"
+      },
+      "rules": {
+        "type": "tecnica_jinchuuriki_bijuu_especifica",
+        "prerequisites": {
+          "aptitudes": [
+            "jinchuuriki_kurama"
+          ],
+          "powers": {
+            "jinchuuriki": 2
+          }
+        },
+        "recuperacaoEnergia": {
+          "chakraDoubled": true,
+          "vitDoubled": true,
+          "appliesToIryouNinjutsu": true,
+          "notAppliesToPilulasDoSoldado": true
+        },
+        "curaDeSangramento": {
+          "autoLevelPerTurn": 1,
+          "extraLevelByVigorTest": true
+        },
+        "curaEmFrenesi": {
+          "costsAndVitDamageHalved": true,
+          "exaustoAtEndOfSceneIfMantoOrAbove": true,
+          "cumulativeWithDominioFailure": true,
+          "ceasesAtControleTotal": true
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "modo_kurama",
+      "name": "Modo Kurama",
+      "minLevel": 10,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Jinchuuriki Kurama Nv 10. Exclusivo (substitui Manto/Modo Bijuu). Manto dourado. Dureza +2 (total 3). Agi +2 + acelerado. Potência da Besta Maior +4. Sensor + Transformação Parcial.",
+      "description": "Transformação exclusiva da Kyuubi. Substitui Manto Bijuu e Modo Bijuu (que se tornam indisponíveis). Manto dourado muda aparência completamente (inclui roupas) mas sem caudas visíveis. Regras e benefícios do Manto Bijuu + diferenças: Proteção dureza +2 (total 3). Velocidade Agi +2 + mantém acelerado, imune a finta super acelerada (super acelerado ainda pode finta acelerada). Potência da Besta Maior: +4 bônus de dano na Potência da Besta. Sensor de Emoções Negativas: aptidão Sensor contínua + distingue assinaturas chakra + sente ódio e intenções assassinas (mesmo se disfarçados). Transformação Parcial: pode usar simultaneamente sem restrições (Braço de Chakra completo, braço/cauda/réplica da cabeça). Forma Kurama (ação parcial): expande manto dourado em réplica gigante da Kurama, regras da Forma Bijuu + mantém Sensor + Transformação Parcial (perde outros do Modo Kurama). Pode usar Bijuudama e Disparo. Ação completa, custo 10 chakra. Presença Bijuu obrigatória. Fonte: Livro de Hijutsus p. 52.",
+      "stats": {
+        "action": "COMPLETA",
+        "range": "pessoal",
+        "duration": "CONTINUA",
+        "chakraCost": 10,
+        "selos": false
+      },
+      "rules": {
+        "type": "modo_do_poder_exclusivo_kurama",
+        "prerequisites": {
+          "aptitudes": [
+            "jinchuuriki_kurama"
+          ],
+          "powers": {
+            "jinchuuriki": 10
+          },
+          "effects": [
+            "presenca_bijuu"
+          ],
+          "narrative": "presenca_bijuu_ativa_obrigatoria"
+        },
+        "exclusiveWith": [
+          "manto_bijuu",
+          "modo_bijuu"
+        ],
+        "exclusiveWithNote": "Após Modo Kurama, jinchuuriki NÃO consegue mais usar Manto Bijuu ou Modo Bijuu (RAW p.52 'Perda de Modos').",
+        "inheritsMantoBijuuRules": true,
+        "benefits": {
+          "extraBodyHardness": 2,
+          "totalBodyHardness": 3,
+          "agiBonus": 2,
+          "keepsAcelerado": true,
+          "immuneToFintaSuperAcelerada": true,
+          "potenciaDaBestaMaiorBonusDamage": 4,
+          "grants": [
+            "sensor_continuo_emocoes_negativas"
+          ],
+          "grantsBypassesPrereq": true,
+          "grantsBypassesPrereqNote": "Modo Kurama é Nv 10 Jinchuuriki + Controle Total — gateway justifica concessão direta da aptidão Sensor.",
+          "transformacaoParcialAllowedSimultaneously": true,
+          "transformacaoParcialFullBracoDeChakraRules": true
+        },
+        "formaKurama": {
+          "action": "parcial",
+          "rules": "forma_bijuu_padrao",
+          "keepsBenefits": [
+            "sensor_emocoes_negativas",
+            "transformacao_parcial"
+          ],
+          "losesOtherKuramaBenefits": true,
+          "allowsBijuudamaAndDisparo": true
+        }
+      },
+      "evolutions": []
+    }
+  ]
+}

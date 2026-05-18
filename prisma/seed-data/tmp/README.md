@@ -1,176 +1,78 @@
-# Seed Data — Lote 5a (Aptidões Comuns + Combate)
+# Seed Data — Lote 6h (Equipamento Geral)
 
-Primeiro lote da fase 5 (Aptidões). Cobre as ~50 aptidões mais usadas — comuns, de habilidade, de combate básico, manobras básicas, e gerais (Ninja Médico, Químico, Engenheiro, etc.). **Não inclui restritas de clã** (Lote 5b), **manobras avançadas** (5c) nem **meta-aptidões de poder** (5d).
+Oitava onda da fase 6. **29 itens** utilitários do dia-a-dia shinobi.
 
 ## 📦 Conteúdo
 
-| Arquivo | Aptidões |
+| Arquivo | Itens |
 |---|:---:|
-| `aptitudes-common-combat.json` | **51** |
+| `equipment-general.json` | **29** |
 
-## 🎯 Categorias
+## 🎯 Distribuição
 
-| Categoria | Quantidade | Exemplos |
+| Subtype | Quantidade | Itens |
 |---|:---:|---|
-| **HABILIDADE** | 12 | Acuidade, Ataque em Movimento, De Pé, Diligente, Especialista, Intuição, Maestria, Perito, Perícia Inata, Reflexos, Rolamento, Velocista |
-| **COMBATE** | 22 | Ambidestria, Atirador, Bloqueio Ambidestro, Combate Defensivo, Crítico Aprimorado, Dano Extra, Esquiva de Risco, Guerreiro, Lutador, Lutar às Cegas, Mestre dos Selos, Mira Apurada, Mobilidade, Oportunista, Ponto Cego, Punho de Ferro, Retirada Rápida, Saque Rápido, Tiro Longo, Tiro Preciso, Trespassar, Usar Armaduras Pesadas |
-| **MANOBRA** | 7 | Apanhar Objetos, Arremessar, Ataque Atordoante, Ataque Giratório, Ataque Múltiplo, Ataque Poderoso, Ataque Progressivo |
-| **GERAL** | 10 | Auxiliador Especialista, Avaliador do Perigo, Corpo Esguio, Duro de Matar, Engenheiro, Ninja Médico, Químico, Resistência Maior, Sensor, Usar Arma |
+| `ferramenta_comum` | 6 | Algemas, Corda 15m, Instrumento Musical, Lanterna, Caneta, Sela |
+| `recipiente` | 2 | Coldre/Bolsa com Cinto (+1 comp), Mochila (+4 comps) |
+| `kit` | 4 | Kit de Artesão, Ferramentas, Medicamentos, Laboratório (5 usos cada) |
+| `pergaminho_papel` | 3 | Pergaminho de Jutsus, Pergaminho de Escrita, Tarja Especial (em branco) |
+| `campismo` | 2 | Saco de Dormir, Ração de Viagem |
+| `animal` | 2 | Cão de Guarda, Cavalo |
+| `veiculo` | 3 | Carroça, Carruagem, Canoa |
+| `servico` | 7 | Bebida, Estadia, Refeição, Mensageiro, Estábulo, Condução Terrestre/Marítima |
 
 ## 🔑 Decisões importantes
 
-### 1. Schema JSONB amorfo (como combinado)
+### 1. Serviços têm `slots: null`
 
-Cada aptidão tem `effects` em JSONB com campo `type` que classifica a mecânica. Tipos usados:
+Bebida, Estadia, Refeição, Mensageiro, Estábulo, Condução Terrestre/Marítima são **consumidos no momento da compra** — não ocupam compartimento. Modelei com `slots: null` + `effects.isService: true`. Útil pra UI de loja e controle de despesas, mas não aparecem no inventário do personagem.
 
-- `precision_bonus` — +X em testes (Especialista, Perito, Intuição, Maestria, Mira Apurada)
-- `skill_bonus` — bônus em perícia específica (Bloqueio Ambidestro, Diligente)
-- `damage_bonus` — +dano em ataques (Atirador, Dano Extra, Ataque Poderoso)
-- `manuever` — manobra nova/modificada (Ataque Atordoante, Ataque Giratório, Ataque Múltiplo)
-- `manuever_permission` — remove penalidade de manobras (Lutador, Guerreiro)
-- `manuever_modifier` — modifica manobra existente (Arremessar modifica derrubar; Ataque Progressivo modifica Múltiplo)
-- `movement_modifier` — afeta deslocamento (Velocista, Ataque em Movimento, Retirada Rápida)
-- `action_economy` — muda tipo de ação (De Pé, Ponto Cego, Saque Rápido)
-- `esquiva_bonus` — bônus em Esquiva (Reflexos, Mobilidade, Esquiva de Risco)
-- `critical_range_modifier` — afeta crítico (Crítico Aprimorado)
-- `stat_substitution` — troca atributo no teste (Acuidade)
-- `permission` — desbloqueia capability (Ninja Médico, Químico, Engenheiro)
-- `reroll` — re-rolagem (Perícia Inata, Diligente, Resistência Maior)
-- `death_saving_throw` — escape da morte (Duro de Matar)
-- `weapon_proficiency` — proficiência em arma (Usar Arma)
-- `armor_proficiency` — proficiência em armadura (Usar Armaduras Pesadas)
-- `dual_wielding` — duas armas (Ambidestria)
-- `sensor` — habilidade sensora (Sensor)
-- `extra_attack_on_kill` — ataque extra ao matar (Trespassar)
-- `opportunity_attack` — modifica ataques oportunos (Oportunista)
-- `range_modifier` — dobra alcance (Tiro Longo)
-- `aim_bonus` — bônus de mira (Mira Apurada)
-- `ignore_cover` — ignora cobertura (Tiro Preciso)
-- `fall_damage_reduction` — reduz dano de queda (Rolamento)
-- `defensive_reaction` — nova reação defensiva (Esquiva de Risco)
-- `escape_bonus` — escapar de amarras (Corpo Esguio)
-- `blind_combat` — combate cego (Lutar às Cegas)
-- `combat_modifier` — modificador geral (Combate Defensivo)
-- `skill_grants` — concede aptidões em perícia (Mestre dos Selos)
-- `unarmed_weapon_damage` — dano de arma desarmado (Punho de Ferro)
-- `ally_support` — apoio a aliados (Auxiliador Especialista)
+### 2. Animais e Veículos também sem slots
 
-**Motor de regra futuro vai precisar entender esses tipos.** Está documentado em `effects.type` exatamente pra isso.
+Cão de Guarda, Cavalo, Carroça, Carruagem, Canoa — não cabem em "compartimentos" do personagem. Existem no banco como entradas pra economia e referência narrativa. Estatísticas mecânicas (HP do cão, deslocamento do cavalo) ficam **a cargo do Mestre** — não modelei porque o RAW não traz.
 
-### 2. Acuidade modelada com RAW estrito (como combinado)
+### 3. Kits com `effects.uses: 5`
 
-Conforme decisão crítica #1 do projeto: **Acuidade NÃO afeta dano de CC**. Modelei `stat_substitution.substituteAttribute: "destreza_for_forca"` mas com a nota explícita no `notes`: "RAW estrito — não dá dano de Destreza em ataque CC desarmado, só substitui pra arma compatível".
+Os 4 kits têm 5 usos cada. Motor deve decrementar a cada uso (ex: criar armadilha consome 1 uso de Kit de Ferramentas).
 
-### 3. Evoluções de Nv 2 (entrada única + array)
+### 4. Mochila e Coldre com `compartmentBonus`
 
-Conforme combinado, modelei como array `evolutions` na própria entrada base:
+Mochila: +4 compartimentos. Coldre/Bolsa com Cinto: +1 compartimento. Motor soma esses bônus à capacidade base do personagem (3 comps).
 
-- **Diligente** → Diligente Nv 2 (Iniciativa 21, fintado em primeira rodada, etc.)
-- **Lutar às Cegas** → Nv 2 (Pron 12, sem contato visual)
-- **Tiro Preciso** → Nv 2 (Des 13, ignora camuflagem total)
-- **Trespassar** → Nv 2 (CC 9, quantas vezes quiser por rodada)
+### 5. Pergaminho de Jutsus vs Tarja Especial
 
-Cada evolução tem `prerequisites` próprio.
+São itens diferentes:
+- **Pergaminho de Jutsus** (10 Ryos): pra **Fuuinjutsu Nv1** — selos básicos (armazenar itens/jutsus/chakra).
+- **Tarja Especial em branco** (10 Ryos): pra **Fuuinjutsu Nv3+** — criar Selos Avançados (Misshi/Bakudan/Gensou/Wana — modelados no 6g).
 
-### 4. Revisões do GAS embutidas (não duplicadas)
+Ambos são consumíveis (destruídos no uso).
 
-Onde o Guia Avançado revisa uma aptidão existente, embuti as melhorias num campo `gasReview` dentro de `effects`, em vez de criar entrada duplicada. Exemplos:
+### 6. Pílulas do Soldado NÃO está aqui
 
-- **Mobilidade**: GAS adiciona +2 Cambalhota
-- **Retirada Rápida**: GAS adiciona +10m 1x/cena
-- **Saque Rápido**: GAS adiciona Recarga Rápida de Pólvora
-- **Tiro Longo**: GAS reduz pré-req pra Des 11 + afeta arremesso
-- **Usar Arma**: GAS permite upgrade grátis em For/Des 10+12
+Aparece na tabela do Livro Básico p. 140 como item geral, mas já modelei no 6g como `CONSUMABLE`. Não duplica.
 
-Motor pode optar por aplicar `gasReview` baseado em flag global do banco ou da campanha.
+### 7. Caneta sem slots
 
-### 5. Pré-requisitos cruzados catalogados (não validados)
+`slots: null` + `effects.negligibleWeight: true`. Item "desprezível" do RAW (não ocupa compartimento). Mesma lógica dos Tampões de Ouvido no 6f.
 
-Aptidões com pré-req em outras aptidões:
+## ⚠️ Pendências
 
-- **Crítico Aprimorado** → Especialista
-- **Ataque Progressivo** → Ataque Múltiplo
-- **Mestre dos Selos** → Ponto Cego (+ Prestidigitação 12)
-- **Mira Apurada** → Tiro Longo (+ Des 12)
-- **Bloqueio Ambidestro** → Ambidestria
-- **Mobilidade** → Reflexos (+ Agi 3)
-- **Esquiva de Risco** → Reflexos (+ Esquiva 11)
-- **Arremessar** → Lutador OU Guerreiro (+ For 6)
-
-Tudo registrado em `prerequisites.aptitudes` ou `prerequisites.aptitudes_one_of`. **Não validei em runtime** — fica pro motor futuro.
-
-## ⚠️ O que NÃO entrou (transparência)
-
-### 1. Aptidões restritas de clã — vão no **Lote 5b**
-
-Não modelei:
-- **Byakugan, Tenketsu Byakugan** (Hyuuga)
-- **Sharingan, Mangekyou** (Uchiha)
-- **Corpulência, Resiliência** (Akimichi)
-- **Kikaichuu, Shōkaichuu, Kidaichuu, Rinkaichuu** (Aburame)
-- **Companheiro Animal, Hakken no Jutsu** (Inuzuka)
-- **Predador Aquático, Elemento Natural Suiton, Reserva de Água** (Hoshigaki)
-- **Suika, Imunidade Fluida** (Hozuki)
-- **Shikotsumyaku, Artesão de Ossos** (Kaguya)
-- **Chakra Expandido** (Uzumaki)
-- **Demônio do Vento** (Fuuma)
-- **Tensai** + suas escolhas (genialidade)
-- **Senjutsu** aptitudes (Sennin Modo)
-- **Senninka** (Selo Amaldiçoado)
-- **Shikigami no Mai** (Kamijutsu)
-- **Armadura de Raios** (Nintaijutsu)
-- **Espadachim, Sabre Samurai, Iaido, Yojinbo, Issen, Hadan** (Samurai)
-- **Tendō / Caminho Deva** (Rinnegan)
-- **Estilo Zui Quan, Imobilização, Instância de Falange** (raras do GAS)
-
-### 2. Aptidões de manobra avançadas — vão no **Lote 5c**
-
-Não modelei:
-- Bloquear Arma, Contragolpe
-- Chute Duplo, Chute Giratório, Chute Inverso
-- Derrubar Agressivo, Desarme Agressivo, Rasteira
-- Golpe Atemi, Golpe Caratê, Seguir Sombra
-- Soco Agarrado, Soco em Gancho, Voadora
-- Agarrar Agressivo (GAS)
-- Roubar, Henge Perfeito, Furtividade Ágil, Burro de Carga (GAS)
-
-### 3. Meta-aptidões de técnica — vão no **Lote 5d**
-
-Não modelei:
-- Maximizar, Potencializar, Técnica Poderosa, Técnica Acelerada, Técnica Eficiente, Técnica Elevada
-- Domínio da Água/Fogo/Raio/Terra/Vento/Ninpou
-- Ilusão Profunda, Ilusão Fluida
-- Clone (Bunshin, Kage Bunshin, Mizu Bunshin, Doro Bunshin, Tsuchi Bunshin, etc. — pode virar lote próprio)
-- Fascinar, Miragem (pré-reqs de Magen)
-
-### 4. Aptidões "duplicadas" ou "mencionadas só em listas"
-
-Aptidões que aparecem listadas em criaturas/invocações do GAS mas sem entrada própria detalhada (Estilo Zui Quan, Henge Perfeito, Burro de Carga, Furtividade Ágil) — modelei só **Auxiliador Especialista** como exemplo, com `notes: "consultar regra completa GAS"`. As outras seguem mesmo padrão e ficam pro 5c.
+- **Estatísticas dos animais**: o RAW não dá HP/atributos/deslocamento de Cão de Guarda e Cavalo. Quando o personagem comprar, fica como dado vivo da campanha. Posso modelar templates de PdM separadamente se você quiser.
+- **Veículos sem capacidade explícita**: Canoa "1-3 pessoas" é estimativa interpretativa. Carroça/Carruagem não têm número definido no RAW.
 
 ## ✅ Validação pós-seed
 
-Total no banco depois do 5a: **51 aptidões**.
+Total acumulado:
+- 6a-6g: 119 equipamentos
+- 6h: +29 = **148 equipamentos**
 
 Verifique:
-- `acuidade` tem `effects.notes` com "RAW estrito"
-- `diligente`, `lutar_as_cegas`, `tiro_preciso`, `trespassar` têm cada um exatamente 1 evolução no array
-- `critico_aprimorado` tem pré-req `aptitudes: ["especialista"]`
-- `arremessar` tem `prerequisites.aptitudes_one_of: ["lutador", "guerreiro_pesadas"]`
-- `mobilidade.effects.gasReview.cambalhotaBonus` = 2
-
-## 🔧 Padrão de seed atualizado
-
-```typescript
-async function seedAptitudes() {
-  const files = [
-    'aptitudes-common-combat.json',  // 5a
-    // 5b: aptitudes-clan-restricted.json (vem depois)
-    // 5c: aptitudes-manuevers.json
-    // 5d: aptitudes-meta.json
-  ];
-  // resto igual aos lotes anteriores: ler, validar, upsert por code
-}
-```
+- `mochila.effects.compartmentBonus` = 4
+- `kit_de_medicamentos.effects.uses` = 5
+- `tarja_especial.subtype` = "pergaminho_papel"
+- `cavalo.subtype` = "animal" e `slots` = null
+- `bebida.effects.isService` = true
+- Caneta tem `slots: null` (item desprezível)
 
 ---
 
@@ -179,10 +81,9 @@ async function seedAptitudes() {
 ```
 arcana-forge/
 ├── prisma/
-│   ├── seed.ts                                  ← adicionar seedAptitudes()
 │   ├── seed-data/
 │   │   ├── (anteriores)
-│   │   └── aptitudes-common-combat.json         ← NOVO (5a)
+│   │   └── equipment-general.json    ← NOVO (6h)
 ```
 
 ---
@@ -192,21 +93,14 @@ arcana-forge/
 ```bash
 cd ~/projects/arcana-forge
 
-# 1. Confirma lotes 1-4f aplicados
+# Confirma 6a-6g aplicados (119 equipamentos)
 pnpm tsx scripts/validate-seed-data.ts
-# Esperado: PASSED
 
-# 2. Descompacta lote 5a
-unzip ~/Downloads/seed-data-lote-5a.zip -d /tmp/
+# Descompacta 6h
+unzip ~/Downloads/seed-data-lote-6h.zip -d /tmp/
 
-# 3. Copia o JSON novo
-cp /tmp/seed-data-lote-5a/aptitudes-common-combat.json prisma/seed-data/
-
-# 4. Guarda README
-cp /tmp/seed-data-lote-5a/README.md /tmp/lote-5a-README.md
-
-# 5. Confere
-ls prisma/seed-data/aptitudes-*.json
+cp /tmp/seed-data-lote-6h/equipment-general.json prisma/seed-data/
+cp /tmp/seed-data-lote-6h/README.md /tmp/lote-6h-README.md
 ```
 
 ---
@@ -214,205 +108,117 @@ ls prisma/seed-data/aptitudes-*.json
 # 💬 Prompt pro Claude Code
 
 ```
-# Aplicar Lote 5a do Seed: Aptidões Comuns + Combate (51 aptidões)
+# Aplicar Lote 6h: Equipamento Geral (29 itens)
 
-Primeiro lote da fase 5 (Aptidões). 1 arquivo JSON novo, 51 aptidões.
+Penúltimo lote da fase 6. Itens utilitários gerais + animais + veículos + serviços.
 
 ## Arquivos novos
 
-- `prisma/seed-data/aptitudes-common-combat.json` — 51 aptidões em 4 categorias (HABILIDADE, COMBATE, MANOBRA, GERAL)
+- `prisma/seed-data/equipment-general.json` — 29 itens
 
 ## Antes de codar
 
-1. **Leia `/tmp/lote-5a-README.md`** — pontos importantes:
-   - Schema da tabela `Aptitude` provavelmente NÃO existe ainda. Verifica em `prisma/schema.prisma`. Se não existir, criar via migration.
-   - Acuidade modelada com RAW estrito (decisão crítica #1)
-   - Evoluções de Nv 2 são array dentro da entrada base (não entradas separadas)
-   - Revisões do GAS embutidas em `effects.gasReview` (não duplicadas)
-   - 51 aptidões totais — categorias: 12 HABILIDADE + 22 COMBATE + 7 MANOBRA + 10 GERAL
-
-2. **Verifica schema atual:**
-   ```bash
-   grep -A 20 "model Aptitude" prisma/schema.prisma
-   ```
-   Se não existir o model, ele precisa ser criado.
-
-3. **Schema mínimo sugerido:**
-
-```prisma
-model Aptitude {
-  id            String   @id @default(cuid())
-  code          String   @unique
-  name          String
-  category      AptitudeCategory
-  shortDescription String?
-  description   String   @db.Text
-  prerequisites Json?    // JSONB amorfo
-  effects       Json     // JSONB amorfo com .type discriminador
-  evolutions    Json     // array de evoluções Nv 2+
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  
-  @@map("aptitudes")
-}
-
-enum AptitudeCategory {
-  HABILIDADE
-  COMBATE
-  MANOBRA
-  GERAL
-  RESTRITA  // pra Lote 5b futuro
-  META      // pra Lote 5d futuro
-}
-```
+1. **Leia `/tmp/lote-6h-README.md`**
+2. Confirme 6a-6g aplicados (119 equipamentos)
+3. Schema NÃO muda — usa mesmo model Equipment
 
 ## Tarefas
 
-### 1. Criar migration (se schema novo)
-
-```bash
-pnpm prisma migrate dev --name add_aptitudes
-```
-
-### 2. Adicionar seedAptitudes() ao prisma/seed.ts
+### 1. Atualizar lista em prisma/seed.ts
 
 ```typescript
-async function seedAptitudes() {
-  const filePath = path.join(__dirname, 'seed-data', 'aptitudes-common-combat.json');
-  const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-  
-  for (const aptitude of data.data) {
-    await prisma.aptitude.upsert({
-      where: { code: aptitude.code },
-      create: {
-        code: aptitude.code,
-        name: aptitude.name,
-        category: aptitude.category,
-        shortDescription: aptitude.shortDescription,
-        description: aptitude.description,
-        prerequisites: aptitude.prerequisites ?? {},
-        effects: aptitude.effects,
-        evolutions: aptitude.evolutions ?? [],
-      },
-      update: {
-        name: aptitude.name,
-        category: aptitude.category,
-        shortDescription: aptitude.shortDescription,
-        description: aptitude.description,
-        prerequisites: aptitude.prerequisites ?? {},
-        effects: aptitude.effects,
-        evolutions: aptitude.evolutions ?? [],
-      },
-    });
-  }
-  
-  console.log(`✓ Seeded ${data.data.length} aptitudes`);
-}
+const equipmentFiles = [
+  // ... anteriores
+  'equipment-general.json',                // 6h
+];
 ```
 
-Chame em `main()` depois de `seedPowerEffects()`.
-
-### 3. Validar antes de seedar
-
-```bash
-pnpm tsx scripts/validate-seed-data.ts
-```
-
-### 4. Atualizar validador para incluir aptidões
-
-No `scripts/validate-seed-data.ts`, adicione no `buildIndices` o tratamento pra arquivos `aptitudes-*.json` análogo aos `effects-*.json`:
-- Detecta tipo via filename
-- Indexa codes
-- Valida `prerequisites.aptitudes` referenciam codes existentes
-
-### 5. Rodar seed
+### 2. Rodar seed
 
 ```bash
 pnpm prisma db seed
 ```
 
-### 6. Verificar no Prisma Studio
+### 3. Verificar
 
-- Tabela `aptitudes` deve ter **52 linhas**
-- `acuidade` deve ter `effects.notes` com "RAW estrito"
-- `diligente.evolutions` deve ser array com 1 elemento
-- `critico_aprimorado.prerequisites.aptitudes` deve ser `["especialista"]`
+```sql
+-- Total
+SELECT COUNT(*) FROM equipments;
+-- Esperado: 148
 
-### 7. Teste mínimo
+-- Por kind
+SELECT kind, COUNT(*) FROM equipments GROUP BY kind;
+-- Esperado: GENERAL=29, WEAPON=58, ARMOR=6, TOOL=9, AMMO=3, CONSUMABLE=35
+-- (Os números podem variar levemente. O importante: GENERAL=29)
 
-Crie `tests/seed/aptitudes.spec.ts`:
+-- Serviços
+SELECT code FROM equipments 
+WHERE kind = 'GENERAL' AND effects->>'isService' = 'true';
+-- Esperado: 7 (bebida, estadia, refeição, mensageiro, estábulo, condução terrestre/marítima)
+```
+
+### 4. Testes mínimos
 
 ```typescript
-import { describe, it, expect } from 'vitest';
-import { prisma } from '@/lib/prisma';
-
-describe('Seed: Aptidões Lote 5a', () => {
-  it('tem 51 aptidões no banco', async () => {
-    const count = await prisma.aptitude.count();
-    expect(count).toBeGreaterThanOrEqual(51);
+describe('Seed: Lote 6h - Equipamento Geral', () => {
+  it('tem 148 equipamentos totais', async () => {
+    const count = await prisma.equipment.count();
+    expect(count).toBe(148);
   });
 
-  it('Acuidade está com RAW estrito', async () => {
-    const acuidade = await prisma.aptitude.findUnique({ where: { code: 'acuidade' } });
-    expect(acuidade?.effects).toMatchObject({
-      type: 'stat_substitution',
-      substituteAttribute: 'destreza_for_forca'
+  it('Mochila dá +4 compartimentos', async () => {
+    const m = await prisma.equipment.findUnique({ where: { code: 'mochila' } });
+    expect(m?.effects?.compartmentBonus).toBe(4);
+  });
+
+  it('Kits têm 5 usos', async () => {
+    const kits = await prisma.equipment.findMany({
+      where: { subtype: 'kit' }
     });
-    expect(acuidade?.effects?.notes).toContain('RAW estrito');
+    for (const kit of kits) {
+      expect(kit.effects?.uses).toBe(5);
+    }
   });
 
-  it('Diligente tem evolução Nv 2', async () => {
-    const dil = await prisma.aptitude.findUnique({ where: { code: 'diligente' } });
-    expect(dil?.evolutions).toHaveLength(1);
-    expect(dil?.evolutions[0]?.atLevel).toBe(2);
+  it('Caneta é item de peso desprezível (sem slots)', async () => {
+    const c = await prisma.equipment.findUnique({ where: { code: 'caneta' } });
+    expect(c?.slots).toBe(null);
+    expect(c?.effects?.negligibleWeight).toBe(true);
   });
 
-  it('Crítico Aprimorado requer Especialista', async () => {
-    const ca = await prisma.aptitude.findUnique({ where: { code: 'critico_aprimorado' } });
-    expect(ca?.prerequisites?.aptitudes).toContain('especialista');
+  it('Serviços não ocupam compartimento', async () => {
+    const servicos = await prisma.equipment.findMany({
+      where: { subtype: 'servico' }
+    });
+    expect(servicos.length).toBe(7);
+    for (const s of servicos) {
+      expect(s.slots).toBe(null);
+      expect(s.effects?.isService).toBe(true);
+    }
   });
 
-  it('distribuição por categoria', async () => {
-    const habilidade = await prisma.aptitude.count({ where: { category: 'HABILIDADE' } });
-    const combate = await prisma.aptitude.count({ where: { category: 'COMBATE' } });
-    const manobra = await prisma.aptitude.count({ where: { category: 'MANOBRA' } });
-    const geral = await prisma.aptitude.count({ where: { category: 'GERAL' } });
-    
-    expect(habilidade).toBe(12);
-    expect(combate).toBe(22);
-    expect(manobra).toBe(7);
-    expect(geral).toBe(10);
+  it('Tarja Especial é consumível pra Fuuinjutsu Nv3+', async () => {
+    const t = await prisma.equipment.findUnique({ where: { code: 'tarja_especial' } });
+    expect(t?.subtype).toBe('pergaminho_papel');
+    expect((t?.effects?.compatibleWith as string[])).toContain('fuuinjutsu_nv3_plus');
   });
 });
 ```
 
 ## ⛔ Limites
 
-- **NÃO modele** aptidões restritas de clã (Byakugan, Sharingan, Corpulência, etc.) — Lote 5b
-- **NÃO modele** manobras avançadas (Derrubar Agressivo, Chute Giratório, etc.) — Lote 5c
-- **NÃO modele** meta-aptidões (Maximizar, Potencializar, Técnica Poderosa) — Lote 5d
-- **NÃO valide** pré-requisitos cruzados em runtime — fica pro motor
-- **NÃO crie** UI de ficha ainda
-- **NÃO faça** `git push`
+- **NÃO modele** armas/armaduras de hijutsu (6i) ainda — último lote da fase
 
 ## Após aplicar
 
-Documente no `SESSION-LOG.md`:
+Atualize SESSION-LOG.md:
 
 ```markdown
-## Lote 5a (Aptidões Comuns + Combate) — APLICADO
-
-- 51 aptidões adicionadas (12 HABILIDADE + 22 COMBATE + 7 MANOBRA + 10 GERAL)
-- Schema novo: tabela `Aptitude` + enum `AptitudeCategory`
-- Migration: `add_aptitudes`
-- Validador estendido pra arquivos `aptitudes-*.json`
-- Decisões críticas respeitadas:
-  - Acuidade RAW estrito (não afeta dano CC desarmado)
-  - Evoluções Nv 2 como array (não entradas separadas)
-  - Revisões GAS embutidas em effects.gasReview
-- Pré-requisitos cruzados catalogados mas NÃO validados em runtime
-- Próximo passo: Lote 5b (Aptidões Restritas de Clã ~30)
+## Lote 6h (Equipamento Geral) — APLICADO
+- 29 itens utilitários
+- Kits (4), recipientes (2), ferramentas (6), pergaminhos em branco (3), campismo (2)
+- Animais (2), veículos (3), serviços (7)
+- Total: 148 equipamentos
+- Próximo: 6i (Armas/Armaduras exclusivas de Hijutsu) — ÚLTIMO LOTE DA FASE 6
 ```
-
-Rode `pnpm typecheck && pnpm lint && pnpm test && pnpm seed:validate` antes de fechar.
 ```

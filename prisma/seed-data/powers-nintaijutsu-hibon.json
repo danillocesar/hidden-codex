@@ -1,0 +1,127 @@
+{
+  "_meta": {
+    "description": "Lote 7j — 2 powers: Nintaijutsu (Hijutsu Raiton+físico, regras próprias) + Hibon Ninpou (variante única de Ninpou com bonificações). Resolve débito real listado em Task #11 (hibon_ninpou).",
+    "sources": [
+      "Livro de Hijutsus p. 61-65 (Nintaijutsu)",
+      "Livro Básico p. 212 (Hibon Ninpou)"
+    ],
+    "extractedAt": "2026-05-14",
+    "schemaVersion": 1,
+    "appliesToTable": "powers",
+    "expectedItemCount": 2,
+    "resolvesDormantRefs": [
+      "hibon_ninpou"
+    ],
+    "resolvesDormantRefsNote": "Hibon Ninpou estava em aptitudes-meta-shinobi.json:_meta.unmodeledPowers (referenciado em dominio_ninpou.prerequisites.powers_one_of). Este lote resolve."
+  },
+  "data": [
+    {
+      "code": "nintaijutsu",
+      "name": "Nintaijutsu",
+      "translation": "Arte Ninja Corporal",
+      "category": "RESTRITO",
+      "element": "raio",
+      "shortDescription": "Hijutsu Raiton+físico. Combate corporal em super velocidade. NÃO usa aptidões de técnica. Efeitos próprios. Dano = nível usado + ½ Força.",
+      "description": "Combina Raiton com combate físico pra efeitos únicos. NÃO afetado por aptidões de técnica. Exceto Força Bruta, nenhum efeito usa aptidões de manobra ou recebe bônus de aptidões de combate. Pré-req Força 2 + Velocista + Ataque em Movimento. Efeitos seguem regras de Ninpou (mas só os efeitos próprios deste poder). Dano comum: nível usado + ½ Força (arredonda pra cima). Dificuldade resistência: 7 + nível usado + ½ Força. Alcance: Toque (CC). Todos efeitos são ataques corporais de alvo único, duração instantânea (exceto Hell Stab). Avanço Rápido: alguns efeitos exigem deslocamento mín 10m antes de atacar; ação completa, regras Ataque em Movimento, sem curvas/desvios. Acelerado pode usar finta acelerada no avanço. Fonte: Livro de Hijutsus p. 61-62.",
+      "stats": {
+        "rangeFormula": {
+          "category": "Toque",
+          "noRange": true
+        },
+        "sizeFormula": null,
+        "keyAttribute": "for",
+        "elementAdvantage": [
+          "raiton_natural"
+        ],
+        "elementDisadvantage": []
+      },
+      "rules": {
+        "selosDefault": false,
+        "type": "hijutsu_taijutsu_raiton",
+        "prerequisites": {
+          "attributes": {
+            "for": 2
+          },
+          "aptitudes": [
+            "velocista",
+            "ataque_em_movimento"
+          ]
+        },
+        "noTechniqueAptitudes": true,
+        "noManobraAptitudesExceptForcaBruta": true,
+        "noCombatAptitudeDamageBonuses": true,
+        "damageCommon": "nivel_usado_do_poder + metade_for_arredondado_para_cima",
+        "resistanceDifficulty": "7 + nivel_usado + metade_for",
+        "alcance": "toque_cc",
+        "duration": "instantanea_default_exceto_hell_stab",
+        "target": "1_criatura_corporal",
+        "avancoRapido": {
+          "minMovementM": 10,
+          "action": "completa",
+          "rules": "ataque_em_movimento",
+          "noCurvesOrDeviations": true,
+          "aceleradoCanUseFintaAcelerada": true
+        },
+        "associatedEffects": "forca_bruta, elbow, straight, lariat, hell_stab, guillotine_drop, linger_bomb, reverse_chop (effects-nintaijutsu.json)",
+        "associatedAptitudes": "armadura_de_raios (aptitudes-nintaijutsu.json)"
+      }
+    },
+    {
+      "code": "hibon_ninpou",
+      "name": "Hibon Ninpou",
+      "translation": "Arte Ninja Única",
+      "category": "RESTRITO",
+      "element": null,
+      "shortDescription": "Power Restrito. Estilo de Ninjutsu único. Funciona como Ninpou + 2 bonificações escolhidas (Dano Adicional, Dureza Adicional, Dificuldade Aumentada — Dano pode ser escolhido 2x).",
+      "description": "Estilo de Ninjutsu único da família/pessoa. Funciona EXATAMENTE como Ninpou. Mesmos parâmetros + 2 bonificações: ESCOLHA 2 ENTRE 3 (ou Dano Adicional 2x). Bonificações: Dano Adicional (+1 dano elemento, pode ser escolhido 2x); Dureza Adicional (+2 dureza criações); Dificuldade Aumentada (+1 Dif resistência). Genialidade/Trabalho Duro: pode comprar com Trabalho Duro OU Tensai (neste caso não compra Versatilidade). Efeitos permitidos: todos os de Ninpou + todos os exclusivos de UM elemento básico à escolha (Doton/Fuuton/Katon/Raiton/Suiton). Hibon Ninpou é considerado elemento NOVO e ÚNICO — não serve como pré-req de aptidões dos elementos comuns (Domínio da Água etc.) e tampouco recebe os benefícios. Fonte: Livro Básico p. 212.",
+      "stats": {
+        "rangeFormula": {
+          "base": 10,
+          "perEsp": 2,
+          "category": "Médio"
+        },
+        "sizeFormula": {
+          "perEsp": 1,
+          "unit": "m"
+        },
+        "keyAttribute": "esp",
+        "elementAdvantage": [],
+        "elementDisadvantage": []
+      },
+      "rules": {
+        "selosDefault": true,
+        "type": "hijutsu_ninpou_unico",
+        "prerequisites": {
+          "narrative": "estilo_de_ninjutsu_unico_da_familia_ou_pessoa"
+        },
+        "isVariantOf": "ninpou",
+        "inheritsNinpouRules": true,
+        "bonifications": {
+          "pickTwoFromThree": true,
+          "options": {
+            "danoAdicional": {
+              "bonus": 1,
+              "type": "dano_elemento",
+              "canBePickedTwice": true
+            },
+            "durezaAdicional": {
+              "bonus": 2,
+              "appliesToCreations": true
+            },
+            "dificuldadeAumentada": {
+              "bonus": 1,
+              "appliesToResistanceDifficulty": true
+            }
+          }
+        },
+        "compatibility": {
+          "comTrabalhoDuro": true,
+          "comTensai": true,
+          "comTensaiBlocksVersatilidade": true
+        },
+        "allowedEffects": "todos_de_ninpou + exclusivos_de_um_elemento_basico_escolhido",
+        "uniqueElementNote": "Considerado elemento novo e único — não serve como pré-req de aptidões dos elementos comuns (Domínio da Água, Maestria) nem recebe benefícios delas."
+      }
+    }
+  ]
+}

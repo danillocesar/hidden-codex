@@ -136,7 +136,6 @@ async function seedKekkeiGenkais(): Promise<void> {
 type ClanSeed = {
   code: string;
   name: string;
-  village?: string | null;
   shortDescription?: string;
   description: string;
   benefits?: Record<string, unknown>;
@@ -148,7 +147,6 @@ async function seedClans(): Promise<void> {
     const data = {
       code: c.code,
       name: c.name,
-      village: c.village ?? null,
       shortDescription: c.shortDescription ?? null,
       description: c.description,
       benefits: (c.benefits ?? {}) as Prisma.InputJsonValue,
@@ -190,6 +188,13 @@ type PowerSeed = {
 const POWER_FILES: ReadonlyArray<string> = [
   'powers.json', // Lote 3 — 19 poderes
   'powers-additional.json', // Lote 4f — 13 hijutsus avançados
+  'powers-orphans.json', // 7b — 7 powers órfãos (hachimon_tonkou, jiton, sabaku_hijutsu, yonbi_youton, sanbi_suiton, senjutsu, aoi_katon)
+  'powers-uchiha-mangekyou.json', // 7e1 — 1 power virtual mangekyou_sharingan (sem progressão; gateway pras 6 técnicas Nv 10)
+  'powers-jinchuuriki.json', // 7f — Jinchuuriki base (Hijutsu Kinjutsu). Resolve 4 refs dormentes em aoi_katon/sabaku_hijutsu/sanbi_suiton/yonbi_youton.
+  'powers-jinchuuriki-bijuus.json', // 7f2b — 2 powers Hijutsu/Jinchuuriki que faltavam (Gobi Futton, Rokubi Suiton).
+  'powers-rinnegan.json', // 7h — 1 power Rinne Ninpou (variante Ninpou aceitando 5 elementos básicos via Rinnegan).
+  'powers-senninka.json', // 7g — 1 power Senninka (Hijutsu KG instintiva, Primeiro/Segundo Estágio).
+  'powers-nintaijutsu-hibon.json', // 7j — 2 powers: Nintaijutsu (Hijutsu Raiton+físico) + Hibon Ninpou (Ninpou único com bonificações).
 ];
 
 async function seedPowers(): Promise<void> {
@@ -285,6 +290,19 @@ const EFFECT_FILES: ReadonlyArray<string> = [
   // listados em `_meta.unmodeledPowers` do JSON. FK lógica aceita; vínculo
   // automático quando esses poderes entrarem no catálogo.
   'effects-guia-avancado.json', // 7: Dano Contínuo, Deslocamento de Vácuo, Purificar, Repelir, Projetar, Cegante, Desastre
+  // 7e — efeitos do Mangekyou Sharingan + Suika expandido. Effects do Mangekyou
+  // dependem do power virtual `mangekyou_sharingan` (vem em POWER_FILES via
+  // `powers-uchiha-mangekyou.json`). Effects de Suika referenciam Suiton (já
+  // existente). subTechniques compartilhadas (kamui_teletransporte) repetem em
+  // kamui_curto e kamui_longo — motor deduz no runtime.
+  'effects-mangekyou-sharingan.json', // 7e1 — 6 técnicas Nv 10 (Tsukuyomi, Amaterasu, Kagutsuchi/Enton, Kamui Curto, Kamui Longo, Susanoo)
+  'effects-suika.json', // 7e2 — 4 efeitos exclusivos Suiton-via-Suika (Braço de Água, Afogar, Monstro de Água, Clone de Óleo)
+  'effects-jinchuuriki.json', // 7f — 11 effects do Jinchuuriki (5 modos + 6 técnicas gerais)
+  'effects-jinchuuriki-bijuus.json', // 7f2c — 20 effects técnicos por Bijuu (Nekozume movido de aoi-katon; Sangoshō, Kagenade, Ebulição, Aceleração-Vapor, Força-Vapor, Tsunoori, Corrosão da Lesma, 4 Técnicas de Bolhas, Pó de Prata, Rede de Fios, Casulo de Fios, Tinta do Polvo, Cauda Morta, Tornado do Polvo, Cura da Raposa, Modo Kurama)
+  'effects-rinnegan.json', // 7h — 2 effects do Caminho Tendō (Shinra Tensei + Banshō Ten'in)
+  'effects-senninka.json', // 7g — 2 effects exclusivos do Senninka (Corrente Nv 3 + Transferência Celular Nv 6)
+  'effects-kami-ninpou.json', // 7i — 3 effects exclusivos do Kami Ninpou (Anjo de Papel Nv 5 + Julgamento Nv 6 + Emissário Divino Nv 10)
+  'effects-nintaijutsu.json', // 7j — 8 effects do Nintaijutsu (Força Bruta, Elbow, Straight, Lariat, Hell Stab, Guillotine Drop, Linger Bomb, Reverse Chop)
 ];
 
 async function seedPowerEffects(): Promise<void> {
@@ -342,13 +360,35 @@ type AptitudeSeed = {
   evolutions?: Array<Record<string, unknown>>;
 };
 
+// Ordem importa: `aptitudes-patches.json` precisa vir DEPOIS do 5c para que os
+// upserts de `burro_de_carga` e `furtividade_agil` (MANOBRA → GERAL) sobrescrevam
+// corretamente as entradas originais via `prisma.aptitude.upsert({ where: code })`.
 const APTITUDE_FILES: ReadonlyArray<string> = [
   'aptitudes-common-combat.json', // 5a — 51 aptidões (12 HAB + 22 COM + 7 MAN + 10 GER)
-  // Próximas ondas (5b restritas de clã, 5c manobras avançadas, 5d meta) entram aqui.
+  'aptitudes-clan-restricted.json', // 5b — 36 aptidões RESTRITA (14 clãs + 4 hijutsus)
+  'aptitudes-manuevers.json', // 5c — 24 aptidões MANOBRA (14 Livro Básico + 10 GAS)
+  'aptitudes-meta-shinobi.json', // 5d — 26 aptidões (META + GERAL ex-SHINOBI + RESTRITA Tensai)
+  'aptitudes-patches.json', // 5-patches — 10 aptidões (8 novas + 2 upserts MANOBRA→GERAL)
+  'aptitudes-phase6-patches.json', // patch fase 6 — 1 aptidão GERAL (usar_armaduras_pesadas)
+  'aptitudes-samurai.json', // 7a — 8 aptidões RESTRITA (Hijutsu Samurai)
+  // 7c-d-e1 — Aptidões Hijutsu pós-Samurai. Vários upserts em aptidões de
+  // `aptitudes-clan-restricted.json` — esta ordem garante que os upserts
+  // sobrescrevam corretamente o original.
+  'aptitudes-kaguya.json', // 7c — upsert artesao_de_ossos + 6 novas Kaguya (armadura_ossea + 5 danças)
+  'aptitudes-fuuma-yuki.json', // 7d — demonio_do_vento + congelamento (upsert)
+  'aptitudes-uchiha-doujutsu.json', // 7e1 — hipnose_sharingan (nova) + upserts nidan/sandan_sharingan (refator fields→subTechniques)
+  'aptitudes-jinchuuriki-bijuus.json', // 7f2a — 9 aptidões marcadoras (jinchuuriki_<bijuu>) com tabela específica de benefícios por nível + diferenças da Forma Bijuu
+  'aptitudes-rinnegan.json', // 7h — 8 aptidões (rinnegan + 7 Caminhos: Shuradō, Jigokudō, Ningendō, Gakidō, Chikushōdō, Tendō, Gedō)
+  'aptitudes-kami-ninpou.json', // 7i — 1 aptidão Shikigami no Mai (2 níveis evolutivos)
+  'aptitudes-nintaijutsu.json', // 7j — 1 aptidão Armadura de Raios (Hijutsu Nintaijutsu, 3 níveis evolutivos)
 ];
 
+// Conta codes únicos (Set) em vez de items processados (length), seguindo mesma
+// estratégia de `seedEquipment` — patches futuros podem fazer upserts (5-patches
+// fez 2: MANOBRA→GERAL); `Set.size` reflete o estado final do DB, não a soma
+// de items dos JSONs.
 async function seedAptitudes(): Promise<void> {
-  let total = 0;
+  const seen = new Set<string>();
   for (const file of APTITUDE_FILES) {
     const aptitudes = loadSeedData<AptitudeSeed>(file);
     for (const a of aptitudes) {
@@ -367,10 +407,101 @@ async function seedAptitudes(): Promise<void> {
         create: data,
         update: data,
       });
+      seen.add(a.code);
     }
-    total += aptitudes.length;
   }
-  console.info(`  ✓ ${total} aptidões`);
+  console.info(`  ✓ ${seen.size} aptidões`);
+}
+
+// ──────────────────────────────────────────────────────────────────────
+// Equipamentos (Lote 6 — entregue em ondas 6a-6i)
+// ──────────────────────────────────────────────────────────────────────
+// Estrutura espelha Aptitude: arquivos `equipment-*.json` agregados via
+// `EQUIPMENT_FILES`. Cada item tem `kind` (enum EquipmentKind) + `category`
+// (enum WeaponCategory, null pra kinds não-arma). `prerequisites` e `effects`
+// são JSONB livres (mesmo padrão das aptidões). Refs a aptidões parametrizadas
+// (`usar_arma_<X>`, `especialista_armas_<X>`) são dormentes — declaradas em
+// `_meta.unmodeledAptitudes` no JSON pra demover de error pra info no validador.
+
+type EquipmentSeed = {
+  code: string;
+  name: string;
+  kind: 'WEAPON' | 'ARMOR' | 'TOOL' | 'CONSUMABLE' | 'GENERAL' | 'AMMO';
+  subtype?: string | null;
+  category?:
+    | 'DESARMADO'
+    | 'LEVE'
+    | 'MEDIANA'
+    | 'LONGA'
+    | 'PESADA'
+    | 'ARREMESSO'
+    | 'DISPARO'
+    | 'LEVE_COMPLEMENTAR'
+    | 'MUNICAO'
+    | 'VARIAVEL'
+    | 'EXPLOSIVO'
+    | 'AREA'
+    | 'EQUIPAMENTO'
+    | null;
+  price?: number | null;
+  damage?: string | null;
+  range?: string | null;
+  critRange?: string | null;
+  slots?: Record<string, unknown> | null;
+  damageType?: string | null;
+  prerequisites?: Record<string, unknown>;
+  effects?: Record<string, unknown>;
+  shortDescription?: string;
+  description: string;
+};
+
+// Lotes 6b-6i (armas especiais, GAS, armaduras, tools, consumíveis, gerais,
+// armas de hijutsu) entram aqui ao longo da fase. Mesma convenção do
+// APTITUDE_FILES: último arquivo da lista ganha em colisões via upsert.
+const EQUIPMENT_FILES: ReadonlyArray<string> = [
+  'equipment-weapons-basic.json', // 6a — 42 itens (40 WEAPON + 2 AMMO)
+  'equipment-special-weapons.json', // 6b — 9 armas especiais (7 Espadas da Névoa + Kusanagi + Gunbai)
+  'equipment-firearms.json', // 6c — 7 itens (5 firearms + munição + Disparador Oculto)
+  'equipment-weapons-gas.json', // 6d — 23 itens (11 novas + 12 revisões)
+  'equipment-armor.json', // 6e — 6 armaduras (4 leves + 2 pesadas)
+  'equipment-shinobi-tools.json', // 6f — 9 ferramentas shinobi utilitárias (EXPLOSIVO/AREA/EQUIPAMENTO)
+  'equipment-consumables.json', // 6g — 35 consumíveis (26 venenos + 4 pílulas + 1 antídoto + 4 selos Fuuinjutsu)
+  'equipment-general.json', // 6h — 29 itens utilitários (kits, recipientes, animais, veículos, serviços)
+  'equipment-armor-samurai.json', // 7a — 1 armadura exclusiva do Hijutsu Samurai (subtype armadura_pesada_hijutsu)
+  'equipment-jinchuuriki-bijuus.json', // 7f2d — 2 itens do Jinchuuriki (Soprador de Bolhas Saiken + Armadura a Vapor Kokuō)
+];
+
+async function seedEquipment(): Promise<void> {
+  const seen = new Set<string>();
+  for (const file of EQUIPMENT_FILES) {
+    const items = loadSeedData<EquipmentSeed>(file);
+    for (const item of items) {
+      const data = {
+        code: item.code,
+        name: item.name,
+        kind: item.kind,
+        subtype: item.subtype ?? null,
+        category: item.category ?? null,
+        price: item.price ?? null,
+        damage: item.damage ?? null,
+        range: item.range ?? null,
+        critRange: item.critRange ?? null,
+        slots: (item.slots ?? null) as Prisma.InputJsonValue | null,
+        damageType: item.damageType ?? null,
+        prerequisites: (item.prerequisites ?? {}) as Prisma.InputJsonValue,
+        effects: (item.effects ?? {}) as Prisma.InputJsonValue,
+        shortDescription: item.shortDescription ?? null,
+        description: item.description,
+      };
+      await prisma.equipment.upsert({
+        where: { code: item.code },
+        create: data,
+        update: data,
+      });
+      seen.add(item.code);
+    }
+  }
+  console.info(`  ✓ ${seen.size} equipamentos`);
 }
 
 // ──────────────────────────────────────────────────────────────────────
@@ -417,14 +548,15 @@ async function seedPericias(): Promise<void> {
 async function main(): Promise<void> {
   console.info('🌱 Seed iniciado…');
   // Ordem importa: clãs referenciam vilas e KGs; poderes referenciam clãs e
-  // KGs; efeitos referenciam códigos de poder via `availableFor`. Perícias
-  // são independentes — vão por último.
+  // KGs; efeitos referenciam códigos de poder via `availableFor`. Aptidões
+  // e equipamentos vêm depois. Perícias são independentes — vão por último.
   await seedVillages();
   await seedKekkeiGenkais();
   await seedClans();
   await seedPowers();
   await seedPowerEffects();
   await seedAptitudes();
+  await seedEquipment();
   await seedPericias();
   console.info('✅ Seed completo.');
 }

@@ -61,9 +61,13 @@ export async function POST(req: Request) {
   const bytes = Buffer.from(await file.arrayBuffer());
   let processed: Buffer;
   try {
+    // Preserva o aspecto original (só reduz pra um teto de 1600px). NÃO cropar
+    // aqui: a mesma imagem serve capas (largas), cards de jutsu (retrato) e
+    // fundo — cada contexto recorta via CSS (object-fit/position). Cropar pra
+    // um banner fixo deixava artes verticais "tortas" nos cards.
     processed = await sharp(bytes)
       .rotate()
-      .resize(1600, 700, { fit: 'cover', position: 'attention' })
+      .resize({ width: 1600, height: 1600, fit: 'inside', withoutEnlargement: true })
       .webp({ quality: 84 })
       .toBuffer();
   } catch {

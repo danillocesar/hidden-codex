@@ -31,8 +31,8 @@ export async function loadCharacterById(
       pericias: true,
       aptitudes: { include: { aptitude: true } },
       powers: { include: { power: true } },
-      jutsus: true,
-      inventory: { include: { equipment: true } },
+      jutsus: { orderBy: { createdAt: 'asc' } },
+      inventory: { include: { equipment: true }, orderBy: { createdAt: 'asc' } },
       images: true,
     },
   })) as CharacterWithRelations | null;

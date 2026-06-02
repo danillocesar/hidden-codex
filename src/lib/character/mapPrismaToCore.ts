@@ -27,9 +27,11 @@ import {
   resolveFichaBackground,
   resolveSectionCovers,
   resolveSectionCoverPositions,
+  resolveSectionCoverZooms,
   type SectionCoverImage,
   type SectionCovers,
   type SectionCoverPositions,
+  type SectionCoverZooms,
 } from './sectionCovers';
 
 /**
@@ -132,6 +134,7 @@ export type CharacterViewModel = {
     freeAptitudeCodes: ReadonlyArray<string>;
     sectionCovers: SectionCovers;
     sectionCoverPositions: SectionCoverPositions;
+    sectionCoverZooms: SectionCoverZooms;
     /** Imagem de fundo da ficha inteira (P&B + overlay), ou null. */
     fichaBackground: string | null;
     images: ReadonlyArray<SectionCoverImage>;
@@ -277,6 +280,7 @@ export function mapPrismaToCore(
       freeAptitudeCodes: benefits.freeAptitudeCodes,
       sectionCovers: resolveSectionCovers(row.uiState),
       sectionCoverPositions: resolveSectionCoverPositions(row.uiState),
+      sectionCoverZooms: resolveSectionCoverZooms(row.uiState),
       fichaBackground: resolveFichaBackground(row.uiState),
       images: row.images.map((image) => ({
         id: image.id,

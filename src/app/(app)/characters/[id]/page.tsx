@@ -197,6 +197,7 @@ export default async function CharacterFichaPage({ params }: { params: { id: str
           kanji="才能 · 技能"
           imageUrl={display.sectionCovers.talentos}
           position={display.sectionCoverPositions.talentos}
+          zoom={display.sectionCoverZooms.talentos}
           coverKey="talentos"
           characterId={display.id}
           canEdit={display.isOwner}
@@ -216,6 +217,7 @@ export default async function CharacterFichaPage({ params }: { params: { id: str
           kanji="術"
           imageUrl={display.sectionCovers.tecnicas}
           position={display.sectionCoverPositions.tecnicas}
+          zoom={display.sectionCoverZooms.tecnicas}
           coverKey="tecnicas"
           characterId={display.id}
           canEdit={display.isOwner}
@@ -243,6 +245,7 @@ export default async function CharacterFichaPage({ params }: { params: { id: str
           kanji="道具 · 記"
           imageUrl={display.sectionCovers.arquivo}
           position={display.sectionCoverPositions.arquivo}
+          zoom={display.sectionCoverZooms.arquivo}
           coverKey="arquivo"
           characterId={display.id}
           canEdit={display.isOwner}

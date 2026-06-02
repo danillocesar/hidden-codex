@@ -60,6 +60,8 @@ export function mergeSectionCoverUiState(
 export type SectionCoverPositions = Readonly<Record<SectionCoverKey, string>>;
 
 export const DEFAULT_COVER_POSITION = '50% 50%';
+export const DEFAULT_COVER_ZOOM = 1;
+export const MAX_COVER_ZOOM = 3;
 
 /** Valida "X% Y%" com X/Y inteiros 0–100. */
 export function isValidCoverPosition(value: string): boolean {
@@ -68,6 +70,39 @@ export function isValidCoverPosition(value: string): boolean {
   const x = Number(match[1]);
   const y = Number(match[2]);
   return x >= 0 && x <= 100 && y >= 0 && y <= 100;
+}
+
+/** Valida zoom (1 = sem zoom até MAX_COVER_ZOOM). */
+export function isValidCoverZoom(value: number): boolean {
+  return Number.isFinite(value) && value >= 1 && value <= MAX_COVER_ZOOM;
+}
+
+export type SectionCoverZooms = Readonly<Record<SectionCoverKey, number>>;
+
+export function resolveSectionCoverZooms(uiState: unknown): SectionCoverZooms {
+  const zooms = readRecordField(uiState, 'sectionCoverZooms');
+  return {
+    fundamentos: pickZoom(zooms, 'fundamentos'),
+    talentos: pickZoom(zooms, 'talentos'),
+    tecnicas: pickZoom(zooms, 'tecnicas'),
+    arquivo: pickZoom(zooms, 'arquivo'),
+  };
+}
+
+export function mergeSectionCoverZoomUiState(
+  uiState: unknown,
+  key: SectionCoverKey,
+  zoom: number,
+): Record<string, unknown> {
+  const base = isRecord(uiState) ? { ...uiState } : {};
+  const current = isRecord(base.sectionCoverZooms) ? base.sectionCoverZooms : {};
+  base.sectionCoverZooms = { ...current, [key]: zoom };
+  return base;
+}
+
+function pickZoom(record: Record<string, unknown>, key: SectionCoverKey): number {
+  const value = record[key];
+  return typeof value === 'number' && isValidCoverZoom(value) ? value : DEFAULT_COVER_ZOOM;
 }
 
 export function resolveSectionCoverPositions(uiState: unknown): SectionCoverPositions {

@@ -1,11 +1,6 @@
-import {
-  DEFAULT_SECTION_COVERS,
-  type SectionCoverImage,
-  type SectionCoverKey,
-} from '@/lib/character/sectionCovers';
+import type { SectionCoverImage, SectionCoverKey } from '@/lib/character/sectionCovers';
 import { cn } from '@/lib/utils/cn';
-import { SectionCover } from './SectionCover';
-import { SectionCoverPicker } from './SectionCoverPicker';
+import { SectionCoverArea } from './SectionCoverArea';
 
 export function SectionDivider({
   number,
@@ -13,6 +8,7 @@ export function SectionDivider({
   kanji,
   imageUrl,
   position,
+  zoom,
   coverKey,
   characterId,
   canEdit,
@@ -24,6 +20,7 @@ export function SectionDivider({
   kanji: string;
   imageUrl: string;
   position: string;
+  zoom: number;
   coverKey: SectionCoverKey;
   characterId: string;
   canEdit: boolean;
@@ -31,15 +28,16 @@ export function SectionDivider({
   className?: string;
 }) {
   return (
-    <section className={cn('relative my-8 border-y border-border bg-bg-deep', className)}>
-      <div className="relative h-[180px] overflow-hidden md:h-[140px]">
-        <SectionCover
-          imageUrl={imageUrl}
-          position={position}
-          canEdit={canEdit}
-          characterId={characterId}
-          coverKey={coverKey}
-        />
+    <section className={cn('group relative my-8 border-y border-border bg-bg-deep', className)}>
+      <SectionCoverArea
+        imageUrl={imageUrl}
+        position={position}
+        zoom={zoom}
+        canEdit={canEdit}
+        characterId={characterId}
+        coverKey={coverKey}
+        images={images}
+      >
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,var(--bg-deep)_0%,transparent_20%,transparent_80%,var(--bg-deep)_100%),linear-gradient(90deg,var(--bg-deep)_0%,transparent_26%,transparent_74%,var(--bg-deep)_100%)]"
@@ -64,16 +62,7 @@ export function SectionDivider({
         >
           {number}
         </div>
-      </div>
-
-      {canEdit ? (
-        <SectionCoverPicker
-          characterId={characterId}
-          coverKey={coverKey}
-          defaultUrl={DEFAULT_SECTION_COVERS[coverKey]}
-          images={images}
-        />
-      ) : null}
+      </SectionCoverArea>
     </section>
   );
 }

@@ -10,8 +10,10 @@ import {
   isAllowedSectionCoverUrl,
   isSectionCoverKey,
   isValidCoverPosition,
+  isValidCoverZoom,
   mergeFichaBackgroundUiState,
   mergeSectionCoverPositionUiState,
+  mergeSectionCoverZoomUiState,
   mergeSectionCoverUiState,
 } from '@/lib/character/sectionCovers';
 
@@ -58,11 +60,13 @@ export async function setCharacterSectionCoverPosition(
   characterId: string,
   key: string,
   position: string,
+  zoom: number,
 ): Promise<SetCharacterSectionCoverResult> {
   const session = await getCurrentUser();
   if (!session) return { ok: false, error: 'Nao autenticado.' };
   if (!isSectionCoverKey(key)) return { ok: false, error: 'Separador invalido.' };
   if (!isValidCoverPosition(position)) return { ok: false, error: 'Posicao invalida.' };
+  if (!isValidCoverZoom(zoom)) return { ok: false, error: 'Zoom invalido.' };
 
   const character = await prisma.character.findFirst({
     where: { id: characterId, userId: session.user.id, deletedAt: null },
@@ -70,7 +74,8 @@ export async function setCharacterSectionCoverPosition(
   });
   if (!character) return { ok: false, error: 'Ficha nao encontrada.' };
 
-  const nextUiState = mergeSectionCoverPositionUiState(character.uiState, key, position);
+  const withPosition = mergeSectionCoverPositionUiState(character.uiState, key, position);
+  const nextUiState = mergeSectionCoverZoomUiState(withPosition, key, zoom);
   await prisma.character.update({
     where: { id: character.id },
     data: { uiState: nextUiState as Prisma.InputJsonValue },

@@ -65,8 +65,11 @@ export type FichaJutsu = {
    * para efeitos sem ataque ou com teste resistido especial (agarrar, etc.).
    */
   acerto: 'cc' | 'cd' | 'lm' | null;
-  /** Custo de chakra quando declarado no JSON do efeito; senao null. */
-  cost: number | null;
+  /**
+   * Custo de chakra do efeito, já em rótulo legível (`stats.chakraCost`):
+   * ex.: "1 por nível usado", "Sem custo", "3 de chakra", "varia". `null` se ausente.
+   */
+  chakraCost: string | null;
 };
 
 export type FichaEffect = {
@@ -184,7 +187,7 @@ export function mapPrismaToCore(
       imageUrl: j.imageUrl,
       description: j.flavorText,
       acerto: readRollType(effect?.stats),
-      cost: readEffectCost(effect?.rules),
+      chakraCost: formatChakraCost(effect?.stats),
     };
   });
 
@@ -313,9 +316,31 @@ function readRollType(stats: Prisma.JsonValue | undefined): 'cc' | 'cd' | 'lm' |
   return value === 'cc' || value === 'cd' || value === 'lm' ? value : null;
 }
 
-function readEffectCost(rules: Prisma.JsonValue | undefined): number | null {
-  if (!rules || typeof rules !== 'object' || Array.isArray(rules)) return null;
-  const record = rules as Record<string, unknown>;
-  const raw = record.chakraCost ?? record.cost;
-  return typeof raw === 'number' && Number.isFinite(raw) ? raw : null;
+/**
+ * Códigos de custo de chakra usados no seed → rótulo legível em PT.
+ */
+const CHAKRA_COST_LABELS: Record<string, string> = {
+  nivel_usado: '1 por nível usado',
+  nível_usado: '1 por nível usado',
+  nivel_usado_quando_atacar: '1 por nível usado (ao atacar)',
+  nivel_do_poder: '1 por nível do poder',
+  padrao_do_poder: 'padrão do poder',
+  metade_do_nivel_do_poder: 'metade do nível do poder',
+};
+
+/**
+ * Le `stats.chakraCost` e devolve um rótulo legível. Aceita número (custo fixo),
+ * códigos conhecidos (mapeados acima) e frases livres (já legíveis no seed, ex.:
+ * "1 por nível do poder", "varia"). Retorna null quando ausente.
+ */
+function formatChakraCost(stats: Prisma.JsonValue | undefined): string | null {
+  if (!stats || typeof stats !== 'object' || Array.isArray(stats)) return null;
+  const raw = (stats as Record<string, unknown>).chakraCost;
+  if (typeof raw === 'number' && Number.isFinite(raw)) {
+    return raw === 0 ? 'Sem custo' : `${raw} de chakra`;
+  }
+  if (typeof raw !== 'string') return null;
+  const key = raw.trim();
+  if (!key) return null;
+  return CHAKRA_COST_LABELS[key] ?? key.replace(/_/g, ' ');
 }

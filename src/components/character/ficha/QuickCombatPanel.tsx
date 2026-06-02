@@ -158,5 +158,5 @@ function weaponObs(w: FichaInventoryItem): string {
 }
 
 function jutsuObs(j: FichaJutsu): string {
-  return j.cost !== null ? `${j.cost} chakra` : '—';
+  return j.chakraCost ? `chakra: ${j.chakraCost}` : '—';
 }

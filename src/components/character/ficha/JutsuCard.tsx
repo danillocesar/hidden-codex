@@ -85,20 +85,30 @@ export function JutsuCard({
         </div>
         <h3 className="font-serif text-xl font-medium leading-tight text-ink">{jutsu.name}</h3>
 
-        <div className="mt-3 border-t border-ice/25 pt-2.5">
-          <p className="font-display text-[8px] uppercase tracking-[0.25em] text-ink-muted">
-            Níveis conjuráveis
-          </p>
-          <div className="mt-1.5 flex flex-wrap gap-1.5">
-            {jutsu.levels.map((lvl) => (
-              <span
-                key={lvl}
-                className="min-w-7 rounded border border-ice-deep/50 bg-bg-deep/40 px-1.5 py-0.5 text-center font-serif text-sm font-medium text-ice-bright"
-              >
-                {lvl}
-              </span>
-            ))}
+        <div className="mt-3 space-y-2 border-t border-ice/25 pt-2.5">
+          <div>
+            <p className="font-display text-[8px] uppercase tracking-[0.25em] text-ink-muted">
+              Níveis conjuráveis
+            </p>
+            <div className="mt-1.5 flex flex-wrap gap-1.5">
+              {jutsu.levels.map((lvl) => (
+                <span
+                  key={lvl}
+                  className="min-w-7 rounded border border-ice-deep/50 bg-bg-deep/40 px-1.5 py-0.5 text-center font-serif text-sm font-medium text-ice-bright"
+                >
+                  {lvl}
+                </span>
+              ))}
+            </div>
           </div>
+          {jutsu.chakraCost ? (
+            <div className="flex items-baseline gap-2">
+              <span className="font-display text-[8px] uppercase tracking-[0.25em] text-ink-muted">
+                Chakra
+              </span>
+              <span className="font-body text-xs text-ice-bright">{jutsu.chakraCost}</span>
+            </div>
+          ) : null}
         </div>
 
         {jutsu.description ? (

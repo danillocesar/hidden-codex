@@ -68,6 +68,7 @@ export function JutsusSection({
           <JutsuCard
             key={jutsu.id}
             jutsu={jutsu}
+            characterId={characterId}
             acertoValues={acertoValues}
             canEdit={canEdit}
             onRequestDelete={setPending}

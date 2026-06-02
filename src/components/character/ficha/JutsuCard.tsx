@@ -1,6 +1,12 @@
 'use client';
 
+import { useRef, useState, type ChangeEvent } from 'react';
+import { useRouter } from 'next/navigation';
+import { updateJutsuImage } from '@/server/actions/characters/jutsus';
 import type { FichaJutsu } from '@/lib/character/mapPrismaToCore';
+
+const ACCEPTED = 'image/jpeg,image/png,image/webp';
+const MAX_BYTES = 8 * 1024 * 1024;
 
 const IMG_GRADIENT =
   'linear-gradient(180deg, rgba(10,11,14,0.15) 0%, rgba(10,11,14,0.2) 35%, rgba(10,11,14,0.75) 55%, rgba(10,11,14,0.92) 75%, rgba(10,11,14,0.96) 100%)';
@@ -15,17 +21,43 @@ export type AcertoValues = { cc: number; cd: number; lm: number };
  */
 export function JutsuCard({
   jutsu,
+  characterId,
   acertoValues,
   canEdit,
   onRequestDelete,
 }: {
   jutsu: FichaJutsu;
+  characterId: string;
   acertoValues: AcertoValues;
   canEdit: boolean;
   onRequestDelete: (jutsu: FichaJutsu) => void;
 }) {
+  const router = useRouter();
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [uploading, setUploading] = useState(false);
   const element = [jutsu.powerName, jutsu.effectName].filter(Boolean).join(' · ');
   const acerto = jutsu.acerto ? `${jutsu.acerto.toUpperCase()} ${acertoValues[jutsu.acerto]}` : '—';
+
+  const handleFile = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file || file.size > MAX_BYTES) return;
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append('characterId', characterId);
+      fd.append('file', file);
+      fd.append('label', jutsu.name.slice(0, 80) || 'Jutsu');
+      const res = await fetch('/api/upload/character-image', { method: 'POST', body: fd });
+      const body = (await res.json().catch(() => null)) as { image?: { url: string } } | null;
+      if (res.ok && body?.image) {
+        const result = await updateJutsuImage(jutsu.id, body.image.url);
+        if (result.ok) router.refresh();
+      }
+    } finally {
+      setUploading(false);
+    }
+  };
 
   return (
     <article className="group relative flex min-h-[360px] flex-col overflow-hidden rounded border border-border bg-bg-card transition-all duration-300 hover:-translate-y-1 hover:border-border-strong">
@@ -53,27 +85,61 @@ export function JutsuCard({
       </span>
 
       {canEdit ? (
-        <button
-          type="button"
-          onClick={() => onRequestDelete(jutsu)}
-          aria-label={`Apagar ${jutsu.name}`}
-          className="absolute right-2 top-2 z-20 grid h-8 w-8 place-items-center rounded border border-border bg-bg-deep/70 text-ink-muted opacity-0 backdrop-blur transition hover:border-danger/60 hover:text-danger focus-visible:opacity-100 group-hover:opacity-100"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            className="h-3.5 w-3.5"
+        <div className="absolute right-2 top-2 z-20 flex gap-1.5 opacity-0 transition focus-within:opacity-100 group-hover:opacity-100">
+          <button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            disabled={uploading}
+            aria-label={`Trocar imagem de ${jutsu.name}`}
+            className="grid h-8 w-8 place-items-center rounded border border-border bg-bg-deep/70 text-ink-muted backdrop-blur transition hover:border-ice hover:text-ice-bright disabled:opacity-60"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M2.5 4h11M6 4V2.5h4V4m-5 0 .5 9h5l.5-9"
-            />
-          </svg>
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              className="h-3.5 w-3.5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M2 12V5a1 1 0 0 1 1-1h2l1-1.5h4L11 4h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1Z"
+              />
+              <circle cx="8" cy="8.5" r="2.2" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            onClick={() => onRequestDelete(jutsu)}
+            aria-label={`Apagar ${jutsu.name}`}
+            className="grid h-8 w-8 place-items-center rounded border border-border bg-bg-deep/70 text-ink-muted backdrop-blur transition hover:border-danger/60 hover:text-danger"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              className="h-3.5 w-3.5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M2.5 4h11M6 4V2.5h4V4m-5 0 .5 9h5l.5-9"
+              />
+            </svg>
+          </button>
+          <input
+            ref={inputRef}
+            type="file"
+            accept={ACCEPTED}
+            onChange={handleFile}
+            className="hidden"
+            aria-hidden
+            tabIndex={-1}
+          />
+        </div>
       ) : null}
 
       <div className="relative z-10 mt-auto p-4 pt-12">

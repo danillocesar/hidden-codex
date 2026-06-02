@@ -1,16 +1,17 @@
 import type { ReactNode } from 'react';
+import { FichaPortrait } from './FichaPortrait';
 
 /**
- * Hero section da ficha — imagem (left) + titulo/quickfacts (right). O miolo
+ * Hero section da ficha — retrato (left) + titulo/quickfacts (right). O miolo
  * abaixo do titulo (atributos, energias, combate, etc.) e composto pela page e
  * passado via `lowerContent` — assim o layout fica flexivel sem mexer aqui.
  *
- * Imagem: usa placeholder bonito quando `imageUrl` for null (kanji do KG ou
- * cla em destaque sobre gradient). Upload entra em P1.5.
+ * O retrato (`FichaPortrait`) e clicavel pro dono trocar a imagem.
  *
  * Spec: reference HTML linhas 915-1011 + 05-UI-SPEC.md §"Hero".
  */
 export function HeroSection({
+  characterId,
   name,
   subtitle,
   overline,
@@ -20,8 +21,10 @@ export function HeroSection({
   tendency,
   imageUrl,
   placeholderKanji,
+  canEdit,
   lowerContent,
 }: {
+  characterId: string;
   name: string;
   /** "A Lâmina do Gelo" ou similar — usa biography se null. */
   subtitle?: string | null;
@@ -34,6 +37,8 @@ export function HeroSection({
   imageUrl: string | null;
   /** Kanji exibido no placeholder quando `imageUrl` for null. */
   placeholderKanji?: string;
+  /** Dono pode trocar o retrato clicando na caixa. */
+  canEdit: boolean;
   /** Miolo da ficha abaixo do titulo (atributos, energias, combate, etc.). */
   lowerContent?: ReactNode;
 }) {
@@ -46,19 +51,14 @@ export function HeroSection({
   return (
     <section className="grid gap-8 px-6 pb-10 md:grid-cols-[380px_1fr] md:gap-9 md:px-12">
       <div className="relative aspect-[2/3] self-start overflow-hidden shadow-hero">
-        {imageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={imageUrl}
-            alt={`Retrato de ${name}`}
-            className="h-full w-full object-cover object-[center_20%]"
-            style={{ filter: 'contrast(1.05) brightness(0.92) saturate(0.85)' }}
-          />
-        ) : (
-          <HeroImagePlaceholder kanji={placeholderKanji} />
-        )}
-        {/* Selo 忍 */}
-        <div className="absolute right-4 top-4 flex h-14 w-14 -rotate-6 items-center justify-center border-2 border-seal bg-seal/40 backdrop-blur-sm">
+        <FichaPortrait
+          characterId={characterId}
+          imageUrl={imageUrl}
+          canEdit={canEdit}
+          placeholderKanji={placeholderKanji}
+        />
+        {/* Selo 忍 — pointer-events-none pra não bloquear o clique no retrato */}
+        <div className="pointer-events-none absolute right-4 top-4 z-20 flex h-14 w-14 -rotate-6 items-center justify-center border-2 border-seal bg-seal/40 backdrop-blur-sm">
           <span
             className="absolute inset-[3px] border border-[rgba(244,235,217,0.4)]"
             aria-hidden
@@ -114,16 +114,6 @@ export function HeroSection({
         {lowerContent}
       </div>
     </section>
-  );
-}
-
-function HeroImagePlaceholder({ kanji }: { kanji?: string }) {
-  return (
-    <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-bg-card-2 via-bg-paper to-bg-deep">
-      <span className="font-jp text-[120px] font-bold text-ice-deep/40" aria-hidden>
-        {kanji ?? '影'}
-      </span>
-    </div>
   );
 }
 

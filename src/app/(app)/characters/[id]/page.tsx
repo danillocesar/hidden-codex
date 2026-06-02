@@ -146,6 +146,8 @@ export default async function CharacterFichaPage({ params }: { params: { id: str
       />
 
       <HeroSection
+        characterId={display.id}
+        canEdit={display.isOwner}
         name={display.name}
         subtitle={null}
         overline={

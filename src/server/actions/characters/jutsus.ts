@@ -92,6 +92,40 @@ export async function createJutsu(raw: CreateJutsuInput): Promise<JutsuActionRes
   return { ok: true, id: created.id };
 }
 
+/**
+ * Troca/limpa a imagem de um jutsu. Owner-only. A URL deve pertencer às
+ * imagens do personagem (mesma regra do create).
+ */
+export async function updateJutsuImage(
+  jutsuId: string,
+  imageUrl: string | null,
+): Promise<JutsuActionResult> {
+  const session = await getCurrentUser();
+  if (!session) return { ok: false, error: 'Nao autenticado.' };
+
+  const jutsu = await prisma.characterJutsu.findFirst({
+    where: { id: jutsuId, character: { userId: session.user.id, deletedAt: null } },
+    select: {
+      id: true,
+      characterId: true,
+      character: { select: { images: { select: { url: true } } } },
+    },
+  });
+  if (!jutsu) return { ok: false, error: 'Jutsu não encontrado.' };
+
+  if (imageUrl !== null && !jutsu.character.images.some((img) => img.url === imageUrl)) {
+    return { ok: false, error: 'Imagem não pertence a esta ficha.' };
+  }
+
+  await prisma.characterJutsu.update({
+    where: { id: jutsu.id },
+    data: { imageUrl },
+  });
+
+  revalidatePath(`/characters/${jutsu.characterId}`);
+  return { ok: true };
+}
+
 /** Remove um jutsu do personagem. Owner-only. */
 export async function deleteJutsu(jutsuId: string): Promise<JutsuActionResult> {
   const session = await getCurrentUser();

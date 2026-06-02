@@ -8,7 +8,7 @@ import { Modal } from '@/components/ui/modal';
 import { Text } from '@/components/ui/text';
 import { deleteJutsu } from '@/server/actions/characters/jutsus';
 import type { FichaJutsu } from '@/lib/character/mapPrismaToCore';
-import { JutsuCard } from './JutsuCard';
+import { JutsuCard, type AcertoValues } from './JutsuCard';
 import { JutsuEditor, type JutsuImage, type JutsuPowerOption } from './JutsuEditor';
 
 /**
@@ -21,12 +21,14 @@ export function JutsusSection({
   jutsus,
   powers,
   images,
+  acertoValues,
   canEdit,
 }: {
   characterId: string;
   jutsus: ReadonlyArray<FichaJutsu>;
   powers: ReadonlyArray<JutsuPowerOption>;
   images: ReadonlyArray<JutsuImage>;
+  acertoValues: AcertoValues;
   canEdit: boolean;
 }) {
   const router = useRouter();
@@ -63,7 +65,13 @@ export function JutsusSection({
     <div>
       <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {jutsus.map((jutsu) => (
-          <JutsuCard key={jutsu.id} jutsu={jutsu} canEdit={canEdit} onRequestDelete={setPending} />
+          <JutsuCard
+            key={jutsu.id}
+            jutsu={jutsu}
+            acertoValues={acertoValues}
+            canEdit={canEdit}
+            onRequestDelete={setPending}
+          />
         ))}
 
         {canCreate ? (

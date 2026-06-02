@@ -5,21 +5,27 @@ import type { FichaJutsu } from '@/lib/character/mapPrismaToCore';
 const IMG_GRADIENT =
   'linear-gradient(180deg, rgba(10,11,14,0.15) 0%, rgba(10,11,14,0.2) 35%, rgba(10,11,14,0.75) 55%, rgba(10,11,14,0.92) 75%, rgba(10,11,14,0.96) 100%)';
 
+export type AcertoValues = { cc: number; cd: number; lm: number };
+
 /**
- * Card de jutsu seguindo a referência (`.jutsu`): imagem de fundo cobrindo o
- * card, glifo no topo, e corpo no rodapé com poder·efeito, nome, níveis
- * conjuráveis e descrição. Sem CD/Dano calculados (entram com a calculadora).
+ * Card de jutsu (ref. `.jutsu`): imagem de fundo, glifo do elemento do poder,
+ * e corpo com poder·efeito, nome e um grid de stats em 2 linhas — Acerto /
+ * Alcance / Duração em cima; Dano / Chakra (mais texto) embaixo — além dos
+ * níveis conjuráveis. Stats ausentes aparecem com "—".
  */
 export function JutsuCard({
   jutsu,
+  acertoValues,
   canEdit,
   onRequestDelete,
 }: {
   jutsu: FichaJutsu;
+  acertoValues: AcertoValues;
   canEdit: boolean;
   onRequestDelete: (jutsu: FichaJutsu) => void;
 }) {
   const element = [jutsu.powerName, jutsu.effectName].filter(Boolean).join(' · ');
+  const acerto = jutsu.acerto ? `${jutsu.acerto.toUpperCase()} ${acertoValues[jutsu.acerto]}` : '—';
 
   return (
     <article className="group relative flex min-h-[360px] flex-col overflow-hidden rounded border border-border bg-bg-card transition-all duration-300 hover:-translate-y-1 hover:border-border-strong">
@@ -43,7 +49,7 @@ export function JutsuCard({
         style={{ textShadow: '0 0 24px rgba(0,0,0,0.95), 0 2px 4px rgba(0,0,0,0.8)' }}
         aria-hidden
       >
-        術
+        {jutsu.powerKanji}
       </span>
 
       {canEdit ? (
@@ -71,52 +77,42 @@ export function JutsuCard({
       ) : null}
 
       <div className="relative z-10 mt-auto p-4 pt-12">
-        <div className="mb-1.5 flex items-center gap-2">
-          {element ? (
-            <span className="font-display text-[9px] uppercase tracking-[0.35em] text-ice">
-              {element}
-            </span>
-          ) : null}
-          {jutsu.acerto ? (
-            <span className="rounded border border-ice-deep/50 px-1 font-display text-[8px] uppercase tracking-[0.2em] text-ice-bright">
-              {jutsu.acerto}
-            </span>
-          ) : null}
-        </div>
+        {element ? (
+          <p className="mb-1.5 font-display text-[9px] uppercase tracking-[0.35em] text-ice">
+            {element}
+          </p>
+        ) : null}
         <h3 className="font-serif text-xl font-medium leading-tight text-ink">{jutsu.name}</h3>
 
-        <div className="mt-3 space-y-2 border-t border-ice/25 pt-2.5">
+        <div className="mt-3 space-y-2.5 border-t border-ice/25 pt-2.5">
+          <div className="grid grid-cols-3 gap-2">
+            <Stat label="Acerto" value={acerto} />
+            <Stat label="Alcance" value={jutsu.range ?? '—'} />
+            <Stat label="Duração" value={jutsu.duration ?? '—'} />
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <Stat label="Dano" value={jutsu.damage ?? '—'} />
+            <Stat label="Chakra" value={jutsu.chakraCost ?? '—'} />
+          </div>
           <div>
             <p className="font-display text-[8px] uppercase tracking-[0.25em] text-ink-muted">
-              Níveis conjuráveis
+              Níveis
             </p>
-            <div className="mt-1.5 flex flex-wrap gap-1.5">
-              {jutsu.levels.map((lvl) => (
-                <span
-                  key={lvl}
-                  className="min-w-7 rounded border border-ice-deep/50 bg-bg-deep/40 px-1.5 py-0.5 text-center font-serif text-sm font-medium text-ice-bright"
-                >
-                  {lvl}
-                </span>
-              ))}
+            <div className="mt-1 flex flex-wrap gap-1.5">
+              {jutsu.levels.length > 0 ? (
+                jutsu.levels.map((lvl) => (
+                  <span
+                    key={lvl}
+                    className="min-w-6 rounded border border-ice-deep/50 bg-bg-deep/40 px-1.5 py-0.5 text-center font-serif text-sm font-medium text-ice-bright"
+                  >
+                    {lvl}
+                  </span>
+                ))
+              ) : (
+                <span className="font-body text-xs text-ink-muted">—</span>
+              )}
             </div>
           </div>
-          {jutsu.damage ? (
-            <div className="flex items-baseline gap-2">
-              <span className="min-w-12 font-display text-[8px] uppercase tracking-[0.25em] text-ink-muted">
-                Dano
-              </span>
-              <span className="font-body text-xs text-ice-bright">{jutsu.damage}</span>
-            </div>
-          ) : null}
-          {jutsu.chakraCost ? (
-            <div className="flex items-baseline gap-2">
-              <span className="min-w-12 font-display text-[8px] uppercase tracking-[0.25em] text-ink-muted">
-                Chakra
-              </span>
-              <span className="font-body text-xs text-ice-bright">{jutsu.chakraCost}</span>
-            </div>
-          ) : null}
         </div>
 
         {jutsu.description ? (
@@ -126,5 +122,14 @@ export function JutsuCard({
         ) : null}
       </div>
     </article>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="min-w-0">
+      <p className="font-display text-[8px] uppercase tracking-[0.25em] text-ink-muted">{label}</p>
+      <p className="mt-0.5 break-words font-body text-xs text-ice-bright">{value}</p>
+    </div>
   );
 }

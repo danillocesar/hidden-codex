@@ -220,6 +220,11 @@ export default async function CharacterFichaPage({ params }: { params: { id: str
           jutsus={display.jutsus}
           powers={jutsuPowerOptions}
           images={display.images}
+          acertoValues={{
+            cc: combatStats.find((s) => s.code === 'cc')?.value ?? 0,
+            cd: combatStats.find((s) => s.code === 'cd')?.value ?? 0,
+            lm: combatStats.find((s) => s.code === 'lm')?.value ?? 0,
+          }}
           canEdit={display.isOwner}
         />
       </section>

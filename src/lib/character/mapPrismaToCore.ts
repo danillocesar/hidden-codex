@@ -75,6 +75,12 @@ export type FichaJutsu = {
    * "comum do poder", "ver descrição". `null` quando o efeito não causa dano direto.
    */
   damage: string | null;
+  /** Alcance/área do efeito (`stats.range`), em rótulo legível. `null` se ausente. */
+  range: string | null;
+  /** Duração do efeito (`stats.duration`), em rótulo legível. `null` se ausente. */
+  duration: string | null;
+  /** Glifo do elemento do poder (氷/水/火/風…) pro card. Fallback 術. */
+  powerKanji: string;
 };
 
 export type FichaEffect = {
@@ -194,6 +200,9 @@ export function mapPrismaToCore(
       acerto: readRollType(effect?.stats),
       chakraCost: formatChakraCost(effect?.stats),
       damage: formatDamage(effect?.stats),
+      range: labelizeStat(effect?.stats, 'range', RANGE_LABELS),
+      duration: labelizeStat(effect?.stats, 'duration', DURATION_LABELS),
+      powerKanji: powerKanjiFor(power?.code),
     };
   });
 
@@ -377,4 +386,67 @@ function formatDamage(stats: Prisma.JsonValue | undefined): string | null {
   if (!key) return null;
   if (key in DAMAGE_LABELS) return DAMAGE_LABELS[key] ?? null;
   return key.replace(/_/g, ' ');
+}
+
+const RANGE_LABELS: Record<string, string> = {
+  pessoal: 'Pessoal',
+  comum_do_poder: 'comum do poder',
+  meio_comum_do_poder: 'metade do comum',
+  toque: 'Toque',
+  curto: 'Curto',
+  magen_padrao: 'padrão (genjutsu)',
+};
+
+const DURATION_LABELS: Record<string, string> = {
+  INSTANTANEA: 'Instantânea',
+  instantanea: 'Instantânea',
+  CONTINUA: 'Contínua',
+  SUSTENTADA: 'Sustentada',
+  CONCENTRACAO: 'Concentração',
+  PERMANENTE: 'Permanente',
+  CONTINUA_ATE_LIBERTAR: 'Contínua (até libertar)',
+};
+
+/**
+ * Le `stats[key]` e devolve rótulo legível: número vira string, códigos
+ * conhecidos viram label do mapa, e o resto tem `_` trocado por espaço.
+ */
+function labelizeStat(
+  stats: Prisma.JsonValue | undefined,
+  key: string,
+  labels: Record<string, string>,
+): string | null {
+  if (!stats || typeof stats !== 'object' || Array.isArray(stats)) return null;
+  const raw = (stats as Record<string, unknown>)[key];
+  if (typeof raw === 'number' && Number.isFinite(raw)) return String(raw);
+  if (typeof raw !== 'string') return null;
+  const trimmed = raw.trim();
+  if (!trimmed) return null;
+  return labels[trimmed] ?? trimmed.replace(/_/g, ' ');
+}
+
+/** Kanji do elemento por código de poder (canônico). Fallback 術 (jutsu). */
+const POWER_KANJI: Record<string, string> = {
+  ninpou: '忍',
+  katon: '火',
+  suiton: '水',
+  fuuton: '風',
+  doton: '土',
+  raiton: '雷',
+  hyouton: '氷',
+  mokuton: '木',
+  shouton: '晶',
+  youton: '熔',
+  futton: '沸',
+  jiton: '磁',
+  ranton: '嵐',
+  shakuton: '灼',
+  bakuton: '爆',
+  arashi: '嵐',
+  jinton: '塵',
+};
+
+function powerKanjiFor(code: string | undefined): string {
+  if (!code) return '術';
+  return POWER_KANJI[code] ?? '術';
 }

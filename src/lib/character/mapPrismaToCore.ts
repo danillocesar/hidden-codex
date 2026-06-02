@@ -23,7 +23,13 @@ import {
   commonPowerRange,
 } from '@/domain/rules/jutsus';
 import { applyOriginBenefits } from './applyOriginBenefits';
-import { resolveSectionCovers, type SectionCoverImage, type SectionCovers } from './sectionCovers';
+import {
+  resolveSectionCovers,
+  resolveSectionCoverPositions,
+  type SectionCoverImage,
+  type SectionCovers,
+  type SectionCoverPositions,
+} from './sectionCovers';
 
 /**
  * Shape do Character retornado pela query `loadCharacterById` — inclui as
@@ -124,6 +130,7 @@ export type CharacterViewModel = {
     /** Codigos de aptidoes grátis vindas da origem. */
     freeAptitudeCodes: ReadonlyArray<string>;
     sectionCovers: SectionCovers;
+    sectionCoverPositions: SectionCoverPositions;
     images: ReadonlyArray<SectionCoverImage>;
     uiState: Prisma.JsonValue;
     /** Inventario completo (armas, armaduras, itens) para a secao da ficha. */
@@ -203,10 +210,10 @@ export function mapPrismaToCore(
       imageUrl: j.imageUrl,
       description: j.flavorText,
       acerto: readRollType(effect?.stats),
-      chakraCost: formatChakraCost(effect?.stats),
+      chakraCost: resolveChakra(effect?.stats, j.levels),
       damage: resolveDamage(effect?.stats, row.attrEsp, j.levels),
       range: resolveRange(effect?.stats, row.attrEsp),
-      duration: labelizeStat(effect?.stats, 'duration', DURATION_LABELS),
+      duration: formatDuration(effect?.stats),
       powerKanji: powerKanjiFor(power?.code),
     };
   });
@@ -266,6 +273,7 @@ export function mapPrismaToCore(
       freePowerLevels: benefits.freePowerLevels,
       freeAptitudeCodes: benefits.freeAptitudeCodes,
       sectionCovers: resolveSectionCovers(row.uiState),
+      sectionCoverPositions: resolveSectionCoverPositions(row.uiState),
       images: row.images.map((image) => ({
         id: image.id,
         url: image.url,
@@ -365,6 +373,81 @@ function formatChakraCost(stats: Prisma.JsonValue | undefined): string | null {
   return CHAKRA_COST_LABELS[key] ?? key.replace(/_/g, ' ');
 }
 
+/** Códigos de chakra cujo custo = nível usado (1 por nível). */
+const CHAKRA_PER_LEVEL = new Set([
+  'nivel_usado',
+  'nível_usado',
+  'nivel_usado_quando_atacar',
+  'nivel_do_poder',
+  '1 por nível do poder',
+  '1 por nível usado',
+]);
+
+/**
+ * Resolve o custo de chakra por nível conjurável. "nivel_usado" e similares =
+ * o próprio nível (ex.: níveis 1·2·3 → "1 · 2 · 3"); "metade do nível" =
+ * ⌈nível/2⌉; número fixo é mantido. Sem nível/desconhecido cai no rótulo.
+ */
+function resolveChakra(
+  stats: Prisma.JsonValue | undefined,
+  levels: ReadonlyArray<number>,
+): string | null {
+  if (!stats || typeof stats !== 'object' || Array.isArray(stats)) return null;
+  const raw = (stats as Record<string, unknown>).chakraCost;
+  if (typeof raw === 'number') return raw === 0 ? 'Sem custo' : String(raw);
+  if (typeof raw !== 'string') return null;
+  const key = raw.trim();
+  if (!key) return null;
+  const perLevel = (fn: (lvl: number) => number): string | null =>
+    levels.length > 0 ? levels.map(fn).join(' · ') : null;
+  if (CHAKRA_PER_LEVEL.has(key)) return perLevel((lvl) => lvl) ?? formatChakraCost(stats);
+  if (key === 'metade_do_nivel_do_poder') {
+    return perLevel((lvl) => Math.ceil(lvl / 2)) ?? formatChakraCost(stats);
+  }
+  return formatChakraCost(stats);
+}
+
+/** Tokens de duração (enum do seed) → rótulo capitalizado. */
+const DURATION_TOKENS: Record<string, string> = {
+  INSTANTANEA: 'Instantânea',
+  CONTINUA: 'Contínua',
+  CONTINUA_ATE_LIBERTAR: 'Contínua (até libertar)',
+  SUSTENTADA: 'Sustentada',
+  CONCENTRACAO: 'Concentração',
+  PERMANENTE: 'Permanente',
+};
+
+/**
+ * Le `stats.duration` e devolve um rótulo enxuto: normaliza "ou"/"_OU_" para
+ * "/", capitaliza tokens conhecidos e tira o ALL-CAPS. Ex.:
+ * "SUSTENTADA_OU_PERMANENTE" → "Sustentada/Permanente".
+ */
+function formatDuration(stats: Prisma.JsonValue | undefined): string | null {
+  if (!stats || typeof stats !== 'object' || Array.isArray(stats)) return null;
+  const raw = (stats as Record<string, unknown>).duration;
+  if (typeof raw === 'number') return String(raw);
+  if (typeof raw !== 'string') return null;
+  const normalized = raw
+    .trim()
+    .replace(/\s+ou\s+/gi, '/')
+    .replace(/_ou_/gi, '/')
+    .replace(/_/g, ' ');
+  if (!normalized) return null;
+  return normalized
+    .split('/')
+    .map((segment) => {
+      const seg = segment.trim();
+      const upper = seg.toUpperCase();
+      for (const [token, label] of Object.entries(DURATION_TOKENS)) {
+        if (upper === token) return label;
+        if (upper.startsWith(`${token} `)) return label + seg.slice(token.length);
+      }
+      const base = seg === upper ? seg.toLowerCase() : seg;
+      return base.charAt(0).toUpperCase() + base.slice(1);
+    })
+    .join('/​'); // zero-width space: permite quebrar após a "/"
+}
+
 /** Códigos de dano usados no seed → rótulo legível em PT (ou null = sem dano). */
 const DAMAGE_LABELS: Record<string, string | null> = {
   nenhum: null,
@@ -445,16 +528,6 @@ const RANGE_LABELS: Record<string, string> = {
   toque: 'Toque',
   curto: 'Curto',
   magen_padrao: 'padrão (genjutsu)',
-};
-
-const DURATION_LABELS: Record<string, string> = {
-  INSTANTANEA: 'Instantânea',
-  instantanea: 'Instantânea',
-  CONTINUA: 'Contínua',
-  SUSTENTADA: 'Sustentada',
-  CONCENTRACAO: 'Concentração',
-  PERMANENTE: 'Permanente',
-  CONTINUA_ATE_LIBERTAR: 'Contínua (até libertar)',
 };
 
 /**

@@ -192,6 +192,7 @@ export default async function CharacterFichaPage({ params }: { params: { id: str
         title="Talentos e Perícias"
         kanji="才能 · 技能"
         imageUrl={display.sectionCovers.talentos}
+        position={display.sectionCoverPositions.talentos}
         coverKey="talentos"
         characterId={display.id}
         canEdit={display.isOwner}
@@ -210,6 +211,7 @@ export default async function CharacterFichaPage({ params }: { params: { id: str
         title="Técnicas"
         kanji="術"
         imageUrl={display.sectionCovers.tecnicas}
+        position={display.sectionCoverPositions.tecnicas}
         coverKey="tecnicas"
         characterId={display.id}
         canEdit={display.isOwner}
@@ -236,6 +238,7 @@ export default async function CharacterFichaPage({ params }: { params: { id: str
         title="Arquivo"
         kanji="道具 · 記"
         imageUrl={display.sectionCovers.arquivo}
+        position={display.sectionCoverPositions.arquivo}
         coverKey="arquivo"
         characterId={display.id}
         canEdit={display.isOwner}

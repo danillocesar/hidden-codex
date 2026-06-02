@@ -2,6 +2,7 @@
 
 import { useRef, useState, type ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import { Badge } from '@/components/ui/badge';
 import { updateJutsuImage } from '@/server/actions/characters/jutsus';
 import type { FichaJutsu } from '@/lib/character/mapPrismaToCore';
 
@@ -36,7 +37,6 @@ export function JutsuCard({
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [uploading, setUploading] = useState(false);
   const element = [jutsu.powerName, jutsu.effectName].filter(Boolean).join(' · ');
-  const acerto = jutsu.acerto ? `${jutsu.acerto.toUpperCase()} ${acertoValues[jutsu.acerto]}` : '—';
 
   const handleFile = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -152,7 +152,20 @@ export function JutsuCard({
 
         <div className="mt-3 space-y-2.5 border-t border-ice/25 pt-2.5">
           <div className="grid grid-cols-3 gap-2">
-            <Stat label="Acerto" value={acerto} />
+            <div className="min-w-0">
+              {jutsu.acerto ? (
+                <Badge tone="neutral" variant="outline" size="xs">
+                  {jutsu.acerto.toUpperCase()}
+                </Badge>
+              ) : (
+                <p className="font-display text-[8px] uppercase tracking-[0.25em] text-ink-muted">
+                  Acerto
+                </p>
+              )}
+              <p className="mt-1 font-serif text-base font-medium leading-none text-ice-bright">
+                {jutsu.acerto ? acertoValues[jutsu.acerto] : '—'}
+              </p>
+            </div>
             <Stat label="Alcance" value={jutsu.range ?? '—'} />
             <Stat label="Duração" value={jutsu.duration ?? '—'} />
           </div>
@@ -195,7 +208,9 @@ function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="min-w-0">
       <p className="font-display text-[8px] uppercase tracking-[0.25em] text-ink-muted">{label}</p>
-      <p className="mt-0.5 break-words font-body text-xs text-ice-bright">{value}</p>
+      <p className="mt-0.5 break-words font-body text-[11px] leading-tight text-ice-bright">
+        {value}
+      </p>
     </div>
   );
 }

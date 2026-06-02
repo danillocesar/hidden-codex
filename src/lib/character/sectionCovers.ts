@@ -55,6 +55,52 @@ export function mergeSectionCoverUiState(
   return base;
 }
 
+// ── Posição da imagem de capa (object-position) ─────────────────────────────
+
+export type SectionCoverPositions = Readonly<Record<SectionCoverKey, string>>;
+
+export const DEFAULT_COVER_POSITION = '50% 50%';
+
+/** Valida "X% Y%" com X/Y inteiros 0–100. */
+export function isValidCoverPosition(value: string): boolean {
+  const match = /^(\d{1,3})% (\d{1,3})%$/.exec(value);
+  if (!match) return false;
+  const x = Number(match[1]);
+  const y = Number(match[2]);
+  return x >= 0 && x <= 100 && y >= 0 && y <= 100;
+}
+
+export function resolveSectionCoverPositions(uiState: unknown): SectionCoverPositions {
+  const positions = readRecordField(uiState, 'sectionCoverPositions');
+  return {
+    fundamentos: pickPosition(positions, 'fundamentos'),
+    talentos: pickPosition(positions, 'talentos'),
+    tecnicas: pickPosition(positions, 'tecnicas'),
+    arquivo: pickPosition(positions, 'arquivo'),
+  };
+}
+
+export function mergeSectionCoverPositionUiState(
+  uiState: unknown,
+  key: SectionCoverKey,
+  position: string,
+): Record<string, unknown> {
+  const base = isRecord(uiState) ? { ...uiState } : {};
+  const current = isRecord(base.sectionCoverPositions) ? base.sectionCoverPositions : {};
+  base.sectionCoverPositions = { ...current, [key]: position };
+  return base;
+}
+
+function pickPosition(record: Record<string, unknown>, key: SectionCoverKey): string {
+  const value = record[key];
+  return typeof value === 'string' && isValidCoverPosition(value) ? value : DEFAULT_COVER_POSITION;
+}
+
+function readRecordField(uiState: unknown, field: string): Record<string, unknown> {
+  if (!isRecord(uiState) || !isRecord(uiState[field])) return {};
+  return uiState[field] as Record<string, unknown>;
+}
+
 function pickCover(sectionCovers: Record<string, unknown>, key: SectionCoverKey): string {
   const value = sectionCovers[key];
   return typeof value === 'string' && isAllowedSectionCoverUrl(value)

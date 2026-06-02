@@ -9,10 +9,42 @@ import {
   DEFAULT_SECTION_COVERS,
   isAllowedSectionCoverUrl,
   isSectionCoverKey,
+  isValidCoverPosition,
+  mergeSectionCoverPositionUiState,
   mergeSectionCoverUiState,
 } from '@/lib/character/sectionCovers';
 
 export type SetCharacterSectionCoverResult = { ok: true } | { ok: false; error: string };
+
+/**
+ * Salva a posição (object-position "X% Y%") da imagem de capa de uma seção,
+ * pra o dono reposicionar a foto dentro do card. Owner-only.
+ */
+export async function setCharacterSectionCoverPosition(
+  characterId: string,
+  key: string,
+  position: string,
+): Promise<SetCharacterSectionCoverResult> {
+  const session = await getCurrentUser();
+  if (!session) return { ok: false, error: 'Nao autenticado.' };
+  if (!isSectionCoverKey(key)) return { ok: false, error: 'Separador invalido.' };
+  if (!isValidCoverPosition(position)) return { ok: false, error: 'Posicao invalida.' };
+
+  const character = await prisma.character.findFirst({
+    where: { id: characterId, userId: session.user.id, deletedAt: null },
+    select: { id: true, uiState: true },
+  });
+  if (!character) return { ok: false, error: 'Ficha nao encontrada.' };
+
+  const nextUiState = mergeSectionCoverPositionUiState(character.uiState, key, position);
+  await prisma.character.update({
+    where: { id: character.id },
+    data: { uiState: nextUiState as Prisma.InputJsonValue },
+  });
+
+  revalidatePath(`/characters/${character.id}`);
+  return { ok: true };
+}
 
 export async function setCharacterSectionCover(
   characterId: string,

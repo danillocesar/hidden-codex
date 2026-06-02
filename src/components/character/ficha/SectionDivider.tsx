@@ -4,6 +4,7 @@ import {
   type SectionCoverKey,
 } from '@/lib/character/sectionCovers';
 import { cn } from '@/lib/utils/cn';
+import { SectionCover } from './SectionCover';
 import { SectionCoverPicker } from './SectionCoverPicker';
 
 export function SectionDivider({
@@ -11,6 +12,7 @@ export function SectionDivider({
   title,
   kanji,
   imageUrl,
+  position,
   coverKey,
   characterId,
   canEdit,
@@ -21,6 +23,7 @@ export function SectionDivider({
   title: string;
   kanji: string;
   imageUrl: string;
+  position: string;
   coverKey: SectionCoverKey;
   characterId: string;
   canEdit: boolean;
@@ -30,23 +33,23 @@ export function SectionDivider({
   return (
     <section className={cn('relative my-8 border-y border-border bg-bg-deep', className)}>
       <div className="relative h-[180px] overflow-hidden md:h-[140px]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={imageUrl}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover object-center"
-          style={{ filter: 'saturate(0.62) contrast(1.12) brightness(0.55)' }}
+        <SectionCover
+          imageUrl={imageUrl}
+          position={position}
+          canEdit={canEdit}
+          characterId={characterId}
+          coverKey={coverKey}
         />
         <div
           aria-hidden
-          className="absolute inset-0 bg-[linear-gradient(180deg,var(--bg-deep)_0%,transparent_20%,transparent_80%,var(--bg-deep)_100%),linear-gradient(90deg,var(--bg-deep)_0%,transparent_26%,transparent_74%,var(--bg-deep)_100%)]"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,var(--bg-deep)_0%,transparent_20%,transparent_80%,var(--bg-deep)_100%),linear-gradient(90deg,var(--bg-deep)_0%,transparent_26%,transparent_74%,var(--bg-deep)_100%)]"
         />
         <div
           aria-hidden
-          className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(155,184,209,0.20),transparent_52%)]"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(155,184,209,0.20),transparent_52%)]"
         />
 
-        <div className="relative z-10 flex h-full flex-col items-center justify-center gap-2 px-6 text-center">
+        <div className="pointer-events-none relative z-10 flex h-full flex-col items-center justify-center gap-2 px-6 text-center">
           <h2 className="font-serif text-3xl font-normal leading-none text-ink drop-shadow-[0_0_28px_rgba(0,0,0,0.65)] md:text-5xl">
             {title}
           </h2>
@@ -57,20 +60,20 @@ export function SectionDivider({
 
         <div
           aria-hidden
-          className="absolute -left-2 bottom-1 font-serif text-[120px] leading-none text-ice/10 md:text-[180px]"
+          className="pointer-events-none absolute -left-2 bottom-1 font-serif text-[120px] leading-none text-ice/10 md:text-[180px]"
         >
           {number}
         </div>
-
-        {canEdit ? (
-          <SectionCoverPicker
-            characterId={characterId}
-            coverKey={coverKey}
-            defaultUrl={DEFAULT_SECTION_COVERS[coverKey]}
-            images={images}
-          />
-        ) : null}
       </div>
+
+      {canEdit ? (
+        <SectionCoverPicker
+          characterId={characterId}
+          coverKey={coverKey}
+          defaultUrl={DEFAULT_SECTION_COVERS[coverKey]}
+          images={images}
+        />
+      ) : null}
     </section>
   );
 }

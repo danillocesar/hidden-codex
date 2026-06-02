@@ -53,6 +53,7 @@ interface AptitudePrerequisites {
   attributes?: Record<string, number>;
   attributes_one_of?: Record<string, number>;
   skills?: Record<string, number>;
+  combatSkills?: Record<string, number>;
   combatSkills_one_of?: Record<string, number>;
   [key: string]: unknown;
 }
@@ -157,6 +158,13 @@ describe('Seed: Aptidões Lote 5a (aptitudes-common-combat.json)', () => {
     const ca = byCode5a.get('critico_aprimorado');
     expect(ca).toBeDefined();
     expect(ca?.prerequisites?.aptitudes).toContain('especialista');
+  });
+
+  it('Ambidestria exige Combate Corporal 12 (não Destreza 10)', () => {
+    const ambidestria = byCode5a.get('ambidestria');
+    expect(ambidestria).toBeDefined();
+    expect(ambidestria?.prerequisites?.combatSkills).toEqual({ cc: 12 });
+    expect(ambidestria?.prerequisites?.attributes).toBeUndefined();
   });
 
   it('distribuição por categoria bate com o README do lote', () => {

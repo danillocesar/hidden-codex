@@ -22,6 +22,11 @@
         "date": "2026-05-16",
         "phase": "dt3-fix",
         "change": "ponto_cego: prereq AND attributes_one_of+skills_one_of (chave skills_one_of não-canônica) → alternatives [via_agilidade | via_prestidigitacao]. Semantica OR correta (Livro Básico p. 65)."
+      },
+      {
+        "date": "2026-06-01",
+        "phase": "prereq-fix",
+        "change": "ambidestria: prereq corrigido de Destreza 10 para Combate Corporal 12 (Livro Básico p. 62)."
       }
     ]
   },
@@ -52,8 +57,8 @@
       "shortDescription": "Ataca com duas armas leves ao mesmo tempo.",
       "description": "Permite ataque com duas armas leves simultaneamente (ou armas duplas se descrição permitir). Some o dano de ambas no cálculo. Armas precisam ter mesmo atributo de dano e mesma margem de crítico, e mesma precisão. Se for alvo de Desarmar, só uma arma pode ser perdida (atacante escolhe). NÃO funciona pra armas naturais ou desarmado. Fonte: Livro Básico p. 62.",
       "prerequisites": {
-        "attributes": {
-          "des": 10
+        "combatSkills": {
+          "cc": 12
         }
       },
       "effects": {

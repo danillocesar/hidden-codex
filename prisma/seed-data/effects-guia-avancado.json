@@ -99,7 +99,7 @@
     {
       "code": "projetar",
       "name": "Projetar",
-      "minLevel": 3,
+      "minLevel": 2,
       "availableFor": [
         "ninpou",
         "doton",

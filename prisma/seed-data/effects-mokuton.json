@@ -99,6 +99,49 @@
           "description": "Golem tem tamanho colossal. Ataques corporais comuns recebem gratuitamente o efeito Selar Chakra (no nível que o usuário possuir)."
         }
       ]
+    },
+    {
+      "code": "selar_chakra",
+      "name": "Selar Chakra",
+      "minLevel": 6,
+      "availableFor": [
+        "mokuton"
+      ],
+      "shortDescription": "Usa o efeito Raio e seal parte do chakra do alvo, drenando metade do nível usado. Pode reverter transformação Bijuu fora de controle.",
+      "description": "Ao usar o efeito Raio, além de causar dano normalmente, o usuário pode selar parte do chakra de sua vítima, diminuindo temporariamente parte do mesmo. Ao ser atingido pela técnica, o alvo perderá pontos de chakra igual à metade do nível usado do poder. Selar Chakra Bijuu: o usuário também pode usar este efeito pra selar o chakra bijuu de um Jinchuuriki e reverter sua transformação caso ele esteja fora de controle. Só pode ser feito em alvo com Jinchuuriki em nível inferior ao do usuário neste poder, e somente contra alvo no Modo Bijuu ou inferior. Usado como ação preparada que executa assim que um jinchuuriki dentro do alcance fica descontrolado, ou assim que um jinchuuriki descontrolado entra no alcance. Dez pilares de madeira surgem ao redor do alvo e suprimem o chakra da bijuu enquanto mantém concentração. Sem teste de acerto — em vez disso, teste de Espírito (Dif 7 + 2x nível do poder Jinchuuriki do alvo). Bem-sucedido: todo chakra suprimido até o final da rodada. Falha: chakra ainda suprimido, mas o usuário paga novamente o custo. Após conclusão, o alvo tem o poder Jinchuuriki desativado e fica inconsciente por 10 minutos. Fonte: Livro Básico p. 176-177.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "comum_do_poder",
+        "target": "uma_ou_mais_criaturas (regras do Raio)",
+        "damage": "2_por_nivel_do_poder",
+        "duration": "INSTANTANEA ou CONCENTRACAO (ver texto)",
+        "chakraCost": "nivel_usado"
+      },
+      "rules": {
+        "prerequisites": {
+          "effects": [
+            "raio"
+          ]
+        },
+        "drainChakraAmount": "metade_do_nivel_usado",
+        "canSealBijuuChakra": true,
+        "bijuuSealRequiresLowerJinchuurikiLevel": true,
+        "bijuuSealMaxAffectedMode": "modo_bijuu",
+        "bijuuSealResolution": {
+          "testType": "espirito",
+          "difficultyFormula": "7 + 2x nível_jinchuuriki_do_alvo",
+          "onSuccess": "suprime_todo_chakra_da_bijuu",
+          "onFailure": "ainda_suprime, paga custo novamente",
+          "afterEffect": "jinchuuriki_desativado + inconsciente_10min"
+        }
+      },
+      "evolutions": [
+        {
+          "atLevel": 9,
+          "name": "Selar Chakra Nv 9",
+          "description": "Usuário pode selar chakra bijuu de Jinchuurikis com poder em nível igual ou inferior ao seu neste poder. Também pode quebrar técnicas de controle de Bijuus, através do toque, usando as regras do jutsu básico Kai."
+        }
+      ]
     }
   ]
 }

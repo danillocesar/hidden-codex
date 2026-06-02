@@ -52,3 +52,23 @@ export function calculateNinpouBaseDamage(espirito: number, powerLevelUsed: numb
 export function calculateCanhaoDamage(powerLevel: number): number {
   return 2 * powerLevel;
 }
+
+// ── "Comum do poder" ────────────────────────────────────────────────────────
+// Valores-padrão de um poder, escalando com Espírito (e nível usado). Fonte:
+// Livro Básico (tabela base dos poderes). Dano/Dureza base = nível + ⌈Esp/2⌉,
+// já coberto por `calculateNinpouBaseDamage`.
+
+/** Alcance "comum do poder" (Médio): 10m + 2m por nível de Espírito. */
+export function commonPowerRange(espirito: number): number {
+  return 10 + 2 * espirito;
+}
+
+/** Dificuldade dos testes "comum do poder": 9 + nível usado + ⌈Esp/2⌉. */
+export function commonPowerDifficulty(espirito: number, powerLevelUsed: number): number {
+  return 9 + calculateNinpouBaseDamage(espirito, powerLevelUsed);
+}
+
+/** Tamanho "comum do poder" (Escala Grande): 1m por nível de Espírito. */
+export function commonPowerSize(espirito: number): number {
+  return espirito;
+}

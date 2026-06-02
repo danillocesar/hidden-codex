@@ -17,6 +17,11 @@ import type {
 } from '@prisma/client';
 
 import type { AttributeKey, CharacterCore, CombatSkillKey } from '@/domain/types';
+import {
+  calculateCanhaoDamage,
+  calculateNinpouBaseDamage,
+  commonPowerRange,
+} from '@/domain/rules/jutsus';
 import { applyOriginBenefits } from './applyOriginBenefits';
 import { resolveSectionCovers, type SectionCoverImage, type SectionCovers } from './sectionCovers';
 
@@ -199,8 +204,8 @@ export function mapPrismaToCore(
       description: j.flavorText,
       acerto: readRollType(effect?.stats),
       chakraCost: formatChakraCost(effect?.stats),
-      damage: formatDamage(effect?.stats),
-      range: labelizeStat(effect?.stats, 'range', RANGE_LABELS),
+      damage: resolveDamage(effect?.stats, row.attrEsp, j.levels),
+      range: resolveRange(effect?.stats, row.attrEsp),
       duration: labelizeStat(effect?.stats, 'duration', DURATION_LABELS),
       powerKanji: powerKanjiFor(power?.code),
     };
@@ -386,6 +391,51 @@ function formatDamage(stats: Prisma.JsonValue | undefined): string | null {
   if (!key) return null;
   if (key in DAMAGE_LABELS) return DAMAGE_LABELS[key] ?? null;
   return key.replace(/_/g, ' ');
+}
+
+/**
+ * Resolve o alcance: "comum_do_poder" vira o valor calculado (Médio = 10 + 2×Esp);
+ * o resto cai no rótulo legível. Ex.: Esp 1 → "Médio (12m)".
+ */
+function resolveRange(stats: Prisma.JsonValue | undefined, esp: number): string | null {
+  if (!stats || typeof stats !== 'object' || Array.isArray(stats)) return null;
+  const raw = (stats as Record<string, unknown>).range;
+  if (raw === 'comum_do_poder') return `Médio (${commonPowerRange(esp)}m)`;
+  if (raw === 'meio_comum_do_poder') return `${Math.ceil(commonPowerRange(esp) / 2)}m`;
+  return labelizeStat(stats, 'range', RANGE_LABELS);
+}
+
+/**
+ * Resolve o dano por nível conjurável, usando Espírito. "comum_do_poder" =
+ * nível + ⌈Esp/2⌉; Canhão (2 por nível) = 2 × nível. Ex.: níveis 1·2·3 com
+ * Esp 3 → "3 · 4 · 5". Quando não dá pra calcular, cai no rótulo do efeito.
+ */
+function resolveDamage(
+  stats: Prisma.JsonValue | undefined,
+  esp: number,
+  levels: ReadonlyArray<number>,
+): string | null {
+  if (!stats || typeof stats !== 'object' || Array.isArray(stats)) return null;
+  const record = stats as Record<string, unknown>;
+  const rawDamage = record.damage;
+  if (typeof rawDamage === 'number') return rawDamage === 0 ? null : String(rawDamage);
+  const formula = typeof record.damageFormula === 'string' ? record.damageFormula.trim() : '';
+  const d = typeof rawDamage === 'string' ? rawDamage.trim() : '';
+  if (d === 'nenhum' || d === 'nenhum_direto') return null;
+
+  const perLevel = (fn: (lvl: number) => number): string | null =>
+    levels.length > 0 ? levels.map(fn).join(' · ') : null;
+
+  const isComum = d === 'comum_do_poder' || formula === 'nivel_usado + ceil(esp / 2)';
+  const isDouble =
+    formula === '2 * nivel_usado' ||
+    d === '2x_nivel_do_poder' ||
+    d === '2 por nível do poder usado' ||
+    d === '2 por nível usado';
+
+  if (isComum) return perLevel((lvl) => calculateNinpouBaseDamage(esp, lvl)) ?? formatDamage(stats);
+  if (isDouble) return perLevel((lvl) => calculateCanhaoDamage(lvl)) ?? formatDamage(stats);
+  return formatDamage(stats);
 }
 
 const RANGE_LABELS: Record<string, string> = {

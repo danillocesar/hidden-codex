@@ -56,6 +56,10 @@ export type FichaJutsu = {
   name: string;
   powerName: string | null;
   effectName: string | null;
+  /** Níveis do poder em que o jutsu pode ser conjurado (1..nível do poder). */
+  levels: ReadonlyArray<number>;
+  imageUrl: string | null;
+  description: string | null;
   /** Custo de chakra quando declarado no JSON do efeito; senao null. */
   cost: number | null;
 };
@@ -171,6 +175,9 @@ export function mapPrismaToCore(
       name: j.name,
       powerName: power?.name ?? null,
       effectName: effect?.name ?? null,
+      levels: j.levels,
+      imageUrl: j.imageUrl,
+      description: j.flavorText,
       cost: readEffectCost(effect?.rules),
     };
   });

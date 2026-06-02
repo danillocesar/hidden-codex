@@ -12,6 +12,7 @@ import {
   type CombatStat,
 } from '@/components/character/ficha/MechanicsPanel';
 import { QuickCombatPanel } from '@/components/character/ficha/QuickCombatPanel';
+import { JutsusSection } from '@/components/character/ficha/JutsusSection';
 import { InventoryPanel } from '@/components/character/ficha/InventoryPanel';
 import { SectionDivider } from '@/components/character/ficha/SectionDivider';
 import {
@@ -125,6 +126,15 @@ export default async function CharacterFichaPage({ params }: { params: { id: str
       effects: (display.effectsByPowerCode[item.code] ?? []).map((e) => e.name),
     };
   });
+  // Poderes com efeitos aprendidos — base pra criar jutsus (poder + efeito + níveis).
+  const jutsuPowerOptions = core.powers
+    .map((p) => ({
+      code: p.code,
+      name: lookup.powerByCode.get(p.code)?.name ?? humanizeCode(p.code),
+      level: p.level,
+      effects: display.effectsByPowerCode[p.code] ?? [],
+    }))
+    .filter((p) => p.effects.length > 0);
 
   return (
     <article className="relative mx-auto max-w-[1340px]">
@@ -204,10 +214,13 @@ export default async function CharacterFichaPage({ params }: { params: { id: str
       />
 
       <section className="px-6 py-12 md:px-12">
-        <div className="border-y border-dashed border-border px-6 py-8 text-center text-sm text-ink-muted">
-          <p>Jutsus detalhados · Diário · Ações de mesa</p>
-          <p className="mt-1 text-xs text-ink-faint">entram nas próximas fatias da ficha</p>
-        </div>
+        <JutsusSection
+          characterId={display.id}
+          jutsus={display.jutsus}
+          powers={jutsuPowerOptions}
+          images={display.images}
+          canEdit={display.isOwner}
+        />
       </section>
 
       <SectionDivider

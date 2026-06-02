@@ -393,6 +393,10 @@ model CharacterJutsu {
   flavorText  String? @map("flavor_text") @db.Text
   imageUrl    String? @map("image_url")
 
+  /// Níveis do poder em que o jutsu pode ser conjurado (1..nível do poder).
+  /// Ex.: um Canhão "Bola de Gelo" castável em [1, 2, 3].
+  levels Int[] @default([])
+
   overrides Json @default("{}")
 
   createdAt DateTime @default(now()) @map("created_at")

@@ -28,7 +28,9 @@ export function SectionDivider({
   className?: string;
 }) {
   return (
-    <section className={cn('group relative my-8 border-y border-border bg-bg-deep', className)}>
+    <section
+      className={cn('group/cover relative my-8 border-y border-border bg-bg-deep', className)}
+    >
       <SectionCoverArea
         imageUrl={imageUrl}
         position={position}

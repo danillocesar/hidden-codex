@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { updateJutsuImage } from '@/server/actions/characters/jutsus';
 import type { FichaJutsu } from '@/lib/character/mapPrismaToCore';
+import { EffectInfo } from './EffectInfo';
 
 const ACCEPTED = 'image/jpeg,image/png,image/webp';
 const MAX_BYTES = 8 * 1024 * 1024;
@@ -84,63 +85,71 @@ export function JutsuCard({
         {jutsu.powerKanji}
       </span>
 
-      {canEdit ? (
-        <div className="absolute right-2 top-2 z-20 flex gap-1.5 opacity-0 transition focus-within:opacity-100 group-hover:opacity-100">
-          <button
-            type="button"
-            onClick={() => inputRef.current?.click()}
-            disabled={uploading}
-            aria-label={`Trocar imagem de ${jutsu.name}`}
-            className="grid h-8 w-8 place-items-center rounded border border-border bg-bg-deep/70 text-ink-muted backdrop-blur transition hover:border-ice hover:text-ice-bright disabled:opacity-60"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              className="h-3.5 w-3.5"
+      <div className="absolute right-2 top-2 z-20 flex gap-1.5 opacity-0 transition focus-within:opacity-100 group-hover:opacity-100">
+        <EffectInfo
+          variant="icon"
+          title={jutsu.name}
+          subtitle={element || null}
+          description={jutsu.effectDescription}
+        />
+        {canEdit ? (
+          <>
+            <button
+              type="button"
+              onClick={() => inputRef.current?.click()}
+              disabled={uploading}
+              aria-label={`Trocar imagem de ${jutsu.name}`}
+              className="grid h-8 w-8 place-items-center rounded border border-border bg-bg-deep/70 text-ink-muted backdrop-blur transition hover:border-ice hover:text-ice-bright disabled:opacity-60"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M2 12V5a1 1 0 0 1 1-1h2l1-1.5h4L11 4h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1Z"
-              />
-              <circle cx="8" cy="8.5" r="2.2" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            onClick={() => onRequestDelete(jutsu)}
-            aria-label={`Apagar ${jutsu.name}`}
-            className="grid h-8 w-8 place-items-center rounded border border-border bg-bg-deep/70 text-ink-muted backdrop-blur transition hover:border-danger/60 hover:text-danger"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              className="h-3.5 w-3.5"
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                className="h-3.5 w-3.5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M2 12V5a1 1 0 0 1 1-1h2l1-1.5h4L11 4h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1Z"
+                />
+                <circle cx="8" cy="8.5" r="2.2" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={() => onRequestDelete(jutsu)}
+              aria-label={`Apagar ${jutsu.name}`}
+              className="grid h-8 w-8 place-items-center rounded border border-border bg-bg-deep/70 text-ink-muted backdrop-blur transition hover:border-danger/60 hover:text-danger"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M2.5 4h11M6 4V2.5h4V4m-5 0 .5 9h5l.5-9"
-              />
-            </svg>
-          </button>
-          <input
-            ref={inputRef}
-            type="file"
-            accept={ACCEPTED}
-            onChange={handleFile}
-            className="hidden"
-            aria-hidden
-            tabIndex={-1}
-          />
-        </div>
-      ) : null}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                className="h-3.5 w-3.5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M2.5 4h11M6 4V2.5h4V4m-5 0 .5 9h5l.5-9"
+                />
+              </svg>
+            </button>
+            <input
+              ref={inputRef}
+              type="file"
+              accept={ACCEPTED}
+              onChange={handleFile}
+              className="hidden"
+              aria-hidden
+              tabIndex={-1}
+            />
+          </>
+        ) : null}
+      </div>
 
       <div className="relative z-10 mt-auto p-4 pt-12">
         {element ? (
@@ -153,15 +162,16 @@ export function JutsuCard({
         <div className="mt-3 space-y-2.5 border-t border-ice/25 pt-2.5">
           <div className="grid grid-cols-3 gap-2">
             <div className="min-w-0">
-              {jutsu.acerto ? (
-                <Badge tone="neutral" variant="outline" size="xs">
-                  {jutsu.acerto.toUpperCase()}
-                </Badge>
-              ) : (
-                <p className="font-display text-[8px] uppercase tracking-[0.25em] text-ink-muted">
+              <div className="flex items-center gap-1">
+                <span className="font-display text-[8px] uppercase tracking-[0.25em] text-ink-muted">
                   Acerto
-                </p>
-              )}
+                </span>
+                {jutsu.acerto ? (
+                  <Badge tone="neutral" variant="outline" size="xs">
+                    {jutsu.acerto.toUpperCase()}
+                  </Badge>
+                ) : null}
+              </div>
               <p className="mt-1 font-serif text-base font-medium leading-none text-ice-bright">
                 {jutsu.acerto ? acertoValues[jutsu.acerto] : '—'}
               </p>
@@ -170,7 +180,23 @@ export function JutsuCard({
             <Stat label="Duração" value={jutsu.duration ?? '—'} />
           </div>
           <div className="grid grid-cols-2 gap-2">
-            <Stat label="Dano" value={jutsu.damage ?? '—'} />
+            <div className="min-w-0">
+              <p className="font-display text-[8px] uppercase tracking-[0.25em] text-ink-muted">
+                Dano
+              </p>
+              <p className="mt-0.5 break-words text-[11px] leading-tight">
+                {jutsu.damage === 'ver descrição' ? (
+                  <EffectInfo
+                    variant="link"
+                    title={jutsu.name}
+                    subtitle={element || null}
+                    description={jutsu.effectDescription}
+                  />
+                ) : (
+                  <span className="font-body text-ice-bright">{jutsu.damage ?? '—'}</span>
+                )}
+              </p>
+            </div>
             <Stat label="Chakra" value={jutsu.chakraCost ?? '—'} />
           </div>
           <div>

@@ -1,6 +1,8 @@
+import type { ReactNode } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Eyebrow } from '@/components/ui/eyebrow';
 import type { FichaInventoryItem, FichaJutsu } from '@/lib/character/mapPrismaToCore';
+import { EffectInfo } from './EffectInfo';
 
 /** Categorias de arma que atacam com Combate a Distancia (CD). Resto usa CC. */
 const RANGED_CATEGORIES = new Set(['ARREMESSO', 'DISPARO', 'EXPLOSIVO', 'AREA']);
@@ -75,7 +77,18 @@ export function QuickCombatPanel({
                   powerTag={j.powerName}
                   accuracyTag={j.acerto ? j.acerto.toUpperCase() : undefined}
                   acerto={j.acerto ? String(acertoByType[j.acerto]) : '—'}
-                  dano={j.damage ?? '—'}
+                  dano={
+                    j.damage === 'ver descrição' ? (
+                      <EffectInfo
+                        variant="link"
+                        title={j.name}
+                        subtitle={[j.powerName, j.effectName].filter(Boolean).join(' · ') || null}
+                        description={j.effectDescription}
+                      />
+                    ) : (
+                      (j.damage ?? '—')
+                    )
+                  }
                   chakra={j.chakraCost ?? '—'}
                   levels={j.levels.length > 0 ? j.levels.join(' · ') : '—'}
                 />
@@ -119,7 +132,7 @@ function Row({
 }: {
   name: string;
   acerto: string;
-  dano: string;
+  dano: ReactNode;
   chakra: string;
   levels: string;
   /** Tag de acerto ao lado do nome (CC/CD/LM). */

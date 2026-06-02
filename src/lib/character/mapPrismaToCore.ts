@@ -70,6 +70,8 @@ export type FichaJutsu = {
   name: string;
   powerName: string | null;
   effectName: string | null;
+  /** Descrição completa do efeito (pro drawer de detalhes). */
+  effectDescription: string | null;
   /** Níveis do poder em que o jutsu pode ser conjurado (1..nível do poder). */
   levels: ReadonlyArray<number>;
   imageUrl: string | null;
@@ -212,6 +214,7 @@ export function mapPrismaToCore(
       name: j.name,
       powerName: power?.name ?? null,
       effectName: effect?.name ?? null,
+      effectDescription: effect?.description ?? effect?.shortDescription ?? null,
       levels: j.levels,
       imageUrl: j.imageUrl,
       description: j.flavorText,

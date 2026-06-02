@@ -19,7 +19,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="min-h-screen bg-bg-deep text-ink">
-      <header className="border-b border-border bg-bg-paper/70 backdrop-blur">
+      <header className="relative z-20 border-b border-border bg-bg-paper/70 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link
             href="/dashboard"

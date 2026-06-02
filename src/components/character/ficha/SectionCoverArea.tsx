@@ -136,7 +136,7 @@ export function SectionCoverArea({
             'absolute right-4 top-4 z-30 flex items-center gap-2 transition-opacity',
             adjusting
               ? 'opacity-100'
-              : 'opacity-0 focus-within:opacity-100 group-hover:opacity-100',
+              : 'opacity-0 focus-within:opacity-100 group-hover/cover:opacity-100',
           )}
         >
           {adjusting ? (

@@ -6,10 +6,10 @@ import type { FichaInventoryItem, FichaJutsu } from '@/lib/character/mapPrismaTo
 const RANGED_CATEGORIES = new Set(['ARREMESSO', 'DISPARO', 'EXPLOSIVO', 'AREA']);
 
 /**
- * Card "Combate Rapido" — referencia rapida de armas equipadas + jutsus
- * cadastrados. A coluna "Acerto" usa CC ou CD conforme a arma/jutsu (tag ao
- * lado do nome indica qual). Dano = valor cadastrado; calculo completo entra
- * com a calculadora de combate (Fase 4).
+ * Card "Combate Rapido" — referencia rapida de armas equipadas + jutsus, com
+ * colunas Acerto (CC/CD/LM do personagem), Dano, Chakra e Níveis. Os valores
+ * vêm do que está cadastrado (efeito/arma); o cálculo fino entra com a
+ * calculadora de combate (Fase 4).
  *
  * Spec: reference HTML linhas 1164-1184 (`.ataques-table`).
  */
@@ -49,7 +49,8 @@ export function QuickCombatPanel({
                 <Th>Arma / Jutsu</Th>
                 <Th center>Acerto</Th>
                 <Th center>Dano</Th>
-                <Th>Obs.</Th>
+                <Th center>Chakra</Th>
+                <Th center>Níveis</Th>
               </tr>
             </thead>
             <tbody>
@@ -61,8 +62,9 @@ export function QuickCombatPanel({
                     name={w.name}
                     accuracyTag={ranged ? 'CD' : 'CC'}
                     acerto={String(ranged ? cd : cc)}
-                    dano={w.damage ?? '—'}
-                    obs={weaponObs(w)}
+                    dano={[w.damage, w.damageType].filter(Boolean).join(' · ') || '—'}
+                    chakra="—"
+                    levels="—"
                   />
                 );
               })}
@@ -73,15 +75,16 @@ export function QuickCombatPanel({
                   powerTag={j.powerName}
                   accuracyTag={j.acerto ? j.acerto.toUpperCase() : undefined}
                   acerto={j.acerto ? String(acertoByType[j.acerto]) : '—'}
-                  dano="—"
-                  obs={jutsuObs(j)}
+                  dano={j.damage ?? '—'}
+                  chakra={j.chakraCost ?? '—'}
+                  levels={j.levels.length > 0 ? j.levels.join(' · ') : '—'}
                 />
               ))}
             </tbody>
           </table>
           <p className="mt-2 font-body text-[10px] italic text-ink-faint">
-            Acerto usa CC/CD/LM do personagem conforme o efeito; dano e mods finos entram com a
-            calculadora de combate.
+            Acerto, dano e chakra vêm do efeito/arma cadastrados; o cálculo fino (bônus, ½Esp) entra
+            com a calculadora de combate.
           </p>
         </div>
       ) : (
@@ -109,21 +112,23 @@ function Row({
   name,
   acerto,
   dano,
-  obs,
+  chakra,
+  levels,
   accuracyTag,
   powerTag,
 }: {
   name: string;
   acerto: string;
   dano: string;
-  obs: string;
+  chakra: string;
+  levels: string;
   /** Tag de acerto ao lado do nome (CC/CD/LM). */
   accuracyTag?: string;
   /** Chip do poder antes do nome (jutsus), ex.: "Hyouton". */
   powerTag?: string | null;
 }) {
   return (
-    <tr className="border-b border-border last:border-b-0">
+    <tr className="border-b border-border align-top last:border-b-0">
       <td className="px-2.5 py-2">
         <span className="flex flex-wrap items-center gap-1.5">
           {powerTag ? (
@@ -142,21 +147,11 @@ function Row({
       <td className="px-2.5 py-2 text-center font-serif text-lg font-medium text-ice-bright">
         {acerto}
       </td>
-      <td className="px-2.5 py-2 text-center font-serif text-lg font-medium text-ice-bright">
-        {dano}
+      <td className="px-2.5 py-2 text-center font-body text-xs text-ice-bright">{dano}</td>
+      <td className="px-2.5 py-2 text-center font-body text-xs text-ink-muted">{chakra}</td>
+      <td className="px-2.5 py-2 text-center font-serif text-sm font-medium text-ice-bright">
+        {levels}
       </td>
-      <td className="px-2.5 py-2 font-body text-[11px] italic text-ink-muted">{obs}</td>
     </tr>
   );
-}
-
-function weaponObs(w: FichaInventoryItem): string {
-  const parts: string[] = [];
-  if (w.damageType) parts.push(w.damageType);
-  if (w.range) parts.push(w.range);
-  return parts.join(' · ') || '—';
-}
-
-function jutsuObs(j: FichaJutsu): string {
-  return j.chakraCost ? `chakra: ${j.chakraCost}` : '—';
 }

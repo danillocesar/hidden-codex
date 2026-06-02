@@ -70,6 +70,11 @@ export type FichaJutsu = {
    * ex.: "1 por nível usado", "Sem custo", "3 de chakra", "varia". `null` se ausente.
    */
   chakraCost: string | null;
+  /**
+   * Dano do efeito, em rótulo legível (`stats.damage`): ex.: "2 por nível do poder",
+   * "comum do poder", "ver descrição". `null` quando o efeito não causa dano direto.
+   */
+  damage: string | null;
 };
 
 export type FichaEffect = {
@@ -188,6 +193,7 @@ export function mapPrismaToCore(
       description: j.flavorText,
       acerto: readRollType(effect?.stats),
       chakraCost: formatChakraCost(effect?.stats),
+      damage: formatDamage(effect?.stats),
     };
   });
 
@@ -343,4 +349,32 @@ function formatChakraCost(stats: Prisma.JsonValue | undefined): string | null {
   const key = raw.trim();
   if (!key) return null;
   return CHAKRA_COST_LABELS[key] ?? key.replace(/_/g, ' ');
+}
+
+/** Códigos de dano usados no seed → rótulo legível em PT (ou null = sem dano). */
+const DAMAGE_LABELS: Record<string, string | null> = {
+  nenhum: null,
+  nenhum_direto: null,
+  comum_do_poder: 'comum do poder',
+  comum_juuken: 'comum do Juuken',
+  '2x_nivel_do_poder': '2 por nível do poder',
+  ver_texto: 'ver descrição',
+  ver_descricao: 'ver descrição',
+};
+
+/**
+ * Le `stats.damage` e devolve um rótulo legível, ou null quando o efeito não
+ * causa dano direto ("nenhum"). Aceita número, códigos conhecidos e frases livres.
+ */
+function formatDamage(stats: Prisma.JsonValue | undefined): string | null {
+  if (!stats || typeof stats !== 'object' || Array.isArray(stats)) return null;
+  const raw = (stats as Record<string, unknown>).damage;
+  if (typeof raw === 'number' && Number.isFinite(raw)) {
+    return raw === 0 ? null : `${raw}`;
+  }
+  if (typeof raw !== 'string') return null;
+  const key = raw.trim();
+  if (!key) return null;
+  if (key in DAMAGE_LABELS) return DAMAGE_LABELS[key] ?? null;
+  return key.replace(/_/g, ' ');
 }

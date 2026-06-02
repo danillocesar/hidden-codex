@@ -101,9 +101,17 @@ export function JutsuCard({
               ))}
             </div>
           </div>
+          {jutsu.damage ? (
+            <div className="flex items-baseline gap-2">
+              <span className="min-w-12 font-display text-[8px] uppercase tracking-[0.25em] text-ink-muted">
+                Dano
+              </span>
+              <span className="font-body text-xs text-ice-bright">{jutsu.damage}</span>
+            </div>
+          ) : null}
           {jutsu.chakraCost ? (
             <div className="flex items-baseline gap-2">
-              <span className="font-display text-[8px] uppercase tracking-[0.25em] text-ink-muted">
+              <span className="min-w-12 font-display text-[8px] uppercase tracking-[0.25em] text-ink-muted">
                 Chakra
               </span>
               <span className="font-body text-xs text-ice-bright">{jutsu.chakraCost}</span>

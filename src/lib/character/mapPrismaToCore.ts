@@ -60,6 +60,11 @@ export type FichaJutsu = {
   levels: ReadonlyArray<number>;
   imageUrl: string | null;
   description: string | null;
+  /**
+   * Tipo de acerto vindo do efeito (`stats.rollType`): CC, CD ou LM. `null`
+   * para efeitos sem ataque ou com teste resistido especial (agarrar, etc.).
+   */
+  acerto: 'cc' | 'cd' | 'lm' | null;
   /** Custo de chakra quando declarado no JSON do efeito; senao null. */
   cost: number | null;
 };
@@ -178,6 +183,7 @@ export function mapPrismaToCore(
       levels: j.levels,
       imageUrl: j.imageUrl,
       description: j.flavorText,
+      acerto: readRollType(effect?.stats),
       cost: readEffectCost(effect?.rules),
     };
   });
@@ -292,6 +298,19 @@ export function parseLearnedEffects(json: Prisma.JsonValue): Record<string, stri
     if (codes.length > 0) out[powerCode] = codes;
   }
   return out;
+}
+
+/**
+ * Le `stats.rollType` do efeito e normaliza pro tipo de acerto do jutsu. So
+ * CC/CD/LM viram acerto numerico na ficha; testes resistidos especiais
+ * (agarrar, olhar_hipnotico, "Vigor ...") e efeitos sem ataque retornam null.
+ */
+function readRollType(stats: Prisma.JsonValue | undefined): 'cc' | 'cd' | 'lm' | null {
+  if (!stats || typeof stats !== 'object' || Array.isArray(stats)) return null;
+  const raw = (stats as Record<string, unknown>).rollType;
+  if (typeof raw !== 'string') return null;
+  const value = raw.trim().toLowerCase();
+  return value === 'cc' || value === 'cd' || value === 'lm' ? value : null;
 }
 
 function readEffectCost(rules: Prisma.JsonValue | undefined): number | null {

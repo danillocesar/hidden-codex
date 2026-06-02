@@ -71,11 +71,18 @@ export function JutsuCard({
       ) : null}
 
       <div className="relative z-10 mt-auto p-4 pt-12">
-        {element ? (
-          <p className="mb-1.5 font-display text-[9px] uppercase tracking-[0.35em] text-ice">
-            {element}
-          </p>
-        ) : null}
+        <div className="mb-1.5 flex items-center gap-2">
+          {element ? (
+            <span className="font-display text-[9px] uppercase tracking-[0.35em] text-ice">
+              {element}
+            </span>
+          ) : null}
+          {jutsu.acerto ? (
+            <span className="rounded border border-ice-deep/50 px-1 font-display text-[8px] uppercase tracking-[0.2em] text-ice-bright">
+              {jutsu.acerto}
+            </span>
+          ) : null}
+        </div>
         <h3 className="font-serif text-xl font-medium leading-tight text-ink">{jutsu.name}</h3>
 
         <div className="mt-3 border-t border-ice/25 pt-2.5">

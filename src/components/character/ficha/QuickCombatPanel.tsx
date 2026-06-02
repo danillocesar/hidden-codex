@@ -18,14 +18,16 @@ export function QuickCombatPanel({
   jutsus,
   cc,
   cd,
+  lm,
 }: {
   weapons: ReadonlyArray<FichaInventoryItem>;
   jutsus: ReadonlyArray<FichaJutsu>;
-  /** Acerto corpo-a-corpo do personagem (reutilizado nas armas de CC). */
+  /** Acertos do personagem, reusados conforme o tipo de cada arma/jutsu. */
   cc: number;
-  /** Acerto a distancia do personagem (reutilizado nas armas de CD). */
   cd: number;
+  lm: number;
 }) {
+  const acertoByType = { cc, cd, lm } as const;
   const hasRows = weapons.length > 0 || jutsus.length > 0;
 
   return (
@@ -69,7 +71,8 @@ export function QuickCombatPanel({
                   key={j.id}
                   name={j.name}
                   powerTag={j.powerName}
-                  acerto="—"
+                  accuracyTag={j.acerto ? j.acerto.toUpperCase() : undefined}
+                  acerto={j.acerto ? String(acertoByType[j.acerto]) : '—'}
                   dano="—"
                   obs={jutsuObs(j)}
                 />
@@ -77,12 +80,13 @@ export function QuickCombatPanel({
             </tbody>
           </table>
           <p className="mt-2 font-body text-[10px] italic text-ink-faint">
-            Acerto usa CC/CD do personagem; dano e mods finos entram com a calculadora de combate.
+            Acerto usa CC/CD/LM do personagem conforme o efeito; dano e mods finos entram com a
+            calculadora de combate.
           </p>
         </div>
       ) : (
         <p className="mt-3 font-body text-sm text-ink-muted">
-          Nenhuma arma equipada. Jutsus aparecem aqui quando a criação de jutsus for implementada.
+          Nenhuma arma equipada ou jutsu cadastrado.
         </p>
       )}
     </section>
@@ -113,8 +117,8 @@ function Row({
   acerto: string;
   dano: string;
   obs: string;
-  /** Tag CC/CD ao lado do nome (armas). */
-  accuracyTag?: 'CC' | 'CD';
+  /** Tag de acerto ao lado do nome (CC/CD/LM). */
+  accuracyTag?: string;
   /** Chip do poder antes do nome (jutsus), ex.: "Hyouton". */
   powerTag?: string | null;
 }) {

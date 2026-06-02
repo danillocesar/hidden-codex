@@ -12,11 +12,7 @@ import { createCharacter } from '@/server/actions/characters/create';
 import type { CreateCharacterInput } from '@/schemas/character/create';
 import { useFormErrors } from '@/lib/forms/useFormErrors';
 import { Alert } from '@/components/ui/alert';
-import {
-  TOTAL_STEPS,
-  initialWizardState,
-  wizardReducer,
-} from './wizardState';
+import { TOTAL_STEPS, initialWizardState, wizardReducer } from './wizardState';
 import { validateStep } from './wizardValidation';
 import { buildDevFixture } from './devFixture';
 import { Step1Identity } from './steps/Step1Identity';
@@ -25,6 +21,7 @@ import { Step3Pericias } from './steps/Step3Pericias';
 import { Step4Aptitudes } from './steps/Step4Aptitudes';
 import { Step5Powers } from './steps/Step5Powers';
 import { Step6Effects } from './steps/Step6Effects';
+import { StepInventory } from './steps/StepInventory';
 import { Step7Summary } from './steps/Step7Summary';
 
 /**
@@ -43,6 +40,7 @@ const STEPS = [
   { id: 'aptitudes', label: 'Aptidoes', kanji: '才' },
   { id: 'powers', label: 'Poderes', kanji: '力' },
   { id: 'effects', label: 'Efeitos', kanji: '術' },
+  { id: 'inventory', label: 'Inventario', kanji: '道具' },
   { id: 'summary', label: 'Revisar', kanji: '検' },
 ] as const;
 
@@ -134,9 +132,7 @@ export function WizardClient({ catalogs }: { catalogs: WizardCatalogs }) {
             type="button"
             variant="outline"
             size="sm"
-            onClick={() =>
-              dispatch({ type: 'loadState', state: buildDevFixture(catalogs) })
-            }
+            onClick={() => dispatch({ type: 'loadState', state: buildDevFixture(catalogs) })}
             title="Preenche todos os steps com fixture Satsuki NC 6"
           >
             Preencher tudo
@@ -187,24 +183,19 @@ export function WizardClient({ catalogs }: { catalogs: WizardCatalogs }) {
         {state.step === 3 && (
           <Step4Aptitudes state={state} dispatch={dispatch} catalogs={catalogs} />
         )}
-        {state.step === 4 && (
-          <Step5Powers state={state} dispatch={dispatch} catalogs={catalogs} />
+        {state.step === 4 && <Step5Powers state={state} dispatch={dispatch} catalogs={catalogs} />}
+        {state.step === 5 && <Step6Effects state={state} dispatch={dispatch} catalogs={catalogs} />}
+        {state.step === 6 && (
+          <StepInventory state={state} dispatch={dispatch} catalogs={catalogs} />
         )}
-        {state.step === 5 && (
-          <Step6Effects state={state} dispatch={dispatch} catalogs={catalogs} />
-        )}
-        {state.step === 6 && <Step7Summary state={state} catalogs={catalogs} />}
+        {state.step === 7 && <Step7Summary state={state} catalogs={catalogs} />}
       </Section>
 
       {submitError ? <Alert tone="danger">{submitError}</Alert> : null}
 
       <nav className="flex items-center justify-between">
         {state.step > 0 ? (
-          <Button
-            variant="outline"
-            disabled={isPending}
-            onClick={() => dispatch({ type: 'prev' })}
-          >
+          <Button variant="outline" disabled={isPending} onClick={() => dispatch({ type: 'prev' })}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"

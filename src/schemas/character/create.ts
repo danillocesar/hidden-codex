@@ -37,19 +37,17 @@ const combatBasesSchema = z.object(
 
 const PERICIA_CODES = new Set(PERICIAS.map((p) => p.code));
 const periciaPointsSchema = z.number().int().min(0).max(20);
-const periciasRecordSchema = z
-  .record(z.string(), periciaPointsSchema)
-  .superRefine((value, ctx) => {
-    for (const code of Object.keys(value)) {
-      if (!PERICIA_CODES.has(code)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: `Pericia desconhecida: ${code}`,
-          path: [code],
-        });
-      }
+const periciasRecordSchema = z.record(z.string(), periciaPointsSchema).superRefine((value, ctx) => {
+  for (const code of Object.keys(value)) {
+    if (!PERICIA_CODES.has(code)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Pericia desconhecida: ${code}`,
+        path: [code],
+      });
     }
-  });
+  }
+});
 
 const powerLevelSchema = z.number().int().min(1).max(30);
 const powersInputSchema = z.array(
@@ -80,6 +78,24 @@ const aptitudesInputSchema = z.array(
   }),
 );
 
+/**
+ * Itens de inventario escolhidos no step final do wizard. Cada item referencia
+ * um `equipmentCode` do catalogo (equipments.json). `equipped` marca armas em
+ * uso (alimenta o card "Combate Rapido" da ficha). Validacao de existencia do
+ * code acontece no server action (lookup no banco).
+ */
+const inventoryInputSchema = z
+  .array(
+    z.object({
+      equipmentCode: z.string().min(1).max(80),
+      quantity: z.number().int().min(1).max(9999).default(1),
+      equipped: z.boolean().default(false),
+      notes: z.string().trim().max(280).nullable().optional(),
+    }),
+  )
+  .max(200)
+  .default([]);
+
 const identitySchema = z.object({
   name: z.string().trim().min(1, 'Nome obrigatorio.').max(NAME_MAX),
   age: z.number().int().min(0).max(999).nullable().optional(),
@@ -109,12 +125,7 @@ const identitySchema = z.object({
    * URL relativa do retrato (`/uploads/portraits/...`). Setada pelo upload
    * via `POST /api/upload/character-portrait` antes do submit do wizard.
    */
-  portraitUrl: z
-    .string()
-    .startsWith('/uploads/portraits/')
-    .max(200)
-    .nullable()
-    .optional(),
+  portraitUrl: z.string().startsWith('/uploads/portraits/').max(200).nullable().optional(),
 });
 
 export const createCharacterInputSchema = z
@@ -126,6 +137,7 @@ export const createCharacterInputSchema = z
     powers: powersInputSchema,
     effectsByPower: effectsByPowerSchema,
     aptitudes: aptitudesInputSchema,
+    inventory: inventoryInputSchema,
   })
   .superRefine((input, ctx) => {
     const id = input.identity;

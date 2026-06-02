@@ -22,7 +22,7 @@ export function FichaHeader({
   return (
     <header
       className={cn(
-        'relative overflow-hidden border-b border-border px-6 py-10 md:px-12 md:py-12',
+        'relative mb-8 overflow-hidden border-b border-border px-6 pb-7 pt-10 md:px-12',
         'before:absolute before:inset-0 before:bg-cover before:bg-[center_40%] before:bg-no-repeat before:opacity-25',
         'after:absolute after:inset-0 after:bg-gradient-to-b after:from-[rgba(10,11,14,0.4)] after:to-bg-deep',
       )}
@@ -37,21 +37,21 @@ export function FichaHeader({
           : undefined
       }
     >
-      <div className="relative z-10 grid grid-cols-1 items-center gap-2 md:grid-cols-[1fr_auto_1fr]">
-        <div className="font-display text-[10px] uppercase tracking-[0.4em] text-ink-muted">
-          Cla{' '}
-          <span className="ml-2 font-body text-base normal-case tracking-normal text-ice">
-            {clanKanji ? <span className="mr-1 font-jp">{clanKanji}</span> : null}
+      <div className="relative z-10 grid grid-cols-1 items-center gap-3 md:grid-cols-[1fr_auto_1fr]">
+        <div className="font-jp text-[11px] tracking-[0.1em] text-ink-muted md:text-right">
+          Clã{' '}
+          <span className="ml-1.5 text-ice">
+            {clanKanji ? <span className="mr-1">{clanKanji}</span> : null}
             {clanName ?? '—'}
           </span>
         </div>
-        <div className="font-display text-xs uppercase tracking-[0.45em] text-ice-bright md:px-6">
+        <div className="justify-self-center border-y border-border px-4 py-1.5 font-display text-[11px] uppercase tracking-[0.5em] text-ice">
           Ficha de Personagem
         </div>
-        <div className="font-display text-[10px] uppercase tracking-[0.4em] text-ink-muted md:text-right">
+        <div className="font-jp text-[11px] tracking-[0.1em] text-ink-muted">
           Vila{' '}
-          <span className="ml-2 font-body text-base normal-case tracking-normal text-ice">
-            {villageKanji ? <span className="mr-1 font-jp">{villageKanji}</span> : null}
+          <span className="ml-1.5 text-ice">
+            {villageKanji ? <span className="mr-1">{villageKanji}</span> : null}
             {villageName ?? '—'}
           </span>
         </div>

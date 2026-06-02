@@ -79,6 +79,15 @@ export function buildDevFixture(catalogs: WizardCatalogs): WizardState {
     }
   }
 
+  // ── Inventario: 2 primeiras armas do catalogo (1a equipada) p/ demonstrar
+  //    o card "Combate Rapido" da ficha. Codes garantidamente reais.
+  const weapons = catalogs.equipment.filter((e) => e.kind === 'WEAPON').slice(0, 2);
+  const inventory: WizardState['inventory'] = weapons.map((w, i) => ({
+    equipmentCode: w.code,
+    quantity: 1,
+    equipped: i === 0,
+  }));
+
   return {
     ...base,
     step: 0,
@@ -101,5 +110,6 @@ export function buildDevFixture(catalogs: WizardCatalogs): WizardState {
     powers,
     effectsByPower,
     aptitudes,
+    inventory,
   };
 }

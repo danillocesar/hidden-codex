@@ -86,6 +86,20 @@ export type WizardPowerEffectOption = {
   rules: Prisma.JsonValue;
 };
 
+export type WizardEquipmentOption = {
+  id: string;
+  code: string;
+  name: string;
+  kind: string;
+  subtype: string | null;
+  category: string | null;
+  damage: string | null;
+  range: string | null;
+  damageType: string | null;
+  price: number | null;
+  shortDescription: string | null;
+};
+
 export type WizardCatalogs = {
   clans: ReadonlyArray<WizardClanOption>;
   villages: ReadonlyArray<WizardVillageOption>;
@@ -94,103 +108,120 @@ export type WizardCatalogs = {
   aptitudes: ReadonlyArray<WizardAptitudeOption>;
   pericias: ReadonlyArray<WizardPericiaOption>;
   powerEffects: ReadonlyArray<WizardPowerEffectOption>;
+  equipment: ReadonlyArray<WizardEquipmentOption>;
 };
 
 export async function loadWizardCatalogs(): Promise<WizardCatalogs> {
-  const [clans, villages, kekkeiGenkais, powers, aptitudes, pericias, powerEffects] =
+  const [clans, villages, kekkeiGenkais, powers, aptitudes, pericias, powerEffects, equipment] =
     await Promise.all([
-    prisma.clan.findMany({
-      orderBy: { name: 'asc' },
-      select: {
-        id: true,
-        code: true,
-        name: true,
-        shortDescription: true,
-        description: true,
-        benefits: true,
-      },
-    }),
-    prisma.village.findMany({
-      orderBy: { name: 'asc' },
-      select: {
-        id: true,
-        code: true,
-        name: true,
-        fullName: true,
-        translation: true,
-        country: true,
-        shortDescription: true,
-        description: true,
-        benefits: true,
-      },
-    }),
-    prisma.kekkeiGenkai.findMany({
-      orderBy: { name: 'asc' },
-      select: {
-        id: true,
-        code: true,
-        name: true,
-        translation: true,
-        associatedClan: true,
-        shortDescription: true,
-        description: true,
-        benefits: true,
-      },
-    }),
-    prisma.power.findMany({
-      orderBy: [{ category: 'asc' }, { name: 'asc' }],
-      select: {
-        id: true,
-        code: true,
-        name: true,
-        translation: true,
-        category: true,
-        element: true,
-        associatedClan: true,
-        associatedKekkeiGenkai: true,
-        shortDescription: true,
-        description: true,
-        rules: true,
-      },
-    }),
-    prisma.aptitude.findMany({
-      orderBy: [{ category: 'asc' }, { name: 'asc' }],
-      select: {
-        id: true,
-        code: true,
-        name: true,
-        category: true,
-        costPoints: true,
-        shortDescription: true,
-        description: true,
-        prerequisites: true,
-        effects: true,
-      },
-    }),
-    prisma.pericia.findMany({
-      orderBy: { order: 'asc' },
-      select: {
-        code: true,
-        name: true,
-        attribute: true,
-        shortDescription: true,
-        description: true,
-      },
-    }),
-    prisma.powerEffect.findMany({
-      orderBy: [{ minLevel: 'asc' }, { name: 'asc' }],
-      select: {
-        id: true,
-        code: true,
-        name: true,
-        minLevel: true,
-        availableFor: true,
-        shortDescription: true,
-        description: true,
-        rules: true,
-      },
-    }),
-  ]);
+      prisma.clan.findMany({
+        orderBy: { name: 'asc' },
+        select: {
+          id: true,
+          code: true,
+          name: true,
+          shortDescription: true,
+          description: true,
+          benefits: true,
+        },
+      }),
+      prisma.village.findMany({
+        orderBy: { name: 'asc' },
+        select: {
+          id: true,
+          code: true,
+          name: true,
+          fullName: true,
+          translation: true,
+          country: true,
+          shortDescription: true,
+          description: true,
+          benefits: true,
+        },
+      }),
+      prisma.kekkeiGenkai.findMany({
+        orderBy: { name: 'asc' },
+        select: {
+          id: true,
+          code: true,
+          name: true,
+          translation: true,
+          associatedClan: true,
+          shortDescription: true,
+          description: true,
+          benefits: true,
+        },
+      }),
+      prisma.power.findMany({
+        orderBy: [{ category: 'asc' }, { name: 'asc' }],
+        select: {
+          id: true,
+          code: true,
+          name: true,
+          translation: true,
+          category: true,
+          element: true,
+          associatedClan: true,
+          associatedKekkeiGenkai: true,
+          shortDescription: true,
+          description: true,
+          rules: true,
+        },
+      }),
+      prisma.aptitude.findMany({
+        orderBy: [{ category: 'asc' }, { name: 'asc' }],
+        select: {
+          id: true,
+          code: true,
+          name: true,
+          category: true,
+          costPoints: true,
+          shortDescription: true,
+          description: true,
+          prerequisites: true,
+          effects: true,
+        },
+      }),
+      prisma.pericia.findMany({
+        orderBy: { order: 'asc' },
+        select: {
+          code: true,
+          name: true,
+          attribute: true,
+          shortDescription: true,
+          description: true,
+        },
+      }),
+      prisma.powerEffect.findMany({
+        orderBy: [{ minLevel: 'asc' }, { name: 'asc' }],
+        select: {
+          id: true,
+          code: true,
+          name: true,
+          minLevel: true,
+          availableFor: true,
+          shortDescription: true,
+          description: true,
+          rules: true,
+        },
+      }),
+      prisma.equipment.findMany({
+        orderBy: [{ kind: 'asc' }, { name: 'asc' }],
+        select: {
+          id: true,
+          code: true,
+          name: true,
+          kind: true,
+          subtype: true,
+          category: true,
+          damage: true,
+          range: true,
+          damageType: true,
+          price: true,
+          shortDescription: true,
+        },
+      }),
+    ]);
 
-  return { clans, villages, kekkeiGenkais, powers, aptitudes, pericias, powerEffects };
+  return { clans, villages, kekkeiGenkais, powers, aptitudes, pericias, powerEffects, equipment };
 }

@@ -10,29 +10,17 @@ import {
   applyOriginBenefits,
   getEffectiveFreePowerLevels,
 } from '@/lib/character/applyOriginBenefits';
-import {
-  createCharacterInputSchema,
-  type CreateCharacterInput,
-} from '@/schemas/character/create';
+import { createCharacterInputSchema, type CreateCharacterInput } from '@/schemas/character/create';
 import type { CharacterAptitudeRef, CharacterCore, CharacterPowerRef } from '@/domain/types';
 import { ATTRIBUTE_KEYS } from '@/domain/types';
 import { validateCombatBases } from '@/domain/rules/combatBases';
-import {
-  findAttributesAboveMax,
-  findAttributesBelowMin,
-} from '@/domain/rules/attributeLimits';
+import { findAttributesAboveMax, findAttributesBelowMin } from '@/domain/rules/attributeLimits';
 import { getAttrBudget } from '@/domain/rules/pointsBudget';
 import { validatePericiaBudget } from '@/domain/rules/skills';
-import {
-  FREE_STARTING_APTITUDES,
-  validatePowersAndAptitudes,
-} from '@/domain/rules/powers';
+import { FREE_STARTING_APTITUDES, validatePowersAndAptitudes } from '@/domain/rules/powers';
 import { checkAptitudePrerequisites } from '@/domain/rules/aptitudes';
 import { validateEffectSelection, type EffectDef } from '@/domain/rules/effects';
-import {
-  calculateMaxChakra,
-  calculateMaxVitality,
-} from '@/domain/rules/derivedStats';
+import { calculateMaxChakra, calculateMaxVitality } from '@/domain/rules/derivedStats';
 
 export type CreateCharacterResult =
   | { ok: true; characterId: string }
@@ -51,9 +39,7 @@ export type CreateCharacterResult =
  * Erros de regra de RPG voltam como `{ ok: false, error }` (mensagem em pt-BR
  * pra UI). Erros de auth resolvem em redirect pro login.
  */
-export async function createCharacter(
-  rawInput: unknown,
-): Promise<CreateCharacterResult> {
+export async function createCharacter(rawInput: unknown): Promise<CreateCharacterResult> {
   const session = await getCurrentUser();
   if (!session) {
     redirect('/login');
@@ -146,9 +132,7 @@ export async function createCharacter(
   }
   const above = findAttributesAboveMax(attrs, nc);
   if (above.length > 0) {
-    const list = above
-      .map((a) => `${a.key.toUpperCase()} ${a.current} > max ${a.max}`)
-      .join(', ');
+    const list = above.map((a) => `${a.key.toUpperCase()} ${a.current} > max ${a.max}`).join(', ');
     return { ok: false, error: `Atributos acima do maximo do NC ${nc}: ${list}.` };
   }
 
@@ -264,9 +248,7 @@ export async function createCharacter(
   }
 
   // ── 4b. Validar selecao de efeitos (slots por poder) ────────────────────
-  const allEffectCodes = Array.from(
-    new Set(Object.values(input.effectsByPower).flat()),
-  );
+  const allEffectCodes = Array.from(new Set(Object.values(input.effectsByPower).flat()));
   const effectRows = allEffectCodes.length
     ? await prisma.powerEffect.findMany({
         where: { code: { in: allEffectCodes } },
@@ -340,6 +322,21 @@ export async function createCharacter(
     }
   }
 
+  // Resolver equipmentId pra cada item de inventario (step final, opcional).
+  const allEquipmentCodes = Array.from(new Set(input.inventory.map((i) => i.equipmentCode)));
+  const equipmentRows = allEquipmentCodes.length
+    ? await prisma.equipment.findMany({
+        where: { code: { in: allEquipmentCodes } },
+        select: { id: true, code: true },
+      })
+    : [];
+  const equipmentIdByCode = new Map(equipmentRows.map((e) => [e.code, e.id]));
+  for (const code of allEquipmentCodes) {
+    if (!equipmentIdByCode.has(code)) {
+      return { ok: false, error: `Equipamento "${code}" nao encontrado no catalogo.` };
+    }
+  }
+
   const characterCreate: Prisma.CharacterCreateInput = {
     user: { connect: { id: session.user.id } },
     name: input.identity.name.trim(),
@@ -385,19 +382,17 @@ export async function createCharacter(
         level: p.level,
       })),
     },
-    jutsus: {
-      create: Object.entries(input.effectsByPower).flatMap(([powerCode, effectCodes]) => {
-        const powerId = powerIdByCode.get(powerCode);
-        if (!powerId) return [];
-        return effectCodes.map((effectCode) => {
-          const effect = effectByCode.get(effectCode)!;
-          return {
-            powerId,
-            powerEffectId: effect.id,
-            name: effect.name,
-          };
-        });
-      }),
+    // Efeitos aprendidos persistidos como Record<powerCode, effectCode[]>.
+    // NAO criamos CharacterJutsu aqui — essa tabela fica para jutsus reais
+    // criados pelo usuario numa fase futura.
+    learnedEffects: input.effectsByPower as Prisma.InputJsonValue,
+    inventory: {
+      create: input.inventory.map((item) => ({
+        equipmentId: equipmentIdByCode.get(item.equipmentCode)!,
+        quantity: item.quantity,
+        equipped: item.equipped,
+        notes: item.notes?.trim() || null,
+      })),
     },
   };
 

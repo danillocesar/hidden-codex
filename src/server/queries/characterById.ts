@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import {
   mapPrismaToCore,
+  parseLearnedEffects,
   type CharacterViewModel,
   type CharacterWithRelations,
 } from '@/lib/character/mapPrismaToCore';
@@ -30,6 +31,9 @@ export async function loadCharacterById(
       pericias: true,
       aptitudes: { include: { aptitude: true } },
       powers: { include: { power: true } },
+      jutsus: true,
+      inventory: { include: { equipment: true } },
+      images: true,
     },
   })) as CharacterWithRelations | null;
 
@@ -39,6 +43,17 @@ export async function loadCharacterById(
   if (!isOwner && !row.isPublicOnProfile) {
     return { ok: false, reason: 'forbidden' };
   }
+
+  // Efeitos aprendidos sao persistidos em `Character.learnedEffects`
+  // (Record<powerCode, effectCode[]>). Carregamos os PowerEffect por code pra
+  // resolver nome/regras na ficha.
+  const learnedMap = parseLearnedEffects(row.learnedEffects);
+  const effectCodes = Array.from(new Set(Object.values(learnedMap).flat()));
+  const powerEffects = effectCodes.length
+    ? await prisma.powerEffect.findMany({ where: { code: { in: effectCodes } } })
+    : [];
+
+  row.powerEffects = powerEffects;
 
   return { ok: true, viewModel: mapPrismaToCore(row, { currentUserId }) };
 }

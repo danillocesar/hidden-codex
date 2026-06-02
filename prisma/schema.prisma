@@ -98,6 +98,12 @@ model Character {
   // Estado de UI (Json estruturado — ver 03-DATA-MODEL.md §"UIState")
   uiState Json @default("{}") @map("ui_state")
 
+  // Efeitos aprendidos por poder: Record<powerCode, effectCode[]>. Sao as
+  // sub-tecnicas escolhidas no wizard. Persistidas aqui (e nao mais derivadas
+  // de CharacterJutsu) — `CharacterJutsu` fica reservado para jutsus reais
+  // criados pelo usuario. Validado com Zod antes de gravar.
+  learnedEffects Json @default("{}") @map("learned_effects")
+
   // Recursos
   ryos Int @default(0)
 
@@ -486,6 +492,9 @@ model CharacterInventoryItem {
   customStats Json?      @map("custom_stats")
 
   quantity Int     @default(1)
+  /// Marca itens (tipicamente armas) atualmente equipados pelo personagem.
+  /// Alimenta o card "Combate Rapido" da ficha. Toggle owner-only na UI.
+  equipped Boolean @default(false)
   notes    String? @db.Text
 
   createdAt DateTime @default(now()) @map("created_at")

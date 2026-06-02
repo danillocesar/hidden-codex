@@ -3,27 +3,19 @@ import type { Attributes } from '@/domain/types';
 import { cn } from '@/lib/utils/cn';
 
 /**
- * Grid 7 colunas com os atributos — versao read-only da ficha view.
+ * Grid de 7 atributos (linha cheia), igual a referencia. O(s) atributo(s) de
+ * MAIOR valor ganham destaque (`highlight`) — so Des/Agi em Satsuki NC6.
  *
- * Atributos "altos" (>= NC/2 round up) ganham destaque visual (`highlight`).
- * Em mobile colapsa pra 4 colunas, depois 2.
- *
- * Spec: 05-UI-SPEC.md §"Hero" + 08-VISUAL-REFERENCE §"Spacing" (grid 7 col).
+ * Spec: 05-UI-SPEC.md §"Hero" + reference HTML linhas 936-944.
  */
-export function AttributesGrid({
-  attributes,
-  campaignLevel,
-}: {
-  attributes: Attributes;
-  campaignLevel: number;
-}) {
-  const highlightThreshold = Math.ceil(campaignLevel / 2);
+export function AttributesGrid({ attributes }: { attributes: Attributes }) {
+  const maxValue = Math.max(...ATTRIBUTES.map((attr) => attributes[attr.code]));
 
   return (
     <ul className="grid grid-cols-4 gap-2 sm:grid-cols-7">
       {ATTRIBUTES.map((attr) => {
         const value = attributes[attr.code];
-        const isHighlight = value >= highlightThreshold && value > 1;
+        const isHighlight = value === maxValue && value > 1;
         return (
           <li
             key={attr.code}

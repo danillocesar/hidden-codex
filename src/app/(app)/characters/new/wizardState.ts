@@ -20,10 +20,12 @@ export type WizardAction =
   | { type: 'setPericia'; code: string; points: number }
   | { type: 'setPowers'; powers: CreateCharacterInput['powers'] }
   | { type: 'setEffectsForPower'; powerCode: string; effectCodes: ReadonlyArray<string> }
-  | { type: 'setAptitudes'; aptitudes: CreateCharacterInput['aptitudes'] };
+  | { type: 'setAptitudes'; aptitudes: CreateCharacterInput['aptitudes'] }
+  | { type: 'setInventory'; inventory: CreateCharacterInput['inventory'] };
 
-// 1 Identity · 2 Attr · 3 Pericias · 4 Poderes · 5 Efeitos · 6 Aptidoes · 7 Summary
-export const TOTAL_STEPS = 7;
+// 1 Identity · 2 Attr · 3 Pericias · 4 Aptidoes · 5 Poderes · 6 Efeitos ·
+// 7 Inventario · 8 Summary
+export const TOTAL_STEPS = 8;
 
 export function initialWizardState(): WizardState {
   return {
@@ -46,6 +48,7 @@ export function initialWizardState(): WizardState {
     powers: [],
     effectsByPower: {},
     aptitudes: [],
+    inventory: [],
   };
 }
 
@@ -103,6 +106,8 @@ export function wizardReducer(state: WizardState, action: WizardAction): WizardS
     }
     case 'setAptitudes':
       return { ...state, aptitudes: action.aptitudes };
+    case 'setInventory':
+      return { ...state, inventory: action.inventory };
     default:
       return state;
   }

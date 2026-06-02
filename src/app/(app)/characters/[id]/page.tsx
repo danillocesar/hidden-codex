@@ -4,7 +4,34 @@ import { getCurrentUser } from '@/lib/auth/session';
 import { loadCharacterById } from '@/server/queries/characterById';
 import { FichaHeader } from '@/components/character/ficha/FichaHeader';
 import { HeroSection } from '@/components/character/ficha/HeroSection';
+import { AttributesGrid } from '@/components/character/ficha/AttributesGrid';
+import {
+  EnergyPanel,
+  CombatSkillsPanel,
+  SocialPanel,
+  type CombatStat,
+} from '@/components/character/ficha/MechanicsPanel';
+import { QuickCombatPanel } from '@/components/character/ficha/QuickCombatPanel';
+import { InventoryPanel } from '@/components/character/ficha/InventoryPanel';
+import { SectionDivider } from '@/components/character/ficha/SectionDivider';
+import {
+  TrainingPanel,
+  type FichaAptitude,
+  type FichaPericia,
+  type FichaPower,
+} from '@/components/character/ficha/TrainingPanel';
 import { Button } from '@/components/ui/button';
+import { PERICIAS } from '@/domain/catalog/pericias';
+import {
+  calculateCC,
+  calculateCD,
+  calculateESQ,
+  calculateLM,
+  calculateMaxChakra,
+  calculateMaxVitality,
+} from '@/domain/rules/derivedStats';
+import { calculatePericiaLevelByCode, sumPericiaPoints } from '@/domain/rules/skills';
+import { getPericaBudget } from '@/domain/rules/pointsBudget';
 
 /**
  * Ficha read-only — `/characters/[id]`.
@@ -16,22 +43,91 @@ import { Button } from '@/components/ui/button';
  * Personagens publicos (`isPublicOnProfile`) sao acessiveis sem ser dono.
  * 404 quando nao encontrado OU sem permissao (nao vaza existencia).
  */
-export default async function CharacterFichaPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function CharacterFichaPage({ params }: { params: { id: string } }) {
   const session = await getCurrentUser();
   const result = await loadCharacterById(params.id, session?.user.id ?? null);
 
   if (!result.ok) notFound();
 
-  const { core: _core, display, lookup: _lookup } = result.viewModel;
-  void _core;
-  void _lookup;
+  const { core, display, lookup } = result.viewModel;
+  const aptitudeCodes = core.aptitudes.flatMap((a) =>
+    a.parameter ? [a.code, `${a.code}_${a.parameter}`] : [a.code],
+  );
+  const combatInput = {
+    attributes: core.attributes,
+    bases: core.bases,
+    aptitudeCodes,
+  };
+  const combatStats: CombatStat[] = [
+    {
+      code: 'cc',
+      value: calculateCC(combatInput),
+      base: core.bases.cc,
+      attributeLabel: aptitudeCodes.includes('acuidade')
+        ? `Des ${core.attributes.des}`
+        : `For ${core.attributes.for}`,
+    },
+    {
+      code: 'cd',
+      value: calculateCD(combatInput),
+      base: core.bases.cd,
+      attributeLabel: `Des ${core.attributes.des}`,
+    },
+    {
+      code: 'esq',
+      value: calculateESQ(combatInput),
+      base: core.bases.esq,
+      attributeLabel: `Agi ${core.attributes.agi}`,
+    },
+    {
+      code: 'lm',
+      value: calculateLM(combatInput),
+      base: core.bases.lm,
+      attributeLabel: `Per ${core.attributes.per}`,
+    },
+  ];
+  const maxVitality = calculateMaxVitality(core.attributes.vig, core.campaignLevel);
+  const maxChakra = calculateMaxChakra(core.attributes.esp);
+  // Todas as pericias aparecem: as nao-treinadas tem base do atributo mesmo com
+  // 0 pontos (igual a referencia). Treinadas sem pontos ficam "sem treino" (sem
+  // base usavel) e sao ocultadas. Ordenadas por nivel desc.
+  const pericias: FichaPericia[] = PERICIAS.flatMap<FichaPericia>((def) => {
+    const points = core.pericias[def.code] ?? 0;
+    if (def.trained && points === 0) return [];
+    let level: number | null;
+    try {
+      level = calculatePericiaLevelByCode(def.code, core.attributes, points);
+    } catch {
+      level = null; // pericia social — calculo dedicado ainda pendente
+    }
+    return [{ code: def.code, name: def.name, points, level }];
+  }).sort((a, b) => (b.level ?? -1) - (a.level ?? -1));
+  const periciasCountLabel = `${sumPericiaPoints(core.pericias)}/${getPericaBudget(core.campaignLevel)}`;
+  const aptitudes: FichaAptitude[] = core.aptitudes.map((item) => {
+    const def = lookup.aptitudeByCode.get(item.code);
+    return {
+      code: item.code,
+      name: def?.name ?? humanizeCode(item.code),
+      category: def?.category ?? 'APTIDAO',
+      parameter: item.parameter,
+      isFree: item.isFreeFromOrigin,
+    };
+  });
+  const powers: FichaPower[] = core.powers.map((item) => {
+    const def = lookup.powerByCode.get(item.code);
+    return {
+      code: item.code,
+      name: def?.name ?? humanizeCode(item.code),
+      translation: def?.translation ?? null,
+      category: def?.category ?? 'PODER',
+      level: item.level,
+      freeLevel: display.freePowerLevels[item.code] ?? 0,
+      effects: (display.effectsByPowerCode[item.code] ?? []).map((e) => e.name),
+    };
+  });
 
   return (
-    <article className="relative">
+    <article className="relative mx-auto max-w-[1340px]">
       <FichaHeader
         clanName={display.clanName}
         villageName={display.villageName}
@@ -51,20 +147,82 @@ export default async function CharacterFichaPage({
         }
         age={display.age}
         rank={display.rank}
-        campaignLevel={result.viewModel.core.campaignLevel}
+        campaignLevel={core.campaignLevel}
         tendency={display.tendency}
-        attributes={result.viewModel.core.attributes}
-        imageUrl={null}
+        imageUrl={display.portraitUrl}
+        lowerContent={
+          <div className="flex flex-col gap-[18px]">
+            <AttributesGrid attributes={core.attributes} />
+            <div className="grid gap-[18px] lg:grid-cols-[1.1fr_1.5fr_1fr]">
+              <EnergyPanel
+                vitality={{ current: core.currentVitality, max: maxVitality }}
+                chakra={{ current: core.currentChakra, max: maxChakra }}
+              />
+              <CombatSkillsPanel combatStats={combatStats} />
+              <SocialPanel
+                social={{ carisma: core.socialCarisma, manipulacao: core.socialManipulacao }}
+              />
+            </div>
+            <QuickCombatPanel
+              weapons={display.equippedWeapons}
+              jutsus={display.jutsus}
+              cc={combatStats.find((s) => s.code === 'cc')?.value ?? 0}
+              cd={combatStats.find((s) => s.code === 'cd')?.value ?? 0}
+            />
+          </div>
+        }
         placeholderKanji={display.clanCode === 'yuki' ? '雪' : undefined}
       />
 
-      <section className="mx-auto max-w-5xl px-6 py-12 md:px-12">
-        <div className="rounded border border-dashed border-border bg-bg-paper/50 px-6 py-10 text-center text-sm text-ink-muted">
-          <p>StatsRow · Aptidoes · Pericias · Jutsus · Combate · Inventario</p>
-          <p className="mt-1 text-xs text-ink-faint">
-            entram nos Dias 2-4 do P0.3
-          </p>
+      <SectionDivider
+        number="01"
+        title="Talentos e Perícias"
+        kanji="才能 · 技能"
+        imageUrl={display.sectionCovers.talentos}
+        coverKey="talentos"
+        characterId={display.id}
+        canEdit={display.isOwner}
+        images={display.images}
+      />
+
+      <TrainingPanel
+        pericias={pericias}
+        periciasCountLabel={periciasCountLabel}
+        aptitudes={aptitudes}
+        powers={powers}
+      />
+
+      <SectionDivider
+        number="02"
+        title="Técnicas"
+        kanji="術"
+        imageUrl={display.sectionCovers.tecnicas}
+        coverKey="tecnicas"
+        characterId={display.id}
+        canEdit={display.isOwner}
+        images={display.images}
+      />
+
+      <section className="px-6 py-12 md:px-12">
+        <div className="border-y border-dashed border-border px-6 py-8 text-center text-sm text-ink-muted">
+          <p>Jutsus detalhados · Diário · Ações de mesa</p>
+          <p className="mt-1 text-xs text-ink-faint">entram nas próximas fatias da ficha</p>
         </div>
+      </section>
+
+      <SectionDivider
+        number="03"
+        title="Arquivo"
+        kanji="道具 · 記"
+        imageUrl={display.sectionCovers.arquivo}
+        coverKey="arquivo"
+        characterId={display.id}
+        canEdit={display.isOwner}
+        images={display.images}
+      />
+
+      <section className="px-6 py-12 md:px-12">
+        <InventoryPanel items={display.inventory} canEdit={display.isOwner} />
       </section>
 
       {display.isOwner ? (
@@ -79,4 +237,11 @@ export default async function CharacterFichaPage({
       ) : null}
     </article>
   );
+}
+
+function humanizeCode(code: string): string {
+  return code
+    .split('_')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
 }

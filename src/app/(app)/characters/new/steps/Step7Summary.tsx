@@ -44,13 +44,13 @@ export function Step7Summary({
   const nc = identity.campaignLevel;
 
   const clan = identity.clanCode
-    ? catalogs.clans.find((c) => c.code === identity.clanCode) ?? null
+    ? (catalogs.clans.find((c) => c.code === identity.clanCode) ?? null)
     : null;
   const kekkeiGenkai = identity.kekkeiGenkaiCode
-    ? catalogs.kekkeiGenkais.find((k) => k.code === identity.kekkeiGenkaiCode) ?? null
+    ? (catalogs.kekkeiGenkais.find((k) => k.code === identity.kekkeiGenkaiCode) ?? null)
     : null;
   const village = identity.villageCode
-    ? catalogs.villages.find((v) => v.code === identity.villageCode) ?? null
+    ? (catalogs.villages.find((v) => v.code === identity.villageCode) ?? null)
     : null;
 
   const origin = useMemo(
@@ -91,8 +91,7 @@ export function Step7Summary({
       const key = a.code + (a.parameter ?? '');
       seen.add(key);
       items.push({
-        name:
-          (def?.name ?? a.code) + (a.parameter ? ` (${humanizeParameter(a.parameter)})` : ''),
+        name: (def?.name ?? a.code) + (a.parameter ? ` (${humanizeParameter(a.parameter)})` : ''),
         category: def?.category.toLowerCase() ?? '—',
         description: def?.shortDescription ?? def?.description ?? '',
         isFree: false,
@@ -144,26 +143,66 @@ export function Step7Summary({
   const kekkeiGenkaiName =
     kekkeiGenkai?.name ??
     (origin.effectiveKekkeiGenkaiCode
-      ? catalogs.kekkeiGenkais.find((k) => k.code === origin.effectiveKekkeiGenkaiCode)?.name ??
-        origin.effectiveKekkeiGenkaiCode
+      ? (catalogs.kekkeiGenkais.find((k) => k.code === origin.effectiveKekkeiGenkaiCode)?.name ??
+        origin.effectiveKekkeiGenkaiCode)
       : null);
 
+  const inventoryRecap = state.inventory.map((item) => {
+    const def = catalogs.equipment.find((e) => e.code === item.equipmentCode);
+    return {
+      name: def?.name ?? item.equipmentCode,
+      quantity: item.quantity,
+      equipped: item.equipped,
+      isWeapon: def?.kind === 'WEAPON',
+    };
+  });
+
   return (
-    <CharacterSummary
-      clanName={clanName}
-      villageName={villageName}
-      name={identity.name}
-      portraitUrl={identity.portraitUrl ?? null}
-      kekkeiGenkaiName={kekkeiGenkaiName}
-      age={identity.age ?? null}
-      gender={identity.gender ?? null}
-      campaignLevel={nc}
-      attributes={attributes}
-      derived={derived}
-      aptitudes={summaryAptitudes}
-      pericias={summaryPericias}
-      powers={summaryPowers}
-    />
+    <div className="space-y-6">
+      <CharacterSummary
+        clanName={clanName}
+        villageName={villageName}
+        name={identity.name}
+        portraitUrl={identity.portraitUrl ?? null}
+        kekkeiGenkaiName={kekkeiGenkaiName}
+        age={identity.age ?? null}
+        gender={identity.gender ?? null}
+        campaignLevel={nc}
+        attributes={attributes}
+        derived={derived}
+        aptitudes={summaryAptitudes}
+        pericias={summaryPericias}
+        powers={summaryPowers}
+      />
+
+      {inventoryRecap.length > 0 ? (
+        <div>
+          <p className="mb-2 font-display text-[10px] uppercase tracking-[0.35em] text-ice">
+            Inventario
+          </p>
+          <ul className="space-y-1">
+            {inventoryRecap.map((item) => (
+              <li
+                key={item.name}
+                className="flex items-center justify-between border-b border-border py-1.5 text-sm last:border-b-0"
+              >
+                <span className="text-ink">
+                  {item.name}
+                  {item.quantity > 1 ? (
+                    <span className="ml-2 text-ink-muted">×{item.quantity}</span>
+                  ) : null}
+                </span>
+                {item.isWeapon && item.equipped ? (
+                  <span className="font-display text-[9px] uppercase tracking-[0.3em] text-ice-deep">
+                    equipada
+                  </span>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+    </div>
   );
 }
 

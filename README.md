@@ -8,16 +8,21 @@ Plataforma open source de fichas de personagem para o RPG **Shinobi no Sho 4.1b*
 
 ## Estado atual
 
-**Fase F0 — Bootstrap (em andamento).** Repositório vivo localmente:
+**MVP local em construção.** Guia operacional atualizado em `ROADMAP-ESTRUTURADO.md`.
 
-- Next.js 14 + TypeScript estrito + App Router
-- Tailwind 3.4 + tema dark+ice (`src/styles/tokens.css`)
-- Prisma + Postgres local (Docker) com schema completo aplicado
-- Firebase Auth client+admin configurados (OAuth real liga em F1)
-- Motor de regras completo em `src/domain/rules/` com 180 testes (95%+ cobertura)
-- Storage local em `public/uploads/` (Supabase Storage fica para uma fase futura)
+Já funciona localmente:
 
-Sem deploy Vercel, sem GitHub Actions, sem auth funcional ainda — tudo isso entra em fases posteriores.
+- Next.js 14 + TypeScript estrito + App Router + Tailwind 3.4 (tema dark+ice)
+- Prisma + Postgres local (Docker) — schema completo + migrations aplicadas
+- **Firebase Auth real** (login Google, sessão HTTP-only, middleware)
+- **Motor de regras** completo em `src/domain/rules/` (464 testes verdes)
+- **Seed de catálogos** populado (aptidões, poderes, efeitos, equipamentos, clãs, vilas, KGs)
+- **Wizard de criação** (`/characters/new`) — 8 passos incluindo inventário
+- **Ficha read-only** (`/characters/[id]`) — hero, atributos, energias/combate/sociais, combate rápido, perícias, aptidões, poderes/efeitos e inventário (com equipar)
+- Storage local em `public/uploads/` (cloud fica para fase futura)
+
+Próximas frentes (ver roadmap): Dashboard com lista de fichas, editor da ficha, uso em mesa.
+Sem deploy/CI ainda — tudo localhost até o MVP amadurecer.
 
 ---
 
@@ -69,7 +74,7 @@ App em `http://localhost:3000`.
 | `pnpm format` | Prettier escreve nos arquivos |
 | `pnpm db:studio` | Prisma Studio (UI visual do banco) |
 | `pnpm db:migrate` | Cria nova migration em desenvolvimento |
-| `pnpm db:seed` | Roda `prisma/seed.ts` (no-op até F2.3 entregar os catálogos) |
+| `pnpm db:seed` | Roda `prisma/seed.ts` (popula os catálogos do livro) |
 
 ---
 
@@ -96,4 +101,4 @@ MIT (a confirmar — pode mudar para AGPL antes do primeiro release público).
 
 ---
 
-*Próxima fase: F1 — Autenticação e Base.*
+*Guia operacional e próximas fases: `ROADMAP-ESTRUTURADO.md`.*

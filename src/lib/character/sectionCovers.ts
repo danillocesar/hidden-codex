@@ -91,6 +91,28 @@ export function mergeSectionCoverPositionUiState(
   return base;
 }
 
+// ── Fundo da ficha inteira ──────────────────────────────────────────────────
+
+/** URL do fundo da ficha (imagem em P&B + overlay), ou null. */
+export function resolveFichaBackground(uiState: unknown): string | null {
+  if (!isRecord(uiState)) return null;
+  const value = uiState.fichaBackground;
+  return typeof value === 'string' && isAllowedSectionCoverUrl(value) ? value : null;
+}
+
+export function mergeFichaBackgroundUiState(
+  uiState: unknown,
+  url: string | null,
+): Record<string, unknown> {
+  const base = isRecord(uiState) ? { ...uiState } : {};
+  if (url) {
+    base.fichaBackground = url;
+  } else {
+    delete base.fichaBackground;
+  }
+  return base;
+}
+
 function pickPosition(record: Record<string, unknown>, key: SectionCoverKey): string {
   const value = record[key];
   return typeof value === 'string' && isValidCoverPosition(value) ? value : DEFAULT_COVER_POSITION;

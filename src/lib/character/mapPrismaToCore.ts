@@ -24,6 +24,7 @@ import {
 } from '@/domain/rules/jutsus';
 import { applyOriginBenefits } from './applyOriginBenefits';
 import {
+  resolveFichaBackground,
   resolveSectionCovers,
   resolveSectionCoverPositions,
   type SectionCoverImage,
@@ -131,6 +132,8 @@ export type CharacterViewModel = {
     freeAptitudeCodes: ReadonlyArray<string>;
     sectionCovers: SectionCovers;
     sectionCoverPositions: SectionCoverPositions;
+    /** Imagem de fundo da ficha inteira (P&B + overlay), ou null. */
+    fichaBackground: string | null;
     images: ReadonlyArray<SectionCoverImage>;
     uiState: Prisma.JsonValue;
     /** Inventario completo (armas, armaduras, itens) para a secao da ficha. */
@@ -274,6 +277,7 @@ export function mapPrismaToCore(
       freeAptitudeCodes: benefits.freeAptitudeCodes,
       sectionCovers: resolveSectionCovers(row.uiState),
       sectionCoverPositions: resolveSectionCoverPositions(row.uiState),
+      fichaBackground: resolveFichaBackground(row.uiState),
       images: row.images.map((image) => ({
         id: image.id,
         url: image.url,

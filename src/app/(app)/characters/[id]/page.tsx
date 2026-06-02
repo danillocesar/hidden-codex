@@ -14,6 +14,8 @@ import {
 import { QuickCombatPanel } from '@/components/character/ficha/QuickCombatPanel';
 import { JutsusSection } from '@/components/character/ficha/JutsusSection';
 import { InventoryPanel } from '@/components/character/ficha/InventoryPanel';
+import { FichaBackground } from '@/components/character/ficha/FichaBackground';
+import { FichaBackgroundButton } from '@/components/character/ficha/FichaBackgroundButton';
 import { SectionDivider } from '@/components/character/ficha/SectionDivider';
 import {
   TrainingPanel,
@@ -138,127 +140,135 @@ export default async function CharacterFichaPage({ params }: { params: { id: str
 
   return (
     <article className="relative mx-auto max-w-[1340px]">
-      <FichaHeader
-        clanName={display.clanName}
-        villageName={display.villageName}
-        clanKanji={undefined}
-        villageKanji={undefined}
-      />
+      <FichaBackground url={display.fichaBackground} />
+      <div className="relative z-10">
+        <FichaHeader
+          clanName={display.clanName}
+          villageName={display.villageName}
+          clanKanji={undefined}
+          villageKanji={undefined}
+        />
 
-      <HeroSection
-        characterId={display.id}
-        canEdit={display.isOwner}
-        name={display.name}
-        subtitle={null}
-        overline={
-          display.kekkeiGenkaiName
-            ? `Kekkei Genkai · ${display.kekkeiGenkaiName}`
-            : display.clanName
-              ? `Cla · ${display.clanName}`
-              : null
-        }
-        age={display.age}
-        rank={display.rank}
-        campaignLevel={core.campaignLevel}
-        tendency={display.tendency}
-        imageUrl={display.portraitUrl}
-        lowerContent={
-          <div className="flex flex-col gap-[18px]">
-            <AttributesGrid attributes={core.attributes} />
-            <div className="grid gap-[18px] lg:grid-cols-[1.1fr_1.5fr_1fr]">
-              <EnergyPanel
-                vitality={{ current: core.currentVitality, max: maxVitality }}
-                chakra={{ current: core.currentChakra, max: maxChakra }}
-              />
-              <CombatSkillsPanel combatStats={combatStats} />
-              <SocialPanel
-                social={{ carisma: core.socialCarisma, manipulacao: core.socialManipulacao }}
+        <HeroSection
+          characterId={display.id}
+          canEdit={display.isOwner}
+          name={display.name}
+          subtitle={null}
+          overline={
+            display.kekkeiGenkaiName
+              ? `Kekkei Genkai · ${display.kekkeiGenkaiName}`
+              : display.clanName
+                ? `Cla · ${display.clanName}`
+                : null
+          }
+          age={display.age}
+          rank={display.rank}
+          campaignLevel={core.campaignLevel}
+          tendency={display.tendency}
+          imageUrl={display.portraitUrl}
+          lowerContent={
+            <div className="flex flex-col gap-[18px]">
+              <AttributesGrid attributes={core.attributes} />
+              <div className="grid gap-[18px] lg:grid-cols-[1.1fr_1.5fr_1fr]">
+                <EnergyPanel
+                  vitality={{ current: core.currentVitality, max: maxVitality }}
+                  chakra={{ current: core.currentChakra, max: maxChakra }}
+                />
+                <CombatSkillsPanel combatStats={combatStats} />
+                <SocialPanel
+                  social={{ carisma: core.socialCarisma, manipulacao: core.socialManipulacao }}
+                />
+              </div>
+              <QuickCombatPanel
+                weapons={display.equippedWeapons}
+                jutsus={display.jutsus}
+                cc={combatStats.find((s) => s.code === 'cc')?.value ?? 0}
+                cd={combatStats.find((s) => s.code === 'cd')?.value ?? 0}
+                lm={combatStats.find((s) => s.code === 'lm')?.value ?? 0}
               />
             </div>
-            <QuickCombatPanel
-              weapons={display.equippedWeapons}
-              jutsus={display.jutsus}
-              cc={combatStats.find((s) => s.code === 'cc')?.value ?? 0}
-              cd={combatStats.find((s) => s.code === 'cd')?.value ?? 0}
-              lm={combatStats.find((s) => s.code === 'lm')?.value ?? 0}
-            />
-          </div>
-        }
-        placeholderKanji={display.clanCode === 'yuki' ? '雪' : undefined}
-      />
-
-      <SectionDivider
-        number="01"
-        title="Talentos e Perícias"
-        kanji="才能 · 技能"
-        imageUrl={display.sectionCovers.talentos}
-        position={display.sectionCoverPositions.talentos}
-        coverKey="talentos"
-        characterId={display.id}
-        canEdit={display.isOwner}
-        images={display.images}
-      />
-
-      <TrainingPanel
-        pericias={pericias}
-        periciasCountLabel={periciasCountLabel}
-        aptitudes={aptitudes}
-        powers={powers}
-      />
-
-      <SectionDivider
-        number="02"
-        title="Técnicas"
-        kanji="術"
-        imageUrl={display.sectionCovers.tecnicas}
-        position={display.sectionCoverPositions.tecnicas}
-        coverKey="tecnicas"
-        characterId={display.id}
-        canEdit={display.isOwner}
-        images={display.images}
-      />
-
-      <section className="px-6 py-12 md:px-12">
-        <JutsusSection
-          characterId={display.id}
-          jutsus={display.jutsus}
-          powers={jutsuPowerOptions}
-          images={display.images}
-          acertoValues={{
-            cc: combatStats.find((s) => s.code === 'cc')?.value ?? 0,
-            cd: combatStats.find((s) => s.code === 'cd')?.value ?? 0,
-            lm: combatStats.find((s) => s.code === 'lm')?.value ?? 0,
-          }}
-          canEdit={display.isOwner}
+          }
+          placeholderKanji={display.clanCode === 'yuki' ? '雪' : undefined}
         />
-      </section>
 
-      <SectionDivider
-        number="03"
-        title="Arquivo"
-        kanji="道具 · 記"
-        imageUrl={display.sectionCovers.arquivo}
-        position={display.sectionCoverPositions.arquivo}
-        coverKey="arquivo"
-        characterId={display.id}
-        canEdit={display.isOwner}
-        images={display.images}
-      />
+        <SectionDivider
+          number="01"
+          title="Talentos e Perícias"
+          kanji="才能 · 技能"
+          imageUrl={display.sectionCovers.talentos}
+          position={display.sectionCoverPositions.talentos}
+          coverKey="talentos"
+          characterId={display.id}
+          canEdit={display.isOwner}
+          images={display.images}
+        />
 
-      <section className="px-6 py-12 md:px-12">
-        <InventoryPanel items={display.inventory} canEdit={display.isOwner} />
-      </section>
+        <TrainingPanel
+          pericias={pericias}
+          periciasCountLabel={periciasCountLabel}
+          aptitudes={aptitudes}
+          powers={powers}
+        />
 
-      {display.isOwner ? (
-        <nav className="sticky bottom-4 mx-auto mt-8 flex w-fit gap-3 rounded-full border border-border bg-bg-card/95 px-4 py-2 backdrop-blur">
-          <Button asChild variant="outline" size="sm">
-            <Link href="/dashboard">Voltar</Link>
-          </Button>
-          <Button asChild size="sm" disabled title="Editor entra em P0.4.">
-            <span>Editar (em breve)</span>
-          </Button>
-        </nav>
-      ) : null}
+        <SectionDivider
+          number="02"
+          title="Técnicas"
+          kanji="術"
+          imageUrl={display.sectionCovers.tecnicas}
+          position={display.sectionCoverPositions.tecnicas}
+          coverKey="tecnicas"
+          characterId={display.id}
+          canEdit={display.isOwner}
+          images={display.images}
+        />
+
+        <section className="px-6 py-12 md:px-12">
+          <JutsusSection
+            characterId={display.id}
+            jutsus={display.jutsus}
+            powers={jutsuPowerOptions}
+            images={display.images}
+            acertoValues={{
+              cc: combatStats.find((s) => s.code === 'cc')?.value ?? 0,
+              cd: combatStats.find((s) => s.code === 'cd')?.value ?? 0,
+              lm: combatStats.find((s) => s.code === 'lm')?.value ?? 0,
+            }}
+            canEdit={display.isOwner}
+          />
+        </section>
+
+        <SectionDivider
+          number="03"
+          title="Arquivo"
+          kanji="道具 · 記"
+          imageUrl={display.sectionCovers.arquivo}
+          position={display.sectionCoverPositions.arquivo}
+          coverKey="arquivo"
+          characterId={display.id}
+          canEdit={display.isOwner}
+          images={display.images}
+        />
+
+        <section className="px-6 py-12 md:px-12">
+          <InventoryPanel items={display.inventory} canEdit={display.isOwner} />
+        </section>
+
+        {display.isOwner ? (
+          <nav className="sticky bottom-4 mx-auto mt-8 flex w-fit items-center gap-3 rounded-full border border-border bg-bg-card/95 px-4 py-2 backdrop-blur">
+            <Button asChild variant="outline" size="sm">
+              <Link href="/dashboard">Voltar</Link>
+            </Button>
+            <FichaBackgroundButton
+              characterId={display.id}
+              current={display.fichaBackground}
+              images={display.images}
+            />
+            <Button asChild size="sm" disabled title="Editor entra em P0.4.">
+              <span>Editar (em breve)</span>
+            </Button>
+          </nav>
+        ) : null}
+      </div>
     </article>
   );
 }

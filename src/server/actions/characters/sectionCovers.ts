@@ -10,11 +10,45 @@ import {
   isAllowedSectionCoverUrl,
   isSectionCoverKey,
   isValidCoverPosition,
+  mergeFichaBackgroundUiState,
   mergeSectionCoverPositionUiState,
   mergeSectionCoverUiState,
 } from '@/lib/character/sectionCovers';
 
 export type SetCharacterSectionCoverResult = { ok: true } | { ok: false; error: string };
+
+/**
+ * Define/limpa o fundo da ficha inteira (imagem com transparência + P&B).
+ * Owner-only; a imagem deve pertencer à ficha (ou null pra remover).
+ */
+export async function setCharacterFichaBackground(
+  characterId: string,
+  url: string | null,
+): Promise<SetCharacterSectionCoverResult> {
+  const session = await getCurrentUser();
+  if (!session) return { ok: false, error: 'Nao autenticado.' };
+
+  const character = await prisma.character.findFirst({
+    where: { id: characterId, userId: session.user.id, deletedAt: null },
+    select: { id: true, uiState: true, images: { select: { url: true } } },
+  });
+  if (!character) return { ok: false, error: 'Ficha nao encontrada.' };
+
+  if (url !== null) {
+    if (!isAllowedSectionCoverUrl(url) || !character.images.some((img) => img.url === url)) {
+      return { ok: false, error: 'Imagem não pertence a esta ficha.' };
+    }
+  }
+
+  const nextUiState = mergeFichaBackgroundUiState(character.uiState, url);
+  await prisma.character.update({
+    where: { id: character.id },
+    data: { uiState: nextUiState as Prisma.InputJsonValue },
+  });
+
+  revalidatePath(`/characters/${character.id}`);
+  return { ok: true };
+}
 
 /**
  * Salva a posição (object-position "X% Y%") da imagem de capa de uma seção,

@@ -20,24 +20,29 @@ como guia operacional atualizado para decidir o que fazer a seguir.
 - Upload local de retrato via `/api/upload/character-portrait`.
 - Testes unitarios/integracao cobrindo motor, auth, seed e schema de criacao.
 
+> Atualizacao 2026-06: Fases 1, 2 e 4 entregues. Veja abaixo.
+
+### Entregue desde a revisao inicial
+
+- **Ficha read-only completa** (F1): hero (retrato + atributos/energias/combate/sociais), Combate Rapido, talentos/pericias/aptidoes, poderes com efeitos, tecnicas (jutsus reais via editor), inventario, capas de secao com pan+zoom, fundo da ficha.
+- **Dashboard operacional** (F2): lista personagens, busca por nome, filtros (NC/origem), soft delete com confirmacao.
+- **Uso em mesa / calculadora de combate** (F4): modal de jutsu (calculadora de dano por grau, tabs de nivel, Ataque Poderoso/Canhao-sem-chakra gateados por aptidao e tipo de ataque), modal de ataque com arma, Usar Jutsu (debita chakra), Tomar Dano/Curar/Restaurar Chakra, toasts de feedback, skeleton no carregamento de imagens.
+- **Persistencia de `learnedEffects`** no `Character` (migration + mapper); backfill de fichas legadas via `scripts/backfill-learned-effects.ts`.
+- **Regras adicionais no motor**: bonus de dano de elemento (Fuuton +2), efeitos de nivel fixo (Nevoa), aptidao homebrew "Acuidade (Homebrew)" (Des no dano de CC), pericia social Obter Informacao (Carisma + 1/2 Int).
+
 ### Parcial
 
-- Dashboard existe, mas ainda mostra empty state e nao lista personagens.
-- Ficha renderiza apenas header/hero; blocos de stats, pericias, aptidoes, jutsus, combate e inventario ainda sao placeholders.
-- Wizard parece funcional, mas ainda precisa de teste manual responsivo e E2E de criacao.
-- `learnedEffects` e `narrativeFlags` existem no dominio, mas nao persistem no Prisma.
-- Documentacao raiz esta desatualizada em alguns pontos, especialmente README e topo do BACKLOG.
+- `narrativeFlags` existe no dominio mas ainda nao persiste (sem uso ativo).
+- Wizard funciona, mas falta E2E de criacao e revisao responsiva formal.
+- Documentacao raiz (README) ainda pode estar desatualizada em pontos.
 
 ### Ainda nao iniciado
 
-- Editor da ficha.
-- Uso em mesa: usar jutsu, gastar chakra, tomar dano, curar.
-- Sistema guiado de subida de NC.
-- Diario na UI.
-- Compartilhamento publico completo.
-- Dashboard com busca/filtros/delete.
+- **Editor da ficha** (F3) — pasta `characters/[id]/edit` vazia.
+- **Subida de NC guiada + Diario** (F5) — pasta `characters/[id]/diary` vazia.
+- **Compartilhamento publico** (F6) — pasta `share/[token]` vazia.
 - E2E critico com Playwright.
-- Deploy, CI e polish de acessibilidade/performance.
+- Deploy, CI e polish de acessibilidade/performance (F7).
 
 ## Norte do MVP
 
@@ -762,6 +767,17 @@ entender se sao ajustes intencionais e rodar validador.
 
 O projeto usa storage local em `public/uploads/`, enquanto a spec antiga fala em
 Supabase Storage. Manter decisao explicita por ambiente.
+
+### DT.6 `rollType` faltante em ~38 efeitos (KG/Hijutsu/Bijuu)
+
+Alguns efeitos com dano nao declaram `stats.rollType` no seed, entao a ficha
+mostra "—" no Acerto e a calculadora nao resolve a precisao. Os efeitos
+**basicos** (Canhao, Raio, Orbe, Lanca, etc.) ja estao completos; o gap esta em
+efeitos avancados (Rasengan, Juuken, Shikakyu, tecnicas de Bijuu/Jinchuuriki) e
+alguns sao **utilitarios** que legitimamente nao tem rolagem (Criar Arma,
+Energizar, Afiar). Preencher os reais exige consulta caso-a-caso ao livro — NAO
+chutar (corrompe dados de jogo). Tratar como tarefa de qualidade de seed pos-MVP,
+efeito por efeito com referencia de pagina.
 
 ## Definicao De Pronto
 

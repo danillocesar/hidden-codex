@@ -1,52 +1,51 @@
-# Handoff — sessão ficha/UI (jun/2026)
+# Handoff — sessão Fase 4 (combate) + limpeza (jun/2026)
 
-Branch: **`test-lazy-web`** · commits **locais (sem push)** · suíte **467 testes verdes**, typecheck e lint limpos.
+Branch: **`test-lazy-web`** · commits **locais (sem push)** · suíte **495 testes verdes**, typecheck e lint limpos.
 
-> Guia operacional de escopo segue em `ROADMAP-ESTRUTURADO.md`; convenções em `CLAUDE.md`. Este arquivo é o resumo pra **retomar em outra sessão**.
+> Guia operacional de escopo em `ROADMAP-ESTRUTURADO.md`; convenções em `CLAUDE.md`. Este arquivo é o resumo pra **retomar em outra sessão**.
 
-## Estado atual (o que funciona)
+## Estado atual (jornada do MVP: loga → cria → vê → editar ⬜ → joga ✅ → compartilha ⬜)
 
 - **Fundação**: Next 14 + TS estrito + Tailwind + Prisma/Postgres (Docker) + Firebase Auth real.
-- **Motor de regras** (`src/domain/rules/`) completo, 467 testes.
-- **Seed** de catálogos populado (aptidões, poderes, efeitos, equipamentos, clãs, vilas, KGs).
-- **Wizard** de criação (`/characters/new`) — 8 passos, incluindo **inventário**.
-- **Ficha read-only** (`/characters/[id]`) — completa e alinhada à `arcana-forge-spec/reference/satsuki-ficha-reference.html`:
-  - **Hero**: retrato (clicável p/ o dono trocar) + Atributos · Energias · Habilidades de Combate · Sociais; **Combate Rápido** (tabela Acerto/Dano/Chakra/Níveis).
-  - **Talentos e Perícias**: Aptidões, Poderes (com efeitos aprendidos), Perícias (todas, base do atributo nas não-treinadas, ordenadas).
-  - **Técnicas**: cards de **jutsu** (criação real via JutsuEditor, troca de imagem, ícone de info → drawer com a descrição do efeito; "ver descrição" também abre o drawer).
-  - **Arquivo**: Inventário (checkbox "equipada" alimenta o Combate Rápido).
-  - **Capas de seção**: trocar/escolher imagem + **ajustar (pan + zoom)** — controles só no hover, atrás de um toggle "Ajustar".
-  - **Fundo da ficha inteira** (imagem P&B + overlay, full screen) via botão "Fundo".
-- **Dashboard** (`/dashboard`): grid de cards, busca por nome, filtros (NC/origem), soft delete.
+- **Motor de regras** (`src/domain/rules/`) completo.
+- **Wizard** de criação (`/characters/new`) — 8 passos com inventário.
+- **Ficha read-only** (`/characters/[id]`) — completa (hero, combate rápido, talentos/perícias/aptidões, técnicas/jutsus, inventário, capas com pan+zoom, fundo).
+- **Dashboard** (`/dashboard`) — grid, busca, filtros (NC/origem), soft delete.
+- **Fase 4 — Uso em mesa** (entregue nesta leva):
+  - Calculadora de dano (`DamageCalculatorTable`) por grau (DDA·½·NV·Elem·Outro·Total·graus 1-4).
+  - **Modal de jutsu** (`JutsuUseModal`): tabs de nível, Ataque Poderoso, Canhão-sem-chakra, **Usar Jutsu** (debita chakra). Efeitos sem dano (Névoa/Barreira/Criar Arma) não mostram calculadora.
+  - **Modal de ataque** (`WeaponAttackModal`): Ataque Poderoso + Múltiplo.
+  - **Energias clicáveis** (`EnergyAdjuster` + `EnergyAdjustModal`): Tomar Dano/Curar, Gastar/Restaurar Chakra, com status (agonizando/morto).
+  - Server actions em `src/server/actions/characters/combat.ts` (`useJutsu`, `adjustVitality`, `adjustChakra`) — owner-only, recalculam máximos no servidor.
+  - **Toasts** (`ui/toast.tsx`, provider no `(app)/layout`) no topo-direito; **skeleton** de imagem (`ui/image-with-skeleton.tsx`) em retrato/capa/card de jutsu.
 
 ## Decisões e gotchas desta sessão
 
-- **Efeitos aprendidos** persistem em `Character.learnedEffects` (JSON `Record<powerCode, effectCode[]>`), **não** mais derivados de `CharacterJutsu`. `CharacterJutsu` é reservado para jutsus reais. (migration `add_character_learned_effects`)
-- Migrations novas: `add_inventory_equipped` (`CharacterInventoryItem.equipped`), `add_jutsu_levels` (`CharacterJutsu.levels Int[]`), `add_character_learned_effects`.
-- **"Comum do poder"** resolvido com Espírito no motor (`jutsus.ts`): `commonPowerRange = 10 + 2×Esp`, `commonPowerDifficulty = 9 + nível + ⌈Esp/2⌉`, `commonPowerSize = Esp`; dano base = `calculateNinpouBaseDamage`. Card/Combate mostram valores **por nível conjurável** (ex.: níveis 1·2·3 → dano 3·4·5).
-- Stats do efeito (`rollType`/`damage`/`chakraCost`/`range`/`duration`) vêm de `PowerEffect.stats` e são exibidos com rótulos PT (helpers em `mapPrismaToCore.ts`). **Cobertura parcial no seed** — efeito sem `rollType`/dano fica "—".
-- **Uploads**: `/api/upload/character-image` agora **preserva aspecto** (`fit:inside` 1600px, sem crop) — cada contexto recorta via CSS. `/api/upload/character-portrait` = 600×900 (2:3).
-- `uiState` guarda: `sectionCovers`, `sectionCoverPositions`, `sectionCoverZooms`, `fichaBackground`.
-- **Fundo da ficha** = `fixed inset-0 z-0`; o header do `(app)/layout.tsx` recebeu `z-20` pra não ser coberto.
-- **Tooltip** usa `group-hover` genérico → onde a section também é `group`, use **group nomeado** (`group/cover`) pra não abrir todos os tooltips juntos.
-- ⚠️ **Windows**: `prisma generate` falha com EPERM se o `next dev` estiver rodando (lock do query engine). **Pare o dev server antes** de `migrate dev`/`generate`.
+- **Acuidade RAW** mantida (não afeta dano). Para homebrew, criamos a aptidão **`acuidade_homebrew`** ("Acuidade (Homebrew)") que usa Des no dano de CC (só em arma que aceita Acuidade). Flag desce via `abilities` na page → `QuickCombatPanel` → modais.
+- **Toggles gateados**: Ataque Poderoso só em ataque CC **e** se o personagem tem a aptidão; Ataque Múltiplo só com a aptidão. Confirmado no livro (Ataque Poderoso é corpo-a-corpo).
+- **Fuuton +2 de dano base** em todos os efeitos (`domain/rules/elements.ts`; Katon comentado p/ habilitar). Entra como componente `elemento` no breakdown e é dividido junto no Canhão-sem-chakra.
+- **Névoa** = efeito de **nível fixo** (`stats.scaling:false`), custo de chakra = nível do efeito (`chakraCost:"nivel_do_efeito"` → 2). Mapper expõe ação/alvo/área/pré-requisito; editor não pede multi-nível pra efeitos `scaling:false`.
+- **Perícia social Obter Informação** = Carisma + ½ Int (`calculateSocialPericiaLevel`; catálogo ganhou `socialRequiredAttribute`).
+- **Portais (React) borbulham pela árvore de componentes**, não a do DOM: `InfoDrawer` faz `stopPropagation` na raiz pra não disparar o onClick da linha do Combate Rápido. `Toaster` só monta o portal pós-hidratação (evita mismatch).
+- **Imagem com cache** completa antes do `onLoad`: `ImageWithSkeleton` usa `key={src}` + checa `img.complete` no efeito (senão a img some/skeleton trava).
 
 ## Pendências (próximos passos)
 
-1. **Botão "Criar jutsu"** só aparece se a ficha tem efeitos aprendidos. Fichas criadas **antes** da migration `learnedEffects` têm `{}` → fazer **backfill** (a partir dos `CharacterJutsu` legados) ou recriar pelo wizard.
-2. **Calculadora de combate (Fase 4)**: acerto hoje reaproveita CC/CD/LM do personagem; falta dano final com bônus/½Esp por contexto, Especialista por arma, opção meio-chakra do Canhão, e o modal "usar jutsu" (gastar chakra, tomar dano, curar).
-3. **Perícia social** (Obter Informação, base Carisma) sem cálculo (Carisma + ½ Int) → mostra "—".
-4. **Seed**: preencher `stats.rollType`/`damage` faltantes em efeitos de ataque.
-5. **Docs**: README/ROADMAP refletir que dashboard + criação de jutsus + edição foram entregues.
-6. `.claude/hooks/` (format-on-edit, guard-paths) está **untracked** — decidir versionar.
-7. **`git push`** pendente (tudo local em `test-lazy-web`).
+1. **Editor da ficha (F3)** — `characters/[id]/edit` vazio. Maior lacuna da jornada principal.
+2. **Compartilhamento público (F6)** — `share/[token]` vazio. Menor, alto valor de demo.
+3. **Level-up + Diário (F5)** — `characters/[id]/diary` vazio.
+4. **DT.6 (ROADMAP)**: ~38 efeitos avançados sem `rollType` no seed — preencher caso-a-caso com o livro (não chutar).
+5. **README** raiz pode estar desatualizado.
+6. `.claude/hooks/` untracked — decidir versionar. **`git push`** pendente (tudo local).
 
 ## Como rodar
 
 ```bash
 docker start arcana-forge-db          # Postgres local
-pnpm dev                              # localhost:3000 (ou 3001 se ocupada)
+pnpm dev                              # localhost:3000
 pnpm lint && pnpm typecheck && pnpm test
-# migrations (pare o dev antes no Windows):
+pnpm tsx scripts/backfill-learned-effects.ts [--apply]   # backfill de fichas legadas
+# migrations/seed (pare o dev antes no Windows):
 pnpm prisma migrate dev --name <nome>
+pnpm prisma db seed                   # reaplica catálogos (Névoa, acuidade_homebrew, etc.)
 ```

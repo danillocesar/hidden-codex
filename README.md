@@ -15,13 +15,15 @@ Já funciona localmente:
 - Next.js 14 + TypeScript estrito + App Router + Tailwind 3.4 (tema dark+ice)
 - Prisma + Postgres local (Docker) — schema completo + migrations aplicadas
 - **Firebase Auth real** (login Google, sessão HTTP-only, middleware)
-- **Motor de regras** completo em `src/domain/rules/` (464 testes verdes)
+- **Motor de regras** completo em `src/domain/rules/` (495 testes verdes)
 - **Seed de catálogos** populado (aptidões, poderes, efeitos, equipamentos, clãs, vilas, KGs)
 - **Wizard de criação** (`/characters/new`) — 8 passos incluindo inventário
-- **Ficha read-only** (`/characters/[id]`) — hero, atributos, energias/combate/sociais, combate rápido, perícias, aptidões, poderes/efeitos e inventário (com equipar)
+- **Ficha read-only** (`/characters/[id]`) — hero, energias/combate/sociais, combate rápido, perícias, aptidões, poderes/efeitos, técnicas (jutsus) e inventário
+- **Dashboard** (`/dashboard`) — lista, busca, filtros (NC/origem) e soft delete
+- **Uso em mesa** — calculadora de dano, usar jutsu (gasta chakra), tomar dano/curar/restaurar, com toasts e skeletons
 - Storage local em `public/uploads/` (cloud fica para fase futura)
 
-Próximas frentes (ver roadmap): Dashboard com lista de fichas, editor da ficha, uso em mesa.
+Próximas frentes (ver roadmap): **editor da ficha** (F3) e **compartilhamento público** (F6).
 Sem deploy/CI ainda — tudo localhost até o MVP amadurecer.
 
 ---

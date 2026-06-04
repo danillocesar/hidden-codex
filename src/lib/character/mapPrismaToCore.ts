@@ -22,6 +22,7 @@ import {
   calculateNinpouBaseDamage,
   commonPowerRange,
 } from '@/domain/rules/jutsus';
+import { getElementDamageBonus } from '@/domain/rules/elements';
 import { applyOriginBenefits } from './applyOriginBenefits';
 import {
   resolveFichaBackground,
@@ -63,6 +64,28 @@ export type FichaInventoryItem = {
   damageType: string | null;
   range: string | null;
   isWeapon: boolean;
+  /** Bônus de dano numérico parseado de `damage` ("+2" → 2). null se não numérico. */
+  weaponDamageValue: number | null;
+  /** Tipo de ataque pra calculadora: CC (corporal) ou CD-arremesso. null = não-arma. */
+  attackKind: 'cc' | 'cd_thrown' | null;
+  /** Arma aceita a aptidão Acuidade (leve ou marcada em `compatibleAptitudes`). */
+  acceptsAcuidade: boolean;
+};
+
+/**
+ * Dados numéricos de combate de um jutsu — alimentam a calculadora de dano do
+ * modal. Separado dos rótulos legíveis (`damage`/`chakraCost`) porque a
+ * calculadora recalcula por nível/toggle no client.
+ */
+export type FichaJutsuCombat = {
+  /** Fórmula de dano reconhecida, ou null quando o efeito não tem dano direto calculável. */
+  damageType: 'ninpou_canhao' | 'ninpou_standard' | null;
+  /** Canhão a partir do nível 2 do poder permite uso sem custo de chakra (dano ÷2). */
+  isCanhao: boolean;
+  /** Custo de chakra numérico por nível conjurável (mesmo índice de `levels`). null = não auto-debitável. */
+  chakraByLevel: ReadonlyArray<number | null>;
+  /** Bônus de dano base do elemento do poder (Fuuton +2, etc.). */
+  elementDamageBonus: number;
 };
 
 export type FichaJutsu = {
@@ -95,13 +118,30 @@ export type FichaJutsu = {
   range: string | null;
   /** Duração do efeito (`stats.duration`), em rótulo legível. `null` se ausente. */
   duration: string | null;
+  /** Ação para conjurar (`stats.action`): "Padrão", "Parcial", etc. `null` se ausente. */
+  action: string | null;
+  /** Alvo do efeito (`stats.target`): "Uma criatura", "O ambiente", etc. `null` se ausente. */
+  target: string | null;
+  /** Área de efeito (`stats.areaOfEffect` + `areaHeight`), em rótulo legível. `null` se ausente. */
+  area: string | null;
+  /** Pré-requisito do efeito (`rules.prerequisites`), em rótulo legível. `null` se nenhum. */
+  prerequisite: string | null;
   /** Glifo do elemento do poder (氷/水/火/風…) pro card. Fallback 術. */
   powerKanji: string;
+  /** Dados numéricos pra calculadora de dano (modal de uso). */
+  combat: FichaJutsuCombat;
 };
 
 export type FichaEffect = {
   code: string;
   name: string;
+  /** Nível do efeito (nível do poder em que fica disponível). */
+  minLevel: number;
+  /**
+   * Efeito escala com o nível conjurado (dano/custo variam). `false` = nível
+   * fixo (ex.: Névoa, sempre usado no seu nível) → não precisa multi-seleção.
+   */
+  scaling: boolean;
 };
 
 /**
@@ -190,6 +230,7 @@ export function mapPrismaToCore(
 
   const inventory: FichaInventoryItem[] = row.inventory.map((item) => {
     const eq = item.equipment;
+    const isWeapon = eq?.kind === 'WEAPON';
     return {
       id: item.id,
       name: eq?.name ?? item.customName ?? 'Item',
@@ -201,7 +242,10 @@ export function mapPrismaToCore(
       damage: eq?.damage ?? null,
       damageType: eq?.damageType ?? null,
       range: eq?.range ?? null,
-      isWeapon: eq?.kind === 'WEAPON',
+      isWeapon,
+      weaponDamageValue: isWeapon ? parseWeaponDamage(eq?.damage ?? null) : null,
+      attackKind: weaponAttackKind(eq?.category ?? null, isWeapon),
+      acceptsAcuidade: isWeapon && weaponAcceptsAcuidade(eq?.category ?? null, eq?.effects),
     };
   });
   const equippedWeapons = inventory.filter((i) => i.isWeapon && i.equipped);
@@ -219,11 +263,16 @@ export function mapPrismaToCore(
       imageUrl: j.imageUrl,
       description: j.flavorText,
       acerto: readRollType(effect?.stats),
-      chakraCost: resolveChakra(effect?.stats, j.levels),
-      damage: resolveDamage(effect?.stats, row.attrEsp, j.levels),
+      chakraCost: resolveChakra(effect?.stats, j.levels, effect?.minLevel),
+      damage: resolveDamage(effect?.stats, row.attrEsp, j.levels, power?.code),
       range: resolveRange(effect?.stats, row.attrEsp),
       duration: formatDuration(effect?.stats),
+      action: resolveAction(effect?.stats),
+      target: resolveTarget(effect?.stats),
+      area: resolveArea(effect?.stats, row.attrEsp),
+      prerequisite: resolvePrerequisite(effect?.rules),
       powerKanji: powerKanjiFor(power?.code),
+      combat: resolveJutsuCombat(effect?.stats, j.levels, power?.code, effect?.minLevel),
     };
   });
 
@@ -231,10 +280,15 @@ export function mapPrismaToCore(
   // poderes na secao Tecnicas (os jutsus reais vao no Combate Rapido).
   const effectsByPowerCode: Record<string, FichaEffect[]> = {};
   for (const [powerCode, codes] of Object.entries(learnedMap)) {
-    effectsByPowerCode[powerCode] = codes.map((code) => ({
-      code,
-      name: effectByCode.get(code)?.name ?? code,
-    }));
+    effectsByPowerCode[powerCode] = codes.map((code) => {
+      const def = effectByCode.get(code);
+      return {
+        code,
+        name: def?.name ?? code,
+        minLevel: def?.minLevel ?? 1,
+        scaling: isEffectScaling(def?.stats),
+      };
+    });
   }
 
   const core: CharacterCore = {
@@ -402,6 +456,7 @@ const CHAKRA_PER_LEVEL = new Set([
 function resolveChakra(
   stats: Prisma.JsonValue | undefined,
   levels: ReadonlyArray<number>,
+  effectMinLevel: number | undefined,
 ): string | null {
   if (!stats || typeof stats !== 'object' || Array.isArray(stats)) return null;
   const raw = (stats as Record<string, unknown>).chakraCost;
@@ -409,6 +464,8 @@ function resolveChakra(
   if (typeof raw !== 'string') return null;
   const key = raw.trim();
   if (!key) return null;
+  // Custo não especificado no livro = o próprio nível do efeito (fixo).
+  if (key === 'nivel_do_efeito') return String(effectMinLevel ?? 1);
   const perLevel = (fn: (lvl: number) => number): string | null =>
     levels.length > 0 ? levels.map(fn).join(' · ') : null;
   if (CHAKRA_PER_LEVEL.has(key)) return perLevel((lvl) => lvl) ?? formatChakraCost(stats);
@@ -508,17 +565,37 @@ function resolveDamage(
   stats: Prisma.JsonValue | undefined,
   esp: number,
   levels: ReadonlyArray<number>,
+  powerCode: string | undefined,
 ): string | null {
+  const profile = classifyJutsuDamageType(stats);
+  const elementBonus = getElementDamageBonus(powerCode);
+  const perLevel = (fn: (lvl: number) => number): string | null =>
+    levels.length > 0 ? levels.map((lvl) => fn(lvl) + elementBonus).join(' · ') : null;
+
+  if (profile === 'ninpou_standard') {
+    return perLevel((lvl) => calculateNinpouBaseDamage(esp, lvl)) ?? formatDamage(stats);
+  }
+  if (profile === 'ninpou_canhao') {
+    return perLevel((lvl) => calculateCanhaoDamage(lvl)) ?? formatDamage(stats);
+  }
+  return formatDamage(stats);
+}
+
+/**
+ * Classifica a fórmula de dano de um efeito nos dois tipos que a calculadora
+ * sabe recalcular: Ninpou padrão (⌈Esp/2⌉ + nível) e Canhão (2 × nível). null
+ * pra efeitos sem dano direto ou com dano só descritivo ("ver texto").
+ */
+function classifyJutsuDamageType(
+  stats: Prisma.JsonValue | undefined,
+): 'ninpou_canhao' | 'ninpou_standard' | null {
   if (!stats || typeof stats !== 'object' || Array.isArray(stats)) return null;
   const record = stats as Record<string, unknown>;
   const rawDamage = record.damage;
-  if (typeof rawDamage === 'number') return rawDamage === 0 ? null : String(rawDamage);
+  if (typeof rawDamage === 'number') return null;
   const formula = typeof record.damageFormula === 'string' ? record.damageFormula.trim() : '';
   const d = typeof rawDamage === 'string' ? rawDamage.trim() : '';
   if (d === 'nenhum' || d === 'nenhum_direto') return null;
-
-  const perLevel = (fn: (lvl: number) => number): string | null =>
-    levels.length > 0 ? levels.map(fn).join(' · ') : null;
 
   const isComum = d === 'comum_do_poder' || formula === 'nivel_usado + ceil(esp / 2)';
   const isDouble =
@@ -527,9 +604,193 @@ function resolveDamage(
     d === '2 por nível do poder usado' ||
     d === '2 por nível usado';
 
-  if (isComum) return perLevel((lvl) => calculateNinpouBaseDamage(esp, lvl)) ?? formatDamage(stats);
-  if (isDouble) return perLevel((lvl) => calculateCanhaoDamage(lvl)) ?? formatDamage(stats);
-  return formatDamage(stats);
+  if (isComum) return 'ninpou_standard';
+  if (isDouble) return 'ninpou_canhao';
+  return null;
+}
+
+/**
+ * Custo de chakra numérico de um efeito num nível específico. "nivel_usado" e
+ * similares = o próprio nível; "metade do nível" = ⌈nível/2⌉; número fixo é
+ * mantido. Retorna null quando o custo não é auto-debitável (texto livre/varia).
+ */
+function chakraCostForLevel(
+  stats: Prisma.JsonValue | undefined,
+  level: number,
+  effectMinLevel: number | undefined,
+): number | null {
+  if (!stats || typeof stats !== 'object' || Array.isArray(stats)) return null;
+  const raw = (stats as Record<string, unknown>).chakraCost;
+  if (typeof raw === 'number' && Number.isFinite(raw)) return raw;
+  if (typeof raw !== 'string') return null;
+  const key = raw.trim();
+  if (key === 'nivel_do_efeito') return effectMinLevel ?? 1;
+  if (CHAKRA_PER_LEVEL.has(key)) return level;
+  if (key === 'metade_do_nivel_do_poder') return Math.ceil(level / 2);
+  return null;
+}
+
+/**
+ * Efeito escala com o nível conjurado? `stats.scaling === false` marca nível
+ * fixo (ex.: Névoa). Default true (mantém o comportamento de efeitos com
+ * dano/custo por nível).
+ */
+function isEffectScaling(stats: Prisma.JsonValue | undefined): boolean {
+  if (!stats || typeof stats !== 'object' || Array.isArray(stats)) return true;
+  return (stats as Record<string, unknown>).scaling !== false;
+}
+
+/** Monta os dados numéricos de combate do jutsu pra calculadora do modal. */
+function resolveJutsuCombat(
+  stats: Prisma.JsonValue | undefined,
+  levels: ReadonlyArray<number>,
+  powerCode: string | undefined,
+  effectMinLevel: number | undefined,
+): FichaJutsuCombat {
+  const damageType = classifyJutsuDamageType(stats);
+  return {
+    damageType,
+    isCanhao: damageType === 'ninpou_canhao',
+    chakraByLevel: levels.map((lvl) => chakraCostForLevel(stats, lvl, effectMinLevel)),
+    elementDamageBonus: getElementDamageBonus(powerCode),
+  };
+}
+
+/** Categorias de arma que atacam com Combate a Distância (arremesso/disparo). */
+const RANGED_ATTACK_CATEGORIES = new Set(['ARREMESSO', 'DISPARO', 'EXPLOSIVO', 'AREA']);
+
+/** Parse "+2"/"+1/+1"/"+0" → bônus numérico (primeiro token). null se não numérico. */
+function parseWeaponDamage(raw: string | null): number | null {
+  if (!raw) return null;
+  const match = raw.match(/[+-]?\d+/);
+  return match ? Number(match[0]) : null;
+}
+
+/** Tipo de ataque da arma pra calculadora: ranged → CD-arremesso, resto → CC. */
+function weaponAttackKind(
+  category: string | null,
+  isWeapon: boolean,
+): 'cc' | 'cd_thrown' | null {
+  if (!isWeapon) return null;
+  if (category && RANGED_ATTACK_CATEGORIES.has(category)) return 'cd_thrown';
+  return 'cc';
+}
+
+/**
+ * Arma aceita Acuidade? Toda arma leve (categoria LEVE) aceita por definição
+ * (Livro Básico); demais precisam declarar `acuidade` em `effects.compatibleAptitudes`.
+ */
+function weaponAcceptsAcuidade(category: string | null, effects: Prisma.JsonValue | undefined): boolean {
+  if (category === 'LEVE') return true;
+  if (!effects || typeof effects !== 'object' || Array.isArray(effects)) return false;
+  const compat = (effects as Record<string, unknown>).compatibleAptitudes;
+  return Array.isArray(compat) && compat.includes('acuidade');
+}
+
+/** Tokens de ação (enum do seed) → rótulo capitalizado. */
+const ACTION_LABELS: Record<string, string> = {
+  PADRAO: 'Padrão',
+  PARCIAL: 'Parcial',
+  MOVIMENTO: 'Movimento',
+  COMPLETA: 'Completa',
+  LIVRE: 'Livre',
+  REACAO: 'Reação',
+};
+
+/** Le `stats.action` e devolve rótulo legível (ex.: PADRAO → "Padrão"). */
+function resolveAction(stats: Prisma.JsonValue | undefined): string | null {
+  if (!stats || typeof stats !== 'object' || Array.isArray(stats)) return null;
+  const raw = (stats as Record<string, unknown>).action;
+  if (typeof raw !== 'string') return null;
+  const key = raw.trim();
+  if (!key) return null;
+  return ACTION_LABELS[key.toUpperCase()] ?? capitalizeWords(key.replace(/_/g, ' '));
+}
+
+/** Codigos de alvo do seed → rótulo legível em PT. */
+const TARGET_LABELS: Record<string, string> = {
+  ambiente: 'O ambiente',
+  uma_criatura: 'Uma criatura',
+  uma_ou_mais_criaturas: 'Uma ou mais criaturas',
+  varias_criaturas: 'Várias criaturas',
+  area: 'Área',
+  pessoal: 'Pessoal',
+  si_mesmo: 'Si mesmo',
+  um_objeto: 'Um objeto',
+  um_aliado: 'Um aliado',
+};
+
+/** Le `stats.target` e devolve rótulo legível (ex.: "ambiente" → "O ambiente"). */
+function resolveTarget(stats: Prisma.JsonValue | undefined): string | null {
+  if (!stats || typeof stats !== 'object' || Array.isArray(stats)) return null;
+  const raw = (stats as Record<string, unknown>).target;
+  if (typeof raw !== 'string') return null;
+  const key = raw.trim();
+  if (!key) return null;
+  return TARGET_LABELS[key] ?? capitalizeWords(key.replace(/_/g, ' '));
+}
+
+/**
+ * Le `stats.areaOfEffect` (+ `areaHeight`) e devolve rótulo legível. Resolve o
+ * termo "por Espírito" com o Esp atual (ex.: "3m_por_esp" com Esp 3 → "9m") e
+ * deixa o restante como fórmula. Ex.: "Círculo Ø 30m + 9m · alt. comum do poder".
+ */
+function resolveArea(stats: Prisma.JsonValue | undefined, esp: number): string | null {
+  if (!stats || typeof stats !== 'object' || Array.isArray(stats)) return null;
+  const rec = stats as Record<string, unknown>;
+  const raw = rec.areaOfEffect;
+  if (typeof raw === 'number') return `${raw}m`;
+  if (typeof raw !== 'string' || !raw.trim()) return null;
+  const shape = raw
+    .replace(/(\d+)m_por_esp/gi, (_, n: string) => `${Number(n) * esp}m`)
+    .replace(/circulo/gi, 'Círculo Ø')
+    .replace(/quadrado/gi, 'Quadrado')
+    .replace(/_diametro/gi, '')
+    .replace(/_/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const h = rec.areaHeight;
+  const height =
+    typeof h === 'string' && h.trim()
+      ? h.trim() === 'comum_do_poder'
+        ? 'alt. comum do poder'
+        : h.replace(/_/g, ' ')
+      : null;
+  return height ? `${shape} · ${height}` : shape;
+}
+
+/** Rótulos de aptidões usadas como pré-requisito de efeito. */
+const PREREQ_APTITUDE_LABELS: Record<string, string> = {
+  lutar_as_cegas: 'Lutar às Cegas',
+  sensor: 'sensor',
+};
+
+/**
+ * Le `rules.prerequisites` e devolve rótulo legível. Cobre os formatos do seed:
+ * `aptitudes_one_of` (junta com "ou") e `aptitudes_all` (junta com "e").
+ */
+function resolvePrerequisite(rules: Prisma.JsonValue | undefined): string | null {
+  if (!rules || typeof rules !== 'object' || Array.isArray(rules)) return null;
+  const pre = (rules as Record<string, unknown>).prerequisites;
+  if (!pre || typeof pre !== 'object' || Array.isArray(pre)) return null;
+  const rec = pre as Record<string, unknown>;
+  const label = (code: string): string =>
+    PREREQ_APTITUDE_LABELS[code] ?? capitalizeWords(code.replace(/_/g, ' '));
+
+  const oneOf = rec.aptitudes_one_of;
+  if (Array.isArray(oneOf) && oneOf.length > 0) {
+    return oneOf.filter((c): c is string => typeof c === 'string').map(label).join(' ou ');
+  }
+  const all = rec.aptitudes_all;
+  if (Array.isArray(all) && all.length > 0) {
+    return all.filter((c): c is string => typeof c === 'string').map(label).join(' e ');
+  }
+  return null;
+}
+
+/** Capitaliza a primeira letra de cada palavra (rótulos derivados de codes). */
+function capitalizeWords(text: string): string {
+  return text.replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 const RANGE_LABELS: Record<string, string> = {

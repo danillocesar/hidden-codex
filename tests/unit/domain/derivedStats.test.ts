@@ -72,6 +72,16 @@ describe('derivedStats — Satsuki NC 6', () => {
       expect(calculateCC(input, { weaponCategory: 'leve' })).toBe(6); // 5 + 1 For
     });
 
+    it('Acuidade (Homebrew) também substitui Força por Destreza na precisão', () => {
+      const input = {
+        attributes: satsukiNc6.attributes,
+        bases: satsukiNc6.bases,
+        aptitudeCodes: ['acuidade_homebrew'],
+      };
+      // 5 base + 6 Des (homebrew conta como Acuidade na precisão) = 11
+      expect(calculateCC(input, { weaponCategory: 'leve' })).toBe(11);
+    });
+
     // ── RAW (Livro Básico 4.1b — Acuidade) ───────────────────────────────
     // Arma mediana sem entrada explícita no livro NÃO recebe Acuidade.
     it('arma mediana com nome desconhecido usa Força (não-RAW NÃO entra)', () => {

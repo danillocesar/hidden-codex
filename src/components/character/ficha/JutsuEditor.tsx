@@ -15,7 +15,14 @@ export type JutsuPowerOption = {
   code: string;
   name: string;
   level: number;
-  effects: ReadonlyArray<{ code: string; name: string }>;
+  effects: ReadonlyArray<{
+    code: string;
+    name: string;
+    /** Nível do efeito (disponível a partir deste nível do poder). */
+    minLevel: number;
+    /** Escala com o nível conjurado. `false` = nível fixo (sem multi-seleção). */
+    scaling: boolean;
+  }>;
 };
 
 export type JutsuImage = { id: string; url: string; label: string | null };
@@ -54,6 +61,12 @@ export function JutsuEditor({
 
   const busy = uploading || isPending;
   const power = useMemo(() => powers.find((p) => p.code === powerCode), [powers, powerCode]);
+  const effect = useMemo(
+    () => power?.effects.find((e) => e.code === effectCode),
+    [power, effectCode],
+  );
+  // Efeito de nível fixo (ex.: Névoa) usa só o próprio nível — sem multi-seleção.
+  const fixedLevel = effect && !effect.scaling;
   const levelRange = useMemo(
     () => (power ? Array.from({ length: power.level }, (_, i) => i + 1) : []),
     [power],
@@ -79,6 +92,13 @@ export function JutsuEditor({
     setPowerCode(code);
     setEffectCode('');
     setLevels([]);
+  };
+
+  const onEffectChange = (code: string) => {
+    setEffectCode(code);
+    // Efeito de nível fixo já entra com o seu nível selecionado; escalável zera.
+    const ef = power?.effects.find((e) => e.code === code);
+    setLevels(ef && !ef.scaling ? [ef.minLevel] : []);
   };
 
   const toggleLevel = (lvl: number) => {
@@ -247,7 +267,7 @@ export function JutsuEditor({
           <Picker label="Efeito">
             <Select
               value={effectCode}
-              onChange={(e) => setEffectCode(e.target.value)}
+              onChange={(e) => onEffectChange(e.target.value)}
               disabled={!power || power.effects.length === 0}
             >
               <option value="">Selecione…</option>
@@ -261,7 +281,11 @@ export function JutsuEditor({
         </div>
 
         <Picker label="Níveis conjuráveis">
-          {levelRange.length > 0 ? (
+          {fixedLevel ? (
+            <Text variant="muted">
+              Efeito de nível fixo — usado sempre no nível {effect?.minLevel}.
+            </Text>
+          ) : levelRange.length > 0 ? (
             <div className="flex flex-wrap gap-2">
               {levelRange.map((lvl) => {
                 const active = levels.includes(lvl);

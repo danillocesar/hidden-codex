@@ -3,6 +3,7 @@
 import { useRef, useState, type ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { Eyebrow } from '@/components/ui/eyebrow';
+import { ImageWithSkeleton } from '@/components/ui/image-with-skeleton';
 import { setCharacterPortrait } from '@/server/actions/characters/portrait';
 import { cn } from '@/lib/utils/cn';
 
@@ -63,8 +64,7 @@ export function FichaPortrait({
   };
 
   const inner = imageUrl ? (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
+    <ImageWithSkeleton
       src={imageUrl}
       alt="Retrato do personagem"
       className="h-full w-full object-cover object-[center_20%]"
@@ -79,7 +79,7 @@ export function FichaPortrait({
   );
 
   if (!canEdit) {
-    return <div className="h-full w-full">{inner}</div>;
+    return <div className="relative h-full w-full">{inner}</div>;
   }
 
   return (

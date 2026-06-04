@@ -31,7 +31,12 @@ export function EffectInfo({
       {variant === 'icon' ? (
         <button
           type="button"
-          onClick={() => setOpen(true)}
+          onClick={(e) => {
+            // Evita borbulhar pro onClick do container (ex.: linha do Combate
+            // Rápido, que abre o modal de uso).
+            e.stopPropagation();
+            setOpen(true);
+          }}
           aria-label={`Detalhes de ${title}`}
           className="grid h-8 w-8 place-items-center rounded border border-border bg-bg-deep/70 text-ink-muted backdrop-blur transition hover:border-ice hover:text-ice-bright"
         >
@@ -50,7 +55,10 @@ export function EffectInfo({
       ) : (
         <button
           type="button"
-          onClick={() => setOpen(true)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpen(true);
+          }}
           className="text-left text-ice underline decoration-dotted underline-offset-2 transition-colors hover:text-ice-bright"
         >
           {label}

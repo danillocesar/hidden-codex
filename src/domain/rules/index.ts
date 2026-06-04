@@ -7,6 +7,7 @@ export * from './skills';
 export * from './aptitudes';
 export * from './powers';
 export * from './jutsus';
+export * from './elements';
 export * from './damage';
 export * from './combat';
 export * from './leveling';

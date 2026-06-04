@@ -51,6 +51,27 @@
       "evolutions": []
     },
     {
+      "code": "acuidade_homebrew",
+      "name": "Acuidade (Homebrew)",
+      "category": "HABILIDADE",
+      "shortDescription": "Como Acuidade, mas a Destreza também substitui a Força no DANO de CC (homebrew).",
+      "description": "Variante caseira (homebrew) da Acuidade: além de usar Destreza no lugar de Força nos testes de Combate Corporal, a Destreza também substitui a Força no cálculo do DANO de ataques corpo-a-corpo com armas que aceitam Acuidade (leves/medianas compatíveis). NÃO é RAW (o livro diz que Acuidade não afeta dano) — use apenas com permissão do mestre, como 'exceção finesse'. Baseada na aptidão Acuidade (Livro Básico p. 62).",
+      "prerequisites": {},
+      "effects": {
+        "type": "stat_substitution",
+        "skill": "cc",
+        "substituteAttribute": "destreza_for_forca",
+        "appliesTo": [
+          "armas_leves",
+          "armas_medianas",
+          "dano_cc"
+        ],
+        "homebrew": true,
+        "notes": "Homebrew — a Destreza também substitui a Força no dano de CC (finesse), apenas em armas que aceitam Acuidade."
+      },
+      "evolutions": []
+    },
+    {
       "code": "ambidestria",
       "name": "Ambidestria",
       "category": "COMBATE",

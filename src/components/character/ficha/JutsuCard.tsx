@@ -3,6 +3,7 @@
 import { useRef, useState, type ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
+import { ImageWithSkeleton } from '@/components/ui/image-with-skeleton';
 import { updateJutsuImage } from '@/server/actions/characters/jutsus';
 import type { FichaJutsu } from '@/lib/character/mapPrismaToCore';
 import { EffectInfo } from './EffectInfo';
@@ -64,8 +65,7 @@ export function JutsuCard({
     <article className="group relative flex min-h-[360px] flex-col overflow-hidden rounded border border-border bg-bg-card transition-all duration-300 hover:-translate-y-1 hover:border-border-strong">
       <div className="absolute inset-0 z-0">
         {jutsu.imageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <ImageWithSkeleton
             src={jutsu.imageUrl}
             alt=""
             className="h-full w-full object-cover object-[center_25%]"
@@ -179,6 +179,13 @@ export function JutsuCard({
             <Stat label="Alcance" value={jutsu.range ?? '—'} />
             <Stat label="Duração" value={jutsu.duration ?? '—'} />
           </div>
+          {jutsu.action || jutsu.target ? (
+            <div className="grid grid-cols-2 gap-2">
+              <Stat label="Ação" value={jutsu.action ?? '—'} />
+              <Stat label="Alvo" value={jutsu.target ?? '—'} />
+            </div>
+          ) : null}
+          {jutsu.area ? <Stat label="Área de efeito" value={jutsu.area} /> : null}
           <div className="grid grid-cols-2 gap-2">
             <div className="min-w-0">
               <p className="font-display text-[8px] uppercase tracking-[0.25em] text-ink-muted">

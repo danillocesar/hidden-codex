@@ -134,8 +134,8 @@ const allKnownAptitudes = new Set<string>([
 const clanCodes = new Set(clans.data.map((c) => c.code));
 
 describe('Seed: Aptidões Lote 5a (aptitudes-common-combat.json)', () => {
-  it('tem 51 aptidões catalogadas', () => {
-    expect(seed5a.data).toHaveLength(51);
+  it('tem 52 aptidões catalogadas', () => {
+    expect(seed5a.data).toHaveLength(52);
   });
 
   it('Acuidade está com RAW estrito (não afeta dano de CC)', () => {
@@ -145,6 +145,14 @@ describe('Seed: Aptidões Lote 5a (aptitudes-common-combat.json)', () => {
     expect(acuidade?.effects.skill).toBe('cc');
     expect(acuidade?.effects.substituteAttribute).toBe('destreza_for_forca');
     expect(acuidade?.effects.notes).toEqual(expect.stringContaining('RAW estrito'));
+  });
+
+  it('Acuidade (Homebrew) marca que também afeta o dano de CC', () => {
+    const hb = byCode5a.get('acuidade_homebrew');
+    expect(hb).toBeDefined();
+    expect(hb?.category).toBe('HABILIDADE');
+    expect(hb?.effects.homebrew).toBe(true);
+    expect(hb?.effects.appliesTo).toContain('dano_cc');
   });
 
   it('Diligente tem evolução Nv 2 (GAS)', () => {
@@ -174,7 +182,7 @@ describe('Seed: Aptidões Lote 5a (aptitudes-common-combat.json)', () => {
     }, {});
 
     expect(counts).toEqual({
-      HABILIDADE: 12,
+      HABILIDADE: 13,
       COMBATE: 22,
       MANOBRA: 7,
       GERAL: 10,
@@ -630,9 +638,9 @@ describe('Seed: Aptidões — integridade cross-lote (5a + 5b + 5c + 5d + patche
     ...seed7aSamurai.data,
   ];
 
-  it('total de entradas em JSON é 156 e total único pós-upsert é 153 (3 upserts intencionais; 7a sem overlap)', () => {
-    expect(allEntries).toHaveLength(156); // 51+36+24+26+10+1+8
-    expect(byCodeFinal.size).toBe(153); // 2 upserts 5c→patches + 1 upsert 5a→phase6-patches; 7a sem overlap
+  it('total de entradas em JSON é 157 e total único pós-upsert é 154 (3 upserts intencionais; 7a sem overlap)', () => {
+    expect(allEntries).toHaveLength(157); // 52+36+24+26+10+1+8
+    expect(byCodeFinal.size).toBe(154); // 2 upserts 5c→patches + 1 upsert 5a→phase6-patches; 7a sem overlap
   });
 
   it('distribuição final por categoria (pós-upsert) — 7a adiciona +8 RESTRITA', () => {
@@ -641,7 +649,7 @@ describe('Seed: Aptidões — integridade cross-lote (5a + 5b + 5c + 5d + patche
       return acc;
     }, {});
     expect(counts).toEqual({
-      HABILIDADE: 13,
+      HABILIDADE: 14,
       COMBATE: 26, // 27 − 1 (usar_armaduras_pesadas migrou para GERAL)
       MANOBRA: 29,
       GERAL: 24, // 23 + 1 (usar_armaduras_pesadas)

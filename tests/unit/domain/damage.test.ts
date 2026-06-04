@@ -38,6 +38,45 @@ describe('damage — calculateDamageBreakdown', () => {
     expect(breakdown.total).toBe(5);
   });
 
+  it('CC RAW usa Força (Acuidade não afeta dano)', () => {
+    // Satsuki: For 1, Des 6, arma +2 → ⌈1/2⌉ + 2 = 3
+    const breakdown = calculateDamageBreakdown({
+      damageType: 'cc',
+      attackerForce: 1,
+      attackerDexterity: 6,
+      attackerEspirito: 3,
+      weaponDamage: 2,
+    });
+    expect(breakdown.total).toBe(3);
+  });
+
+  it('CC com Acuidade (Homebrew) usa Destreza no dano', () => {
+    // ccDamageUsesDex → ⌈6/2⌉ + 2 = 5 (em vez de 3)
+    const breakdown = calculateDamageBreakdown({
+      damageType: 'cc',
+      attackerForce: 1,
+      attackerDexterity: 6,
+      attackerEspirito: 3,
+      weaponDamage: 2,
+      ccDamageUsesDex: true,
+    });
+    expect(breakdown.components.halfEsp).toBe(3);
+    expect(breakdown.total).toBe(5);
+  });
+
+  it('ccDamageUsesDex não afeta dano à distância (cd_thrown já usa Des)', () => {
+    const breakdown = calculateDamageBreakdown({
+      damageType: 'cd_thrown',
+      attackerForce: 1,
+      attackerDexterity: 6,
+      attackerEspirito: 3,
+      weaponDamage: 1,
+      ccDamageUsesDex: true,
+    });
+    // cd_thrown sempre ⌈Des/2⌉ + arma = 3 + 1 = 4
+    expect(breakdown.total).toBe(4);
+  });
+
   it('CD arremesso usa Destreza', () => {
     const breakdown = calculateDamageBreakdown({
       damageType: 'cd_thrown',
@@ -59,8 +98,52 @@ describe('damage — calculateDamageBreakdown', () => {
       powerLevel: 3,
     });
     expect(breakdown.components.nivel).toBe(6);
+    expect(breakdown.components.elemento).toBe(0);
     expect(breakdown.total).toBe(6);
     expect(breakdown.byGrade.grade4).toBe(24);
+  });
+
+  it('Fuuton Canhão nv 3 soma +2 de elemento (2×3 + 2 = 8)', () => {
+    const breakdown = calculateDamageBreakdown({
+      damageType: 'ninpou_canhao',
+      attackerForce: 1,
+      attackerDexterity: 6,
+      attackerEspirito: 3,
+      powerLevel: 3,
+      elementDamageBonus: 2,
+    });
+    expect(breakdown.components.nivel).toBe(6);
+    expect(breakdown.components.elemento).toBe(2);
+    expect(breakdown.total).toBe(8);
+    expect(breakdown.byGrade).toEqual({ grade1: 8, grade2: 16, grade3: 24, grade4: 32 });
+  });
+
+  it('Fuuton padrão soma elemento ao ⌈Esp/2⌉ + nível', () => {
+    const breakdown = calculateDamageBreakdown({
+      damageType: 'ninpou_standard',
+      attackerForce: 1,
+      attackerDexterity: 1,
+      attackerEspirito: 5,
+      powerLevel: 2,
+      elementDamageBonus: 2,
+    });
+    // ⌈5/2⌉=3 + nivel 2 + elemento 2 = 7
+    expect(breakdown.components.elemento).toBe(2);
+    expect(breakdown.total).toBe(7);
+  });
+
+  it('bônus de elemento é ignorado em dano físico (cc/cd)', () => {
+    const breakdown = calculateDamageBreakdown({
+      damageType: 'cc',
+      attackerForce: 4,
+      attackerDexterity: 4,
+      attackerEspirito: 3,
+      weaponDamage: 2,
+      elementDamageBonus: 2,
+    });
+    expect(breakdown.components.elemento).toBe(0);
+    // halfEsp ⌈4/2⌉=2 + dda 2 = 4 (sem elemento)
+    expect(breakdown.total).toBe(4);
   });
 
   it('Ninpou padrão: ⌈Esp/2⌉ + nivel + bônus', () => {

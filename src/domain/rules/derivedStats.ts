@@ -65,7 +65,10 @@ export function calculateCC(input: CombatSkillInput, opts: CCOptions = {}): numb
   const { attributes, bases, aptitudeCodes } = input;
   const { weaponCategory, weaponKind } = opts;
 
-  const hasAcuidade = aptitudeCodes.includes('acuidade');
+  // `acuidade_homebrew` é a variante caseira que também afeta o dano; pra
+  // precisão de CC ela se comporta igual à Acuidade (substitui Força por Destreza).
+  const hasAcuidade =
+    aptitudeCodes.includes('acuidade') || aptitudeCodes.includes('acuidade_homebrew');
   // RAW (Livro Básico 4.1b, aptidão Acuidade):
   //   - Toda arma de categoria "leve" recebe Acuidade automaticamente.
   //   - Armas além de leve só recebem se o texto da arma disser explicitamente

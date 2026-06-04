@@ -13,6 +13,18 @@ export type DamageBreakdownInput = {
   powerLevel?: number;
   ataquePoderoso?: boolean;
   otherBonus?: number;
+  /**
+   * Bônus de dano base do elemento (ex.: Fuuton +2). Faz parte do dano base —
+   * é somado ao total e contabilizado como componente próprio. Veja
+   * `getElementDamageBonus` em `elements.ts`.
+   */
+  elementDamageBonus?: number;
+  /**
+   * Regra-casa (homebrew, aptidão "Acuidade (Homebrew)"): no dano de CC, usa
+   * metade da Destreza em vez da Força. RAW é sempre Força — só ative quando o
+   * caller confirmar que o personagem tem a aptidão e a arma aceita Acuidade.
+   */
+  ccDamageUsesDex?: boolean;
 };
 
 export type DamageBreakdown = {
@@ -20,6 +32,8 @@ export type DamageBreakdown = {
     dda: number;
     halfEsp: number;
     nivel: number;
+    /** Bônus de dano base do elemento (Fuuton +2, etc.). */
+    elemento: number;
     outro: number;
   };
   total: number;
@@ -51,7 +65,8 @@ export function calculateDamageBreakdown(opts: DamageBreakdownInput): DamageBrea
   switch (opts.damageType) {
     case 'cc':
       dda = opts.weaponDamage ?? 0;
-      halfEsp = roundUp(opts.attackerForce / 2);
+      // RAW: Força. Homebrew "Acuidade (Homebrew)": Destreza.
+      halfEsp = roundUp((opts.ccDamageUsesDex ? opts.attackerDexterity : opts.attackerForce) / 2);
       break;
     case 'cd_thrown':
       dda = opts.weaponDamage ?? 0;
@@ -66,13 +81,16 @@ export function calculateDamageBreakdown(opts: DamageBreakdownInput): DamageBrea
       break;
   }
 
+  // Bônus de dano base do elemento (Fuuton +2, etc.) — só para danos de poder.
+  const elemento = opts.damageType.startsWith('ninpou') ? (opts.elementDamageBonus ?? 0) : 0;
+
   if (opts.ataquePoderoso) outro += 1;
   if (opts.otherBonus) outro += opts.otherBonus;
 
-  const total = Math.max(0, dda + halfEsp + nivel + outro);
+  const total = Math.max(0, dda + halfEsp + nivel + elemento + outro);
 
   return {
-    components: { dda, halfEsp, nivel, outro },
+    components: { dda, halfEsp, nivel, elemento, outro },
     total,
     byGrade: {
       grade1: total * 1,

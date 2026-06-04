@@ -34,7 +34,8 @@
         "areaHeight": "comum_do_poder",
         "damage": "nenhum",
         "duration": "SUSTENTADA",
-        "chakraCost": "nivel_usado"
+        "chakraCost": "nivel_do_efeito",
+        "scaling": false
       },
       "rules": {
         "prerequisites": { "aptitudes_one_of": ["lutar_as_cegas", "sensor"] },

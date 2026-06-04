@@ -10,6 +10,7 @@ import {
 import { Check, Move, ZoomIn, ZoomOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip } from '@/components/ui/tooltip';
+import { ImageWithSkeleton } from '@/components/ui/image-with-skeleton';
 import { setCharacterSectionCoverPosition } from '@/server/actions/characters/sectionCovers';
 import {
   DEFAULT_SECTION_COVERS,
@@ -102,8 +103,7 @@ export function SectionCoverArea({
   return (
     <>
       <div className="relative h-[180px] overflow-hidden md:h-[140px]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <ImageWithSkeleton
           src={imageUrl}
           alt=""
           draggable={false}

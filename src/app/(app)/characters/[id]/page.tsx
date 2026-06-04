@@ -12,6 +12,7 @@ import {
   type CombatStat,
 } from '@/components/character/ficha/MechanicsPanel';
 import { QuickCombatPanel } from '@/components/character/ficha/QuickCombatPanel';
+import { EnergyAdjuster } from '@/components/character/ficha/EnergyAdjuster';
 import { JutsusSection } from '@/components/character/ficha/JutsusSection';
 import { InventoryPanel } from '@/components/character/ficha/InventoryPanel';
 import { FichaBackground } from '@/components/character/ficha/FichaBackground';
@@ -24,7 +25,7 @@ import {
   type FichaPower,
 } from '@/components/character/ficha/TrainingPanel';
 import { Button } from '@/components/ui/button';
-import { PERICIAS } from '@/domain/catalog/pericias';
+import { PERICIAS, isPrimaryAttribute } from '@/domain/catalog/pericias';
 import {
   calculateCC,
   calculateCD,
@@ -33,7 +34,11 @@ import {
   calculateMaxChakra,
   calculateMaxVitality,
 } from '@/domain/rules/derivedStats';
-import { calculatePericiaLevelByCode, sumPericiaPoints } from '@/domain/rules/skills';
+import {
+  calculatePericiaLevelByCode,
+  calculateSocialPericiaLevel,
+  sumPericiaPoints,
+} from '@/domain/rules/skills';
 import { getPericaBudget } from '@/domain/rules/pointsBudget';
 
 /**
@@ -66,9 +71,10 @@ export default async function CharacterFichaPage({ params }: { params: { id: str
       code: 'cc',
       value: calculateCC(combatInput),
       base: core.bases.cc,
-      attributeLabel: aptitudeCodes.includes('acuidade')
-        ? `Des ${core.attributes.des}`
-        : `For ${core.attributes.for}`,
+      attributeLabel:
+        aptitudeCodes.includes('acuidade') || aptitudeCodes.includes('acuidade_homebrew')
+          ? `Des ${core.attributes.des}`
+          : `For ${core.attributes.for}`,
     },
     {
       code: 'cd',
@@ -99,9 +105,14 @@ export default async function CharacterFichaPage({ params }: { params: { id: str
     if (def.trained && points === 0) return [];
     let level: number | null;
     try {
-      level = calculatePericiaLevelByCode(def.code, core.attributes, points);
+      level = isPrimaryAttribute(def.attribute)
+        ? calculatePericiaLevelByCode(def.code, core.attributes, points)
+        : calculateSocialPericiaLevel(def.code, core.attributes, {
+            carisma: core.socialCarisma,
+            manipulacao: core.socialManipulacao,
+          });
     } catch {
-      level = null; // pericia social — calculo dedicado ainda pendente
+      level = null;
     }
     return [{ code: def.code, name: def.name, points, level }];
   }).sort((a, b) => (b.level ?? -1) - (a.level ?? -1));
@@ -170,10 +181,18 @@ export default async function CharacterFichaPage({ params }: { params: { id: str
             <div className="flex flex-col gap-[18px]">
               <AttributesGrid attributes={core.attributes} />
               <div className="grid gap-[18px] lg:grid-cols-[1.1fr_1.5fr_1fr]">
-                <EnergyPanel
-                  vitality={{ current: core.currentVitality, max: maxVitality }}
-                  chakra={{ current: core.currentChakra, max: maxChakra }}
-                />
+                {display.isOwner ? (
+                  <EnergyAdjuster
+                    characterId={display.id}
+                    vitality={{ current: core.currentVitality, max: maxVitality }}
+                    chakra={{ current: core.currentChakra, max: maxChakra }}
+                  />
+                ) : (
+                  <EnergyPanel
+                    vitality={{ current: core.currentVitality, max: maxVitality }}
+                    chakra={{ current: core.currentChakra, max: maxChakra }}
+                  />
+                )}
                 <CombatSkillsPanel combatStats={combatStats} />
                 <SocialPanel
                   social={{ carisma: core.socialCarisma, manipulacao: core.socialManipulacao }}
@@ -185,6 +204,19 @@ export default async function CharacterFichaPage({ params }: { params: { id: str
                 cc={combatStats.find((s) => s.code === 'cc')?.value ?? 0}
                 cd={combatStats.find((s) => s.code === 'cd')?.value ?? 0}
                 lm={combatStats.find((s) => s.code === 'lm')?.value ?? 0}
+                characterId={display.id}
+                isOwner={display.isOwner}
+                attributes={{
+                  for: core.attributes.for,
+                  des: core.attributes.des,
+                  esp: core.attributes.esp,
+                }}
+                currentChakra={core.currentChakra}
+                abilities={{
+                  ataquePoderoso: core.aptitudes.some((a) => a.code === 'ataque_poderoso'),
+                  ataqueMultiplo: core.aptitudes.some((a) => a.code === 'ataque_multiplo'),
+                  acuidadeHomebrew: core.aptitudes.some((a) => a.code === 'acuidade_homebrew'),
+                }}
               />
             </div>
           }

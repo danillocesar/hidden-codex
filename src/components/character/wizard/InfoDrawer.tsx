@@ -42,7 +42,11 @@ export function InfoDrawer({
   if (!open) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50">
+    // Eventos de portais do React borbulham pela árvore de COMPONENTES, não a do
+    // DOM. Sem isto, um clique dentro do drawer (fechar/backdrop) subiria até o
+    // container que o renderizou (ex.: a linha clicável do Combate Rápido) e
+    // dispararia o onClick dele. Paramos a propagação na raiz do portal.
+    <div className="fixed inset-0 z-50" onClick={(e) => e.stopPropagation()}>
       <button
         type="button"
         aria-label="Fechar"

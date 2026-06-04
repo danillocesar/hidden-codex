@@ -30,6 +30,12 @@ export type PericiaDef = {
   /** Ordem canônica de exibição (1..20). */
   order: number;
   shortDescription: string;
+  /**
+   * Só para perícias sociais (`attribute` = `car`/`man`): o atributo cuja
+   * metade entra na fórmula do teste social (atributo social + ½ requerido,
+   * round up). Ex.: Obter Informação = Carisma + ½ Inteligência → `'int'`.
+   */
+  socialRequiredAttribute?: AttributeKey;
 };
 
 /**
@@ -187,6 +193,7 @@ export const PERICIAS: ReadonlyArray<PericiaDef> = [
     doubleTrained: false,
     armorPenalty: false,
     order: 14,
+    socialRequiredAttribute: 'int',
     shortDescription:
       'Fazer contatos, ouvir rumores, descobrir informações específicas. Atributo social.',
   },

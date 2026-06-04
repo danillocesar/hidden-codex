@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   calculatePericiaLevel,
   calculatePericiaLevelByCode,
+  calculateSocialPericiaLevel,
   sumPericiaPoints,
   validatePericiaBudget,
 } from '@/domain/rules/skills';
@@ -55,6 +56,29 @@ describe('skills — calculatePericiaLevelByCode', () => {
 
   it('código desconhecido lança erro', () => {
     expect(() => calculatePericiaLevelByCode('xpto', attrs, 0)).toThrow(/desconhecida/);
+  });
+});
+
+describe('skills — calculateSocialPericiaLevel', () => {
+  const attrs = { for: 1, des: 6, agi: 6, per: 2, int: 1, vig: 5, esp: 3 };
+
+  it('Obter Informação = Carisma + ½ Inteligência (Satsuki: 2 + ⌈1/2⌉ = 3)', () => {
+    expect(
+      calculateSocialPericiaLevel('obter_informacao', attrs, { carisma: 2, manipulacao: 0 }),
+    ).toBe(3);
+  });
+
+  it('arredonda ½ Inteligência pra cima', () => {
+    // Carisma 3, Int 5 → 3 + ⌈5/2⌉ = 3 + 3 = 6
+    expect(
+      calculateSocialPericiaLevel('obter_informacao', { ...attrs, int: 5 }, { carisma: 3, manipulacao: 0 }),
+    ).toBe(6);
+  });
+
+  it('perícia não-social lança erro explícito', () => {
+    expect(() =>
+      calculateSocialPericiaLevel('acrobacia', attrs, { carisma: 2, manipulacao: 0 }),
+    ).toThrow(/não é social/);
   });
 });
 

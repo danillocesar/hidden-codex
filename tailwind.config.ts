@@ -49,10 +49,15 @@ const config: Config = {
           '0%, 100%': { opacity: '0.025' },
           '50%': { opacity: '0.05' },
         },
+        toastIn: {
+          from: { opacity: '0', transform: 'translateX(24px) scale(0.98)' },
+          to: { opacity: '1', transform: 'translateX(0) scale(1)' },
+        },
       },
       animation: {
         'fade-up': 'fadeUp 0.6s ease-out both',
         shimmer: 'shimmer 8s ease-in-out infinite',
+        'toast-in': 'toastIn 0.25s ease-out both',
       },
     },
   },

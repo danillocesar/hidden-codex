@@ -18,10 +18,9 @@ type ActiveModal =
   | null;
 
 /**
- * Card "Combate Rapido" — referencia rapida de armas equipadas + jutsus, com
- * colunas Acerto (CC/CD/LM do personagem), Dano, Chakra e Níveis. Para o dono,
- * cada linha abre a calculadora de dano (modal de jutsu/ataque). Para visitante,
- * é só leitura.
+ * "Combate Rápido" — referência rápida em duas colunas: Jutsus à esquerda,
+ * Armas à direita. Cada entrada é um card com os valores distribuídos (sem
+ * tabela). Pro dono, clicar abre a calculadora de dano (modal de jutsu/ataque).
  *
  * Spec: reference HTML linhas 1164-1184 + 05-UI-SPEC.md §6/§7.
  */
@@ -51,7 +50,6 @@ export function QuickCombatPanel({
   abilities: { ataquePoderoso: boolean; ataqueMultiplo: boolean; acuidadeHomebrew: boolean };
 }) {
   const acertoByType = { cc, cd, lm } as const;
-  const hasRows = weapons.length > 0 || jutsus.length > 0;
   const [active, setActive] = useState<ActiveModal>(null);
 
   return (
@@ -65,72 +63,80 @@ export function QuickCombatPanel({
         Combate Rápido
       </Eyebrow>
 
-      {hasRows ? (
-        <div className="mt-2 overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr>
-                <Th>Arma / Jutsu</Th>
-                <Th center>Acerto</Th>
-                <Th center>Dano</Th>
-                <Th center>Chakra</Th>
-                <Th center>Níveis</Th>
-              </tr>
-            </thead>
-            <tbody>
-              {weapons.map((w) => {
-                const ranged = w.category ? RANGED_CATEGORIES.has(w.category) : false;
-                return (
-                  <Row
-                    key={w.id}
-                    name={w.name}
-                    accuracyTag={ranged ? 'CD' : 'CC'}
-                    acerto={String(ranged ? cd : cc)}
-                    dano={[w.damage, w.damageType].filter(Boolean).join(' · ') || '—'}
-                    chakra="—"
-                    levels="—"
-                    onClick={isOwner ? () => setActive({ type: 'weapon', item: w }) : undefined}
-                  />
-                );
-              })}
-              {jutsus.map((j) => (
-                <Row
-                  key={j.id}
-                  name={j.name}
-                  powerTag={j.powerName}
-                  effectTag={j.effectName}
-                  accuracyTag={j.acerto ? j.acerto.toUpperCase() : undefined}
-                  acerto={j.acerto ? String(acertoByType[j.acerto]) : '—'}
-                  dano={
-                    j.damage === 'ver descrição' ? (
-                      <EffectInfo
-                        variant="link"
-                        title={j.name}
-                        subtitle={[j.powerName, j.effectName].filter(Boolean).join(' · ') || null}
-                        description={j.effectDescription}
-                      />
-                    ) : (
-                      (j.damage ?? '—')
-                    )
-                  }
-                  chakra={j.chakraCost ?? '—'}
-                  levels={j.levels.length > 0 ? j.levels.join(' · ') : '—'}
-                  onClick={isOwner ? () => setActive({ type: 'jutsu', item: j }) : undefined}
-                />
-              ))}
-            </tbody>
-          </table>
-          <p className="mt-2 font-body text-[10px] italic text-ink-faint">
-            {isOwner
-              ? 'Clique numa linha pra abrir a calculadora de dano e usar o jutsu.'
-              : 'Acerto, dano e chakra vêm do efeito/arma cadastrados.'}
-          </p>
-        </div>
-      ) : (
-        <p className="mt-3 font-body text-sm text-ink-muted">
-          Nenhuma arma equipada ou jutsu cadastrado.
+      <div className="mt-2 grid gap-x-5 gap-y-3 md:grid-cols-2">
+        {/* ── Jutsus ── */}
+        <Column label="Jutsus" empty={jutsus.length === 0 ? 'Nenhum jutsu cadastrado.' : null}>
+          {jutsus.map((j) => (
+            <CombatCard
+              key={j.id}
+              onClick={isOwner ? () => setActive({ type: 'jutsu', item: j }) : undefined}
+              header={
+                <span className="flex flex-wrap items-center gap-1.5">
+                  {j.powerName ? (
+                    <Badge tone="accent" variant="soft" size="xs">
+                      {j.powerName}
+                    </Badge>
+                  ) : null}
+                  <span className="font-serif text-[15px] font-medium text-ink">{j.name}</span>
+                  {j.effectName ? (
+                    <span className="font-body text-[11px] italic text-ink-faint">
+                      {j.effectName}
+                    </span>
+                  ) : null}
+                </span>
+              }
+            >
+              <Stat
+                label="Acerto"
+                value={j.acerto ? String(acertoByType[j.acerto]) : '—'}
+                tag={j.acerto ? j.acerto.toUpperCase() : undefined}
+              />
+              <Stat
+                label="Dano"
+                value={
+                  j.damage === 'ver descrição' ? (
+                    <EffectInfo
+                      variant="link"
+                      title={j.name}
+                      subtitle={[j.powerName, j.effectName].filter(Boolean).join(' · ') || null}
+                      description={j.effectDescription}
+                    />
+                  ) : (
+                    (j.damage ?? '—')
+                  )
+                }
+              />
+              <Stat label="Chakra" value={j.chakraCost ?? '—'} muted />
+              <Stat label="Níveis" value={j.levels.length > 0 ? j.levels.join(' · ') : '—'} />
+            </CombatCard>
+          ))}
+        </Column>
+
+        {/* ── Armas ── */}
+        <Column label="Armas" empty={weapons.length === 0 ? 'Nenhuma arma.' : null}>
+          {weapons.map((w) => {
+            const ranged = w.category ? RANGED_CATEGORIES.has(w.category) : false;
+            return (
+              <CombatCard
+                key={w.id}
+                onClick={isOwner ? () => setActive({ type: 'weapon', item: w }) : undefined}
+                header={
+                  <span className="font-serif text-[15px] font-medium text-ink">{w.name}</span>
+                }
+              >
+                <Stat label="Acerto" value={String(ranged ? cd : cc)} tag={ranged ? 'CD' : 'CC'} />
+                <Stat label="Dano" value={w.damage ?? '—'} />
+              </CombatCard>
+            );
+          })}
+        </Column>
+      </div>
+
+      {isOwner ? (
+        <p className="mt-2 font-body text-[10px] italic text-ink-faint">
+          Clique num card pra abrir a calculadora de dano.
         </p>
-      )}
+      ) : null}
 
       {active?.type === 'jutsu' ? (
         <JutsuUseModal
@@ -172,79 +178,94 @@ export function QuickCombatPanel({
   );
 }
 
-function Th({ children, center }: { children: React.ReactNode; center?: boolean }) {
+function Column({
+  label,
+  empty,
+  children,
+}: {
+  label: string;
+  empty: string | null;
+  children: ReactNode;
+}) {
   return (
-    <th
-      className={`border-b border-border px-2.5 py-1.5 font-display text-[9px] uppercase tracking-[0.3em] text-ink-muted ${
-        center ? 'text-center' : 'text-left'
-      }`}
-    >
-      {children}
-    </th>
+    <div>
+      <Eyebrow tone="deep" size="xs" as="div" className="mb-1.5 tracking-[0.3em]">
+        {label}
+      </Eyebrow>
+      {empty ? (
+        <p className="font-body text-xs text-ink-muted">{empty}</p>
+      ) : (
+        <div className="flex flex-col gap-2">{children}</div>
+      )}
+    </div>
   );
 }
 
-function Row({
-  name,
-  acerto,
-  dano,
-  chakra,
-  levels,
-  accuracyTag,
-  powerTag,
-  effectTag,
+function CombatCard({
+  header,
   onClick,
+  children,
 }: {
-  name: string;
-  acerto: string;
-  dano: ReactNode;
-  chakra: string;
-  levels: string;
-  /** Tag de acerto (CC/CD/LM), exibida ao lado do valor de acerto. */
-  accuracyTag?: string;
-  /** Chip do poder antes do nome (jutsus), ex.: "Hyouton". */
-  powerTag?: string | null;
-  /** Chip do efeito após o nome (jutsus), ex.: "Canhão". */
-  effectTag?: string | null;
-  /** Abre a calculadora; ausente = linha não-clicável (visitante). */
+  header: ReactNode;
   onClick?: () => void;
+  children: ReactNode;
 }) {
   return (
-    <tr
-      className={cn(
-        'border-b border-border align-top last:border-b-0',
-        onClick && 'cursor-pointer transition-colors hover:bg-bg-card/50',
-      )}
+    <div
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
       onClick={onClick}
+      onKeyDown={
+        onClick
+          ? (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onClick();
+              }
+            }
+          : undefined
+      }
+      className={cn(
+        'rounded border border-border bg-bg-card-2 p-2.5',
+        onClick &&
+          'cursor-pointer transition duration-200 hover:-translate-y-0.5 hover:scale-[1.02] hover:border-border-strong hover:shadow-hero focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ice',
+      )}
     >
-      <td className="px-2.5 py-2">
-        <span className="flex flex-wrap items-center gap-1.5">
-          {powerTag ? (
-            <Badge tone="accent" variant="soft" size="xs">
-              {powerTag}
-            </Badge>
-          ) : null}
-          <span className="font-serif text-[15px] font-medium text-ink">{name}</span>
-          {effectTag ? (
-            <span className="font-body text-[11px] italic text-ink-faint">{effectTag}</span>
-          ) : null}
-        </span>
-      </td>
-      <td className="px-2.5 py-2 text-center">
-        <span className="inline-flex items-center justify-center gap-1.5">
-          <span className="font-serif text-lg font-medium text-ice-bright">{acerto}</span>
-          {accuracyTag ? (
-            <Badge tone="neutral" variant="outline" size="xs">
-              {accuracyTag}
-            </Badge>
-          ) : null}
-        </span>
-      </td>
-      <td className="px-2.5 py-2 text-center font-body text-xs text-ice-bright">{dano}</td>
-      <td className="px-2.5 py-2 text-center font-body text-xs text-ink-muted">{chakra}</td>
-      <td className="px-2.5 py-2 text-center font-serif text-sm font-medium text-ice-bright">
-        {levels}
-      </td>
-    </tr>
+      {header}
+      <div className="mt-1.5 flex flex-wrap gap-x-5 gap-y-1">{children}</div>
+    </div>
+  );
+}
+
+function Stat({
+  label,
+  value,
+  tag,
+  muted,
+}: {
+  label: string;
+  value: ReactNode;
+  tag?: string;
+  muted?: boolean;
+}) {
+  return (
+    <div className="flex flex-col">
+      <span className="font-display text-[8px] uppercase tracking-[0.25em] text-ink-muted">
+        {label}
+      </span>
+      <span
+        className={cn(
+          'flex items-center gap-1 font-serif text-base font-medium leading-tight',
+          muted ? 'text-ink-muted' : 'text-ice-bright',
+        )}
+      >
+        {value}
+        {tag ? (
+          <Badge tone="neutral" variant="outline" size="xs">
+            {tag}
+          </Badge>
+        ) : null}
+      </span>
+    </div>
   );
 }

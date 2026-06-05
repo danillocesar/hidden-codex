@@ -10,6 +10,8 @@ export * from './jutsus';
 export * from './elements';
 export * from './damage';
 export * from './combat';
+export * from './inventory';
+export * from './compartments';
 export * from './leveling';
 export * from './helpers';
 export * from './validation';

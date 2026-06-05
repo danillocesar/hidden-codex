@@ -15,6 +15,8 @@ import { QuickCombatPanel } from '@/components/character/ficha/QuickCombatPanel'
 import { EnergyAdjuster } from '@/components/character/ficha/EnergyAdjuster';
 import { JutsusSection } from '@/components/character/ficha/JutsusSection';
 import { InventoryPanel } from '@/components/character/ficha/InventoryPanel';
+import { InventoryManager } from '@/components/character/ficha/InventoryManager';
+import { loadEquipmentCatalog } from '@/server/queries/equipmentCatalog';
 import { FichaBackground } from '@/components/character/ficha/FichaBackground';
 import { FichaBackgroundButton } from '@/components/character/ficha/FichaBackgroundButton';
 import { SectionDivider } from '@/components/character/ficha/SectionDivider';
@@ -51,6 +53,17 @@ import { getPericaBudget } from '@/domain/rules/pointsBudget';
  * Personagens publicos (`isPublicOnProfile`) sao acessiveis sem ser dono.
  * 404 quando nao encontrado OU sem permissao (nao vaza existencia).
  */
+/** Abreviações curtas dos atributos pro detalhamento de perícias. */
+const ATTR_SHORT: Record<'for' | 'des' | 'agi' | 'per' | 'int' | 'vig' | 'esp', string> = {
+  for: 'For',
+  des: 'Des',
+  agi: 'Agi',
+  per: 'Per',
+  int: 'Int',
+  vig: 'Vig',
+  esp: 'Esp',
+};
+
 export default async function CharacterFichaPage({ params }: { params: { id: string } }) {
   const session = await getCurrentUser();
   const result = await loadCharacterById(params.id, session?.user.id ?? null);
@@ -58,6 +71,8 @@ export default async function CharacterFichaPage({ params }: { params: { id: str
   if (!result.ok) notFound();
 
   const { core, display, lookup } = result.viewModel;
+  // Catálogo de equipamento só pro dono (alimenta o "adicionar item" do inventário).
+  const equipmentCatalog = display.isOwner ? await loadEquipmentCatalog() : [];
   const aptitudeCodes = core.aptitudes.flatMap((a) =>
     a.parameter ? [a.code, `${a.code}_${a.parameter}`] : [a.code],
   );
@@ -104,17 +119,30 @@ export default async function CharacterFichaPage({ params }: { params: { id: str
     const points = core.pericias[def.code] ?? 0;
     if (def.trained && points === 0) return [];
     let level: number | null;
+    let breakdown: string | null = null;
     try {
-      level = isPrimaryAttribute(def.attribute)
-        ? calculatePericiaLevelByCode(def.code, core.attributes, points)
-        : calculateSocialPericiaLevel(def.code, core.attributes, {
-            carisma: core.socialCarisma,
-            manipulacao: core.socialManipulacao,
-          });
+      if (isPrimaryAttribute(def.attribute)) {
+        level = calculatePericiaLevelByCode(def.code, core.attributes, points);
+        const attrVal = core.attributes[def.attribute];
+        const base = Math.ceil(attrVal / 2);
+        const pts = points > 0 ? ` + ${points} pt${points > 1 ? 's' : ''}` : '';
+        breakdown = `${ATTR_SHORT[def.attribute]} ${attrVal} → base ${base}${pts}`;
+      } else {
+        level = calculateSocialPericiaLevel(def.code, core.attributes, {
+          carisma: core.socialCarisma,
+          manipulacao: core.socialManipulacao,
+        });
+        const social = def.attribute === 'car' ? core.socialCarisma : core.socialManipulacao;
+        const socialLabel = def.attribute === 'car' ? 'Car' : 'Man';
+        const req = def.socialRequiredAttribute;
+        breakdown = req
+          ? `${socialLabel} ${social} + ½ ${ATTR_SHORT[req]} ${core.attributes[req]}`
+          : null;
+      }
     } catch {
       level = null;
     }
-    return [{ code: def.code, name: def.name, points, level }];
+    return [{ code: def.code, name: def.name, points, level, breakdown }];
   }).sort((a, b) => (b.level ?? -1) - (a.level ?? -1));
   const periciasCountLabel = `${sumPericiaPoints(core.pericias)}/${getPericaBudget(core.campaignLevel)}`;
   const aptitudes: FichaAptitude[] = core.aptitudes.map((item) => {
@@ -125,6 +153,7 @@ export default async function CharacterFichaPage({ params }: { params: { id: str
       category: def?.category ?? 'APTIDAO',
       parameter: item.parameter,
       isFree: item.isFreeFromOrigin,
+      description: def?.description ?? def?.shortDescription ?? null,
     };
   });
   const powers: FichaPower[] = core.powers.map((item) => {
@@ -136,7 +165,11 @@ export default async function CharacterFichaPage({ params }: { params: { id: str
       category: def?.category ?? 'PODER',
       level: item.level,
       freeLevel: display.freePowerLevels[item.code] ?? 0,
-      effects: (display.effectsByPowerCode[item.code] ?? []).map((e) => e.name),
+      description: def?.description ?? def?.shortDescription ?? null,
+      effects: (display.effectsByPowerCode[item.code] ?? []).map((e) => {
+        const eff = lookup.effectByCode.get(e.code);
+        return { name: e.name, description: eff?.description ?? eff?.shortDescription ?? null };
+      }),
     };
   });
   // Poderes com efeitos aprendidos — base pra criar jutsus (poder + efeito + níveis).
@@ -273,7 +306,7 @@ export default async function CharacterFichaPage({ params }: { params: { id: str
 
         <SectionDivider
           number="03"
-          title="Arquivo"
+          title="Inventário"
           kanji="道具 · 記"
           imageUrl={display.sectionCovers.arquivo}
           position={display.sectionCoverPositions.arquivo}
@@ -285,7 +318,15 @@ export default async function CharacterFichaPage({ params }: { params: { id: str
         />
 
         <section className="px-6 py-12 md:px-12">
-          <InventoryPanel items={display.inventory} canEdit={display.isOwner} />
+          {display.isOwner ? (
+            <InventoryManager
+              characterId={display.id}
+              items={display.inventory}
+              catalog={equipmentCatalog}
+            />
+          ) : (
+            <InventoryPanel items={display.inventory} canEdit={false} />
+          )}
         </section>
 
         {display.isOwner ? (

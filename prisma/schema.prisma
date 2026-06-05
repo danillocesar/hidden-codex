@@ -499,7 +499,12 @@ model CharacterInventoryItem {
   /// Marca itens (tipicamente armas) atualmente equipados pelo personagem.
   /// Alimenta o card "Combate Rapido" da ficha. Toggle owner-only na UI.
   equipped Boolean @default(false)
-  notes    String? @db.Text
+  /// Compartimento onde o item esta guardado (Livro Basico p.127). Formato
+  /// "<storageInventoryItemId>#<index>" (item de armazenamento + indice do
+  /// compartimento que ele fornece). null = solto (nao guardado). Itens de
+  /// arremesso simples/explosivos podem compartilhar um compartimento (mesclagem).
+  compartmentRef String? @map("compartment_ref")
+  notes          String? @db.Text
 
   createdAt DateTime @default(now()) @map("created_at")
 

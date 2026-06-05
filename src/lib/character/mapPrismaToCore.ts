@@ -54,6 +54,8 @@ export type CharacterWithRelations = Character & {
 
 export type FichaInventoryItem = {
   id: string;
+  /** Code do equipamento de catálogo (null se item custom). Liga o picker ao item. */
+  equipmentCode: string | null;
   name: string;
   kind: string | null;
   subtype: string | null;
@@ -63,6 +65,10 @@ export type FichaInventoryItem = {
   damage: string | null;
   damageType: string | null;
   range: string | null;
+  /** Descrição completa do item (pro drawer de detalhes). null em itens custom. */
+  description: string | null;
+  /** Resumo curto do item. */
+  shortDescription: string | null;
   isWeapon: boolean;
   /** Bônus de dano numérico parseado de `damage` ("+2" → 2). null se não numérico. */
   weaponDamageValue: number | null;
@@ -70,6 +76,20 @@ export type FichaInventoryItem = {
   attackKind: 'cc' | 'cd_thrown' | null;
   /** Arma aceita a aptidão Acuidade (leve ou marcada em `compatibleAptitudes`). */
   acceptsAcuidade: boolean;
+  /** Quantos itens cabem em 1 compartimento (`slots.items`). Default 1. */
+  itemsPerCompartment: number;
+  /** Compartimentos por unidade (`slots.compartments`); 0 = não ocupa (armazenamento/desprezível). */
+  compartmentsPerStack: number;
+  /** Compartimentos que o item FORNECE (bolsa/coldre/mochila). 0 se não for armazenamento. */
+  compartmentBonus: number;
+  /** Item desprezível: não conta nas regras de compartimento. */
+  negligible: boolean;
+  /** Compartimento onde está guardado (`<storageItemId>#<index>`), ou null se solto. */
+  compartmentRef: string | null;
+  /** Pode dividir um compartimento (arremesso simples ou explosivo). */
+  mixable: boolean;
+  /** Pode ser guardado num compartimento de armazenamento (empilhável, não-arma de mão). */
+  storable: boolean;
 };
 
 /**
@@ -231,8 +251,10 @@ export function mapPrismaToCore(
   const inventory: FichaInventoryItem[] = row.inventory.map((item) => {
     const eq = item.equipment;
     const isWeapon = eq?.kind === 'WEAPON';
+    const compartment = resolveCompartment(eq?.slots, eq?.effects, isWeapon);
     return {
       id: item.id,
+      equipmentCode: eq?.code ?? null,
       name: eq?.name ?? item.customName ?? 'Item',
       kind: eq?.kind ?? null,
       subtype: eq?.subtype ?? null,
@@ -242,13 +264,28 @@ export function mapPrismaToCore(
       damage: eq?.damage ?? null,
       damageType: eq?.damageType ?? null,
       range: eq?.range ?? null,
+      description: eq?.description ?? null,
+      shortDescription: eq?.shortDescription ?? null,
       isWeapon,
       weaponDamageValue: isWeapon ? parseWeaponDamage(eq?.damage ?? null) : null,
       attackKind: weaponAttackKind(eq?.category ?? null, isWeapon),
       acceptsAcuidade: isWeapon && weaponAcceptsAcuidade(eq?.category ?? null, eq?.effects),
+      ...compartment,
+      compartmentRef: item.compartmentRef ?? null,
+      mixable:
+        (eq?.category === 'ARREMESSO' && eq?.subtype === 'simples') || eq?.category === 'EXPLOSIVO',
+      storable:
+        compartment.itemsPerCompartment > 1 &&
+        compartment.compartmentBonus === 0 &&
+        !compartment.negligible,
     };
   });
-  const equippedWeapons = inventory.filter((i) => i.isWeapon && i.equipped);
+  // Combate Rápido: qualquer item guardado num compartimento + armas que se
+  // auto-carregam (espadas etc.). Armas empilháveis (shuriken/kunai) só entram
+  // quando estão guardadas num compartimento — soltas, não.
+  const equippedWeapons = inventory.filter(
+    (i) => i.compartmentRef != null || (i.isWeapon && !i.storable),
+  );
 
   const jutsus: FichaJutsu[] = row.jutsus.map((j) => {
     const effect = effectById.get(j.powerEffectId);
@@ -685,6 +722,54 @@ function weaponAcceptsAcuidade(category: string | null, effects: Prisma.JsonValu
   if (!effects || typeof effects !== 'object' || Array.isArray(effects)) return false;
   const compat = (effects as Record<string, unknown>).compatibleAptitudes;
   return Array.isArray(compat) && compat.includes('acuidade');
+}
+
+/** Lê um número de um campo JSON tolerante a ausência/tipo. */
+function readNumber(obj: Record<string, unknown>, key: string): number | null {
+  const v = obj[key];
+  return typeof v === 'number' && Number.isFinite(v) ? v : null;
+}
+
+/**
+ * Resolve os campos de compartimento de um item (Livro Básico p.127):
+ * - armazenamento (bolsa/coldre/mochila) fornece via `effects.compartmentBonus`/`compartmentModifier`;
+ * - itens com `slots.compartments` ocupam isso; armas de mão sem slots ocupam 1;
+ * - armaduras/bugigangas sem slots não ocupam (desprezível pra regra).
+ */
+function resolveCompartment(
+  slots: Prisma.JsonValue | undefined,
+  effects: Prisma.JsonValue | undefined,
+  isWeapon: boolean,
+): {
+  itemsPerCompartment: number;
+  compartmentsPerStack: number;
+  compartmentBonus: number;
+  negligible: boolean;
+} {
+  const slotsObj = slots && typeof slots === 'object' && !Array.isArray(slots) ? (slots as Record<string, unknown>) : {};
+  const effectsObj =
+    effects && typeof effects === 'object' && !Array.isArray(effects)
+      ? (effects as Record<string, unknown>)
+      : {};
+
+  const compartmentBonus =
+    readNumber(effectsObj, 'compartmentBonus') ?? readNumber(effectsObj, 'compartmentModifier') ?? 0;
+  const itemsPerCompartment = readNumber(slotsObj, 'items') ?? 1;
+  const slotsCompartments = readNumber(slotsObj, 'compartments');
+
+  let compartmentsPerStack: number;
+  if (compartmentBonus > 0) {
+    compartmentsPerStack = 0; // armazenamento fornece, não ocupa
+  } else if (slotsCompartments != null) {
+    compartmentsPerStack = slotsCompartments;
+  } else if (isWeapon) {
+    compartmentsPerStack = 1; // arma sem slots explícitos ocupa 1 (bainha/aljava)
+  } else {
+    compartmentsPerStack = 0; // armadura/bugiganga: não ocupa compartimento
+  }
+
+  const negligible = compartmentBonus === 0 && compartmentsPerStack === 0;
+  return { itemsPerCompartment, compartmentsPerStack, compartmentBonus, negligible };
 }
 
 /** Tokens de ação (enum do seed) → rótulo capitalizado. */

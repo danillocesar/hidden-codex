@@ -1,6 +1,7 @@
 import { Eyebrow } from '@/components/ui/eyebrow';
 import { EmptyState } from '@/components/ui/empty-state';
 import { cn } from '@/lib/utils/cn';
+import { DetailInfo } from './DetailInfo';
 
 export type FichaPericia = {
   code: string;
@@ -8,6 +9,8 @@ export type FichaPericia = {
   points: number;
   /** Nivel calculado (⌈atr/2⌉ + pontos). `null` para pericias sociais (calc pendente). */
   level: number | null;
+  /** Origem do valor (ex.: "Agi 6 → base 3 + 2 pts"). `null` se sem nivel. */
+  breakdown: string | null;
 };
 
 export type FichaAptitude = {
@@ -16,6 +19,14 @@ export type FichaAptitude = {
   category: string;
   parameter?: string;
   isFree: boolean;
+  /** Descrição completa (pro drawer de detalhes). */
+  description: string | null;
+};
+
+/** Efeito aprendido de um poder — nome + descrição (pro drawer). */
+export type FichaPowerEffect = {
+  name: string;
+  description: string | null;
 };
 
 export type FichaPower = {
@@ -25,8 +36,10 @@ export type FichaPower = {
   category: string;
   level: number;
   freeLevel: number;
+  /** Descrição completa do poder (pro drawer de detalhes). */
+  description: string | null;
   /** Efeitos aprendidos deste poder (sub-tecnicas). */
-  effects: ReadonlyArray<string>;
+  effects: ReadonlyArray<FichaPowerEffect>;
 };
 
 export function TrainingPanel({
@@ -116,10 +129,17 @@ function PericiaLine({ item }: { item: FichaPericia }) {
         isZero ? 'border-l-ink-faint opacity-40' : 'border-l-ice-deep',
       )}
     >
-      <span className="font-body text-[13px] leading-tight text-ink">{item.name}</span>
+      <span className="min-w-0">
+        <span className="block font-body text-[13px] leading-tight text-ink">{item.name}</span>
+        {item.breakdown ? (
+          <span className="block font-body text-[10px] leading-tight text-ink-faint">
+            {item.breakdown}
+          </span>
+        ) : null}
+      </span>
       <span
         className={cn(
-          'font-serif text-lg font-medium leading-none',
+          'shrink-0 font-serif text-lg font-medium leading-none',
           isZero ? 'text-ink-faint' : 'text-ice-bright',
         )}
       >
@@ -150,6 +170,7 @@ function AptitudeLine({ item }: { item: FichaAptitude }) {
             gratis
           </span>
         ) : null}
+        <DetailInfo title={item.name} subtitle={item.category} description={item.description} />
       </div>
     </li>
   );
@@ -172,6 +193,11 @@ function PowerLine({ item }: { item: FichaPower }) {
                 +{item.freeLevel} gratis
               </span>
             ) : null}
+            <DetailInfo
+              title={item.name}
+              subtitle={item.translation ?? item.category}
+              description={item.description}
+            />
           </div>
           {item.translation ? (
             <p className="mt-0.5 font-body text-xs italic text-ice-deep">{item.translation}</p>
@@ -179,11 +205,14 @@ function PowerLine({ item }: { item: FichaPower }) {
           {item.effects.length > 0 ? (
             <ul className="mt-2 flex flex-wrap gap-1.5">
               {item.effects.map((effect) => (
-                <li
-                  key={effect}
-                  className="border-l border-ice-deep/60 bg-bg-card/60 px-2 py-0.5 font-body text-[11px] text-ink-muted"
-                >
-                  {effect}
+                <li key={effect.name}>
+                  <DetailInfo
+                    label={effect.name}
+                    title={effect.name}
+                    subtitle={item.name}
+                    description={effect.description}
+                    className="border-l border-ice-deep/60 bg-bg-card/60 px-2 py-0.5 font-body text-[11px] text-ink-muted hover:text-ice-bright"
+                  />
                 </li>
               ))}
             </ul>

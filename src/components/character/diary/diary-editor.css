@@ -1,0 +1,41 @@
+/*
+ * Tema dark+ice pro editor de diário (BlockNote / Ariakit). Sobrescreve as
+ * variáveis `--bn-colors-*` do tema "dark" do BlockNote pra casar com os tokens
+ * do produto (src/styles/tokens.css, formato `R G B` → usados via rgb(var(…))).
+ */
+.bn-container[data-color-scheme='dark'] {
+  --bn-colors-editor-background: transparent;
+  --bn-colors-editor-text: rgb(var(--ink));
+  --bn-colors-menu-background: rgb(var(--bg-card));
+  --bn-colors-menu-text: rgb(var(--ink));
+  --bn-colors-tooltip-background: rgb(var(--bg-card-2));
+  --bn-colors-tooltip-text: rgb(var(--ink));
+  --bn-colors-hovered-background: rgb(var(--bg-card-2));
+  --bn-colors-hovered-text: rgb(var(--ice-bright));
+  --bn-colors-selected-background: rgb(var(--ice-deep));
+  --bn-colors-selected-text: rgb(var(--ink));
+  --bn-colors-disabled-background: rgb(var(--bg-card));
+  --bn-colors-disabled-text: rgb(var(--ink-faint));
+  --bn-colors-border: var(--border);
+  --bn-colors-side-menu: rgb(var(--ink-muted));
+  --bn-colors-highlights-gray-background: rgb(var(--bg-card-2));
+  --bn-colors-shadow: rgba(0, 0, 0, 0.5);
+  --bn-font-family: var(--font-body, ui-sans-serif, system-ui, sans-serif);
+}
+
+/* Texto fantasma dos blocos vazios ("Digite '/' para comandos…"). */
+.bn-container[data-color-scheme='dark'] .bn-inline-content[data-placeholder]::before {
+  color: rgb(var(--ink-faint));
+}
+
+/* Links no conteúdo herdam o ice do produto. */
+.bn-container[data-color-scheme='dark'] a {
+  color: rgb(var(--ice-bright));
+}
+
+/* Texto ao lado da imagem = blocos em coluna (extensão xl-multi-column). O
+ * layout vem do CSS do próprio BlockNote; aqui só damos contraste sutil à
+ * divisória de redimensionamento das colunas no tema dark. */
+.bn-container[data-color-scheme='dark'] .bn-block-column + .bn-block-column {
+  border-color: var(--border);
+}

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ChevronsUp, ImageIcon, MoreHorizontal, Pencil, Share2, Undo2 } from 'lucide-react';
+import { BookOpen, ChevronsUp, ImageIcon, MoreHorizontal, Pencil, Share2, Undo2 } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -59,6 +59,12 @@ export function FichaActionMenu({
             <Link href={`/characters/${characterId}/levelup`}>
               <ChevronsUp className="h-3.5 w-3.5" aria-hidden />
               Level up
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href={`/characters/${characterId}/diary`}>
+              <BookOpen className="h-3.5 w-3.5" aria-hidden />
+              Diário
             </Link>
           </DropdownMenuItem>
 

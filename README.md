@@ -99,7 +99,14 @@ A especificação técnica completa está em `arcana-forge-spec/` (00 a 08). Com
 
 ## Licença
 
-MIT (a confirmar — pode mudar para AGPL antes do primeiro release público).
+Código próprio sob **MIT**. **Atenção:** o editor de diário usa
+`@blocknote/xl-multi-column` (colunas estilo Notion), distribuído sob
+**GPL-3.0** (ou licença comercial do BlockNote). Como é copyleft, o **app
+distribuído como um todo** passa a ficar sob termos GPL-3.0: é preciso manter o
+código-fonte aberto e incluir o aviso GPL. O núcleo continua MIT, mas o conjunto
+não pode ser fechado enquanto essa dependência estiver presente. Para voltar a
+MIT puro, remova `@blocknote/xl-multi-column` e a integração de colunas em
+`src/components/character/diary/`.
 
 ---
 

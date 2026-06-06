@@ -254,7 +254,7 @@ Coisas que parecem candidatas a "será que deveria ser diferente?" mas **já est
 5. **Firebase Auth real, não mock.** Free tier aguenta. Setup já feito.
 6. **Postgres local via Docker.** Não SQLite, não cloud — Postgres mesmo (igual prod futura).
 7. **Tema dark+ice é a identidade do produto.** Não tem light mode, não tem outras paletas no MVP.
-8. **Open Source MIT.** Repositório público.
+8. **Open Source — código próprio MIT, mas o conjunto distribuído é GPL-3.0.** Repositório público. O editor de diário usa `@blocknote/xl-multi-column` (GPL-3.0), então o app como um todo carrega termos GPL-3.0 (decisão consciente do owner em jun/2026, aprovada para ter colunas estilo Notion). Manter o código aberto. Para reverter a MIT puro, remover essa dependência e a integração de colunas em `src/components/character/diary/`.
 9. **Sistema é Shinobi no Sho 4.1b apenas no MVP.** D&D, Tormenta e outros são v3+, não interferem em decisões atuais.
 10. **Server Actions sobre REST.** REST apenas em casos específicos (upload, webhooks, ficha pública).
 

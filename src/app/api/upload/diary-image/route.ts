@@ -1,9 +1,8 @@
 import { randomBytes } from 'node:crypto';
-import { mkdir, writeFile } from 'node:fs/promises';
-import path from 'node:path';
 import { NextResponse } from 'next/server';
 import sharp from 'sharp';
 import { getCurrentUser } from '@/lib/auth/session';
+import { saveImage } from '@/lib/storage';
 
 /**
  * POST /api/upload/diary-image
@@ -20,8 +19,6 @@ import { getCurrentUser } from '@/lib/auth/session';
 
 const MAX_BYTES = 5 * 1024 * 1024; // 5 MB (validado client + server)
 const ACCEPTED = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif']);
-const TARGET_DIR = path.join(process.cwd(), 'public', 'uploads', 'diary');
-const PUBLIC_PREFIX = '/uploads/diary';
 
 export async function POST(req: Request) {
   const session = await getCurrentUser();
@@ -76,11 +73,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Arquivo não parece uma imagem válida.' }, { status: 400 });
   }
 
-  await mkdir(TARGET_DIR, { recursive: true });
   const filename = `${Date.now()}-${randomBytes(6).toString('hex')}.webp`;
-  await writeFile(path.join(TARGET_DIR, filename), processed);
+  const saved = await saveImage({
+    key: `diary/${filename}`,
+    buffer: processed,
+    contentType: 'image/webp',
+  });
 
-  return NextResponse.json({ url: `${PUBLIC_PREFIX}/${filename}` });
+  return NextResponse.json({ url: saved.url });
 }
 
 export const runtime = 'nodejs';

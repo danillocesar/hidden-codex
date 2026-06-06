@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { BookOpen, ImageIcon, Pencil, Plus, Trash2, X } from 'lucide-react';
-import type { DiaryBlock, DiaryPartialBlock } from './diarySchema';
+import type { DiaryBlock } from './diarySchema';
 
 import { Heading } from '@/components/ui/heading';
 import { Text } from '@/components/ui/text';
@@ -16,6 +16,7 @@ import { Field, Input } from '@/components/ui/field';
 import { useToast } from '@/components/ui/toast';
 import { cn } from '@/lib/utils/cn';
 import { diaryExcerpt } from '@/lib/character/diaryExcerpt';
+import { parseDiaryDoc } from './diaryDoc';
 import type { DiaryEntryView } from '@/server/queries/diaryEntries';
 import {
   createDiaryEntry,
@@ -40,17 +41,6 @@ function formatEntryDate(iso: string | null): string | null {
   return new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'short', year: 'numeric' }).format(
     d,
   );
-}
-
-/** JSON do body -> blocos pro editor. Vazio/inválido => editor em branco. */
-function parseDoc(body: string): DiaryPartialBlock[] | undefined {
-  if (!body) return undefined;
-  try {
-    const parsed = JSON.parse(body);
-    return Array.isArray(parsed) && parsed.length > 0 ? (parsed as DiaryPartialBlock[]) : undefined;
-  } catch {
-    return undefined;
-  }
 }
 
 type OpenState = { mode: 'new' } | { mode: 'edit'; entry: DiaryEntryView } | null;
@@ -288,7 +278,7 @@ function DiaryEditorOverlay({
   onSaved: () => void;
 }) {
   const todayIso = useMemo(() => new Date().toISOString().slice(0, 10), []);
-  const initialContent = useMemo(() => (entry ? parseDoc(entry.body) : undefined), [entry]);
+  const initialContent = useMemo(() => (entry ? parseDiaryDoc(entry.body) : undefined), [entry]);
 
   const [title, setTitle] = useState(entry?.title ?? '');
   const [entryDate, setEntryDate] = useState(entry?.entryDate ?? todayIso);

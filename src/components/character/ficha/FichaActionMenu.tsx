@@ -2,7 +2,16 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { BookOpen, ChevronsUp, ImageIcon, MoreHorizontal, Pencil, Share2, Undo2 } from 'lucide-react';
+import {
+  BookOpen,
+  ChevronsUp,
+  ImageIcon,
+  MoreHorizontal,
+  NotebookPen,
+  Pencil,
+  Share2,
+  Undo2,
+} from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +22,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ShareLinkDialog } from './ShareLinkDialog';
 import { FichaBackgroundDialog } from './FichaBackgroundDialog';
+import { NotesDrawer } from '@/components/character/diary/NotesDrawer';
 import type { SectionCoverImage } from '@/lib/character/sectionCovers';
 import type { ShareLinkInfo } from '@/server/actions/characters/share';
 
@@ -26,14 +36,17 @@ export function FichaActionMenu({
   fichaBackground,
   images,
   activeShareLink,
+  notes,
 }: {
   characterId: string;
   fichaBackground: string | null;
   images: ReadonlyArray<SectionCoverImage>;
   activeShareLink: ShareLinkInfo | null;
+  notes: string;
 }) {
   const [shareOpen, setShareOpen] = useState(false);
   const [bgOpen, setBgOpen] = useState(false);
+  const [notesOpen, setNotesOpen] = useState(false);
 
   return (
     <>
@@ -66,6 +79,10 @@ export function FichaActionMenu({
               <BookOpen className="h-3.5 w-3.5" aria-hidden />
               Diário
             </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => setNotesOpen(true)}>
+            <NotebookPen className="h-3.5 w-3.5" aria-hidden />
+            Anotações
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
@@ -102,6 +119,12 @@ export function FichaActionMenu({
         characterId={characterId}
         current={fichaBackground}
         images={images}
+      />
+      <NotesDrawer
+        open={notesOpen}
+        onClose={() => setNotesOpen(false)}
+        characterId={characterId}
+        initialNotes={notes}
       />
     </>
   );

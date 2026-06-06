@@ -3,6 +3,7 @@ import { getCurrentUser } from '@/lib/auth/session';
 import { loadCharacterById } from '@/server/queries/characterById';
 import { loadEquipmentCatalog } from '@/server/queries/equipmentCatalog';
 import { getActiveShareLink } from '@/server/queries/shareLinks';
+import { loadCharacterNotes } from '@/server/queries/characterNotes';
 import { FichaView } from '@/components/character/ficha/FichaView';
 
 /**
@@ -23,16 +24,21 @@ export default async function CharacterFichaPage({ params }: { params: { id: str
 
   const { display } = result.viewModel;
 
-  // Catálogo de equipamento + estado do link de compartilhamento só pro dono.
-  const [equipmentCatalog, activeShareLink] = display.isOwner
-    ? await Promise.all([loadEquipmentCatalog(), getActiveShareLink(display.id)])
-    : [[], null];
+  // Catálogo de equipamento + link de compartilhamento + anotações só pro dono.
+  const [equipmentCatalog, activeShareLink, notes] = display.isOwner
+    ? await Promise.all([
+        loadEquipmentCatalog(),
+        getActiveShareLink(display.id),
+        loadCharacterNotes(display.id, session?.user.id ?? null),
+      ])
+    : [[], null, ''];
 
   return (
     <FichaView
       viewModel={result.viewModel}
       equipmentCatalog={equipmentCatalog}
       activeShareLink={activeShareLink}
+      notes={notes}
     />
   );
 }

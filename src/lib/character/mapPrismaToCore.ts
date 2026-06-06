@@ -111,6 +111,10 @@ export type FichaJutsuCombat = {
 export type FichaJutsu = {
   id: string;
   name: string;
+  /** Code do poder de origem (pro editor pré-selecionar). `null` se não resolvido. */
+  powerCode: string | null;
+  /** Code do efeito de origem (pro editor pré-selecionar). `null` se não resolvido. */
+  effectCode: string | null;
   powerName: string | null;
   effectName: string | null;
   /** Descrição completa do efeito (pro drawer de detalhes). */
@@ -295,6 +299,8 @@ export function mapPrismaToCore(
     return {
       id: j.id,
       name: j.name,
+      powerCode: power?.code ?? null,
+      effectCode: effect?.code ?? null,
       powerName: power?.name ?? null,
       effectName: effect?.name ?? null,
       effectDescription: effect?.description ?? effect?.shortDescription ?? null,
@@ -675,7 +681,7 @@ function chakraCostForLevel(
  * fixo (ex.: Névoa). Default true (mantém o comportamento de efeitos com
  * dano/custo por nível).
  */
-function isEffectScaling(stats: Prisma.JsonValue | undefined): boolean {
+export function isEffectScaling(stats: Prisma.JsonValue | undefined): boolean {
   if (!stats || typeof stats !== 'object' || Array.isArray(stats)) return true;
   return (stats as Record<string, unknown>).scaling !== false;
 }

@@ -1,8 +1,7 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { LoginButton } from '@/components/auth/LoginButton';
-import { Eyebrow } from '@/components/ui/eyebrow';
-import { Heading } from '@/components/ui/heading';
 import { Section } from '@/components/ui/section';
 import { Text } from '@/components/ui/text';
 
@@ -15,19 +14,22 @@ import { Text } from '@/components/ui/text';
  */
 export default function LoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center px-6 py-20">
+    <main className="flex min-h-screen flex-col items-center justify-center gap-8 px-6 py-20">
+      <Image
+        src="/brand/hidden-codex-wordmark-transparent-no-brush.svg"
+        alt="Hidden Codex"
+        width={1400}
+        height={1400}
+        className="w-64 max-w-full"
+        priority
+        unoptimized
+      />
       <Section
         as="div"
         tone="default"
         className="relative z-10 w-full max-w-md p-10 text-center shadow-hero"
       >
-        <Eyebrow tone="deep" size="sm" className="tracking-[0.4em]">
-          Acesso
-        </Eyebrow>
-        <Heading level={1} className="mt-2 text-4xl">
-          Entre na <span className="italic text-ice-bright">Forja</span>
-        </Heading>
-        <Text variant="muted" className="mt-6 font-body leading-relaxed">
+        <Text variant="muted" className="font-body leading-relaxed">
           Use sua conta Google. A sessão dura 7 dias.
         </Text>
 

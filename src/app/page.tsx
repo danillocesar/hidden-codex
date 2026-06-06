@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function HomePage() {
@@ -22,9 +23,15 @@ export default function HomePage() {
           Shinobi no Sho · 4.1b
         </span>
 
-        <h1 className="font-serif text-6xl font-light leading-none text-ink md:text-7xl">
-          Arcana <span className="italic text-ice-bright">Forge</span>
-        </h1>
+        <Image
+          src="/brand/hidden-codex-wordmark-transparent-no-brush.svg"
+          alt="Hidden Codex"
+          width={1400}
+          height={1400}
+          className="w-72 max-w-full md:w-96"
+          priority
+          unoptimized
+        />
 
         <p className="max-w-xl font-body text-base leading-relaxed text-ink-muted md:text-lg">
           Fichas de personagem com motor de regras, calculadora de dano e identidade visual

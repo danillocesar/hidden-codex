@@ -5,22 +5,12 @@ import { BlockNoteView } from '@blocknote/ariakit';
 import { pt } from '@blocknote/core/locales';
 import { locales as multiColumnLocales } from '@blocknote/xl-multi-column';
 
-import { diarySchema, type DiaryPartialBlock } from './diarySchema';
+import { diarySchema } from './diarySchema';
+import { parseDiaryDoc } from './diaryDoc';
 
 import '@blocknote/core/fonts/inter.css';
 import '@blocknote/ariakit/style.css';
 import './diary-editor.css';
-
-/** JSON do body -> blocos. Vazio/inválido => documento em branco. */
-function parseDoc(body: string): DiaryPartialBlock[] | undefined {
-  if (!body) return undefined;
-  try {
-    const parsed = JSON.parse(body);
-    return Array.isArray(parsed) && parsed.length > 0 ? (parsed as DiaryPartialBlock[]) : undefined;
-  } catch {
-    return undefined;
-  }
-}
 
 /**
  * Renderiza o corpo de uma entrada de diario em modo LEITURA (BlockNote com
@@ -33,7 +23,7 @@ function parseDoc(body: string): DiaryPartialBlock[] | undefined {
 export function DiaryEntryBody({ body }: { body: string }) {
   const editor = useCreateBlockNote({
     schema: diarySchema,
-    initialContent: parseDoc(body),
+    initialContent: parseDiaryDoc(body),
     dictionary: { ...pt, multi_column: multiColumnLocales.pt },
   });
 

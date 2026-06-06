@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1400" viewBox="0 0 1400 1400" role="img" aria-labelledby="title desc">
+  <title id="title">Hidden Codex Wordmark Logo</title>
+  <desc id="desc">Typography-only Hidden Codex wordmark with subtle sumi-e brushstroke and red hanko seal.</desc>
+
+  <!-- Subtle cold sumi-e brushstroke -->
+  <g fill="#1a1f28" opacity="0.92">
+    <path d="M135 620
+      C220 595 330 602 445 596
+      C565 590 680 575 805 586
+      C930 597 1038 583 1167 596
+      C1248 604 1310 615 1320 632
+      C1238 640 1150 636 1056 650
+      C942 667 807 673 681 665
+      C555 657 438 665 319 666
+      C226 667 160 657 96 650
+      C96 638 111 628 135 620Z"/>
+    <path d="M95 670
+      C190 690 303 682 420 692
+      C560 704 687 712 835 701
+      C988 690 1120 693 1305 674
+      C1247 707 1118 728 962 731
+      C785 734 639 721 471 721
+      C308 721 184 716 75 700
+      C55 692 68 678 95 670Z" opacity="0.66"/>
+    <path d="M190 585
+      C356 572 515 586 662 572
+      C815 557 1034 561 1213 586
+      C1060 587 905 596 743 602
+      C538 609 362 602 190 585Z" opacity="0.45"/>
+    <path d="M216 737
+      C410 754 595 747 748 753
+      C910 759 1054 748 1219 731
+      C1048 775 821 783 606 773
+      C430 765 292 763 216 737Z" opacity="0.36"/>
+    <path d="M118 600 L238 586 L216 607 L92 621Z" opacity="0.38"/>
+    <path d="M1186 596 L1335 616 L1185 633 Z" opacity="0.52"/>
+    <path d="M1124 700 L1314 679 L1210 713 Z" opacity="0.44"/>
+  </g>
+
+  <!-- HIDDEN -->
+  <text x="700" y="505"
+        text-anchor="middle"
+        fill="#e8e4dc"
+        font-family="Cinzel, Trajan Pro, Trajan, 'Times New Roman', serif"
+        font-size="62"
+        font-weight="400"
+        letter-spacing="0.42em">HIDDEN</text>
+
+  <!-- Divider -->
+  <g fill="#e8e4dc" stroke="#e8e4dc" stroke-width="3" stroke-linecap="square">
+    <line x1="410" y1="585" x2="665" y2="585"/>
+    <line x1="735" y1="585" x2="990" y2="585"/>
+    <rect x="690" y="575" width="20" height="20" transform="rotate(45 700 585)" stroke="none"/>
+  </g>
+
+  <!-- CODEX -->
+  <text x="700" y="815"
+        text-anchor="middle"
+        fill="#e8e4dc"
+        font-family="Cormorant Garamond, Trajan Pro, Trajan, 'Times New Roman', serif"
+        font-size="220"
+        font-weight="400"
+        letter-spacing="0.02em">CODEX</text>
+
+  <!-- Hanko seal -->
+  <g transform="translate(1198 788)">
+    <rect x="0" y="0" width="86" height="86" rx="5" ry="5" fill="none" stroke="#8a1f1f" stroke-width="8"/>
+    <text x="43" y="63"
+          text-anchor="middle"
+          fill="#8a1f1f"
+          font-family="'Noto Serif CJK JP', 'Noto Serif JP', 'Yu Mincho', 'Hiragino Mincho ProN', serif"
+          font-size="58"
+          font-weight="700">秘</text>
+  </g>
+</svg>

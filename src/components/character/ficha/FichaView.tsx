@@ -65,10 +65,13 @@ export function FichaView({
   viewModel,
   equipmentCatalog = [],
   activeShareLink = null,
+  notes = '',
 }: {
   viewModel: CharacterViewModel;
   equipmentCatalog?: EquipmentPickerItem[];
   activeShareLink?: ShareLinkInfo | null;
+  /** Anotacoes livres do dono (rascunho). Vazio fora do caminho dono. */
+  notes?: string;
 }) {
   const { core, display, lookup } = viewModel;
 
@@ -202,6 +205,7 @@ export function FichaView({
                 fichaBackground={display.fichaBackground}
                 images={display.images}
                 activeShareLink={activeShareLink}
+                notes={notes}
               />
             ) : undefined
           }

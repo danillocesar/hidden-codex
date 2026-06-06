@@ -1,0 +1,19 @@
+<svg width="200" height="48" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="48" fill="#0a0b0e"></rect>
+
+  <text x="14" y="29" fill="#e8e4dc" font-family="Cinzel, Trajan Pro, Times New Roman, serif" font-size="8.8" font-weight="400" letter-spacing="3.5">
+    HIDDEN
+  </text>
+
+  <line x1="75" y1="15" x2="75" y2="33" stroke="#e8e4dc" stroke-width="0.7"></line>
+
+  <text x="84" y="33" fill="#e8e4dc" font-family="Cormorant Garamond, Trajan Pro, Times New Roman, serif" font-size="25" font-weight="400" letter-spacing="1">
+    CODEX
+  </text>
+
+  <rect x="166" y="17" width="15" height="15" fill="none" stroke="#8a1f1f" stroke-width="1.4"></rect>
+
+  <text x="173.5" y="30" fill="#8a1f1f" font-family="serif" font-size="12" font-weight="600" text-anchor="middle">
+    秘
+  </text>
+</svg>

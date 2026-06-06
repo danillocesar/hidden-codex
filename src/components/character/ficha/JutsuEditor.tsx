@@ -8,7 +8,8 @@ import { Eyebrow } from '@/components/ui/eyebrow';
 import { Input, Select, Textarea } from '@/components/ui/field';
 import { Modal } from '@/components/ui/modal';
 import { Text } from '@/components/ui/text';
-import { createJutsu } from '@/server/actions/characters/jutsus';
+import { createJutsu, updateJutsu } from '@/server/actions/characters/jutsus';
+import type { FichaJutsu } from '@/lib/character/mapPrismaToCore';
 import { cn } from '@/lib/utils/cn';
 
 export type JutsuPowerOption = {
@@ -31,8 +32,10 @@ const ACCEPTED = 'image/jpeg,image/png,image/webp';
 const MAX_BYTES = 8 * 1024 * 1024;
 
 /**
- * Modal de criação de jutsu: imagem representativa, nome, poder + efeito
+ * Modal de criação/edição de jutsu: imagem representativa, nome, poder + efeito
  * aprendido e os níveis em que pode ser conjurado (1..nível do poder, múltiplos).
+ * Com `jutsu`, abre em modo edição com os campos pré-preenchidos. O componente
+ * deve receber um `key` por alvo (id do jutsu ou "new") pra semear o estado.
  */
 export function JutsuEditor({
   open,
@@ -40,21 +43,24 @@ export function JutsuEditor({
   characterId,
   powers,
   images,
+  jutsu,
 }: {
   open: boolean;
   onClose: () => void;
   characterId: string;
   powers: ReadonlyArray<JutsuPowerOption>;
   images: ReadonlyArray<JutsuImage>;
+  jutsu?: FichaJutsu | null;
 }) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [name, setName] = useState('');
-  const [powerCode, setPowerCode] = useState(powers[0]?.code ?? '');
-  const [effectCode, setEffectCode] = useState('');
-  const [levels, setLevels] = useState<number[]>([]);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [description, setDescription] = useState('');
+  const isEdit = !!jutsu;
+  const [name, setName] = useState(jutsu?.name ?? '');
+  const [powerCode, setPowerCode] = useState(jutsu?.powerCode ?? powers[0]?.code ?? '');
+  const [effectCode, setEffectCode] = useState(jutsu?.effectCode ?? '');
+  const [levels, setLevels] = useState<number[]>(jutsu ? [...jutsu.levels] : []);
+  const [imageUrl, setImageUrl] = useState<string | null>(jutsu?.imageUrl ?? null);
+  const [description, setDescription] = useState(jutsu?.description ?? '');
   const [error, setError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -140,15 +146,26 @@ export function JutsuEditor({
   const submit = () => {
     setError(null);
     startTransition(async () => {
-      const result = await createJutsu({
-        characterId,
-        name,
-        powerCode,
-        effectCode,
-        levels,
-        imageUrl,
-        description: description.trim() || null,
-      });
+      const result =
+        isEdit && jutsu
+          ? await updateJutsu({
+              jutsuId: jutsu.id,
+              name,
+              powerCode,
+              effectCode,
+              levels,
+              imageUrl,
+              description: description.trim() || null,
+            })
+          : await createJutsu({
+              characterId,
+              name,
+              powerCode,
+              effectCode,
+              levels,
+              imageUrl,
+              description: description.trim() || null,
+            });
       if (result.ok) {
         reset();
         onClose();
@@ -165,7 +182,7 @@ export function JutsuEditor({
     <Modal
       open={open}
       onClose={close}
-      title="Criar jutsu"
+      title={isEdit ? 'Editar jutsu' : 'Criar jutsu'}
       description="Monte um jutsu a partir de um poder e efeito aprendidos."
       size="md"
       footer={
@@ -174,7 +191,7 @@ export function JutsuEditor({
             Cancelar
           </Button>
           <Button onClick={submit} disabled={!canSubmit}>
-            {isPending ? 'Criando…' : 'Criar jutsu'}
+            {isPending ? 'Salvando…' : isEdit ? 'Salvar' : 'Criar jutsu'}
           </Button>
         </>
       }

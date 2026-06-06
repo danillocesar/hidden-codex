@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { BookOpen } from 'lucide-react';
@@ -36,9 +37,14 @@ export default async function SharedFichaPage({ params }: { params: { token: str
       <div className="min-h-screen bg-bg-deep text-ink">
         <div className="border-b border-border bg-bg-paper/70 backdrop-blur">
           <div className="mx-auto flex max-w-[1340px] items-center justify-between gap-3 px-6 py-3">
-            <span className="font-serif text-lg font-light">
-              Arcana <span className="italic text-ice-bright">Forge</span>
-            </span>
+            <Image
+              src="brand/hidden-codex-wordmark-transparent-no-brush.svg"
+              alt="Hidden Codex"
+              width={200}
+              height={48}
+              className="h-7 w-auto"
+              unoptimized
+            />
             <div className="flex items-center gap-4">
               {diaryCount > 0 ? (
                 <Link

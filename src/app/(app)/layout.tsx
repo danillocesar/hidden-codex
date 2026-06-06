@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth/session';
@@ -23,11 +24,16 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <div className="min-h-screen bg-bg-deep text-ink">
         <header className="relative z-20 border-b border-border bg-bg-paper/70 backdrop-blur">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-            <Link
-              href="/dashboard"
-              className="font-serif text-2xl font-light text-ink transition-colors hover:text-ice-bright"
-            >
-              Arcana <span className="italic text-ice-bright">Forge</span>
+            <Link href="/dashboard" className="flex items-center opacity-90 transition-opacity hover:opacity-100">
+              <Image
+                src="/brand/hidden-codex-wordmark-transparent-no-brush.svg"
+                alt="Hidden Codex"
+                width={200}
+                height={48}
+                className="h-8 w-auto"
+                priority
+                unoptimized
+              />
             </Link>
             <UserMenu
               email={user.email}

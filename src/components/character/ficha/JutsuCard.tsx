@@ -27,12 +27,14 @@ export function JutsuCard({
   characterId,
   acertoValues,
   canEdit,
+  onRequestEdit,
   onRequestDelete,
 }: {
   jutsu: FichaJutsu;
   characterId: string;
   acertoValues: AcertoValues;
   canEdit: boolean;
+  onRequestEdit: (jutsu: FichaJutsu) => void;
   onRequestDelete: (jutsu: FichaJutsu) => void;
 }) {
   const router = useRouter();
@@ -96,6 +98,27 @@ export function JutsuCard({
           <>
             <button
               type="button"
+              onClick={() => onRequestEdit(jutsu)}
+              aria-label={`Editar ${jutsu.name}`}
+              className="grid h-8 w-8 place-items-center rounded border border-border bg-bg-deep/70 text-ink-muted backdrop-blur transition hover:border-ice hover:text-ice-bright"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                className="h-3.5 w-3.5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M11 2.5 13.5 5 6 12.5l-3 .5.5-3L11 2.5Z"
+                />
+              </svg>
+            </button>
+            <button
+              type="button"
               onClick={() => inputRef.current?.click()}
               disabled={uploading}
               aria-label={`Trocar imagem de ${jutsu.name}`}
@@ -153,7 +176,13 @@ export function JutsuCard({
 
       <div className="relative z-10 mt-auto p-4 pt-12">
         {element ? (
-          <p className="mb-1.5 font-display text-[9px] uppercase tracking-[0.35em] text-ice">
+          <p
+            className="mb-1.5 font-display text-[9px] uppercase tracking-[0.35em] text-ice"
+            style={{
+              textShadow:
+                '0 0 4px rgba(0,0,0,1), 0 0 4px rgba(0,0,0,1), 0 0 10px rgba(0,0,0,0.95), 0 1px 3px rgba(0,0,0,1)',
+            }}
+          >
             {element}
           </p>
         ) : null}

@@ -1,9 +1,8 @@
 import { randomBytes } from 'node:crypto';
-import { writeFile } from 'node:fs/promises';
-import path from 'node:path';
 import { NextResponse } from 'next/server';
 import sharp from 'sharp';
 import { getCurrentUser } from '@/lib/auth/session';
+import { saveImage } from '@/lib/storage';
 
 /**
  * POST /api/upload/character-portrait
@@ -21,8 +20,6 @@ import { getCurrentUser } from '@/lib/auth/session';
 
 const MAX_BYTES = 5 * 1024 * 1024; // 5 MB (validado client + server)
 const ACCEPTED = new Set(['image/jpeg', 'image/png', 'image/webp']);
-const TARGET_DIR = path.join(process.cwd(), 'public', 'uploads', 'portraits');
-const PUBLIC_PREFIX = '/uploads/portraits';
 
 export async function POST(req: Request) {
   const session = await getCurrentUser();
@@ -88,10 +85,13 @@ export async function POST(req: Request) {
   }
 
   const filename = `${Date.now()}-${randomBytes(6).toString('hex')}.webp`;
-  const targetPath = path.join(TARGET_DIR, filename);
-  await writeFile(targetPath, processed);
+  const saved = await saveImage({
+    key: `portraits/${filename}`,
+    buffer: processed,
+    contentType: 'image/webp',
+  });
 
-  return NextResponse.json({ url: `${PUBLIC_PREFIX}/${filename}` });
+  return NextResponse.json({ url: saved.url });
 }
 
 export const runtime = 'nodejs';

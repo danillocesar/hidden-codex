@@ -1,15 +1,13 @@
 import { randomBytes } from 'node:crypto';
-import { mkdir, writeFile } from 'node:fs/promises';
-import path from 'node:path';
 import { NextResponse } from 'next/server';
 import sharp from 'sharp';
 
 import { getCurrentUser } from '@/lib/auth/session';
 import { prisma } from '@/lib/prisma';
+import { saveImage } from '@/lib/storage';
 
 const MAX_BYTES = 8 * 1024 * 1024;
 const ACCEPTED = new Set(['image/jpeg', 'image/png', 'image/webp']);
-const PUBLIC_PREFIX = '/uploads/characters';
 
 export async function POST(req: Request) {
   const session = await getCurrentUser();
@@ -75,19 +73,18 @@ export async function POST(req: Request) {
   }
 
   const filename = `${Date.now()}-${randomBytes(6).toString('hex')}.webp`;
-  const targetDir = path.join(process.cwd(), 'public', 'uploads', 'characters', character.id);
-  await mkdir(targetDir, { recursive: true });
-
-  const targetPath = path.join(targetDir, filename);
-  await writeFile(targetPath, processed);
+  const saved = await saveImage({
+    key: `characters/${character.id}/${filename}`,
+    buffer: processed,
+    contentType: 'image/webp',
+  });
 
   const metadata = await sharp(processed).metadata();
-  const url = `${PUBLIC_PREFIX}/${character.id}/${filename}`;
   const image = await prisma.characterImage.create({
     data: {
       characterId: character.id,
-      url,
-      storagePath: targetPath,
+      url: saved.url,
+      storagePath: saved.key,
       fileName: file.name || filename,
       width: metadata.width ?? null,
       height: metadata.height ?? null,

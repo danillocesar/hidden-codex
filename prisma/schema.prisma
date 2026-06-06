@@ -91,6 +91,10 @@ model Character {
   // Bio/lore livre
   biography String? @db.Text
 
+  // Anotacoes livres do jogador (rascunho de sessao). JSON do editor BlockNote
+  // (mesmo formato de DiaryEntry.body). Privado do dono — nao vai no share.
+  notes String? @db.Text
+
   // Retrato principal (hero image da ficha). URL relativa quando local
   // (`/uploads/portraits/...`). Galeria multi-imagem fica em `CharacterImage`.
   portraitUrl String? @map("portrait_url")

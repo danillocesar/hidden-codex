@@ -99,7 +99,7 @@ export type FichaInventoryItem = {
  */
 export type FichaJutsuCombat = {
   /** Fórmula de dano reconhecida, ou null quando o efeito não tem dano direto calculável. */
-  damageType: 'ninpou_canhao' | 'ninpou_standard' | null;
+  damageType: 'ninpou_canhao' | 'ninpou_standard' | 'ninpou_flechas' | null;
   /** Canhão a partir do nível 2 do poder permite uso sem custo de chakra (dano ÷2). */
   isCanhao: boolean;
   /** Custo de chakra numérico por nível conjurável (mesmo índice de `levels`). null = não auto-debitável. */
@@ -624,6 +624,11 @@ function resolveDamage(
   if (profile === 'ninpou_canhao') {
     return perLevel((lvl) => calculateCanhaoDamage(lvl)) ?? formatDamage(stats);
   }
+  if (profile === 'ninpou_flechas') {
+    // 2 por projétil × nível projéteis = 2 × nível, mesmo total do Canhão; bônus
+    // (incl. elemento) uma única vez por alvo, já somado por `perLevel`.
+    return perLevel((lvl) => calculateCanhaoDamage(lvl)) ?? formatDamage(stats);
+  }
   return formatDamage(stats);
 }
 
@@ -634,7 +639,7 @@ function resolveDamage(
  */
 function classifyJutsuDamageType(
   stats: Prisma.JsonValue | undefined,
-): 'ninpou_canhao' | 'ninpou_standard' | null {
+): 'ninpou_canhao' | 'ninpou_standard' | 'ninpou_flechas' | null {
   if (!stats || typeof stats !== 'object' || Array.isArray(stats)) return null;
   const record = stats as Record<string, unknown>;
   const rawDamage = record.damage;
@@ -643,6 +648,11 @@ function classifyJutsuDamageType(
   const d = typeof rawDamage === 'string' ? rawDamage.trim() : '';
   if (d === 'nenhum' || d === 'nenhum_direto') return null;
 
+  // Flechas/projéteis: 2 fixo por projétil, 1 projétil por nível usado. Total
+  // = 2 × nível (mesmo do Canhão), mas sem a opção "sem custo (÷2)".
+  const isFlechas =
+    typeof record.projectilesFormula === 'string' || d === '2 por projétil' || d === '2_por_projetil';
+
   const isComum = d === 'comum_do_poder' || formula === 'nivel_usado + ceil(esp / 2)';
   const isDouble =
     formula === '2 * nivel_usado' ||
@@ -650,6 +660,7 @@ function classifyJutsuDamageType(
     d === '2 por nível do poder usado' ||
     d === '2 por nível usado';
 
+  if (isFlechas) return 'ninpou_flechas';
   if (isComum) return 'ninpou_standard';
   if (isDouble) return 'ninpou_canhao';
   return null;

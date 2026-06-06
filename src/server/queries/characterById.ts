@@ -61,6 +61,10 @@ async function loadCharacterViewModel(
  * pertence ao `currentUserId`, retorna `forbidden` (a UI deve tratar como 404
  * pra nao vazar existencia).
  *
+ * Excecao: GM de um Mundo ao qual o personagem pertence tem acesso read-only,
+ * mesmo que o personagem nao seja publico. Isso evita exigir que o jogador
+ * exponha a ficha publicamente so para o Mestre ver durante a campanha.
+ *
  * Tambem filtra soft-deleted (deletedAt != null).
  */
 export async function loadCharacterById(
@@ -71,6 +75,19 @@ export async function loadCharacterById(
   if (!loaded) return { ok: false, reason: 'not_found' };
 
   if (!loaded.viewModel.display.isOwner && !loaded.isPublicOnProfile) {
+    // Verificar se o currentUserId e GM de um Mundo em que este personagem esta
+    if (currentUserId) {
+      const isGmOfWorld = await prisma.worldMember.findFirst({
+        where: {
+          characterId,
+          world: { gmId: currentUserId, deletedAt: null },
+        },
+        select: { id: true },
+      });
+      if (isGmOfWorld) {
+        return { ok: true, viewModel: loaded.viewModel };
+      }
+    }
     return { ok: false, reason: 'forbidden' };
   }
 

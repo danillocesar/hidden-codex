@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getCurrentUser } from '@/lib/auth/session';
 import { loadUserCharacters } from '@/server/queries/userCharacters';
+import { getWorldsByUser } from '@/server/queries/worlds';
 import { DashboardCharacters } from '@/components/dashboard/DashboardCharacters';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -8,6 +9,7 @@ import { Eyebrow } from '@/components/ui/eyebrow';
 import { Heading } from '@/components/ui/heading';
 import { Stack } from '@/components/ui/stack';
 import { Text } from '@/components/ui/text';
+import { Badge } from '@/components/ui/badge';
 
 /**
  * Dashboard — lista os personagens do usuário (F2). Server Component: faz auth
@@ -19,7 +21,10 @@ export default async function DashboardPage() {
   const { user, isAdmin } = session;
   const greeting = user.displayName?.split(' ')[0] ?? user.email.split('@')[0] ?? 'shinobi';
 
-  const characters = await loadUserCharacters(user.id);
+  const [characters, worlds] = await Promise.all([
+    loadUserCharacters(user.id),
+    getWorldsByUser(user.id),
+  ]);
 
   return (
     <main className="mx-auto max-w-[1340px] px-6 py-12 md:px-12">
@@ -50,6 +55,49 @@ export default async function DashboardPage() {
             : 'Seus personagens aparecerão aqui.'}
         </Text>
       </Stack>
+
+      {/* Mundos */}
+      {worlds.length > 0 && (
+        <section className="mt-8">
+          <div className="mb-4 flex items-center justify-between">
+            <Eyebrow tone="accent" size="sm">
+              Mundos
+            </Eyebrow>
+            <Link
+              href="/worlds"
+              className="text-sm text-ink-muted transition-colors hover:text-ice"
+            >
+              Ver todos
+            </Link>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            {worlds.slice(0, 4).map((w) => (
+              <Link
+                key={w.id}
+                href={`/worlds/${w.id}`}
+                className="flex items-center gap-2 rounded-lg border border-border bg-bg-card px-4 py-2.5 text-sm transition-colors hover:border-ice/40"
+              >
+                <span className="text-ink">{w.name}</span>
+                <Badge
+                  tone={w.role === 'gm' ? 'accent' : 'neutral'}
+                  variant="soft"
+                  size="xs"
+                >
+                  {w.role === 'gm' ? 'Mestre' : 'Jogador'}
+                </Badge>
+              </Link>
+            ))}
+            {worlds.length > 4 && (
+              <Link
+                href="/worlds"
+                className="flex items-center gap-2 rounded-lg border border-border px-4 py-2.5 text-sm text-ink-muted transition-colors hover:text-ice"
+              >
+                +{worlds.length - 4} mais
+              </Link>
+            )}
+          </div>
+        </section>
+      )}
 
       {characters.length > 0 ? (
         <DashboardCharacters characters={characters} />

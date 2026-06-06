@@ -35,6 +35,20 @@ export default async function AppLayout({ children }: { children: React.ReactNod
                 unoptimized
               />
             </Link>
+            <nav className="flex items-center gap-1">
+              <Link
+                href="/dashboard"
+                className="rounded px-3 py-1.5 text-sm text-ink-muted transition-colors hover:bg-bg-card-2 hover:text-ink"
+              >
+                Personagens
+              </Link>
+              <Link
+                href="/worlds"
+                className="rounded px-3 py-1.5 text-sm text-ink-muted transition-colors hover:bg-bg-card-2 hover:text-ink"
+              >
+                Mundos
+              </Link>
+            </nav>
             <UserMenu
               email={user.email}
               displayName={user.displayName}

@@ -25,8 +25,10 @@ model User {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
-  characters Character[]
-  shareLinks ShareLink[]
+  characters       Character[]
+  shareLinks       ShareLink[]
+  gmWorlds         World[]       @relation("WorldGM")
+  worldMemberships WorldMember[] @relation("WorldMemberships")
 
   @@map("users")
 }
@@ -119,14 +121,17 @@ model Character {
   updatedAt DateTime  @updatedAt @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
 
-  pericias     CharacterPericia[]
-  aptitudes    CharacterAptitude[]
-  powers       CharacterPower[]
-  jutsus       CharacterJutsu[]
-  inventory    CharacterInventoryItem[]
-  diaryEntries DiaryEntry[]
-  shareLinks   ShareLink[]
-  images       CharacterImage[]
+  pericias           CharacterPericia[]
+  aptitudes          CharacterAptitude[]
+  powers             CharacterPower[]
+  jutsus             CharacterJutsu[]
+  inventory          CharacterInventoryItem[]
+  diaryEntries       DiaryEntry[]
+  shareLinks         ShareLink[]
+  images             CharacterImage[]
+  worldMemberships   WorldMember[]       @relation("WorldCharacter")
+  worldNpcRoles      WorldNpc[]          @relation("WorldNpcs")
+  combatParticipants CombatParticipant[] @relation("CombatParticipants")
 
   @@index([userId])
   @@index([deletedAt])
@@ -660,4 +665,229 @@ model ShareLink {
   @@index([token])
   @@index([characterId])
   @@map("share_links")
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// MÓDULO MESTRE — MUNDOS, CAMPANHAS E COMBATE
+// ══════════════════════════════════════════════════════════════════════
+
+/// Mundo criado pelo Mestre. Contém campanhas, lore e membros (jogadores).
+/// O token de convite (`inviteToken`) é gerado na criação e permite que
+/// qualquer jogador autenticado entre no Mundo via link /join/[token].
+model World {
+  id          String  @id @default(uuid()) @db.Uuid
+  gmId        String  @map("gm_id") @db.Uuid
+  gm          User    @relation("WorldGM", fields: [gmId], references: [id])
+  name        String
+  description String?
+  /// Imagem representativa do Mundo (capa). URL relativa quando local
+  /// (`/uploads/worlds/...`). Opcional — card usa placeholder se ausente.
+  imageUrl    String? @map("image_url")
+
+  /// Token de convite público (32-char hex). Pode ser regenerado pelo GM,
+  /// o que invalida o token anterior silenciosamente.
+  inviteToken String @unique @map("invite_token")
+
+  members     WorldMember[]
+  campaigns   Campaign[]
+  loreFolders LoreFolder[]
+  loreEntries LoreEntry[]
+  npcs        WorldNpc[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([gmId])
+  @@map("worlds")
+}
+
+/// Associação entre um usuário (jogador) e um Mundo. O jogador seleciona
+/// qual personagem usa neste Mundo (`characterId`). Um mesmo usuário pode
+/// participar de vários mundos com personagens diferentes.
+model WorldMember {
+  id          String     @id @default(uuid()) @db.Uuid
+  worldId     String     @map("world_id") @db.Uuid
+  world       World      @relation(fields: [worldId], references: [id], onDelete: Cascade)
+  userId      String     @map("user_id") @db.Uuid
+  user        User       @relation("WorldMemberships", fields: [userId], references: [id])
+  characterId String?    @map("character_id") @db.Uuid
+  character   Character? @relation("WorldCharacter", fields: [characterId], references: [id])
+  joinedAt    DateTime   @default(now()) @map("joined_at")
+
+  campaignMembers CampaignMember[]
+
+  @@unique([worldId, userId])
+  @@index([worldId])
+  @@index([userId])
+  @@map("world_members")
+}
+
+/// Sub-grupo dentro de um Mundo. Jogadores são atribuídos a Campanhas pelo GM.
+/// Combates são criados dentro de uma Campanha — o GM seleciona participantes
+/// apenas daquela Campanha.
+model Campaign {
+  id          String  @id @default(uuid()) @db.Uuid
+  worldId     String  @map("world_id") @db.Uuid
+  world       World   @relation(fields: [worldId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+
+  members CampaignMember[]
+  combats Combat[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([worldId])
+  @@map("campaigns")
+}
+
+/// Associação entre um WorldMember e uma Campanha (subconjunto do Mundo).
+model CampaignMember {
+  id            String      @id @default(uuid()) @db.Uuid
+  campaignId    String      @map("campaign_id") @db.Uuid
+  campaign      Campaign    @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  worldMemberId String      @map("world_member_id") @db.Uuid
+  worldMember   WorldMember @relation(fields: [worldMemberId], references: [id], onDelete: Cascade)
+
+  @@unique([campaignId, worldMemberId])
+  @@index([campaignId])
+  @@map("campaign_members")
+}
+
+/// Ficha do Mestre associada a um Mundo (roster de NPCs do GM).
+/// O GM pode adicionar qualquer personagem que ele mesmo criou ao Mundo,
+/// tornando-o selecionável em combates como GM_CHARACTER.
+model WorldNpc {
+  id          String    @id @default(uuid()) @db.Uuid
+  worldId     String    @map("world_id") @db.Uuid
+  world       World     @relation(fields: [worldId], references: [id], onDelete: Cascade)
+  characterId String    @map("character_id") @db.Uuid
+  character   Character @relation("WorldNpcs", fields: [characterId], references: [id])
+  /// Rótulo opcional para identificar o papel do NPC no mundo.
+  label       String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([worldId, characterId])
+  @@index([worldId])
+  @@map("world_npcs")
+}
+
+/// Pasta da Lore do Mundo. Suporta hierarquia via `parentId` (auto-relação).
+/// Entradas sem pasta aparecem na raiz. Ordem de exibição via `order`.
+model LoreFolder {
+  id      String @id @default(uuid()) @db.Uuid
+  worldId String @map("world_id") @db.Uuid
+  world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
+  name    String
+
+  /// FK para pasta pai (null = pasta raiz).
+  parentId String?     @map("parent_id") @db.Uuid
+  parent   LoreFolder? @relation("FolderTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children LoreFolder[] @relation("FolderTree")
+  entries  LoreEntry[]
+
+  order Int @default(0)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([worldId])
+  @@index([parentId])
+  @@map("lore_folders")
+}
+
+/// Entrada da Lore do Mundo. Corpo em JSON BlockNote (mesmo formato do DiaryEntry).
+/// Pode estar em uma pasta ou na raiz do Mundo (`folderId = null`).
+model LoreEntry {
+  id       String      @id @default(uuid()) @db.Uuid
+  worldId  String      @map("world_id") @db.Uuid
+  world    World       @relation(fields: [worldId], references: [id], onDelete: Cascade)
+  folderId String?     @map("folder_id") @db.Uuid
+  folder   LoreFolder? @relation(fields: [folderId], references: [id], onDelete: SetNull)
+
+  title String
+  /// Conteúdo em JSON BlockNote — mesmo shape de DiaryEntry.body.
+  body  String @db.Text
+
+  /// Visibilidade: GM_ONLY (só o Mestre vê) ou PLAYERS (visível para todos os
+  /// membros do Mundo). Default GM_ONLY — nada vaza sem o Mestre liberar.
+  visibility LoreVisibility @default(GM_ONLY)
+
+  order Int @default(0)
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([worldId])
+  @@index([folderId])
+  @@map("lore_entries")
+}
+
+enum LoreVisibility {
+  GM_ONLY
+  PLAYERS
+}
+
+/// Sessão de combate dentro de uma Campanha.
+/// Status: SETUP (GM configura) → ACTIVE (visível para jogadores) → ENDED.
+model Combat {
+  id         String       @id @default(uuid()) @db.Uuid
+  campaignId String       @map("campaign_id") @db.Uuid
+  campaign   Campaign     @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  name       String       @default("Combate")
+  status     CombatStatus @default(SETUP)
+
+  participants CombatParticipant[]
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  endedAt   DateTime? @map("ended_at")
+
+  @@index([campaignId])
+  @@map("combats")
+}
+
+enum CombatStatus {
+  SETUP
+  ACTIVE
+  ENDED
+}
+
+/// Participante de um Combate. Pode ser:
+///   - PLAYER: jogador da Campanha (usa ficha do `character`)
+///   - GM_CHARACTER: NPC do GM com ficha completa (usa ficha do `character`)
+///   - GENERIC_ENEMY: inimigo genérico criado na hora (só nome + HP)
+/// HP de inimigos (GENERIC_ENEMY e GM_CHARACTER) é visível apenas para o GM.
+model CombatParticipant {
+  id       String          @id @default(uuid()) @db.Uuid
+  combatId String          @map("combat_id") @db.Uuid
+  combat   Combat          @relation(fields: [combatId], references: [id], onDelete: Cascade)
+  kind     ParticipantKind
+
+  /// Para PLAYER e GM_CHARACTER — usa ficha existente.
+  characterId String?    @map("character_id") @db.Uuid
+  character   Character? @relation("CombatParticipants", fields: [characterId], references: [id])
+
+  /// Para GENERIC_ENEMY — apenas nome e HP (sem ficha completa).
+  enemyName      String? @map("enemy_name")
+  enemyMaxHp     Int?    @map("enemy_max_hp")
+  enemyCurrentHp Int?    @map("enemy_current_hp")
+
+  /// Iniciativa definida pelo GM após rolagem dos dados.
+  initiative   Int?
+  displayOrder Int  @default(0) @map("display_order")
+
+  @@index([combatId])
+  @@map("combat_participants")
+}
+
+enum ParticipantKind {
+  PLAYER
+  GM_CHARACTER
+  GENERIC_ENEMY
 }

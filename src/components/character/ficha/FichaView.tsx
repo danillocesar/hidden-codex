@@ -332,9 +332,15 @@ export function FichaView({
               characterId={display.id}
               items={display.inventory}
               catalog={equipmentCatalog}
+              ryos={display.ryos}
             />
           ) : (
-            <InventoryPanel items={display.inventory} canEdit={false} />
+            <InventoryPanel
+              items={display.inventory}
+              canEdit={false}
+              characterId={display.id}
+              ryos={display.ryos}
+            />
           )}
         </section>
 

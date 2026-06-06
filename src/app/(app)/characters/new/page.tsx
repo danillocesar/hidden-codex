@@ -1,6 +1,8 @@
 import { Heading } from '@/components/ui/heading';
 import { Text } from '@/components/ui/text';
+import { getCurrentUser } from '@/lib/auth/session';
 import { loadWizardCatalogs } from '@/server/queries/wizardCatalogs';
+import { countUserCharacters } from '@/server/queries/userCharacters';
 import { WizardClient } from './WizardClient';
 
 /**
@@ -14,7 +16,12 @@ import { WizardClient } from './WizardClient';
  * Spec: BACKLOG.md P0.2 / arcana-forge-spec/06-MVP-ROADMAP.md F2.4.
  */
 export default async function NewCharacterPage() {
-  const catalogs = await loadWizardCatalogs();
+  const session = await getCurrentUser();
+  const [catalogs, characterCount] = await Promise.all([
+    loadWizardCatalogs(),
+    session ? countUserCharacters(session.user.id) : Promise.resolve(1),
+  ]);
+  const isFirstCharacter = characterCount === 0;
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-10">
@@ -27,7 +34,7 @@ export default async function NewCharacterPage() {
         </Text>
       </header>
 
-      <WizardClient catalogs={catalogs} />
+      <WizardClient catalogs={catalogs} isFirstCharacter={isFirstCharacter} />
     </main>
   );
 }

@@ -106,7 +106,7 @@ export function Step1Identity({
 
   return (
     <div className="grid gap-6 md:grid-cols-[220px_1fr]">
-      <Stack gap="xs">
+      <Stack gap="xs" data-tour="identity-portrait">
         <PortraitUpload
           value={identity.portraitUrl ?? null}
           onChange={(url) => patch({ portraitUrl: url })}
@@ -171,7 +171,7 @@ export function Step1Identity({
           </Field>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2" data-tour="identity-origin">
           <Field label="Vila">
             <Combobox
               id="char-village"

@@ -1,21 +1,11 @@
 import { getLevelUpDelta } from '@/domain/rules/leveling';
-import type { ShinobiRank } from '@/domain/types';
+import { SHINOBI_RANK_LABELS as RANK_LABELS } from '@/domain/catalog/ranks';
 import { Section } from '@/components/ui/section';
 import { Heading } from '@/components/ui/heading';
 import { Eyebrow } from '@/components/ui/eyebrow';
 import { Text } from '@/components/ui/text';
 import { Badge } from '@/components/ui/badge';
 import { Cluster, Stack } from '@/components/ui/stack';
-
-const RANK_LABELS: Record<ShinobiRank, string> = {
-  ESTUDANTE: 'Estudante',
-  GENIN: 'Genin',
-  CHUUNIN: 'Chuunin',
-  JOUNIN_ESPECIAL: 'Jounin Especial',
-  JOUNIN: 'Jounin',
-  JOUNIN_ELITE: 'Jounin de Elite',
-  SANNIN_KAGE: 'Sannin / Kage',
-};
 
 /**
  * Cabecalho do wizard de level-up: resume o que o NC novo concede (deltas de

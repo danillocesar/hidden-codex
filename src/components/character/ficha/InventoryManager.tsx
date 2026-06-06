@@ -40,6 +40,7 @@ import {
   updateInventoryQuantity,
 } from '@/server/actions/characters/inventory';
 import { ItemInfo } from './ItemInfo';
+import { RyosWallet } from './RyosWallet';
 
 const KIND_LABEL: Record<string, string> = {
   WEAPON: 'Armamento',
@@ -62,10 +63,12 @@ export function InventoryManager({
   characterId,
   items,
   catalog,
+  ryos,
 }: {
   characterId: string;
   items: ReadonlyArray<FichaInventoryItem>;
   catalog: ReadonlyArray<EquipmentPickerItem>;
+  ryos: number;
 }) {
   const router = useRouter();
   const { toast } = useToast();
@@ -213,11 +216,14 @@ export function InventoryManager({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <OccupancyMeter occupancy={occupancy} />
-        <Button variant="outline" size="sm" onClick={() => setAdding(true)}>
-          + Adicionar item
-        </Button>
+        <div className="flex flex-col items-end gap-2">
+          <Button variant="outline" size="sm" onClick={() => setAdding(true)}>
+            + Adicionar item
+          </Button>
+          <RyosWallet characterId={characterId} ryos={ryos} canEdit />
+        </div>
       </div>
 
       <DndContext sensors={sensors} onDragEnd={onDragEnd}>

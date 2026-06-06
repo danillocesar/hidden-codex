@@ -96,6 +96,13 @@ const inventoryInputSchema = z
   .max(200)
   .default([]);
 
+/**
+ * Ryos (moeda) iniciais do personagem. Sugerido pelo posto shinobi do NC
+ * (`getStartingRyos`) no wizard, mas editavel. Cap generoso pra acomodar
+ * postos altos (Sannin/Kage = 88.000) e acumulo de missoes.
+ */
+const ryosSchema = z.number().int().min(0).max(99_999_999).default(0);
+
 const identitySchema = z.object({
   name: z.string().trim().min(1, 'Nome obrigatorio.').max(NAME_MAX),
   age: z.number().int().min(0).max(999).nullable().optional(),
@@ -138,6 +145,7 @@ export const createCharacterInputSchema = z
     effectsByPower: effectsByPowerSchema,
     aptitudes: aptitudesInputSchema,
     inventory: inventoryInputSchema,
+    ryos: ryosSchema,
   })
   .superRefine((input, ctx) => {
     const id = input.identity;

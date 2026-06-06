@@ -106,13 +106,15 @@ export function Step6Effects({
 
   return (
     <Stack gap="lg">
-      <Text variant="muted">
-        Cada nivel em um poder concede <b className="text-ice">1 efeito</b> daquele
-        poder. Escolha exatamente {''}<b className="text-ice">N efeitos</b> por poder (N =
-        nivel total).
-      </Text>
+      <div data-tour="effects-intro">
+        <Text variant="muted">
+          Cada nivel em um poder concede <b className="text-ice">1 efeito</b> daquele
+          poder. Escolha exatamente {''}<b className="text-ice">N efeitos</b> por poder (N =
+          nivel total).
+        </Text>
+      </div>
 
-      {state.powers.map((power) => {
+      {state.powers.map((power, index) => {
         const powerDef = catalogs.powers.find((p) => p.code === power.code);
         const selected = state.effectsByPower[power.code] ?? [];
         // Slot = nivel do poder. `power.level` ja inclui niveis gratuitos da
@@ -130,6 +132,7 @@ export function Step6Effects({
             availableEffects={availableEffects}
             character={character}
             humanize={humanize}
+            tourAnchor={index === 0}
             onOpenDrawer={setDrawerCode}
             onToggle={(effectCode) => {
               const next = selected.includes(effectCode)
@@ -168,6 +171,7 @@ function PowerSection({
   availableEffects,
   character,
   humanize,
+  tourAnchor = false,
   onToggle,
   onOpenDrawer,
 }: {
@@ -177,6 +181,8 @@ function PowerSection({
   availableEffects: ReadonlyArray<WizardPowerEffectOption>;
   character: CharacterCore;
   humanize: ReturnType<typeof makeHumanizer>;
+  /** Marca esta secao como ancora do tour de onboarding (so a primeira). */
+  tourAnchor?: boolean;
   onToggle: (effectCode: string) => void;
   onOpenDrawer: (effectCode: string) => void;
 }) {
@@ -202,7 +208,10 @@ function PowerSection({
 
   return (
     <section>
-      <header className="mb-3 flex flex-wrap items-baseline gap-2 border-b border-border pb-2">
+      <header
+        className="mb-3 flex flex-wrap items-baseline gap-2 border-b border-border pb-2"
+        data-tour={tourAnchor ? 'effects-slots' : undefined}
+      >
         <span className="font-serif text-lg font-medium text-ink">
           {powerDef?.name ?? power.code}
         </span>

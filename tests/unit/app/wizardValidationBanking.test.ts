@@ -35,6 +35,7 @@ function baseState(): WizardState {
     effectsByPower: {},
     aptitudes: [],
     inventory: [],
+    ryos: 0,
   };
 }
 

@@ -83,6 +83,7 @@ export async function createCharacter(rawInput: unknown): Promise<CreateCharacte
     baseLm: input.bases.lm,
     currentVitality: maxVitality,
     currentChakra: maxChakra,
+    ryos: input.ryos,
     ...(clan ? { clan: { connect: { id: clan.id } } } : {}),
     ...(village ? { village: { connect: { id: village.id } } } : {}),
     ...(benefits.effectiveKekkeiGenkaiCode && kekkeiGenkai

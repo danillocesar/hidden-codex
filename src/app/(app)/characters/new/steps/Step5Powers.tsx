@@ -262,7 +262,9 @@ export function Step5Powers({
           NC {nc}: nivel maximo por poder = <b className="text-ice">{powerLimit}</b>.
           Cada poder custa <b className="text-ice">{powerCost} ponto(s)</b>.
         </p>
-        <BudgetBadge label="Pontos de poder" spent={totalSpent} budget={budget} />
+        <div data-tour="power-budget">
+          <BudgetBadge label="Pontos de poder" spent={totalSpent} budget={budget} />
+        </div>
       </div>
 
       <div className="grid gap-3 md:grid-cols-2">
@@ -296,7 +298,7 @@ export function Step5Powers({
         {filtered.length} de {availablePowers.length} poderes disponiveis
       </p>
 
-      <ul className="grid gap-2">
+      <ul className="grid gap-2" data-tour="power-list">
         {filtered.map((p) => {
           const selected = selectedByCode.get(p.code);
           const free = effectiveFree[p.code] ?? 0;

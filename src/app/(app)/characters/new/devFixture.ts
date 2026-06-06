@@ -111,5 +111,6 @@ export function buildDevFixture(catalogs: WizardCatalogs): WizardState {
     effectsByPower,
     aptitudes,
     inventory,
+    ryos: 850, // valor custom pra exercitar o campo de Ryos no step
   };
 }

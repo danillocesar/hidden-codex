@@ -1,4 +1,6 @@
 @import '../styles/tokens.css';
+@import 'driver.js/dist/driver.css';
+@import '../styles/driver-theme.css';
 
 @tailwind base;
 @tailwind components;

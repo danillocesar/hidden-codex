@@ -16,6 +16,7 @@ import { Alert } from '@/components/ui/alert';
 import { ATTRIBUTE_KEYS } from '@/domain/types';
 import { getLevelUpDelta } from '@/domain/rules/leveling';
 import { LevelUpBanner } from '@/components/character/wizard/LevelUpBanner';
+import { useWizardTour } from '@/lib/onboarding/useWizardTour';
 import { TOTAL_STEPS, initialWizardState, wizardReducer, type WizardState } from './wizardState';
 import { validateStepById, type WizardStepId } from './wizardValidation';
 import { buildDevFixture } from './devFixture';
@@ -76,6 +77,8 @@ export type WizardClientProps = {
   initialState?: WizardState;
   /** NC de origem no level-up (o estado ja vem com campaignLevel = origem + 1). */
   levelUpFromNc?: number;
+  /** True quando o usuario ainda nao tem personagens — auto-dispara o tour. */
+  isFirstCharacter?: boolean;
 };
 
 /**
@@ -89,6 +92,7 @@ export function WizardClient({
   characterId,
   initialState,
   levelUpFromNc,
+  isFirstCharacter = false,
 }: WizardClientProps) {
   const router = useRouter();
   const [state, dispatch] = useReducer(
@@ -122,6 +126,10 @@ export function WizardClient({
       : 0;
 
   const stepDef = STEPS[Math.min(state.step, totalSteps - 1)]!;
+
+  // Tour guiado de onboarding: auto-dispara no 1o personagem; o sub-tour da aba
+  // atual e re-disparado sempre que `stepDef.id` muda (ao avancar/voltar).
+  const { startTour } = useWizardTour({ isFirstCharacter, mode, currentStepId: stepDef.id });
 
   const currentValidation = useMemo(
     () => validateStepById(stepDef.id, state, catalogs, allowBanking),
@@ -222,22 +230,52 @@ export function WizardClient({
         </div>
       ) : null}
 
-      <StepProgress
-        steps={STEPS}
-        currentIndex={state.step}
-        canAdvance={currentValidation.isValid}
-        isReachable={isReachable}
-        onStepClick={goToStep}
-      />
+      <div data-tour="progress">
+        <StepProgress
+          steps={STEPS}
+          currentIndex={state.step}
+          canAdvance={currentValidation.isValid}
+          isReachable={isReachable}
+          onStepClick={goToStep}
+        />
+      </div>
 
       <Section>
-        <div className="mb-6">
-          <Eyebrow tone="deep" size="sm" as="p" className="tracking-[0.4em]">
-            Passo {state.step + 1} de {totalSteps}
-          </Eyebrow>
-          <Heading level={2} className="mt-1">
-            {stepDef.label}
-          </Heading>
+        <div className="mb-6 flex items-start justify-between gap-4">
+          <div data-tour="step-title">
+            <Eyebrow tone="deep" size="sm" as="p" className="tracking-[0.4em]">
+              Passo {state.step + 1} de {totalSteps}
+            </Eyebrow>
+            <Heading level={2} className="mt-1">
+              {stepDef.label}
+            </Heading>
+          </div>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={startTour}
+            title="Reabrir o tour guiado desta etapa"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              className="h-3.5 w-3.5"
+              aria-hidden
+            >
+              <circle cx="8" cy="8" r="6.25" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6.4 6.2a1.6 1.6 0 113 .7c0 1-1.4 1.3-1.4 2.3"
+              />
+              <circle cx="8" cy="11.6" r="0.5" fill="currentColor" stroke="none" />
+            </svg>
+            Ver tour
+          </Button>
         </div>
 
         {stepDef.id === 'identity' && (
@@ -282,7 +320,7 @@ export function WizardClient({
 
       {submitError ? <Alert tone="danger">{submitError}</Alert> : null}
 
-      <nav className="flex items-center justify-between">
+      <nav className="flex items-center justify-between" data-tour="nav">
         {state.step > 0 ? (
           <Button variant="outline" disabled={isPending} onClick={() => dispatch({ type: 'prev' })}>
             <svg

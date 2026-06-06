@@ -125,28 +125,32 @@ export function Step4Aptitudes({
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <p className="text-sm text-ink-muted">
+        <p className="text-sm text-ink-muted" data-tour="apt-free-rule">
           Cada aptidão custa <b className="text-ice">{APTITUDE_COST} ponto(s)</b> — as{' '}
           <b className="text-ice">{FREE_STARTING_APTITUDES} primeiras</b> são gratuitas na
           criação.
         </p>
-        <BudgetBadge label="Pontos de poder" spent={totalSpent} budget={budget} />
+        <div data-tour="apt-budget">
+          <BudgetBadge label="Pontos de poder" spent={totalSpent} budget={budget} />
+        </div>
       </div>
 
-      <AptitudePicker
-        catalog={catalogs.aptitudes}
-        selected={state.aptitudes}
-        freeAptitudeCodes={origin.freeAptitudeCodes}
-        freeStartingCodes={freeStartingCodes}
-        characterForPrereqCheck={characterForPrereqCheck}
-        humanizeCatalogs={catalogs}
-        onChange={(next) =>
-          dispatch({
-            type: 'setAptitudes',
-            aptitudes: next.map((a) => ({ code: a.code, parameter: a.parameter ?? null })),
-          })
-        }
-      />
+      <div data-tour="apt-picker">
+        <AptitudePicker
+          catalog={catalogs.aptitudes}
+          selected={state.aptitudes}
+          freeAptitudeCodes={origin.freeAptitudeCodes}
+          freeStartingCodes={freeStartingCodes}
+          characterForPrereqCheck={characterForPrereqCheck}
+          humanizeCatalogs={catalogs}
+          onChange={(next) =>
+            dispatch({
+              type: 'setAptitudes',
+              aptitudes: next.map((a) => ({ code: a.code, parameter: a.parameter ?? null })),
+            })
+          }
+        />
+      </div>
 
       {totalSpent > budget ? (
         <Alert tone="danger">

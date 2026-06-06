@@ -58,17 +58,21 @@ export function Step3Pericias({
           inicial = <code className="text-ice">⌈atributo/2⌉</code>; pontos investidos
           somam ao nivel.
         </p>
-        <BudgetBadge label="Pericias" spent={spent} budget={budget} />
+        <div data-tour="pericia-budget">
+          <BudgetBadge label="Pericias" spent={spent} budget={budget} />
+        </div>
       </div>
 
-      <PericiaTable
-        pericias={items}
-        attributes={state.attributes}
-        points={state.pericias}
-        maxPerPericia={maxPer}
-        remainingBudget={budget - spent}
-        onChange={(code, points) => dispatch({ type: 'setPericia', code, points })}
-      />
+      <div data-tour="pericia-table">
+        <PericiaTable
+          pericias={items}
+          attributes={state.attributes}
+          points={state.pericias}
+          maxPerPericia={maxPer}
+          remainingBudget={budget - spent}
+          onChange={(code, points) => dispatch({ type: 'setPericia', code, points })}
+        />
+      </div>
 
       {/* Estouro de budget e impossivel via UI (steppers bloqueiam ao chegar
           no limite). Alert mantido como defesa em profundidade caso o state

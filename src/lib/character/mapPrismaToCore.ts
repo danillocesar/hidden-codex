@@ -182,6 +182,8 @@ export type CharacterViewModel = {
     biography: string | null;
     portraitUrl: string | null;
     isOwner: boolean;
+    /** Ryos (moeda) atuais do personagem. */
+    ryos: number;
     /** Resolvido: `clan.name` OU `customClanName` OU null. */
     clanName: string | null;
     /** Codigo canonico do cla quando aplicavel. */
@@ -364,6 +366,7 @@ export function mapPrismaToCore(
       biography: row.biography,
       portraitUrl: row.portraitUrl,
       isOwner: opts.currentUserId === row.userId,
+      ryos: row.ryos,
       clanName: row.clan?.name ?? row.customClanName ?? null,
       clanCode: row.clan?.code ?? null,
       villageName: row.village?.name ?? row.customVillageName ?? null,

@@ -7,6 +7,7 @@ import { Eyebrow } from '@/components/ui/eyebrow';
 import { setInventoryItemEquipped } from '@/server/actions/characters/inventory';
 import type { FichaInventoryItem } from '@/lib/character/mapPrismaToCore';
 import { cn } from '@/lib/utils/cn';
+import { RyosWallet } from './RyosWallet';
 
 type Group = { key: string; label: string; items: FichaInventoryItem[] };
 
@@ -20,12 +21,27 @@ type Group = { key: string; label: string; items: FichaInventoryItem[] };
 export function InventoryPanel({
   items,
   canEdit,
+  characterId,
+  ryos,
 }: {
   items: ReadonlyArray<FichaInventoryItem>;
   canEdit: boolean;
+  characterId: string;
+  ryos: number;
 }) {
+  const wallet = (
+    <div className="mb-6 flex justify-end">
+      <RyosWallet characterId={characterId} ryos={ryos} canEdit={false} />
+    </div>
+  );
+
   if (items.length === 0) {
-    return <p className="font-body text-sm text-ink-muted">Nenhum item no inventário.</p>;
+    return (
+      <>
+        {wallet}
+        <p className="font-body text-sm text-ink-muted">Nenhum item no inventário.</p>
+      </>
+    );
   }
 
   const groups: Group[] = [
@@ -39,8 +55,10 @@ export function InventoryPanel({
   ].filter((g) => g.items.length > 0);
 
   return (
-    <div className="grid gap-8 md:grid-cols-2">
-      {groups.map((group) => (
+    <>
+      {wallet}
+      <div className="grid gap-8 md:grid-cols-2">
+        {groups.map((group) => (
         <div key={group.key}>
           <Eyebrow
             tone="accent"
@@ -56,8 +74,9 @@ export function InventoryPanel({
             ))}
           </ul>
         </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </>
   );
 }
 

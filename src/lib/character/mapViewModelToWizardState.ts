@@ -46,5 +46,6 @@ export function mapViewModelToWizardState(vm: CharacterViewModel): CreateCharact
       .filter((a) => !a.isFreeFromOrigin)
       .map((a) => ({ code: a.code, parameter: a.parameter ?? null })),
     inventory: [],
+    ryos: vm.display.ryos,
   };
 }

@@ -52,3 +52,11 @@ export async function loadUserCharacters(userId: string): Promise<DashboardChara
     updatedAtLabel: row.updatedAt.toLocaleDateString('pt-BR'),
   }));
 }
+
+/**
+ * Conta os personagens (nao deletados) do usuario. Usado pra decidir se o
+ * wizard deve auto-disparar o tour de onboarding (1o personagem = count 0).
+ */
+export async function countUserCharacters(userId: string): Promise<number> {
+  return prisma.character.count({ where: { userId, deletedAt: null } });
+}

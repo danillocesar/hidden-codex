@@ -158,7 +158,7 @@ export function Step7Summary({
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-tour="summary-review">
       <CharacterSummary
         clanName={clanName}
         villageName={villageName}
@@ -174,6 +174,13 @@ export function Step7Summary({
         pericias={summaryPericias}
         powers={summaryPowers}
       />
+
+      <div className="flex items-baseline justify-between border-b border-border py-1.5">
+        <p className="font-display text-[10px] uppercase tracking-[0.35em] text-ice">Carteira</p>
+        <p className="text-sm text-ink">
+          <b className="text-ice-bright">{state.ryos.toLocaleString('pt-BR')}</b> Ryos
+        </p>
+      </div>
 
       {inventoryRecap.length > 0 ? (
         <div>

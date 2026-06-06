@@ -1,5 +1,6 @@
 import type { CreateCharacterInput } from '@/schemas/character/create';
 import type { ATTRIBUTE_KEYS } from '@/domain/types';
+import { getStartingRyos } from '@/domain/rules/money';
 
 /**
  * Estado interno do wizard de criacao (P0.2). Espelha 1:1 a forma do
@@ -21,7 +22,8 @@ export type WizardAction =
   | { type: 'setPowers'; powers: CreateCharacterInput['powers'] }
   | { type: 'setEffectsForPower'; powerCode: string; effectCodes: ReadonlyArray<string> }
   | { type: 'setAptitudes'; aptitudes: CreateCharacterInput['aptitudes'] }
-  | { type: 'setInventory'; inventory: CreateCharacterInput['inventory'] };
+  | { type: 'setInventory'; inventory: CreateCharacterInput['inventory'] }
+  | { type: 'setRyos'; ryos: number };
 
 // 1 Identity · 2 Attr · 3 Pericias · 4 Aptidoes · 5 Poderes · 6 Efeitos ·
 // 7 Inventario · 8 Summary
@@ -49,6 +51,9 @@ export function initialWizardState(): WizardState {
     effectsByPower: {},
     aptitudes: [],
     inventory: [],
+    // Sugestao inicial = dinheiro do posto Genin (NC 4). O step de Inventario
+    // reajusta a sugestao conforme o NC escolhido; o jogador pode sobrescrever.
+    ryos: getStartingRyos(4),
   };
 }
 
@@ -108,6 +113,8 @@ export function wizardReducer(state: WizardState, action: WizardAction): WizardS
       return { ...state, aptitudes: action.aptitudes };
     case 'setInventory':
       return { ...state, inventory: action.inventory };
+    case 'setRyos':
+      return { ...state, ryos: Math.max(0, Math.floor(action.ryos)) };
     default:
       return state;
   }

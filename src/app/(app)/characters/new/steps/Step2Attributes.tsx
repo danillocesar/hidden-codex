@@ -114,7 +114,9 @@ export function Step2Attributes({
           <h3 className="font-display text-xs uppercase tracking-[0.3em] text-ink-muted">
             Atributos
           </h3>
-          <BudgetBadge label="Pontos totais" spent={attrSum} budget={budget} />
+          <div data-tour="attr-budget">
+            <BudgetBadge label="Pontos totais" spent={attrSum} budget={budget} />
+          </div>
         </div>
         {levelUp ? (
           <p className="mb-2 text-sm text-ink-muted">
@@ -130,7 +132,10 @@ export function Step2Attributes({
           {levelUp ? ' (atributos não podem diminuir)' : ' (preenchido automaticamente)'}, máximo{' '}
           <b className="text-ice">{attrMax}</b>.
         </p>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
+        <div
+          className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7"
+          data-tour="attr-grid"
+        >
           {ATTRIBUTES.map((attr) => (
             <AttributeCard
               key={attr.code}
@@ -165,7 +170,7 @@ export function Step2Attributes({
           <p className="mb-4 text-sm text-ink-muted">
             Inicia 3/3/3/3. Pode mover ate 2 pontos entre as bases.
           </p>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4" data-tour="attr-bases">
             {COMBAT_SKILLS.map((cs) => (
               <AttributeCard
                 key={cs.code}
@@ -188,7 +193,7 @@ export function Step2Attributes({
         </section>
       )}
 
-      <section className="rounded border border-border bg-bg-paper p-4">
+      <section className="rounded border border-border bg-bg-paper p-4" data-tour="attr-preview">
         <h3 className="mb-3 font-display text-xs uppercase tracking-[0.3em] text-ink-muted">
           Preview (sem aptidoes)
         </h3>

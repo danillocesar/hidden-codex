@@ -9,10 +9,11 @@ import { Section } from '@/components/ui/section';
 import { StepProgress } from '@/components/character/wizard/StepProgress';
 import type { WizardCatalogs } from '@/server/queries/wizardCatalogs';
 import { createCharacter } from '@/server/actions/characters/create';
+import { updateCharacter } from '@/server/actions/characters/update';
 import type { CreateCharacterInput } from '@/schemas/character/create';
 import { useFormErrors } from '@/lib/forms/useFormErrors';
 import { Alert } from '@/components/ui/alert';
-import { TOTAL_STEPS, initialWizardState, wizardReducer } from './wizardState';
+import { TOTAL_STEPS, initialWizardState, wizardReducer, type WizardState } from './wizardState';
 import { validateStep } from './wizardValidation';
 import { buildDevFixture } from './devFixture';
 import { Step1Identity } from './steps/Step1Identity';
@@ -33,7 +34,7 @@ import { Step7Summary } from './steps/Step7Summary';
  * Ordem: Aptidoes ANTES de Poderes/Efeitos pra que pre-reqs de efeitos que
  * exijam aptidoes (ex: Veneno Toxico requer Quimico) sejam validados.
  */
-const STEPS = [
+const STEPS_CREATE = [
   { id: 'identity', label: 'Identidade', kanji: '名' },
   { id: 'attributes', label: 'Atributos', kanji: '性' },
   { id: 'pericias', label: 'Pericias', kanji: '技' },
@@ -44,23 +45,53 @@ const STEPS = [
   { id: 'summary', label: 'Revisar', kanji: '検' },
 ] as const;
 
-if (STEPS.length !== TOTAL_STEPS) {
+// Modo edicao reaproveita o wizard mas omite o step de Inventario — o inventario
+// e gerido ao vivo na ficha (com compartimentos e itens custom que o schema do
+// wizard nao modela). Os steps de build (indices 0-5) ficam iguais nos dois
+// modos, entao `validateStep` (indexado) continua valido sem ajuste.
+const STEPS_EDIT = STEPS_CREATE.filter((s) => s.id !== 'inventory');
+
+if (STEPS_CREATE.length !== TOTAL_STEPS) {
   throw new Error('STEPS desalinhado com TOTAL_STEPS');
 }
+
+type WizardMode = 'create' | 'edit';
+
+export type WizardClientProps = {
+  catalogs: WizardCatalogs;
+  mode?: WizardMode;
+  /** Obrigatorio em `mode='edit'` — alvo do `updateCharacter`. */
+  characterId?: string;
+  /** Estado pre-preenchido (modo edicao). Quando ausente, comeca vazio. */
+  initialState?: WizardState;
+};
 
 /**
  * Orquestra o wizard. State central via useReducer; validacao por step em
  * `wizardValidation.ts`. UX de erro segue padrao generico (touched on blur +
  * reveal on submit attempt) via `useFormErrors`.
  */
-export function WizardClient({ catalogs }: { catalogs: WizardCatalogs }) {
+export function WizardClient({
+  catalogs,
+  mode = 'create',
+  characterId,
+  initialState,
+}: WizardClientProps) {
   const router = useRouter();
-  const [state, dispatch] = useReducer(wizardReducer, undefined, initialWizardState);
+  const [state, dispatch] = useReducer(
+    wizardReducer,
+    initialState,
+    (init) => init ?? initialWizardState(),
+  );
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const formErrors = useFormErrors();
 
-  const stepDef = STEPS[state.step]!;
+  const isEdit = mode === 'edit';
+  const STEPS = isEdit ? STEPS_EDIT : STEPS_CREATE;
+  const totalSteps = STEPS.length;
+
+  const stepDef = STEPS[Math.min(state.step, totalSteps - 1)]!;
 
   const currentValidation = useMemo(
     () => validateStep(state.step, state, catalogs),
@@ -95,12 +126,14 @@ export function WizardClient({ catalogs }: { catalogs: WizardCatalogs }) {
 
   const onSubmit = () => {
     setSubmitError(null);
-    for (let i = 0; i < TOTAL_STEPS - 1; i++) {
+    for (let i = 0; i < totalSteps - 1; i++) {
       const v = validateStep(i, state, catalogs);
       if (!v.isValid) {
         formErrors.revealAll();
         setSubmitError(
-          `Passo ${i + 1} (${STEPS[i]!.label}) tem pendencias. Volte e corrija antes de criar.`,
+          `Passo ${i + 1} (${STEPS[i]!.label}) tem pendencias. Volte e corrija antes de ${
+            isEdit ? 'salvar' : 'criar'
+          }.`,
         );
         return;
       }
@@ -108,7 +141,9 @@ export function WizardClient({ catalogs }: { catalogs: WizardCatalogs }) {
     const { step: _step, ...payload } = state;
     void _step;
     startTransition(async () => {
-      const result = await createCharacter(payload satisfies CreateCharacterInput);
+      const result = isEdit
+        ? await updateCharacter(characterId!, payload satisfies CreateCharacterInput)
+        : await createCharacter(payload satisfies CreateCharacterInput);
       if (!result.ok) {
         setSubmitError(result.error);
         return;
@@ -117,13 +152,13 @@ export function WizardClient({ catalogs }: { catalogs: WizardCatalogs }) {
     });
   };
 
-  const isLastStep = state.step === TOTAL_STEPS - 1;
+  const isLastStep = state.step === totalSteps - 1;
 
   const isDev = process.env.NODE_ENV !== 'production';
 
   return (
     <div className="space-y-8">
-      {isDev ? (
+      {isDev && !isEdit ? (
         <div className="flex items-center justify-end gap-2 rounded border border-dashed border-warning/40 bg-warning/5 px-3 py-2">
           <span className="font-display text-[10px] uppercase tracking-[0.3em] text-warning">
             Modo dev
@@ -160,14 +195,14 @@ export function WizardClient({ catalogs }: { catalogs: WizardCatalogs }) {
       <Section>
         <div className="mb-6">
           <Eyebrow tone="deep" size="sm" as="p" className="tracking-[0.4em]">
-            Passo {state.step + 1} de {TOTAL_STEPS}
+            Passo {state.step + 1} de {totalSteps}
           </Eyebrow>
           <Heading level={2} className="mt-1">
             {stepDef.label}
           </Heading>
         </div>
 
-        {state.step === 0 && (
+        {stepDef.id === 'identity' && (
           <Step1Identity
             state={state}
             dispatch={dispatch}
@@ -176,19 +211,23 @@ export function WizardClient({ catalogs }: { catalogs: WizardCatalogs }) {
             onBlurField={formErrors.markTouched}
           />
         )}
-        {state.step === 1 && <Step2Attributes state={state} dispatch={dispatch} />}
-        {state.step === 2 && (
+        {stepDef.id === 'attributes' && <Step2Attributes state={state} dispatch={dispatch} />}
+        {stepDef.id === 'pericias' && (
           <Step3Pericias state={state} dispatch={dispatch} catalogs={catalogs} />
         )}
-        {state.step === 3 && (
+        {stepDef.id === 'aptitudes' && (
           <Step4Aptitudes state={state} dispatch={dispatch} catalogs={catalogs} />
         )}
-        {state.step === 4 && <Step5Powers state={state} dispatch={dispatch} catalogs={catalogs} />}
-        {state.step === 5 && <Step6Effects state={state} dispatch={dispatch} catalogs={catalogs} />}
-        {state.step === 6 && (
+        {stepDef.id === 'powers' && (
+          <Step5Powers state={state} dispatch={dispatch} catalogs={catalogs} />
+        )}
+        {stepDef.id === 'effects' && (
+          <Step6Effects state={state} dispatch={dispatch} catalogs={catalogs} />
+        )}
+        {stepDef.id === 'inventory' && (
           <StepInventory state={state} dispatch={dispatch} catalogs={catalogs} />
         )}
-        {state.step === 7 && <Step7Summary state={state} catalogs={catalogs} />}
+        {stepDef.id === 'summary' && <Step7Summary state={state} catalogs={catalogs} />}
       </Section>
 
       {submitError ? <Alert tone="danger">{submitError}</Alert> : null}
@@ -215,7 +254,13 @@ export function WizardClient({ catalogs }: { catalogs: WizardCatalogs }) {
         )}
         {isLastStep ? (
           <Button onClick={onSubmit} disabled={isPending}>
-            {isPending ? 'Criando…' : 'Criar personagem'}
+            {isEdit
+              ? isPending
+                ? 'Salvando…'
+                : 'Salvar alterações'
+              : isPending
+                ? 'Criando…'
+                : 'Criar personagem'}
           </Button>
         ) : (
           <Button
@@ -227,7 +272,7 @@ export function WizardClient({ catalogs }: { catalogs: WizardCatalogs }) {
                 : undefined
             }
           >
-            {state.step === TOTAL_STEPS - 2 ? 'Revisar' : 'Proximo'}
+            {state.step === totalSteps - 2 ? 'Revisar' : 'Proximo'}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"

@@ -1,6 +1,11 @@
 import { roundUp } from './math';
 
-export type DamageType = 'cc' | 'cd_thrown' | 'ninpou_canhao' | 'ninpou_standard';
+export type DamageType =
+  | 'cc'
+  | 'cd_thrown'
+  | 'ninpou_canhao'
+  | 'ninpou_standard'
+  | 'ninpou_flechas';
 
 export type DamageGrade = 0 | 1 | 2 | 3 | 4;
 
@@ -73,6 +78,14 @@ export function calculateDamageBreakdown(opts: DamageBreakdownInput): DamageBrea
       halfEsp = roundUp(opts.attackerDexterity / 2);
       break;
     case 'ninpou_canhao':
+      nivel = 2 * (opts.powerLevel ?? 0);
+      break;
+    case 'ninpou_flechas':
+      // Flechas: 2 de dano por projétil, 1 projétil por nível usado, todos
+      // concentrados num alvo → 2 × nível. O bônus (incl. elemento) entra uma
+      // única vez por alvo, garantido por `elemento`/`outro` não escalarem com o
+      // nível. Livro Básico p. 99. Total = igual ao Canhão, mas sem a opção
+      // "sem custo de chakra (÷2)" — por isso é um tipo próprio.
       nivel = 2 * (opts.powerLevel ?? 0);
       break;
     case 'ninpou_standard':

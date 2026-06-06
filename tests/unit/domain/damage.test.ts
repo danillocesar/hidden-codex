@@ -118,6 +118,35 @@ describe('damage — calculateDamageBreakdown', () => {
     expect(breakdown.byGrade).toEqual({ grade1: 8, grade2: 16, grade3: 24, grade4: 32 });
   });
 
+  it('Flechas nv 3 = 6 total (2 por projétil × 3 projéteis)', () => {
+    const breakdown = calculateDamageBreakdown({
+      damageType: 'ninpou_flechas',
+      attackerForce: 1,
+      attackerDexterity: 6,
+      attackerEspirito: 3,
+      powerLevel: 3,
+    });
+    expect(breakdown.components.nivel).toBe(6);
+    expect(breakdown.components.halfEsp).toBe(0);
+    expect(breakdown.components.elemento).toBe(0);
+    expect(breakdown.total).toBe(6);
+    expect(breakdown.byGrade.grade4).toBe(24);
+  });
+
+  it('Flechas: bônus de elemento aplicado uma única vez (Fuuton nv 2 → 2×2 + 2 = 6)', () => {
+    const breakdown = calculateDamageBreakdown({
+      damageType: 'ninpou_flechas',
+      attackerForce: 1,
+      attackerDexterity: 6,
+      attackerEspirito: 3,
+      powerLevel: 2,
+      elementDamageBonus: 2,
+    });
+    expect(breakdown.components.nivel).toBe(4);
+    expect(breakdown.components.elemento).toBe(2);
+    expect(breakdown.total).toBe(6);
+  });
+
   it('Fuuton padrão soma elemento ao ⌈Esp/2⌉ + nível', () => {
     const breakdown = calculateDamageBreakdown({
       damageType: 'ninpou_standard',

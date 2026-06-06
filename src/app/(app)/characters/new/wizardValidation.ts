@@ -91,7 +91,12 @@ export function validateIdentity(state: WizardState): StepValidation {
   return { isValid: issues.length === 0, issues };
 }
 
-export function validateAttributes(state: WizardState): StepValidation {
+/**
+ * `allowBanking`: na criacao o jogador e OBRIGADO a gastar tudo; na edicao e no
+ * level-up pode guardar pontos (saldo nao gasto e valido). Quando true, sub-
+ * gastar nao bloqueia — so estourar o budget ou violar min/max.
+ */
+export function validateAttributes(state: WizardState, allowBanking = false): StepValidation {
   const issues: WizardIssue[] = [];
   const nc = state.identity.campaignLevel;
   const { min, max } = getAttributeLimits(nc);
@@ -111,7 +116,7 @@ export function validateAttributes(state: WizardState): StepValidation {
     issues.push({
       message: `Atributos: ${sum}/${budget} pontos totais (estourou).`,
     });
-  } else if (sum < budget) {
+  } else if (sum < budget && !allowBanking) {
     issues.push({
       message: `Distribua todos os pontos: ${sum}/${budget} usados (faltam ${budget - sum}).`,
     });
@@ -123,14 +128,14 @@ export function validateAttributes(state: WizardState): StepValidation {
   return { isValid: issues.length === 0, issues };
 }
 
-export function validatePericias(state: WizardState): StepValidation {
+export function validatePericias(state: WizardState, allowBanking = false): StepValidation {
   const result = validatePericiaBudget(state.pericias, state.identity.campaignLevel);
   if (!result.ok) {
     return { isValid: false, issues: [{ message: result.error }] };
   }
   const budget = getPericaBudget(state.identity.campaignLevel);
   const spent = sumPericiaPoints(state.pericias);
-  if (spent < budget) {
+  if (spent < budget && !allowBanking) {
     return {
       isValid: false,
       issues: [
@@ -265,24 +270,42 @@ export function validateAptitudesStep(
   return { isValid: true, issues: [] };
 }
 
-/** Aggregator: valida o step atual (independente de qual seja). */
-export function validateStep(
-  step: number,
+export type WizardStepId =
+  | 'identity'
+  | 'attributes'
+  | 'pericias'
+  | 'aptitudes'
+  | 'powers'
+  | 'effects'
+  | 'inventory'
+  | 'summary';
+
+/**
+ * Aggregator: valida um step pelo seu `id` (nao pelo indice). Isso desacopla a
+ * validacao da ordem/numero de steps — essencial pros modos que omitem steps
+ * (edit sem inventario; level-up sem identidade nem inventario).
+ *
+ * `allowBanking` propaga pra atributos/pericias (criacao gasta tudo; edit e
+ * level-up podem guardar saldo).
+ */
+export function validateStepById(
+  id: WizardStepId,
   state: WizardState,
   catalogs: WizardCatalogs,
+  allowBanking = false,
 ): StepValidation {
-  switch (step) {
-    case 0:
+  switch (id) {
+    case 'identity':
       return validateIdentity(state);
-    case 1:
-      return validateAttributes(state);
-    case 2:
-      return validatePericias(state);
-    case 3:
+    case 'attributes':
+      return validateAttributes(state, allowBanking);
+    case 'pericias':
+      return validatePericias(state, allowBanking);
+    case 'aptitudes':
       return validateAptitudesStep(state, catalogs);
-    case 4:
+    case 'powers':
       return validatePowersStep(state, catalogs);
-    case 5:
+    case 'effects':
       return validateEffectsStep(state, catalogs);
     default:
       return { isValid: true, issues: [] };

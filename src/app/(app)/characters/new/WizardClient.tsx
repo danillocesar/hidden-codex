@@ -13,8 +13,11 @@ import { updateCharacter } from '@/server/actions/characters/update';
 import type { CreateCharacterInput } from '@/schemas/character/create';
 import { useFormErrors } from '@/lib/forms/useFormErrors';
 import { Alert } from '@/components/ui/alert';
+import { ATTRIBUTE_KEYS } from '@/domain/types';
+import { getLevelUpDelta } from '@/domain/rules/leveling';
+import { LevelUpBanner } from '@/components/character/wizard/LevelUpBanner';
 import { TOTAL_STEPS, initialWizardState, wizardReducer, type WizardState } from './wizardState';
-import { validateStep } from './wizardValidation';
+import { validateStepById, type WizardStepId } from './wizardValidation';
 import { buildDevFixture } from './devFixture';
 import { Step1Identity } from './steps/Step1Identity';
 import { Step2Attributes } from './steps/Step2Attributes';
@@ -51,19 +54,28 @@ const STEPS_CREATE = [
 // modos, entao `validateStep` (indexado) continua valido sem ajuste.
 const STEPS_EDIT = STEPS_CREATE.filter((s) => s.id !== 'inventory');
 
+// Modo level-up: foco no que o nivel novo concede. Sem Identidade (NC e fixo em
+// atual+1) nem Inventario. Atributos primeiro (mininos forcados), depois pericias/
+// aptidoes/poderes/efeitos opcionais (pontos podem ficar guardados).
+const STEPS_LEVELUP = STEPS_CREATE.filter(
+  (s) => s.id !== 'identity' && s.id !== 'inventory',
+);
+
 if (STEPS_CREATE.length !== TOTAL_STEPS) {
   throw new Error('STEPS desalinhado com TOTAL_STEPS');
 }
 
-type WizardMode = 'create' | 'edit';
+type WizardMode = 'create' | 'edit' | 'levelup';
 
 export type WizardClientProps = {
   catalogs: WizardCatalogs;
   mode?: WizardMode;
-  /** Obrigatorio em `mode='edit'` — alvo do `updateCharacter`. */
+  /** Obrigatorio em `mode='edit'|'levelup'` — alvo do `updateCharacter`. */
   characterId?: string;
-  /** Estado pre-preenchido (modo edicao). Quando ausente, comeca vazio. */
+  /** Estado pre-preenchido (edit/level-up). Quando ausente, comeca vazio. */
   initialState?: WizardState;
+  /** NC de origem no level-up (o estado ja vem com campaignLevel = origem + 1). */
+  levelUpFromNc?: number;
 };
 
 /**
@@ -76,6 +88,7 @@ export function WizardClient({
   mode = 'create',
   characterId,
   initialState,
+  levelUpFromNc,
 }: WizardClientProps) {
   const router = useRouter();
   const [state, dispatch] = useReducer(
@@ -88,14 +101,31 @@ export function WizardClient({
   const formErrors = useFormErrors();
 
   const isEdit = mode === 'edit';
-  const STEPS = isEdit ? STEPS_EDIT : STEPS_CREATE;
+  const isLevelup = mode === 'levelup';
+  // Criacao obriga gastar tudo; edit e level-up permitem guardar saldo.
+  const allowBanking = mode !== 'create';
+  // Edit e level-up persistem via updateCharacter (mantem estado de jogo).
+  const saveViaUpdate = mode !== 'create';
+
+  const STEPS = isLevelup ? STEPS_LEVELUP : isEdit ? STEPS_EDIT : STEPS_CREATE;
   const totalSteps = STEPS.length;
+
+  // Baseline do level-up: atributos no inicio (piso de nao-decremento) e soma
+  // pra mostrar "pontos deste nivel". `initialState` e estavel (vem do server).
+  const baselineAttributes = isLevelup ? initialState?.attributes : undefined;
+  const baselineAttrSum = baselineAttributes
+    ? ATTRIBUTE_KEYS.reduce((acc, k) => acc + baselineAttributes[k], 0)
+    : 0;
+  const attrPointsGained =
+    isLevelup && levelUpFromNc !== undefined
+      ? getLevelUpDelta(levelUpFromNc, state.identity.campaignLevel).attrPointsGained
+      : 0;
 
   const stepDef = STEPS[Math.min(state.step, totalSteps - 1)]!;
 
   const currentValidation = useMemo(
-    () => validateStep(state.step, state, catalogs),
-    [state, catalogs],
+    () => validateStepById(stepDef.id, state, catalogs, allowBanking),
+    [stepDef.id, state, catalogs, allowBanking],
   );
 
   const visibleFieldErrors = useMemo(
@@ -108,13 +138,16 @@ export function WizardClient({
     dispatch({ type: 'goto', step: target });
   };
 
-  // Steps Aptidoes (3), Poderes (4) e Efeitos (5) compartilham contexto —
-  // budget de pontos eh dividido entre Aptidoes+Poderes; Efeitos depende dos
-  // poderes. User pode ir e voltar entre eles mesmo invalido pra rebalancear.
+  // Steps Aptidoes/Poderes/Efeitos compartilham contexto — budget de pontos eh
+  // dividido entre Aptidoes+Poderes; Efeitos depende dos poderes. User pode ir e
+  // voltar entre eles mesmo invalido pra rebalancear. Por `id` (a ordem/indice
+  // muda entre os modos).
+  const SHARED_IDS: ReadonlySet<WizardStepId> = new Set(['aptitudes', 'powers', 'effects']);
   const isReachable = (target: number) => {
     if (target <= state.step) return true;
-    const sharedRange = new Set([3, 4, 5]);
-    if (sharedRange.has(state.step) && sharedRange.has(target)) return true;
+    const curId = STEPS[state.step]?.id;
+    const tgtId = STEPS[target]?.id;
+    if (curId && tgtId && SHARED_IDS.has(curId) && SHARED_IDS.has(tgtId)) return true;
     return currentValidation.isValid;
   };
 
@@ -124,16 +157,17 @@ export function WizardClient({
     dispatch({ type: 'next' });
   };
 
+  const verb = isLevelup ? 'concluir' : isEdit ? 'salvar' : 'criar';
+
   const onSubmit = () => {
     setSubmitError(null);
     for (let i = 0; i < totalSteps - 1; i++) {
-      const v = validateStep(i, state, catalogs);
+      const def = STEPS[i]!;
+      const v = validateStepById(def.id, state, catalogs, allowBanking);
       if (!v.isValid) {
         formErrors.revealAll();
         setSubmitError(
-          `Passo ${i + 1} (${STEPS[i]!.label}) tem pendencias. Volte e corrija antes de ${
-            isEdit ? 'salvar' : 'criar'
-          }.`,
+          `Passo ${i + 1} (${def.label}) tem pendencias. Volte e corrija antes de ${verb}.`,
         );
         return;
       }
@@ -141,7 +175,7 @@ export function WizardClient({
     const { step: _step, ...payload } = state;
     void _step;
     startTransition(async () => {
-      const result = isEdit
+      const result = saveViaUpdate
         ? await updateCharacter(characterId!, payload satisfies CreateCharacterInput)
         : await createCharacter(payload satisfies CreateCharacterInput);
       if (!result.ok) {
@@ -158,7 +192,11 @@ export function WizardClient({
 
   return (
     <div className="space-y-8">
-      {isDev && !isEdit ? (
+      {isLevelup && levelUpFromNc !== undefined ? (
+        <LevelUpBanner fromNc={levelUpFromNc} toNc={state.identity.campaignLevel} />
+      ) : null}
+
+      {isDev && mode === 'create' ? (
         <div className="flex items-center justify-end gap-2 rounded border border-dashed border-warning/40 bg-warning/5 px-3 py-2">
           <span className="font-display text-[10px] uppercase tracking-[0.3em] text-warning">
             Modo dev
@@ -211,7 +249,19 @@ export function WizardClient({
             onBlurField={formErrors.markTouched}
           />
         )}
-        {stepDef.id === 'attributes' && <Step2Attributes state={state} dispatch={dispatch} />}
+        {stepDef.id === 'attributes' && (
+          <Step2Attributes
+            state={state}
+            dispatch={dispatch}
+            hideBases={isLevelup}
+            attributeFloors={baselineAttributes}
+            levelUp={
+              isLevelup
+                ? { baselineSum: baselineAttrSum, pointsGained: attrPointsGained }
+                : undefined
+            }
+          />
+        )}
         {stepDef.id === 'pericias' && (
           <Step3Pericias state={state} dispatch={dispatch} catalogs={catalogs} />
         )}
@@ -254,13 +304,17 @@ export function WizardClient({
         )}
         {isLastStep ? (
           <Button onClick={onSubmit} disabled={isPending}>
-            {isEdit
+            {isLevelup
               ? isPending
                 ? 'Salvando…'
-                : 'Salvar alterações'
-              : isPending
-                ? 'Criando…'
-                : 'Criar personagem'}
+                : 'Concluir level up'
+              : isEdit
+                ? isPending
+                  ? 'Salvando…'
+                  : 'Salvar alterações'
+                : isPending
+                  ? 'Criando…'
+                  : 'Criar personagem'}
           </Button>
         ) : (
           <Button

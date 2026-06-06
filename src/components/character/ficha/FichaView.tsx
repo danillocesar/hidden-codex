@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { FichaHeader } from '@/components/character/ficha/FichaHeader';
 import { HeroSection } from '@/components/character/ficha/HeroSection';
 import { AttributesGrid } from '@/components/character/ficha/AttributesGrid';
@@ -14,8 +13,7 @@ import { JutsusSection } from '@/components/character/ficha/JutsusSection';
 import { InventoryPanel } from '@/components/character/ficha/InventoryPanel';
 import { InventoryManager } from '@/components/character/ficha/InventoryManager';
 import { FichaBackground } from '@/components/character/ficha/FichaBackground';
-import { FichaBackgroundButton } from '@/components/character/ficha/FichaBackgroundButton';
-import { ShareLinkButton } from '@/components/character/ficha/ShareLinkButton';
+import { FichaActionMenu } from '@/components/character/ficha/FichaActionMenu';
 import { SectionDivider } from '@/components/character/ficha/SectionDivider';
 import {
   TrainingPanel,
@@ -23,7 +21,6 @@ import {
   type FichaPericia,
   type FichaPower,
 } from '@/components/character/ficha/TrainingPanel';
-import { Button } from '@/components/ui/button';
 import { PERICIAS, isPrimaryAttribute } from '@/domain/catalog/pericias';
 import {
   calculateCC,
@@ -198,6 +195,16 @@ export function FichaView({
         <HeroSection
           characterId={display.id}
           canEdit={display.isOwner}
+          actions={
+            display.isOwner ? (
+              <FichaActionMenu
+                characterId={display.id}
+                fichaBackground={display.fichaBackground}
+                images={display.images}
+                activeShareLink={activeShareLink}
+              />
+            ) : undefined
+          }
           name={display.name}
           subtitle={null}
           overline={
@@ -331,22 +338,6 @@ export function FichaView({
           )}
         </section>
 
-        {display.isOwner ? (
-          <nav className="sticky bottom-4 mx-auto mt-8 flex w-fit items-center gap-3 rounded-full border border-border bg-bg-card/95 px-4 py-2 backdrop-blur">
-            <Button asChild variant="outline" size="sm">
-              <Link href="/dashboard">Voltar</Link>
-            </Button>
-            <FichaBackgroundButton
-              characterId={display.id}
-              current={display.fichaBackground}
-              images={display.images}
-            />
-            <ShareLinkButton characterId={display.id} initialLink={activeShareLink} />
-            <Button asChild size="sm">
-              <Link href={`/characters/${display.id}/edit`}>Editar</Link>
-            </Button>
-          </nav>
-        ) : null}
       </div>
     </article>
   );

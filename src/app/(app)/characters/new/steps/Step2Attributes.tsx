@@ -38,21 +38,39 @@ const MAX_REMANEJAMENTO = 2;
 export function Step2Attributes({
   state,
   dispatch,
+  attributeFloors,
+  hideBases = false,
+  levelUp,
 }: {
   state: WizardState;
   dispatch: React.Dispatch<WizardAction>;
+  /**
+   * Piso por atributo (level-up): cada atributo nao pode cair abaixo do valor
+   * que tinha no inicio do level-up. Combinado com o min do NC.
+   */
+  attributeFloors?: Partial<Record<(typeof ATTRIBUTE_KEYS)[number], number>>;
+  /** Esconde a secao de bases de combate (level-up nao mexe nelas). */
+  hideBases?: boolean;
+  /** Indicador "pontos deste nivel" (level-up). */
+  levelUp?: { baselineSum: number; pointsGained: number };
 }) {
   const nc = state.identity.campaignLevel;
   const { min: attrMin, max: attrMax } = getAttributeLimits(nc);
   const budget = getAttrBudget(nc);
 
-  // Normaliza atributos abaixo do min quando NC muda (Step 1 alterou NC).
+  // Piso efetivo por atributo: max(min do NC, piso de level-up).
+  const floorFor = (key: (typeof ATTRIBUTE_KEYS)[number]) =>
+    Math.max(attrMin, attributeFloors?.[key] ?? 0);
+
+  // Normaliza atributos abaixo do piso quando NC muda (Step 1 alterou NC) ou
+  // quando o min do nivel sobe (level-up forca distribuicao no minimo).
   useEffect(() => {
-    const needsFix = ATTRIBUTE_KEYS.some((k) => state.attributes[k] < attrMin);
+    const needsFix = ATTRIBUTE_KEYS.some((k) => state.attributes[k] < floorFor(k));
     if (!needsFix) return;
     const fixed: typeof state.attributes = { ...state.attributes };
     for (const k of ATTRIBUTE_KEYS) {
-      if (fixed[k] < attrMin) fixed[k] = attrMin;
+      const floor = floorFor(k);
+      if (fixed[k] < floor) fixed[k] = floor;
     }
     dispatch({ type: 'setAttributes', attributes: fixed });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -98,9 +116,19 @@ export function Step2Attributes({
           </h3>
           <BudgetBadge label="Pontos totais" spent={attrSum} budget={budget} />
         </div>
+        {levelUp ? (
+          <p className="mb-2 text-sm text-ink-muted">
+            Pontos deste nível:{' '}
+            <b className="text-ice">
+              {Math.max(0, attrSum - levelUp.baselineSum)}/{levelUp.pointsGained}
+            </b>{' '}
+            gastos. O restante fica guardado.
+          </p>
+        ) : null}
         <p className="mb-4 text-sm text-ink-muted">
           Mínimo <b className="text-ice">{attrMin}</b> por atributo
-          (preenchido automaticamente), máximo <b className="text-ice">{attrMax}</b>.
+          {levelUp ? ' (atributos não podem diminuir)' : ' (preenchido automaticamente)'}, máximo{' '}
+          <b className="text-ice">{attrMax}</b>.
         </p>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
           {ATTRIBUTES.map((attr) => (
@@ -110,7 +138,7 @@ export function Step2Attributes({
               name={attr.name}
               kanji={attr.kanji}
               value={state.attributes[attr.code]}
-              min={attrMin}
+              min={floorFor(attr.code)}
               max={attrMax}
               ariaLabel={attr.name}
               onChange={(v) => dispatch({ type: 'setAttribute', key: attr.code, value: v })}
@@ -124,39 +152,41 @@ export function Step2Attributes({
         ) : null}
       </section>
 
-      <section>
-        <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
-          <h3 className="font-display text-xs uppercase tracking-[0.3em] text-ink-muted">
-            Bases de combate
-          </h3>
-          <span className="font-display text-[10px] uppercase tracking-[0.3em] text-ink-muted">
-            remanejou {Math.max(basesMovedFrom, basesMovedTo)} de {MAX_REMANEJAMENTO}
-          </span>
-        </div>
-        <p className="mb-4 text-sm text-ink-muted">
-          Inicia 3/3/3/3. Pode mover ate 2 pontos entre as bases.
-        </p>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {COMBAT_SKILLS.map((cs) => (
-            <AttributeCard
-              key={cs.code}
-              label={cs.abbreviation}
-              name={cs.name}
-              kanji={cs.kanji}
-              value={state.bases[cs.code]}
-              min={0}
-              max={5}
-              ariaLabel={cs.name}
-              onChange={(v) => dispatch({ type: 'setBase', key: cs.code, value: v })}
-            />
-          ))}
-        </div>
-        {!basesResult.ok ? (
-          <Alert tone="danger" className="mt-3">
-            {basesResult.error}
-          </Alert>
-        ) : null}
-      </section>
+      {hideBases ? null : (
+        <section>
+          <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
+            <h3 className="font-display text-xs uppercase tracking-[0.3em] text-ink-muted">
+              Bases de combate
+            </h3>
+            <span className="font-display text-[10px] uppercase tracking-[0.3em] text-ink-muted">
+              remanejou {Math.max(basesMovedFrom, basesMovedTo)} de {MAX_REMANEJAMENTO}
+            </span>
+          </div>
+          <p className="mb-4 text-sm text-ink-muted">
+            Inicia 3/3/3/3. Pode mover ate 2 pontos entre as bases.
+          </p>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {COMBAT_SKILLS.map((cs) => (
+              <AttributeCard
+                key={cs.code}
+                label={cs.abbreviation}
+                name={cs.name}
+                kanji={cs.kanji}
+                value={state.bases[cs.code]}
+                min={0}
+                max={5}
+                ariaLabel={cs.name}
+                onChange={(v) => dispatch({ type: 'setBase', key: cs.code, value: v })}
+              />
+            ))}
+          </div>
+          {!basesResult.ok ? (
+            <Alert tone="danger" className="mt-3">
+              {basesResult.error}
+            </Alert>
+          ) : null}
+        </section>
+      )}
 
       <section className="rounded border border-border bg-bg-paper p-4">
         <h3 className="mb-3 font-display text-xs uppercase tracking-[0.3em] text-ink-muted">

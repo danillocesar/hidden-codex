@@ -23,6 +23,7 @@ export function HeroSection({
   placeholderKanji,
   canEdit,
   lowerContent,
+  actions,
 }: {
   characterId: string;
   name: string;
@@ -41,6 +42,8 @@ export function HeroSection({
   canEdit: boolean;
   /** Miolo da ficha abaixo do titulo (atributos, energias, combate, etc.). */
   lowerContent?: ReactNode;
+  /** Slot opcional (ex: menu de ações do dono) ancorado no topo-direito. */
+  actions?: ReactNode;
 }) {
   // Quebra "Nome Sobrenome" em "Nome" + "Sobrenome" pra estilizar o segundo
   // em italico (padrao da spec: "Satsuki *Yuki*").
@@ -68,7 +71,8 @@ export function HeroSection({
       </div>
 
       <div className="flex flex-col gap-[18px]">
-        <div className="flex flex-col items-start justify-between gap-6 border-b border-border pb-4 sm:flex-row sm:items-end">
+        <div className="relative flex flex-col items-start justify-between gap-6 border-b border-border pb-4 sm:flex-row sm:items-end">
+          {actions ? <div className="absolute right-0 top-0 z-20">{actions}</div> : null}
           <div className="flex-1">
             {overline ? (
               <div className="mb-2 flex items-center gap-3">

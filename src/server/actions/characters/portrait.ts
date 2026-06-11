@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 
 import { getCurrentUser } from '@/lib/auth/session';
 import { prisma } from '@/lib/prisma';
+import { isUploadedUrlUnder } from '@/lib/storage/publicUrl';
 
 export type SetPortraitResult = { ok: true } | { ok: false; error: string };
 
@@ -18,7 +19,7 @@ export async function setCharacterPortrait(
   const session = await getCurrentUser();
   if (!session) return { ok: false, error: 'Nao autenticado.' };
 
-  if (url !== null && (!url.startsWith('/uploads/portraits/') || url.length > 300)) {
+  if (url !== null && (!isUploadedUrlUnder(url, 'portraits') || url.length > 300)) {
     return { ok: false, error: 'Imagem inválida.' };
   }
 

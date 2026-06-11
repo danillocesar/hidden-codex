@@ -1,3 +1,5 @@
+import { isUploadedUrlUnder } from '@/lib/storage/publicUrl';
+
 export const SECTION_COVER_KEYS = ['fundamentos', 'talentos', 'tecnicas', 'arquivo'] as const;
 
 export type SectionCoverKey = (typeof SECTION_COVER_KEYS)[number];
@@ -22,7 +24,10 @@ export function isSectionCoverKey(value: string): value is SectionCoverKey {
 }
 
 export function isAllowedSectionCoverUrl(value: string): boolean {
-  return value.startsWith('/assets/section-covers/') || value.startsWith('/uploads/characters/');
+  // Capas vêm de imagens da ficha (pasta "characters/") ou dos SVGs default.
+  // `isUploadedUrlUnder` cobre tanto `/uploads/characters/` (dev) quanto a base
+  // do R2 (prod).
+  return value.startsWith('/assets/section-covers/') || isUploadedUrlUnder(value, 'characters');
 }
 
 export function resolveSectionCovers(uiState: unknown): SectionCovers {

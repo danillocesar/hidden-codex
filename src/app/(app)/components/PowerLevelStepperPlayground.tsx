@@ -54,7 +54,7 @@ export function PowerLevelStepperPlayground() {
                 Elemento Gelo
               </Text>
               <Eyebrow tone="deep" size="xs">
-                KEKKEI GENKAI · gelo
+                HIJUTSU · gelo
               </Eyebrow>
               <Eyebrow tone="success" size="xs">
                 gratis

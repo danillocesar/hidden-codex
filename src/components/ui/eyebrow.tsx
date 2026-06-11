@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils/cn';
  * Label CINZEL pequeno em uppercase com letter-spacing alto. Usado pra:
  *   - Labels de campos ("NOME *")
  *   - Pretitulos / kickers de secao ("PASSO 2 DE 6", "APROVADO")
- *   - Chips informativos de baixo destaque ("KEKKEI GENKAI · gelo")
+ *   - Chips informativos de baixo destaque ("HIJUTSU · gelo")
  *
  * Em vez de digitar `font-display text-[10px] uppercase tracking-[0.3em]
  * text-ink-muted` (que aparece >50 vezes no app), use `<Eyebrow>`.

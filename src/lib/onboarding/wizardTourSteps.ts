@@ -59,15 +59,15 @@ export const WIZARD_TOUR_STEPS: Record<WizardStepId, TourStep[]> = {
       element: '[data-tour="identity-origin"]',
       title: 'Vila e Clã',
       description:
-        'Escolha uma opção da lista OU digite um nome livre e pressione Enter para criar o seu. Clã pode conceder benefícios (e até uma Kekkei Genkai) automaticamente.',
+        'Escolha uma opção da lista OU digite um nome livre e pressione Enter para criar o seu. Clã pode conceder benefícios (e até um Hijutsu) automaticamente.',
       side: 'top',
       align: 'start',
     },
     {
       element: '#char-kg',
-      title: 'Kekkei Genkai',
+      title: 'Hijutsu',
       description:
-        'Linhagem sanguínea (Hyouton, Sharingan…). Algumas concedem poderes ou níveis grátis nos passos seguintes. Deixe em "Nenhuma" se o personagem não tiver.',
+        'Linhagem sanguínea ou técnica secreta de clã (Hyouton, Sharingan, Jinchuuriki…). Algumas concedem poderes ou níveis grátis nos passos seguintes. Deixe em "Nenhum" se o personagem não tiver.',
       side: 'top',
       align: 'start',
     },
@@ -163,7 +163,7 @@ export const WIZARD_TOUR_STEPS: Record<WizardStepId, TourStep[]> = {
       element: '#power-search',
       title: 'Buscar poderes',
       description:
-        'A lista mostra só os poderes liberados pela sua origem (clã / Kekkei Genkai) mais os comuns. Busque por nome ou código para filtrar rápido.',
+        'A lista mostra só os poderes liberados pela sua origem (clã / Hijutsu) mais os comuns. Busque por nome ou código para filtrar rápido.',
       side: 'bottom',
       align: 'start',
     },
@@ -171,7 +171,7 @@ export const WIZARD_TOUR_STEPS: Record<WizardStepId, TourStep[]> = {
       element: '#power-category',
       title: 'Filtrar por categoria',
       description:
-        'Separe entre Comum, Restrito, Kekkei Genkai e Hijutsu. Útil quando há muitos poderes disponíveis.',
+        'Separe entre Comum, Restrito e Hijutsu. Útil quando há muitos poderes disponíveis.',
       side: 'bottom',
       align: 'start',
     },

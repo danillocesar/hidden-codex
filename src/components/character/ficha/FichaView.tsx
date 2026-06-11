@@ -233,7 +233,7 @@ export function FichaView({
           subtitle={null}
           overline={
             display.kekkeiGenkaiName
-              ? `Kekkei Genkai · ${display.kekkeiGenkaiName}`
+              ? `Hijutsu · ${display.kekkeiGenkaiName}`
               : display.clanName
                 ? `Cla · ${display.clanName}`
                 : null

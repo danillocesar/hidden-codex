@@ -10,7 +10,10 @@
  */
 
 function r2PublicBase(): string | null {
-  const base = process.env.R2_PUBLIC_URL;
+  // `NEXT_PUBLIC_*` é inlinado no bundle do client (schemas Zod compartilhados
+  // validam no browser). `R2_PUBLIC_URL` é o fallback server-only. Os dois têm
+  // o mesmo valor — a base pública do bucket não é segredo.
+  const base = process.env.NEXT_PUBLIC_R2_PUBLIC_URL ?? process.env.R2_PUBLIC_URL;
   return base ? base.replace(/\/+$/, '') : null;
 }
 
@@ -19,4 +22,11 @@ export function isUploadedUrlUnder(url: string, folder: string): boolean {
   if (url.startsWith(`/uploads/${folder}/`)) return true;
   const base = r2PublicBase();
   return base ? url.startsWith(`${base}/${folder}/`) : false;
+}
+
+/** True se `url` é um upload nosso em qualquer pasta (local `/uploads/` ou R2). */
+export function isUploadedImageUrl(url: string): boolean {
+  if (url.startsWith('/uploads/')) return true;
+  const base = r2PublicBase();
+  return base ? url.startsWith(`${base}/`) : false;
 }

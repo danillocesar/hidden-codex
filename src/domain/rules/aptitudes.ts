@@ -375,7 +375,7 @@ export function checkAptitudePrerequisites(
     for (const kg of prereqs.kekkeiGenkai) {
       checks.push({
         type: 'kekkei',
-        detail: `kekkei genkai ${kg}`,
+        detail: `hijutsu ${kg}`,
         met: character.kekkeiGenkai?.code === kg,
         code: kg,
       });

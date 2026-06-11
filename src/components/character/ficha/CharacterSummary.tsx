@@ -128,7 +128,7 @@ export function CharacterSummary({
             {kekkeiGenkaiName ? (
               <div className="mb-2 flex items-center gap-3">
                 <Eyebrow tone="accent" className="tracking-[0.45em]">
-                  Kekkei Genkai · {kekkeiGenkaiName}
+                  Hijutsu · {kekkeiGenkaiName}
                 </Eyebrow>
                 <span aria-hidden className="h-px max-w-20 flex-1 bg-ice-deep/50" />
               </div>

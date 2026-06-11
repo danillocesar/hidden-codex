@@ -46,3 +46,5 @@ Thumbs.db
 
 # Cursor MCP config (contém bearer tokens locais — nunca commitar)
 .cursor/mcp.json
+
+/arcana-forge-spec

@@ -14,7 +14,7 @@ Este documento aponta para a **fonte de verdade visual** do projeto: o arquivo `
 
 **Arquivo:** `arcana-forge-spec/reference/satsuki-ficha-reference.html`
 
-**O que é:** uma ficha completa da personagem Satsuki Yuki (NC 6, clã Yuki, kekkei genkai Hyouton) renderizada em HTML estático, com todos os componentes visuais que existirão no produto final:
+**O que é:** uma ficha completa da personagem Satsuki Yuki (NC 6, clã Yuki, Hijutsu Hyouton) renderizada em HTML estático, com todos os componentes visuais que existirão no produto final:
 
 - Header com identidade do clã/vila
 - Hero com retrato + nome + atributos + energias + habilidades

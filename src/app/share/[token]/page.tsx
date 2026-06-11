@@ -38,7 +38,7 @@ export default async function SharedFichaPage({ params }: { params: { token: str
         <div className="border-b border-border bg-bg-paper/70 backdrop-blur">
           <div className="mx-auto flex max-w-[1340px] items-center justify-between gap-3 px-6 py-3">
             <Image
-              src="brand/hidden-codex-wordmark-transparent-no-brush.svg"
+              src="/brand/hidden-codex-wordmark-transparent-no-brush.svg"
               alt="Hidden Codex"
               width={200}
               height={48}

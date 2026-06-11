@@ -1,0 +1,551 @@
+{
+  "_meta": {
+    "description": "Lote 7b — Powers órfãos. 7 entries que estavam declaradas em `_meta.unmodeledPowers` de effects existentes mas faltavam na tabela powers, gerando 36 refs `info` no validador. Esse lote PROMOVE essas refs dormentes para powers reais.",
+    "sources": [
+      "Livro Básico 4.1b p. 202-207 (Hachimon Tonkou)",
+      "Livro Básico 4.1b p. 239-241 (Senjutsu)",
+      "Livro de Hijutsus 4.1b p. 29-31 (Ichibi/Sabaku Hijutsu)",
+      "Livro de Hijutsus 4.1b p. 33-35 (Nibi/Aoi Katon)",
+      "Livro de Hijutsus 4.1b p. 36-38 (Sanbi/Sanbi Suiton)",
+      "Livro de Hijutsus 4.1b p. 38-39 (Yonbi/Yonbi Youton)",
+      "Livro de Hijutsus 4.1b p. 53-55 (Jiton)"
+    ],
+    "extractedAt": "2026-05-13",
+    "schemaVersion": 1,
+    "appliesToTable": "powers",
+    "expectedItemCount": 7,
+    "nameCollisionsAcrossTables": {
+      "senjutsu": "Code 'senjutsu' existe como Aptitude (aptitudes-clan-restricted.json:813, hijutsu_unlock). Agora também é Power. Tabelas distintas — codes podem coexistir.",
+      "jiton": "Code 'jiton' já é usado em effects-jiton.json (Areia Selada, Projétil Venenoso) e effects-guia-avancado.json (Deslocamento de Vácuo, Projetar etc.). Agora vira Power real."
+    },
+    "categoryDecisions": {
+      "hachimon_tonkou": "HIJUTSU (Poder Restrito do livro). Não é elemental, sem clã, sem KG.",
+      "jiton": "KEKKEI_GENKAI. Linhagem sanguínea formada por Fuuton+Doton. Livro chama de KG explicitamente (p. 53).",
+      "sabaku_hijutsu": "HIJUTSU. Variação de Ninpou específica do Jinchuuriki Ichibi (Gaara).",
+      "yonbi_youton": "HIJUTSU. Variação de Ninpou via Jinchuuriki Yonbi (Roushi). Não é o Youton do clã Terumi.",
+      "sanbi_suiton": "HIJUTSU. Variação de Suiton via Jinchuuriki Sanbi (Yagura).",
+      "aoi_katon": "HIJUTSU. Variação de Katon via Jinchuuriki Nibi (chamas azuis). Correções pós-revisão (livro p. 33-35): NÃO tem desvantagem contra Suiton; ganha Domínio do Fogo grátis a partir do nível 5; cor das chamas é escolha do jogador (azul OU comum).",
+      "senjutsu": "HIJUTSU. Tipo: Ninjutsu / Subtipo: Hijutsu pelo livro. Pré-req refatorado pós-revisão para alternatives[] em vez de powers_one_of com labels descritivos."
+    },
+    "unmodeledPowers": [
+      "jinchuuriki"
+    ],
+    "unmodeledPowersNotes": "jinchuuriki é pré-req comum dos 4 Bijuu Hijutsus (sabaku_hijutsu, aoi_katon, sanbi_suiton, yonbi_youton). Power-pai ainda não catalogado — será modelado em um lote futuro (Hijutsu de Bijuu). Declarado aqui para o validador demover refs `error` → `info`.",
+    "unmodeledAptitudes": [
+      "resistencia_maior_vigor"
+    ],
+    "unmodeledAptitudesNote": "Ref parametrizada: resistencia_maior_<atributo>. Aptidão 'resistencia_maior' existe — sufixo 'vigor' denota qual atributo. Usado nas alternatives do Senjutsu (modo_eremita_kuchiyose, modo_eremita_mokuton).",
+    "audit": [
+      {
+        "date": "2026-05-14",
+        "phase": "7e-cleanup",
+        "change": "Declarado em _meta: ['unmodeledAptitudes', 'unmodeledAptitudesNote']. Demove erros de validador (refs parametrizadas + dívidas reais marcadas)."
+      }
+    ]
+  },
+  "data": [
+    {
+      "code": "hachimon_tonkou",
+      "name": "Hachimon Tonkou",
+      "translation": "Oito Portões Celestiais",
+      "category": "HIJUTSU",
+      "element": null,
+      "shortDescription": "Hijutsu Taijutsu/Kinjutsu. Libera os 8 portões do sistema de chakra. Sem custo de chakra; consome Vitalidade por turno. Fatiga após uso.",
+      "description": "Os Oito Portões são oito pontos específicos do sistema de circulação de chakra de um shinobi que limitam o fluxo de chakra do corpo, funcionando como válvulas reguladoras. Raros ninjas conseguem controlar essas válvulas, liberando o fluxo a níveis anormais e potencializando habilidades do corpo — mas causando sérios danos. Liberar até metade dos portões disponíveis = ação parcial. Liberar todos = ação de movimento. Duração: Nv 1 = 2 turnos; Nv 2+ = 5 turnos. Custo de chakra: zero. Dano por turno = nível do portão (a partir do 3º). Se Vit ≤ 0, portões fecham automaticamente. Após uso: fatigado 4 turnos (-1 turno por nível acima do requerimento; mínimo 1 turno). 3ª vez na cena = exausto por 1 dia. Poder Restrito: se já tem outro Hijutsu ou Clã, pode comprar mas só nível 1. Fonte: Livro Básico p. 202-207.",
+      "stats": {
+        "rangeFormula": "pessoal",
+        "actionFormula": "ver_descricao",
+        "chakraCostFormula": "zero",
+        "selosDefault": false,
+        "vitDamagePerTurnFormula": "ver_descricao_do_portao"
+      },
+      "rules": {
+        "type": "taijutsu_kinjutsu",
+        "selosDefault": false,
+        "prerequisites": {
+          "attributes": {
+            "vig": 6
+          }
+        },
+        "releaseActions": {
+          "upToHalfPortoes": "parcial",
+          "allAtOnce": "movimento",
+          "gradualAllowed": true,
+          "noGradualReduction": "se_fechar_todos_fecham_de_vez",
+          "cooldownBetweenUses": "1_turno"
+        },
+        "duration": {
+          "level1": "2 turnos",
+          "level2Plus": "5 turnos",
+          "gradualNoEffect": "liberar_gradualmente_nao_afeta_duracao_total"
+        },
+        "fatigueAfterUse": {
+          "default": "fatigado_4_turnos",
+          "reductionFormula": "-1 turno por nivel do poder acima do requerimento do portao usado (minimo 1 turno)",
+          "thirdConsecutiveInScene": "exausto_1_dia",
+          "useWhileExhausted": {
+            "result": "inconsciente_apos_uso",
+            "damagePermanent": true,
+            "healingRequirement": "iryou_ninjutsu_nivel_equivalente_ao_portao_usado"
+          }
+        },
+        "bonusRules": {
+          "nonCumulativeBetweenPortoes": true,
+          "exception": "cura_do_2_portao_acumula_com_demais",
+          "anulaOutrosBonusDanoForca": true,
+          "preservaBonusForcaPorTamanho": true,
+          "preservaBonusDanoArma": true,
+          "preservaBonusComTextoExplicito": true,
+          "strengthBonus": "nivel_do_portao",
+          "strengthBonusDamageDouble": true
+        },
+        "ataquePesado": {
+          "availableFromLevel": 2,
+          "damageGradeFormula": "numero_de_turnos_futuros_de_duracao_restantes",
+          "consequences": [
+            "portoes_fechados_imediatamente",
+            "dano_dos_turnos_futuros_aplicado_de_vez",
+            "cansaco_aumenta_para_exausto"
+          ],
+          "targetTestOnHit": "acrobacia_dif_9_+_2x_nivel_poder_ou_fica_caido",
+          "blockResponse": "bloqueio_resulta_em_sucesso_automatico_do_ataque"
+        },
+        "genjutsuResistance": "dificuldade_de_resistencia_reduzida_conforme_portao",
+        "restrictedPower": {
+          "ifAlreadyHasHijutsuOrCla": "pode_comprar_mas_so_nivel_1"
+        },
+        "associatedEffects": "hachimon_1_kaimon a hachimon_8_shimon + 7 taijutsus avancados em effects-hachimon.json"
+      }
+    },
+    {
+      "code": "jiton",
+      "name": "Jiton",
+      "translation": "Elemento Magnetismo",
+      "category": "KEKKEI_GENKAI",
+      "element": "magnetismo",
+      "shortDescription": "KG formada por Fuuton+Doton. Manipula areia de ferro (Satetsu) ou poeira de ouro (Sakin). Variação de Sabaku Hijutsu.",
+      "description": "Linhagem sanguínea avançada formada através do uso simultâneo dos elementos Vento e Terra para criar forças magnéticas. Permite ao usuário aplicar magnetismo no controle de metais na forma de grãos, produzindo as técnicas secretas da Areia de Ferro (Satetsu — 3º Kazekage) e Poeira de Ouro (Sakin — 4º Kazekage). Ao comprar Jiton, o jogador escolhe uma de suas duas vertentes: Satetsu ou Sakin. Feito isso, Jiton funciona como uma versão alternativa do Sabaku Hijutsu. Restrição de Elemento: usuário não pode aprender outros elementos além de Jiton, Doton e Fuuton. Recebe gratuitamente 1 nível em Fuuton e Doton. Fonte: Livro de Hijutsus p. 53-55.",
+      "stats": {
+        "rangeFormula": {
+          "base": 10,
+          "perEsp": 2,
+          "category": "Médio"
+        },
+        "sizeFormula": {
+          "perEsp": 2,
+          "unit": "m"
+        },
+        "additionalHardness": 2,
+        "elementBonus": 0
+      },
+      "rules": {
+        "selosDefault": true,
+        "kekkeiGenkai": true,
+        "kekkeiGenkaiSource": "fuuton + doton",
+        "isVariantOf": "sabaku_hijutsu",
+        "variantChoiceRequired": [
+          "satetsu",
+          "sakin"
+        ],
+        "variantChoiceDetails": {
+          "satetsu": {
+            "name": "Areia de Ferro",
+            "userExample": "3 Kazekage",
+            "allowedEffects": "todos_efeitos_ninpou_e_sabaku_hijutsu_menos_armadura_de_areia_terceiro_olho_piramide"
+          },
+          "sakin": {
+            "name": "Poeira de Ouro",
+            "userExample": "4 Kazekage",
+            "allowedEffects": "colisao_de_ondas_suiton_e_todos_ninpou_e_sabaku_hijutsu_menos_armadura_de_areia_areia_suspensa_piramide",
+            "elementalAdvantageOverSabakuHijutsu": true
+          }
+        },
+        "mandatoryEffect": "areia_especial",
+        "restrictedElements": [
+          "jiton",
+          "doton",
+          "fuuton"
+        ],
+        "freePowerLevelsByElement": {
+          "fuuton": 1,
+          "doton": 1
+        },
+        "freeEffectCanhao": [
+          "fuuton",
+          "doton"
+        ],
+        "tensaiOptions": {
+          "baseAptitudes": [
+            "talento_natural_somente_efeitos_de_ninpou",
+            "tecnica_avancada",
+            "capacidade",
+            "controle_perfeito",
+            "instinto_de_batalha"
+          ],
+          "specialAptitudeSlots": 1
+        },
+        "optionalSabakuHijutsuAsJiton": "Mestre_pode_permitir_sabaku_hijutsu_como_poder_de_jiton_sem_jinchuuriki"
+      }
+    },
+    {
+      "code": "sabaku_hijutsu",
+      "name": "Sabaku Hijutsu",
+      "translation": "Técnica Secreta do Deserto",
+      "category": "HIJUTSU",
+      "element": "areia",
+      "shortDescription": "Hijutsu do Jinchuuriki Ichibi (Gaara). Manipulação de areia para ninjutsus. Variação de Ninpou com efeitos via Jinchuuriki.",
+      "description": "Manipulação da areia para utilizar ninjutsus. Tratado como variação do poder Ninpou, com efeitos distribuídos dentro do poder Jinchuuriki. Pré-requisito: Jinchuuriki nível 1. Alcance Médio (10m +2m por Espírito). Tamanho até 2m por Espírito. Dureza Adicional: toda criação tem +2 de dureza. Efeitos Permitidos: todos de Ninpou; Imergir (Doton); Colisão de Ondas (Suiton). Duração dos Sólidos: contínua até o fim da cena. Interação Elemental: vantagem contra Katon; desvantagem contra Suiton e Sakin. Fuuton e Doton: recebe 1 nível grátis em cada. Fonte: Livro de Hijutsus p. 30-31.",
+      "stats": {
+        "rangeFormula": {
+          "base": 10,
+          "perEsp": 2,
+          "category": "Médio"
+        },
+        "sizeFormula": {
+          "perEsp": 2,
+          "unit": "m"
+        },
+        "elementBonus": 0,
+        "additionalHardness": 2,
+        "elementAdvantage": [
+          "katon"
+        ],
+        "elementDisadvantage": [
+          "suiton",
+          "sakin"
+        ]
+      },
+      "rules": {
+        "selosDefault": true,
+        "prerequisites": {
+          "powers": {
+            "jinchuuriki": 1
+          }
+        },
+        "isVariantOf": "ninpou",
+        "effectsDistributedInJinchuuriki": true,
+        "allowedEffects": [
+          "all_ninpou",
+          "imergir",
+          "colisao_de_ondas"
+        ],
+        "solidDuration": "continua_ate_fim_da_cena",
+        "freePowerLevelsByElement": {
+          "fuuton": 1,
+          "doton": 1
+        },
+        "freeEffectCanhao": [
+          "fuuton",
+          "doton"
+        ],
+        "exclusiveEffectsCodes": [
+          "areia_especial",
+          "armadura_de_areia",
+          "terceiro_olho",
+          "areia_suspensa",
+          "piramide",
+          "prisao_de_areia",
+          "funeral_de_areia"
+        ]
+      }
+    },
+    {
+      "code": "yonbi_youton",
+      "name": "Yonbi Youton",
+      "translation": "Elemento Lava do Yonbi",
+      "category": "HIJUTSU",
+      "element": "lava",
+      "shortDescription": "Hijutsu do Jinchuuriki Yonbi (Son Goku/Roushi). Manipula lava, cinzas, ácidos. +2 dano em todo efeito. Variante do Youton — distinta de Mei (youton_mei).",
+      "description": "Linhagem formada através do uso simultâneo de Fogo e Terra para criar Lava. Tratado como variação do Ninpou, com efeitos distribuídos dentro do Jinchuuriki. Pré-requisito: Jinchuuriki nível 1. Alcance Longo (15m +3m por Espírito). Tamanho até 2m por Espírito. Dano Adicional: todo Efeito Yonbi Youton causa +2 de dano. Efeitos Permitidos: Canhão, Orbe, Flechas, Coluna, Sopro Destrutivo, Raio, Energizar (somente punho), Míssil, Onda Explosiva, Ricochete, Tremor (Doton). Desvantagem contra Suiton. Doton e Katon: 1 nível grátis em cada. Restrição: só Youton, Doton e Katon. ATENÇÃO: distinto do youton_mei (Mei Terumi). Fonte: Livro de Hijutsus p. 38-39.",
+      "stats": {
+        "rangeFormula": {
+          "base": 15,
+          "perEsp": 3,
+          "category": "Longo"
+        },
+        "sizeFormula": {
+          "perEsp": 2,
+          "unit": "m"
+        },
+        "elementBonus": 2,
+        "elementBonusType": "dano",
+        "elementDisadvantage": [
+          "suiton"
+        ]
+      },
+      "rules": {
+        "selosDefault": true,
+        "prerequisites": {
+          "powers": {
+            "jinchuuriki": 1
+          }
+        },
+        "isVariantOf": "ninpou",
+        "effectsDistributedInJinchuuriki": true,
+        "allowedEffects": [
+          "canhao",
+          "orbe",
+          "flechas",
+          "coluna",
+          "sopro_destrutivo",
+          "raio",
+          "energizar_somente_punho",
+          "missil",
+          "onda_explosiva",
+          "ricochete",
+          "tremor"
+        ],
+        "freePowerLevelsByElement": {
+          "doton": 1,
+          "katon": 1
+        },
+        "freeEffectCanhao": [
+          "doton",
+          "katon"
+        ],
+        "restrictedElements": [
+          "youton",
+          "doton",
+          "katon"
+        ],
+        "exclusiveEffectsCodes": [
+          "manto_de_lava",
+          "vulcao"
+        ],
+        "distinctionFromYoutonMei": "youton_mei é versão da Mizukage Mei Terumi (KG do clã Terumi). Esse poder é a versão Bijuu — código separado pra evitar conflito de regras."
+      }
+    },
+    {
+      "code": "sanbi_suiton",
+      "name": "Sanbi Suiton",
+      "translation": "Elemento Água do Sanbi",
+      "category": "HIJUTSU",
+      "element": "agua",
+      "shortDescription": "Hijutsu do Jinchuuriki Sanbi (Yagura/Isobu). Manipulação de água que funciona da mesma forma que Suiton comum. Distribuído via Jinchuuriki.",
+      "description": "Manipulação do elemento água que funciona da mesma forma que o Suiton comum, porém com efeitos distribuídos dentro do poder Jinchuuriki e usando este mesmo poder como parâmetro de nível. Pode comprar separadamente para ganhar efeitos adicionais. Compatível com aptidões do Suiton comum (Domínio da Água). Pré-requisito: Jinchuuriki nível 1. Fonte: Livro de Hijutsus p. 37-38.",
+      "stats": {
+        "rangeFormula": {
+          "base": 10,
+          "perEsp": 2,
+          "category": "Médio"
+        },
+        "sizeFormula": {
+          "perEsp": 1,
+          "unit": "m"
+        },
+        "elementBonus": 0,
+        "elementAdvantage": [
+          "katon"
+        ],
+        "elementDisadvantage": [
+          "doton"
+        ]
+      },
+      "rules": {
+        "selosDefault": true,
+        "prerequisites": {
+          "powers": {
+            "jinchuuriki": 1
+          }
+        },
+        "isVariantOf": "suiton",
+        "effectsDistributedInJinchuuriki": true,
+        "compatibleSuitonAptitudes": [
+          "dominio_da_agua"
+        ],
+        "inheritsSuitonRules": true,
+        "exclusiveEffectsCodes": [
+          "sangosho",
+          "espelho_dagua"
+        ]
+      }
+    },
+    {
+      "code": "aoi_katon",
+      "name": "Aoi Katon",
+      "translation": "Elemento Fogo Azul (do Nibi)",
+      "category": "HIJUTSU",
+      "element": "fogo",
+      "shortDescription": "Hijutsu do Jinchuuriki Nibi (Matatabi). Variação de Katon com 2 diferenças RAW: NÃO tem desvantagem contra Suiton; ganha Domínio do Fogo grátis a partir do nível 5.",
+      "description": "Manipulação do elemento fogo especial, misturado com o chakra Bijuu, mais perigoso que fogo comum. O nome faz referência às chamas azuis do corpo do Matatabi, mas as técnicas podem possuir a cor de um fogo comum OU azul à escolha do jogador. Funciona como Katon comum, com efeitos distribuídos via Jinchuuriki. Pode comprar separadamente. DIFERENÇAS DO KATON COMUM: (1) NÃO possui desvantagem elemental contra Suiton; (2) Todos os ataques recebem GRATUITAMENTE o benefício da aptidão Domínio do Fogo, se aplicável ao efeito e se possuir nível 5+ neste poder. Pré-requisito: Jinchuuriki nível 1. Fonte: Livro de Hijutsus p. 33-35.",
+      "stats": {
+        "rangeFormula": {
+          "base": 10,
+          "perEsp": 2,
+          "category": "Médio"
+        },
+        "sizeFormula": {
+          "perEsp": 1,
+          "unit": "m"
+        },
+        "elementBonus": 0,
+        "elementAdvantage": [
+          "fuuton"
+        ],
+        "elementDisadvantage": []
+      },
+      "rules": {
+        "selosDefault": true,
+        "prerequisites": {
+          "powers": {
+            "jinchuuriki": 1
+          }
+        },
+        "isVariantOf": "katon",
+        "effectsDistributedInJinchuuriki": true,
+        "colorChoice": [
+          "azul",
+          "fogo_comum"
+        ],
+        "katonOverrides": {
+          "noSuitonDisadvantage": "Aoi Katon NÃO possui desvantagem elemental contra Suiton (diferente do Katon comum)",
+          "freeDominioDoFogoFromLevel": 5,
+          "freeDominioDoFogoConditions": "aplicavel_ao_efeito"
+        },
+        "exclusiveEffectsCodes": [
+          "nekozume"
+        ],
+        "inheritsKatonRules": true
+      }
+    },
+    {
+      "code": "senjutsu",
+      "name": "Senjutsu",
+      "translation": "Técnica Eremita",
+      "category": "HIJUTSU",
+      "element": null,
+      "shortDescription": "Hijutsu Restrito complementar (Kuchiyose/Mokuton). Permite absorver energia da natureza e entrar no Modo Eremita. Sistema de Pontos de Chakra Senjutsu.",
+      "description": "Senjutsus são técnicas que permitem absorver e utilizar a energia da natureza. Pré-req: Vigor 14 obrigatório + (Kuchiyose 8 Sapos ou Cobras + Resistência Maior Vigor) OU (Mokuton 8 + Resistência Maior ou Regeneração). Entrar no Modo: 2 turnos de concentração imóvel. No final do 2º turno: recebe 1 ponto de Chakra Senjutsu por nível. Modo dura enquanto houver ≥1 ponto. Aparência: Nv 1-7 imperfeita, Nv 8+ perfeita. Sensor de Chakra gratuito. Bônus selecionáveis (1 ponto cada): Força +4, Dano Base +2, Precisão Ataque/Defesa +1, Acelerado, Dificuldade Técnicas +1, Dureza Corpo +1, Chakra +20 (1x cena), Vit +30 (1x cena). Transformação em Pedra: drena chakra do Eremita-Kuchiyose vira pedra (morte), exceto se também tiver Senjutsu/Senninka. Fonte: Livro Básico p. 239-241.",
+      "stats": {
+        "rangeFormula": "pessoal",
+        "actionToActivate": "3 turnos (2 de concentração + 1 de ativação)",
+        "duration": "continua_enquanto_houver_chakra_senjutsu",
+        "chakraCostFormula": "ver_sistema_pontos_chakra_senjutsu"
+      },
+      "rules": {
+        "selosDefault": true,
+        "type": "ninjutsu_hijutsu_complementar",
+        "prerequisites": {
+          "attributes": {
+            "vig": 14
+          },
+          "alternatives": [
+            {
+              "name": "modo_eremita_kuchiyose",
+              "description": "Acesso via invocação de Sapos ou Cobras (Caverna Ryūchi / Monte Myōboku).",
+              "powers": {
+                "kuchiyose": 8
+              },
+              "aptitudes": [
+                "resistencia_maior_vigor"
+              ],
+              "kuchiyoseRestriction": [
+                "sapos",
+                "cobras"
+              ]
+            },
+            {
+              "name": "modo_eremita_mokuton",
+              "description": "Acesso via Mokuton sem invocação.",
+              "powers": {
+                "mokuton": 8
+              },
+              "aptitudes_one_of": [
+                "resistencia_maior_vigor",
+                "regeneracao"
+              ]
+            }
+          ],
+          "optionalGM": "Macacos podem dar acesso. Lesmas nunca dão (técnicas de nível semelhante)."
+        },
+        "activation": {
+          "concentrationTurns": 2,
+          "totalAction": "3 turnos",
+          "interruptionConditions": [
+            "receber_dano",
+            "ser_forcado_a_se_defender"
+          ]
+        },
+        "chakraSenjutsuSystem": {
+          "pointsGrantedFormula": "1 ponto por nivel do poder",
+          "modeDuration": "continua_enquanto_houver_pelo_menos_1_ponto",
+          "rechargeMethods": [
+            "senpou_ryosei_no_jutsu_3_turnos_apos_invocacao",
+            "kage_bunshin_absorvendo_energia_externa_recarrega_total",
+            "experiencias_com_celulas_senninka_iryou_10_medicina_20_ocultismo_20_acao_livre_3_turnos",
+            "senjutsu_8_mokuton_8_acao_padrao_3_turnos_(nivel_10_acao_livre)"
+          ]
+        },
+        "freeBenefits": [
+          "aptidao_sensor_gratuita_distingue_assinaturas_de_chakra"
+        ],
+        "bonusList": [
+          {
+            "code": "forca_+4",
+            "cost": 1,
+            "duration": "1_cena",
+            "incompatibleWith": [
+              "dano_base_+2"
+            ]
+          },
+          {
+            "code": "dano_base_+2",
+            "cost": 1,
+            "duration": "1_cena",
+            "appliesToEnergizar": true
+          },
+          {
+            "code": "precisao_ataque_+1",
+            "cost": 1,
+            "duration": "1_cena"
+          },
+          {
+            "code": "precisao_defesa_+1",
+            "cost": 1,
+            "duration": "1_cena"
+          },
+          {
+            "code": "acelerado",
+            "cost": 1,
+            "duration": "1_cena"
+          },
+          {
+            "code": "dificuldade_tecnicas_+1",
+            "cost": 1,
+            "duration": "1_cena"
+          },
+          {
+            "code": "dureza_corpo_+1",
+            "cost": 1,
+            "duration": "1_cena"
+          },
+          {
+            "code": "chakra_+20",
+            "cost": 1,
+            "duration": "1_cena",
+            "oncePerScene": true
+          },
+          {
+            "code": "vit_+30",
+            "cost": 1,
+            "duration": "1_cena",
+            "oncePerScene": true
+          }
+        ],
+        "stoneTransformation": {
+          "trigger": "criatura_drena_chakra_do_usuario_em_modo_kuchiyose",
+          "effect": "transformacao_em_pedra_morte",
+          "immunities": [
+            "senjutsu",
+            "senninka"
+          ]
+        },
+        "associatedAptitude": "Aptidão 'senjutsu' (aptitudes-clan-restricted.json:813) modela o unlock do hijutsu como aptidão de Tensai. Esse Power modela a mecânica do Sennin Modo em si — entidades distintas, codes podem coexistir entre tabelas.",
+        "associatedEffectsCodes": [
+          "modo_eremita_bonus",
+          "senpou_ryosei_no_jutsu"
+        ]
+      }
+    }
+  ]
+}

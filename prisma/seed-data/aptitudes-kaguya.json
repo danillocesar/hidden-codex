@@ -1,0 +1,400 @@
+{
+  "_meta": {
+    "description": "Lote 7c — Aptidões do Clã Kaguya (Shikotsumyaku completo). Fecha o buraco identificado na auditoria: clã tinha apenas 2 aptidões específicas modeladas (shikotsumyaku, artesao_de_ossos) + 1 compartilhada (regeneracao). Faltavam Armadura Óssea + as 5 Danças (Karamatsu, Yanagi, Tsubaki, Tessenka, Sawarabi no Mai). Este lote: 6 novas + 1 upsert do artesao_de_ossos pra incluir as 3 sub-técnicas (Teshi Sendan, Arma-Presa, Especialista Shikotsumyaku) e regras de criação de armas que estavam só como needsDeepResearch antes.",
+    "sources": [
+      "Livro de Hijutsus 4.1b p. 14-17 (Clã Kaguya, Shikotsumyaku)"
+    ],
+    "extractedAt": "2026-05-13",
+    "schemaVersion": 1,
+    "appliesToTable": "aptitudes",
+    "expectedItemCount": 7,
+    "intentionalUpserts": [
+      "artesao_de_ossos"
+    ],
+    "intentionalUpsertsNotes": "artesao_de_ossos JÁ EXISTE em aptitudes-clan-restricted.json:550 com effects mínimos e nota 'Detalhes completos seguem Livro de Hijutsus 1 p. 14-17.'. Este lote substitui pela versão completa: regras de criação de armas (leve/mediana/longa/pesada com custos em Vit e ação), qualidade das armas (+2 dureza, +1 dano), 3 sub-técnicas (Teshi Sendan, Arma-Presa, Especialista Shikotsumyaku).",
+    "subTypeDiscriminator": "Cada subTechnique declara `subType` para o motor consumir uniformemente (mesma convenção do lote 7a Samurai). Valores: 'passive_buff' | 'reactive_buff' | 'conditional_buff' | 'active_ability' | 'active_attack' | 'active_reaction' | 'weapon_creation'.",
+    "crossSetRulesLocationChange": "Regra 'Destreza no lugar de Força com armas leves de osso' modelada em artesao_de_ossos.effects.crossSetRules (raiz do conjunto Shikotsumyaku). Originalmente eu colocaria em armadura_ossea por pragmatismo (pré-req comum), mas Artesão é o lugar semanticamente correto."
+  },
+  "data": [
+    {
+      "code": "artesao_de_ossos",
+      "name": "Artesão de Ossos",
+      "category": "RESTRITA",
+      "shortDescription": "Kaguya. Remove ossos do corpo e molda em armas (leve/mediana/longa/pesada). Custos em Vit. +2 dureza, +1 dano. Sub-técnicas: Teshi Sendan, Arma-Presa, Especialista Shikotsumyaku.",
+      "description": "Remove ossos do próprio corpo e molda-os como achar conveniente para criar armamentos diversos. Controle sobre a regeneração óssea faz com que ossos removidos cresçam de volta quase imediatamente, tornando o usuário um arsenal humano. Criar uma arma exige retirar ossos de um membro (normalmente um braço) — membro fica inutilizado até o início do próximo turno. É proficiente com toda arma criada via esta aptidão (não precisa comprar Usar Arma); somente personagens com esta aptidão são proficientes no uso das armas de ossos. Armas de ossos são Armas Especiais. Tipos criáveis: armas leves, medianas, longas ou pesadas do tipo CORTE ou PERFURAÇÃO (ainda precisa cumprir requisitos de Força/Destreza). NÃO cria armas mecanicamente complexas ou dependentes de químicos. Armas duram 1 cena. Saque Rápido NÃO afeta o custo de ação. Fonte: Livro de Hijutsus p. 14-17.",
+      "prerequisites": {
+        "clans": [
+          "kaguya"
+        ],
+        "aptitudes": [
+          "shikotsumyaku"
+        ]
+      },
+      "effects": {
+        "type": "weapon_creation",
+        "source": "ossos_do_corpo",
+        "regenerationTime": "membro_inutilizado_ate_inicio_proximo_turno",
+        "weaponSpecialKind": "armas_especiais",
+        "weaponDurationPerScene": true,
+        "saqueRapidoNoEffectOnCreation": true,
+        "creationCosts": {
+          "leve": {
+            "action": "parcial",
+            "vit": 1
+          },
+          "mediana": {
+            "action": "parcial",
+            "vit": 2
+          },
+          "longa": {
+            "action": "movimento",
+            "vit": 4
+          },
+          "pesada": {
+            "action": "movimento",
+            "vit": 4
+          }
+        },
+        "allowedDamageTypes": [
+          "corte",
+          "perfuracao"
+        ],
+        "weaponQualityBonus": {
+          "hardnessBonus": 2,
+          "weaponDamageBonus": 1,
+          "canBlockProjectiles": "tipo_projeteis_canhao_flechas_etc"
+        },
+        "subTechniques": [
+          {
+            "code": "teshi_sendan",
+            "name": "Teshi Sendan",
+            "subType": "active_attack",
+            "action": "padrao",
+            "vitCost": 1,
+            "description": "Projéteis criados a partir dos ossos dos dedos e disparados imediatamente. Ossos disparados se regeneram instantaneamente. Ataque à distância. Alcance 20m. Dano base = nível de Destreza. Fonte: Livro de Hijutsus p. 15.",
+            "rangeFormula": "20m",
+            "damageFormula": "nivel_de_destreza",
+            "rollType": "CD"
+          },
+          {
+            "code": "arma_presa",
+            "name": "Arma-Presa",
+            "subType": "weapon_creation",
+            "description": "Arma leve especial. Faz surgir ossos longos e pontiagudos a partir das palmas das mãos (uma ou ambas). Dano = qualquer arma leve à escolha. Pode ser retraída com ação livre. Enquanto empunhada: NÃO pode criar outras armas, MAS não pode ser alvo da manobra Desarmar e NÃO fica com o membro inutilizado. Fonte: Livro de Hijutsus p. 15.",
+            "weaponKind": "leve_especial",
+            "damageChoice": "qualquer_arma_leve",
+            "retractAction": "livre",
+            "constraints": [
+              "nao_cria_outras_armas_enquanto_empunhada"
+            ],
+            "benefits": [
+              "imune_a_desarmar",
+              "membro_nao_inutilizado_durante_uso"
+            ]
+          },
+          {
+            "code": "especialista_shikotsumyaku",
+            "name": "Especialista Shikotsumyaku",
+            "subType": "passive_buff",
+            "description": "Se escolher Shikotsumyaku para sua aptidão Especialista, recebe o benefício dela para TODAS as armas de ossos (não só uma categoria). Fonte: Livro de Hijutsus p. 15.",
+            "trigger": "ao_comprar_especialista_com_categoria_shikotsumyaku",
+            "effect": "especialista_aplica_em_todas_armas_de_osso"
+          }
+        ],
+        "crossSetRules": {
+          "leveBoneWeaponDamageAttribute": {
+            "rule": "Sempre que atacar com uma arma de osso LEVE (qualquer dança ou ataque comum), pode usar Destreza no lugar de Força no cálculo de dano.",
+            "appliesTo": "armas_de_osso_categoria_leve",
+            "scope": "todas_as_dancas_e_ataques_comuns_do_conjunto_shikotsumyaku",
+            "source": "Livro de Hijutsus p. 16 (descrito sob Karamatsu mas o efeito atravessa todas as danças)"
+          }
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "armadura_ossea",
+      "name": "Armadura Óssea",
+      "category": "RESTRITA",
+      "shortDescription": "Kaguya. Endoesqueleto reveste estrutura sob a pele. Dureza corpo 1 (2 com Vig 10; 3 com Vig 14). Recebe Duro de Matar grátis. Imune a fraturas.",
+      "description": "É revestido com ossos poderosos. O endoesqueleto reveste a estrutura por debaixo da pele e concede dureza de corpo contra todos os tipos de dano. Adicionalmente, recebe os benefícios da aptidão Duro de Matar e se torna imune a fraturas. Com Vigor 10: dureza de corpo aumenta para 2. Com Vigor 14: aumenta para 3. Fonte: Livro de Hijutsus p. 15.",
+      "prerequisites": {
+        "clans": [
+          "kaguya"
+        ],
+        "aptitudes": [
+          "shikotsumyaku",
+          "artesao_de_ossos"
+        ]
+      },
+      "effects": {
+        "type": "body_modification",
+        "bodyHardnessByVigor": {
+          "1": 1,
+          "10": 2,
+          "14": 3
+        },
+        "appliesAgainst": "todos_tipos_dano",
+        "grants": [
+          "duro_de_matar"
+        ],
+        "grantsBypassesPrereq": true,
+        "grantsBypassesPrereqNote": "armadura_ossea concede duro_de_matar sem que o personagem precise cumprir o pré-req normal dele. Mesma flag do armadura_samurai (7a).",
+        "immunities": [
+          "fraturas"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "karamatsu_no_mai",
+      "name": "Karamatsu no Mai",
+      "category": "RESTRITA",
+      "shortDescription": "Dança do Lariço. 2 modos: defensivo (Defender com CC ao invés de LM, +dureza extra = Vigor) e ofensivo (mãos livres ou armas-presas, ataque CC ganha Ataque Giratório).",
+      "description": "Vários ossos emergem do corpo de uma só vez para absorver dano e contra-atacar inimigos que ataquem fisicamente. A Dança do Lariço tem 2 modos. MODO DEFENSIVO: usar como ação defensiva é uma manobra Defender com Técnica na qual, ao invés do LM, usa o nível de CC (incluindo bônus de Especialista). Ação parcial, custo 1/4 do Vigor em chakra. Se bem-sucedido, recebe instantaneamente dureza de corpo extra = nível de Vigor (cumulativa com Armadura Óssea), até o fim do turno do inimigo que atacou. Inimigos que atacaram desarmado sofrem dano fixo = 1 por nível de Vigor — só se o teste de CC for bem-sucedido, mas o dano se aplica mesmo se a dureza for superada. Contra tentativa de agarrar desarmado: +2 precisão, se sucesso = dano + teste de escape como reação. Já agarrado: custa ação padrão e dano fixo aumenta +50%. MODO OFENSIVO: mãos livres ou empunhando só armas-presas. Ataque corpo-a-corpo ganha benefícios de Ataque Giratório. Atacando com Ataque Múltiplo: TODOS os ataques são giratórios. Não usa com outras danças ou aptidões de manobra. Fonte: Livro de Hijutsus p. 15-16.",
+      "prerequisites": {
+        "clans": [
+          "kaguya"
+        ],
+        "aptitudes": [
+          "shikotsumyaku",
+          "artesao_de_ossos",
+          "armadura_ossea"
+        ],
+        "attributes": {
+          "vig": 6
+        }
+      },
+      "effects": {
+        "type": "danca_kaguya_dual_mode",
+        "modes": {
+          "defensive": {
+            "name": "Modo Defensivo (Defender com Técnica)",
+            "trigger": "ataque_recebido",
+            "action": "parcial",
+            "chakraCostFormula": "ceil(vigor / 4)",
+            "rollSubstitution": "cc_no_lugar_de_lm",
+            "includesEspecialista": true,
+            "extraBodyHardnessOnSuccess": "nivel_de_vigor",
+            "extraHardnessDuration": "ate_fim_do_turno_do_inimigo_atacante",
+            "extraHardnessStacksWith": [
+              "armadura_ossea"
+            ],
+            "passiveCounterAttack": {
+              "trigger": "ataque_desarmado_recebido",
+              "damage": "1_fixo_por_nivel_de_vigor",
+              "requiresCcSuccess": true,
+              "bypassesBodyHardness": true
+            },
+            "grappleResistance": {
+              "againstUnarmedGrappleAttempt": "+2_precisao_+_dano_+_escape_como_reacao",
+              "whileBeingGrappled": "acao_padrao_dano_fixo_+50%"
+            }
+          },
+          "offensive": {
+            "name": "Modo Ofensivo (Ataque Giratório)",
+            "constraints": [
+              "maos_livres_ou_armas_presas"
+            ],
+            "grantsToMeleeAttack": [
+              "ataque_giratorio"
+            ],
+            "ataqueMultipleAllRotational": true,
+            "noManobras": true,
+            "noOtherDancas": true
+          }
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "yanagi_no_mai",
+      "name": "Yanagi no Mai",
+      "category": "RESTRITA",
+      "shortDescription": "Dança do Salgueiro. Saltos/acrobacias/cambalhotas com armas-presas + secundárias (cotovelos/joelhos/ombros). Grants Retirada Rápida + Trespassar Nv 2. Após abater: +5m + Trespassar.",
+      "description": "Ataque com saltos, acrobacias e cambalhotas, utilizando armas-presas e armas secundárias crescidas a partir dos cotovelos, joelhos e ombros, que podem ser retraídas no final da técnica. Recebe os benefícios das aptidões Retirada Rápida e Trespassar Nv 2. Adicionalmente, sempre que abater um inimigo: recebe deslocamento extra de até 5m para se mover até um novo alvo antes de atacar com Trespassar. Não é possível usar esta técnica com outras danças. Fonte: Livro de Hijutsus p. 16.",
+      "prerequisites": {
+        "clans": [
+          "kaguya"
+        ],
+        "aptitudes": [
+          "shikotsumyaku",
+          "artesao_de_ossos"
+        ],
+        "skills": {
+          "acrobacia": 6
+        }
+      },
+      "effects": {
+        "type": "danca_kaguya_mobility",
+        "weaponRequirements": [
+          "armas_presas_ou_secundarias_do_corpo"
+        ],
+        "secondaryWeaponLocations": [
+          "cotovelos",
+          "joelhos",
+          "ombros"
+        ],
+        "retractAtTechniqueEnd": true,
+        "grants": [
+          "retirada_rapida",
+          "trespassar_nv_2"
+        ],
+        "grantsBypassesPrereq": true,
+        "grantsBypassesPrereqNote": "Yanagi concede Trespassar Nv 2 diretamente, sem que o personagem precise ter comprado Trespassar Nv 1 antes. Mesma flag de armadura_samurai/armadura_ossea.",
+        "onKillBonus": {
+          "trigger": "abater_inimigo",
+          "extraMovement": "5m_para_novo_alvo",
+          "extraAttack": "trespassar"
+        },
+        "noOtherDancas": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "tsubaki_no_mai",
+      "name": "Tsubaki no Mai",
+      "category": "RESTRITA",
+      "shortDescription": "Dança da Camélia. Empunhando só armas leves a 3m+. Ataque Múltiplo x3 com penalidades crescentes na defesa do alvo (-1/-2). Mesmo alvo todos os ataques.",
+      "description": "Combinando movimentos rápidos com ritmo imprevisível, utiliza uma arma de osso do tipo leve para golpear o oponente da maneira mais ágil e letal possível. Necessário estar empunhando SOMENTE armas leves e a 3 metros ou mais do alvo. Usa a aptidão Ataque Múltiplo para atacar 3 vezes, aumentando velocidade de cada ataque: o 2º ataque causa -1 de precisão na defesa do alvo; o 3º ataque causa -2 de precisão (esta penalidade de -2 também é aplicada no teste de Ataque Progressivo). TODOS os ataques devem ser feitos contra o MESMO alvo. Não usa com outras danças nem aptidões de manobra. Fonte: Livro de Hijutsus p. 16.",
+      "prerequisites": {
+        "clans": [
+          "kaguya"
+        ],
+        "aptitudes": [
+          "shikotsumyaku",
+          "artesao_de_ossos",
+          "ataque_em_movimento",
+          "ataque_multiplo"
+        ],
+        "attributes": {
+          "agi": 8
+        }
+      },
+      "effects": {
+        "type": "danca_kaguya_multi_attack",
+        "weaponRequirements": "somente_armas_leves",
+        "minDistanceFromTarget": "3m",
+        "attacksCount": 3,
+        "sameTargetRequired": true,
+        "uses": "ataque_multiplo",
+        "defensePenaltyByAttack": {
+          "1": 0,
+          "2": -1,
+          "3": -2
+        },
+        "ataqueProgressivoPenaltyAt3": -2,
+        "noManobras": true,
+        "noOtherDancas": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "tessenka_no_mai",
+      "name": "Tessenka no Mai",
+      "category": "RESTRITA",
+      "shortDescription": "Dança da Clematite. Cria 2 armas pesadas exclusivas: Tsuru (Vinha de Ossos, chicote 4m, dano arma +4) e Hana (Flor de Ossos, arma-presa pesada, dano arma +6, CC 2m).",
+      "description": "Dança dividida em 2 partes. Na primeira, cria um denso chicote feito com os ossos da coluna vertebral para prender o inimigo. Na segunda, cria uma grande lança no braço livre e perfura o alvo imobilizado. Cria 2 armas pesadas especiais e exclusivas: Vinha de Ossos (Tsuru) e Flor de Ossos (Hana). Podem ser empunhadas simultaneamente mas NUNCA usadas juntas num mesmo ataque. TSURU (Vinha de Ossos): modifica e retira a própria coluna vertebral (regenera nova espinha imediatamente, sem penalidade). Cartilagem entre os ossos permite dobrar como chicote denso e cortante. Arma pesada, dano de arma +4 (bônus do Artesão de Ossos já incluso), alcance até 4m. Realiza manobras derrubar/desarmar/agarrar sem penalidade. Acuidade se aplica. HANA (Flor de Ossos): usa chakra pra fazer os ossos de um dos braços crescerem espantosamente, criando grande lança que vibra (aumenta perfuração). Arma-presa do tipo pesada, dano +6 (bônus do Artesão já incluso), alcance corpo-a-corpo de 2m. Se está agarrando alvo com Tsuru: recebe ataque corporal extra contra o MESMO alvo, exclusivamente para atacar com a Hana. Não usa com aptidões de manobra. Fonte: Livro de Hijutsus p. 16-17.",
+      "prerequisites": {
+        "clans": [
+          "kaguya"
+        ],
+        "aptitudes": [
+          "shikotsumyaku",
+          "artesao_de_ossos",
+          "ambidestria"
+        ],
+        "attributes": {
+          "vig": 12
+        },
+        "attributes_one_of": {
+          "for": 10,
+          "des": 10
+        }
+      },
+      "effects": {
+        "type": "danca_kaguya_dual_weapons",
+        "createsWeapons": [
+          "tsuru",
+          "hana"
+        ],
+        "dualWieldable": true,
+        "neverInSameAttack": true,
+        "weapons": {
+          "tsuru": {
+            "displayName": "Tsuru (Vinha de Ossos)",
+            "source": "coluna_vertebral_regenera_imediatamente",
+            "weaponKind": "pesada_especial",
+            "damageBonus": 4,
+            "damageBonusIncludesArtesao": true,
+            "rangeM": 4,
+            "manuevers": [
+              "derrubar",
+              "desarmar",
+              "agarrar"
+            ],
+            "manueverPenaltyExempt": true,
+            "acuidadeApplies": true
+          },
+          "hana": {
+            "displayName": "Hana (Flor de Ossos)",
+            "source": "ossos_de_um_braco_crescem_espantosamente",
+            "weaponKind": "pesada_especial_arma_presa",
+            "damageBonus": 6,
+            "damageBonusIncludesArtesao": true,
+            "meleeRangeM": 2,
+            "vibratesIncreasesPiercing": true
+          }
+        },
+        "synergy": {
+          "tsuruGrappleWithHana": "ataque_corporal_extra_contra_mesmo_alvo_exclusivamente_com_hana"
+        },
+        "noManobras": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "sawarabi_no_mai",
+      "name": "Sawarabi no Mai",
+      "category": "RESTRITA",
+      "shortDescription": "Dança da Samambaia. Última das 5 danças. Lanças de ossos sobem do subsolo. Funciona como Lança Nv 6 (Ninpou). Vigor 18 = Lança Nv 9. Pode entrar nas lanças como Imergir Nv 4.",
+      "description": "Última das cinco danças do Clã Kaguya. Inúmeras lanças de ossos sobem do subsolo, podendo chegar a milhares para os ninjas de nível mais elevado. Com uma ação padrão, cria várias lanças ao seu redor que se elevam do solo para perfurar os inimigos. Funciona como o efeito Lança Nv 6 de Ninpou (Livro Básico p. 99), com parâmetros próprios. Pode entrar e se mover dentro de qualquer lança, como o efeito Imergir Nv 4 (Doton). Com Vigor 18: efeito Lança é ampliado para Nv 9. Não usa com outras danças nem aptidões de manobra. Fonte: Livro de Hijutsus p. 17.",
+      "prerequisites": {
+        "clans": [
+          "kaguya"
+        ],
+        "aptitudes": [
+          "shikotsumyaku",
+          "artesao_de_ossos",
+          "tessenka_no_mai"
+        ],
+        "attributes": {
+          "vig": 16
+        }
+      },
+      "effects": {
+        "type": "danca_kaguya_area_effect",
+        "action": "padrao",
+        "baseEffect": "lanca_nv_6",
+        "baseEffectSource": "ninpou_livro_basico_p99",
+        "spearParameters": {
+          "diameterM": 1,
+          "heightM": 3,
+          "areaDiameterFormula": "nivel_de_vigor",
+          "hardnessFormula": "2x_vigor",
+          "damageBaseFormula": "1_por_nivel_de_vigor",
+          "chakraCostFormula": "ceil(vigor / 2)",
+          "difficultyFormula": "9 + vigor"
+        },
+        "imergirNv4Synergy": "Pode entrar e se mover dentro de qualquer lança, como Imergir Nv 4 (Doton)",
+        "vigor18Upgrade": {
+          "trigger": "vig_18",
+          "effect": "lanca_nv_9"
+        },
+        "noManobras": true,
+        "noOtherDancas": true
+      },
+      "evolutions": []
+    }
+  ]
+}

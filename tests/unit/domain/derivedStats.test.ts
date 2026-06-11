@@ -11,10 +11,13 @@ import {
 } from '@/domain/rules/derivedStats';
 import { satsukiNc6, STANDARD_BASES } from './fixtures/satsuki-nc6';
 
+// Achata os refs como a ficha faz: Especialista (medianas) → "especialista_medianas".
 const satsukiInput = {
   attributes: satsukiNc6.attributes,
   bases: satsukiNc6.bases,
-  aptitudeCodes: satsukiNc6.aptitudes.map((a) => a.code),
+  aptitudeCodes: satsukiNc6.aptitudes.flatMap((a) =>
+    a.parameter ? [a.code, `${a.code}_${a.parameter}`] : [a.code],
+  ),
 };
 
 describe('derivedStats — Satsuki NC 6', () => {
@@ -27,97 +30,77 @@ describe('derivedStats — Satsuki NC 6', () => {
   });
 
   describe('CC (Combate Corporal)', () => {
-    it('com katana: 5 base + 6 Des (Acuidade) + 1 Especialista = 12', () => {
-      expect(calculateCC(satsukiInput, { weaponCategory: 'mediana', weaponKind: 'katana' })).toBe(
-        12,
-      );
-    });
-
-    it('com wakizashi (Daisho rule): 5 + 6 Des + 1 Especialista (katana → wakizashi) = 12', () => {
+    it('arma mediana (Especialista medianas) + Acuidade: 5 + 6 Des + 1 = 12', () => {
       expect(
-        calculateCC(satsukiInput, { weaponCategory: 'leve', weaponKind: 'wakizashi' }),
+        calculateCC(satsukiInput, { especialistaCategory: 'medianas', acceptsAcuidade: true }),
       ).toBe(12);
     });
 
-    it('com arma leve genérica (sem Especialista) = 11', () => {
+    it('arma leve sem Especialista (leves), com Acuidade = 11', () => {
+      // Satsuki só tem Especialista (medianas) → categoria diferente, sem +1.
       expect(
-        calculateCC(satsukiInput, { weaponCategory: 'leve', weaponKind: 'dagger' }),
+        calculateCC(satsukiInput, { especialistaCategory: 'leves', acceptsAcuidade: true }),
       ).toBe(11);
     });
 
-    it('sem opts (assume leve, sem Especialista) = 11', () => {
+    it('sem opts (assume Acuidade, sem Especialista) = 11', () => {
       expect(calculateCC(satsukiInput)).toBe(11);
     });
 
-    it('arma pesada cancela Acuidade — usa Força', () => {
-      // Força 1 → CC = 5 + 1 = 6
-      expect(calculateCC(satsukiInput, { weaponCategory: 'pesada' })).toBe(6);
+    it('arma que NÃO aceita Acuidade usa Força (pesada): 5 + 1 = 6', () => {
+      expect(
+        calculateCC(satsukiInput, { especialistaCategory: 'pesadas', acceptsAcuidade: false }),
+      ).toBe(6);
     });
 
-    it('Especialista (wakizashi) explícito não dobra com Daisho', () => {
+    it('Especialista (pesadas) somaria +1 mesmo usando Força', () => {
       const input = {
         ...satsukiInput,
-        aptitudeCodes: [...satsukiInput.aptitudeCodes, 'especialista_wakizashi'],
+        aptitudeCodes: [...satsukiInput.aptitudeCodes, 'especialista_pesadas'],
       };
-      // Tem especialista_wakizashi direto, então Daisho não aplica de novo.
-      expect(calculateCC(input, { weaponCategory: 'leve', weaponKind: 'wakizashi' })).toBe(12);
+      // 5 + 1 For + 1 Especialista (pesadas) = 7.
+      expect(
+        calculateCC(input, { especialistaCategory: 'pesadas', acceptsAcuidade: false }),
+      ).toBe(7);
     });
 
-    it('sem Acuidade usa Força mesmo em arma leve', () => {
+    it('sem Acuidade usa Força mesmo em arma que aceitaria', () => {
       const input = {
         attributes: satsukiNc6.attributes,
         bases: satsukiNc6.bases,
         aptitudeCodes: [], // sem Acuidade
       };
-      expect(calculateCC(input, { weaponCategory: 'leve' })).toBe(6); // 5 + 1 For
+      expect(calculateCC(input, { acceptsAcuidade: true })).toBe(6); // 5 + 1 For
     });
 
-    // ── RAW (Livro Básico 4.1b — Acuidade) ───────────────────────────────
-    // Arma mediana sem entrada explícita no livro NÃO recebe Acuidade.
-    it('arma mediana com nome desconhecido usa Força (não-RAW NÃO entra)', () => {
-      // weaponKind='espada_qualquer' não está em ACUIDADE_NAMED_WEAPONS
-      // → cai fora da exceção, usa Força. 5 + 1 = 6.
-      expect(
-        calculateCC(satsukiInput, { weaponCategory: 'mediana', weaponKind: 'espada_qualquer' }),
-      ).toBe(6);
-    });
-
-    it('florete (mediana, mas nominal no livro) ganha Acuidade', () => {
-      // 5 + 6 Des = 11 (sem Especialista_florete na Satsuki).
-      expect(
-        calculateCC(satsukiInput, { weaponCategory: 'mediana', weaponKind: 'florete' }),
-      ).toBe(11);
-    });
-
-    it('chicote (mediana nominal) ganha Acuidade', () => {
-      expect(
-        calculateCC(satsukiInput, { weaponCategory: 'mediana', weaponKind: 'chicote' }),
-      ).toBe(11);
-    });
-
-    it('chokutō (longa nominal) ganha Acuidade', () => {
-      expect(
-        calculateCC(satsukiInput, { weaponCategory: 'longa', weaponKind: 'chokuto' }),
-      ).toBe(11);
-    });
-
-    it('categoria "arremesso" SOZINHA não dispara mais Acuidade (regression)', () => {
-      // Antes da correção, 'arremesso' habilitava Acuidade como blanket.
-      // RAW só fala em "armas de arremesso usáveis em CC (como kunai)" — que
-      // devem ser modeladas como leves, não como categoria arremesso pura.
-      // Aqui passamos um weaponKind genérico não-nominal pra travar a regra.
-      expect(
-        calculateCC(satsukiInput, {
-          weaponCategory: 'arremesso',
-          weaponKind: 'pedra_qualquer',
-        }),
-      ).toBe(6); // usa Força
+    it('Acuidade (Homebrew) também substitui Força por Destreza na precisão', () => {
+      const input = {
+        attributes: satsukiNc6.attributes,
+        bases: satsukiNc6.bases,
+        aptitudeCodes: ['acuidade_homebrew'],
+      };
+      // 5 base + 6 Des (homebrew conta como Acuidade na precisão) = 11
+      expect(calculateCC(input, { acceptsAcuidade: true })).toBe(11);
     });
   });
 
   describe('CD, ESQ, LM', () => {
     it('CD = baseCd + Des = 3 + 6 = 9', () => {
       expect(calculateCD(satsukiInput)).toBe(9);
+    });
+
+    it('CD com Especialista na categoria da arma de distância: +1', () => {
+      const input = {
+        ...satsukiInput,
+        aptitudeCodes: [...satsukiInput.aptitudeCodes, 'especialista_disparo'],
+      };
+      // 3 + 6 Des + 1 Especialista (disparo) = 10.
+      expect(calculateCD(input, { especialistaCategory: 'disparo' })).toBe(10);
+    });
+
+    it('CD sem Especialista na categoria = sem bônus', () => {
+      // Satsuki tem Especialista (medianas), não disparo → CD normal.
+      expect(calculateCD(satsukiInput, { especialistaCategory: 'disparo' })).toBe(9);
     });
     it('ESQ = baseEsq + Agi = 3 + 6 = 9 (sem Reflexos)', () => {
       expect(calculateESQ(satsukiInput)).toBe(9);

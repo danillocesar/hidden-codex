@@ -1,0 +1,102 @@
+{
+  "_meta": {
+    "description": "Lote 7f2d — 2 equipamentos específicos do Jinchuuriki: Soprador de Bolhas (Saiken/Rokubi) + Armadura a Vapor (Kokuō/Gobi). Soprador é arma especial sem necessidade de Usar Arma. Armadura a Vapor é pesada hermética que habilita Aceleração-Vapor e Força-Vapor do Gobi Futton.",
+    "sources": [
+      "Livro de Hijutsus p. 43 (Armadura a Vapor)",
+      "Livro de Hijutsus p. 46 (Soprador de Bolhas)"
+    ],
+    "extractedAt": "2026-05-14",
+    "schemaVersion": 1,
+    "appliesToTable": "equipments",
+    "expectedItemCount": 2
+  },
+  "data": [
+    {
+      "code": "soprador_de_bolhas",
+      "name": "Soprador de Bolhas",
+      "kind": "WEAPON",
+      "subtype": "arma_especial_hijutsu",
+      "category": "VARIAVEL",
+      "price": null,
+      "priceNote": "Item específico do Jinchuuriki Saiken. Não comercializável.",
+      "damage": "0",
+      "range": null,
+      "critRange": "15-16",
+      "slots": 1,
+      "damageType": "esmagamento",
+      "prerequisites": {
+        "aptitudes": [
+          "jinchuuriki_saiken"
+        ]
+      },
+      "effects": {
+        "weaponType": "arma_especial",
+        "noUsarArmaRequired": true,
+        "noUsarArmaRequiredNote": "Embora arma especial, NÃO precisa comprar aptidão Usar Arma pra usar sem penalidades. RAW Hijutsus p.46.",
+        "purpose": "soprar_bolhas_para_executar_Tecnicas_de_Bolhas_do_Rokubi_Suiton",
+        "usagesUnblockedTechniques": [
+          "bolha_tinta",
+          "sopro_acido",
+          "bolha_sufocante",
+          "bolha_flutuante"
+        ],
+        "noSelosNeededWhenUsing": true,
+        "cannotBeTargetedByImpedirSelos": true,
+        "canBeDisarmed": true,
+        "blockingCapability": {
+          "armasLevesMediums": true,
+          "note": "Feito de metal resistente — pode bloquear armas leves e medianas comuns (espadas, kunais)."
+        }
+      },
+      "description": "Canudo irregular feito de metal resistente usado pra soprar bolhas de sabão e executar Técnicas de Bolhas do Rokubi Suiton. Não precisa comprar aptidão Usar Arma. Sem necessidade de selos quando usa o Soprador — não pode ser alvo da aptidão Impedir Selos, mas pode ser desarmado. Bloqueia armas leves/medianas comuns. Fonte: Livro de Hijutsus p. 46."
+    },
+    {
+      "code": "armadura_a_vapor",
+      "name": "Armadura a Vapor",
+      "kind": "ARMOR",
+      "subtype": "armadura_pesada_hijutsu",
+      "category": null,
+      "price": 1200,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {
+        "attributes_one_of": {
+          "for": 10,
+          "vig": 15
+        },
+        "aptitudes": [
+          "usar_armaduras_pesadas"
+        ]
+      },
+      "effects": {
+        "armorType": "pesada",
+        "absorptionBonus": 20,
+        "bodyHardnessBonus": 2,
+        "armorPenalty": -4,
+        "armorPenaltyAppliesOn": [
+          "esquiva",
+          "agilidade",
+          "acrobacia",
+          "atletismo",
+          "escapar",
+          "furtividade"
+        ],
+        "compartmentModifier": -2,
+        "hermeticSealing": true,
+        "hermeticSealingNote": "Cobre todo o corpo dos pés até o pescoço de forma hermética. Sem entrada/fuga de ar. Troca de ar via escapamento nas costas (fornalha).",
+        "futtonAmplifiesPhysical": true,
+        "futtonAmplifiesPhysicalNote": "Por ser hermeticamente selada, permite usar elemento Futton pra ampliar capacidades físicas (técnicas Aceleração-Vapor e Força-Vapor) via pressão do vapor criado.",
+        "breaksIfHitWhenAbsorptionZero": true,
+        "breaksIfHitWhenAbsorptionZeroNote": "Se atingido por ataque que ignore dureza quando absorção está zero, selamento é rompido e armadura não pode mais ser usada pra técnicas de vapor.",
+        "requiredForGobiFuttonTechniques": [
+          "aceleracao_vapor",
+          "forca_vapor"
+        ]
+      },
+      "description": "Armadura pesada hermética que cobre todo o corpo dos pés ao pescoço. Sem entrada/saída de ar. Troca via escapamento nas costas (fornalha). Permite Gobi Futton ampliar capacidades físicas via pressão do vapor (Aceleração-Vapor e Força-Vapor). Se atingida com absorção zero e dureza ignorada, selamento rompe — não pode mais ser usada pra técnicas de vapor. Pré-req: Força 10 OU Vigor 15 + Usar Armaduras Pesadas. Custo: 1.200 Ryos. Fonte: Livro de Hijutsus p. 43."
+    }
+  ]
+}

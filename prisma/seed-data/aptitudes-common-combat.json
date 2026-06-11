@@ -7,7 +7,28 @@
     ],
     "extractedAt": "2026-05-12",
     "schemaVersion": 1,
-    "notes": "Categorias usadas: HABILIDADE (aptidões gerais de teste), COMBATE (testes de CC/CD/dano), MANOBRA (golpes especiais), GERAL (utilitárias/permissão). Evoluções de Nv 2+ ficam no array 'evolutions' da entrada base. Aptidões com PRÉ-REQUISITO cruzado a outras aptidões são catalogadas, mas validação fica para motor futuro."
+    "notes": "Categorias usadas: HABILIDADE (aptidões gerais de teste), COMBATE (testes de CC/CD/dano), MANOBRA (golpes especiais), GERAL (utilitárias/permissão). Evoluções de Nv 2+ ficam no array 'evolutions' da entrada base. Aptidões com PRÉ-REQUISITO cruzado a outras aptidões são catalogadas, mas validação fica para motor futuro.",
+    "unmodeledAptitudes": [
+      "guerreiro_pesadas"
+    ],
+    "unmodeledAptitudesNotes": "Refs dormentes intencionais. 'guerreiro_pesadas' é variante parametrizada da aptidão 'guerreiro' (categoryChoice = 'pesadas'); modelagem como parâmetro fica pro motor (CharacterAptitude.parameter). Validador trata como info ao invés de error.",
+    "audit": [
+      {
+        "date": "2026-05-14",
+        "phase": "7e-cleanup",
+        "change": "Adicionado grantsBypassesPrereq:true + Note em 1 aptidão(ões): ['mestre_dos_selos']. Resolve Task #16 do user."
+      },
+      {
+        "date": "2026-05-16",
+        "phase": "dt3-fix",
+        "change": "ponto_cego: prereq AND attributes_one_of+skills_one_of (chave skills_one_of não-canônica) → alternatives [via_agilidade | via_prestidigitacao]. Semantica OR correta (Livro Básico p. 65)."
+      },
+      {
+        "date": "2026-06-01",
+        "phase": "prereq-fix",
+        "change": "ambidestria: prereq corrigido de Destreza 10 para Combate Corporal 12 (Livro Básico p. 62)."
+      }
+    ]
   },
   "data": [
     {
@@ -21,8 +42,32 @@
         "type": "stat_substitution",
         "skill": "cc",
         "substituteAttribute": "destreza_for_forca",
-        "appliesTo": ["armas_leves", "armas_medianas"],
+        "appliesTo": [
+          "armas_leves",
+          "armas_medianas"
+        ],
         "notes": "RAW estrito — não dá dano de Destreza em ataque CC desarmado, só substitui pra arma compatível"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "acuidade_homebrew",
+      "name": "Acuidade (Homebrew)",
+      "category": "HABILIDADE",
+      "shortDescription": "Como Acuidade, mas a Destreza também substitui a Força no DANO de CC (homebrew).",
+      "description": "Variante caseira (homebrew) da Acuidade: além de usar Destreza no lugar de Força nos testes de Combate Corporal, a Destreza também substitui a Força no cálculo do DANO de ataques corpo-a-corpo com armas que aceitam Acuidade (leves/medianas compatíveis). NÃO é RAW (o livro diz que Acuidade não afeta dano) — use apenas com permissão do mestre, como 'exceção finesse'. Baseada na aptidão Acuidade (Livro Básico p. 62).",
+      "prerequisites": {},
+      "effects": {
+        "type": "stat_substitution",
+        "skill": "cc",
+        "substituteAttribute": "destreza_for_forca",
+        "appliesTo": [
+          "armas_leves",
+          "armas_medianas",
+          "dano_cc"
+        ],
+        "homebrew": true,
+        "notes": "Homebrew — a Destreza também substitui a Força no dano de CC (finesse), apenas em armas que aceitam Acuidade."
       },
       "evolutions": []
     },
@@ -32,12 +77,20 @@
       "category": "COMBATE",
       "shortDescription": "Ataca com duas armas leves ao mesmo tempo.",
       "description": "Permite ataque com duas armas leves simultaneamente (ou armas duplas se descrição permitir). Some o dano de ambas no cálculo. Armas precisam ter mesmo atributo de dano e mesma margem de crítico, e mesma precisão. Se for alvo de Desarmar, só uma arma pode ser perdida (atacante escolhe). NÃO funciona pra armas naturais ou desarmado. Fonte: Livro Básico p. 62.",
-      "prerequisites": { "attributes": { "des": 10 } },
+      "prerequisites": {
+        "combatSkills": {
+          "cc": 12
+        }
+      },
       "effects": {
         "type": "dual_wielding",
         "weaponConstraint": "armas_leves",
         "damageBonus": "soma_das_armas",
-        "sharedRequirements": ["mesma_precisao", "mesmo_atributo_dano", "mesma_margem_critico"]
+        "sharedRequirements": [
+          "mesma_precisao",
+          "mesmo_atributo_dano",
+          "mesma_margem_critico"
+        ]
       },
       "evolutions": []
     },
@@ -50,7 +103,10 @@
       "prerequisites": {},
       "effects": {
         "type": "manuever_unlock",
-        "manuevers": ["apanhar_projetil", "rebater_projetil"],
+        "manuevers": [
+          "apanhar_projetil",
+          "rebater_projetil"
+        ],
         "freeActionThrowBack": true
       },
       "evolutions": []
@@ -62,14 +118,22 @@
       "shortDescription": "Joga inimigo derrubado para trás ou para cima.",
       "description": "Ao usar manobra derrubar, pode escolher arremessar o oponente até 1m por nível de Força (máx 10m), para trás ou para cima. Se jogado para cima, oponente cai no final do turno. Comprado via Lutador → só desarmado; comprado via Guerreiro → só armas pesadas. Fonte: Livro Básico p. 68.",
       "prerequisites": {
-        "attributes": { "for": 6 },
-        "aptitudes_one_of": ["lutador", "guerreiro_pesadas"]
+        "attributes": {
+          "for": 6
+        },
+        "aptitudes_one_of": [
+          "lutador",
+          "guerreiro_pesadas"
+        ]
       },
       "effects": {
         "type": "manuever_modifier",
         "modifiesManuever": "derrubar",
         "throwDistance": "1m por For (max 10m)",
-        "throwDirections": ["tras", "cima"]
+        "throwDirections": [
+          "tras",
+          "cima"
+        ]
       },
       "evolutions": []
     },
@@ -79,7 +143,11 @@
       "category": "MANOBRA",
       "shortDescription": "Atinge ponto vulnerável; não causa dano, atordoa o alvo.",
       "description": "Ação padrão. Ataque corporal sem dano. Se acertar, vítima testa Vigor (Dif 7 + For do atacante) — falha = atordoado até fim do próximo turno. Pode aplicar bônus de Força até +2 na dificuldade. Fonte: Livro Básico p. 68.",
-      "prerequisites": { "attributes": { "for": 12 } },
+      "prerequisites": {
+        "attributes": {
+          "for": 12
+        }
+      },
       "effects": {
         "type": "manuever",
         "action": "padrao",
@@ -96,12 +164,18 @@
       "category": "HABILIDADE",
       "shortDescription": "Divide o deslocamento em duas partes; ataca no meio. Sem ataque oportuno.",
       "description": "Divide deslocamento em duas partes: move antes E depois do ataque, desde que a distância total não passe do deslocamento máximo. NÃO pode andar para trás. Aproximar de inimigo, atacar e prosseguir movimento NÃO sofre ataque oportuno (você ataca enquanto corre). Com Ataque Múltiplo: pode mover entre ataques, mas no máximo 2 movimentos na rodada. Alvo CC precisa estar a mais de 1m. NÃO compatível com Investida. Fonte: Livro Básico p. 62.",
-      "prerequisites": { "attributes": { "agi": 4 } },
+      "prerequisites": {
+        "attributes": {
+          "agi": 4
+        }
+      },
       "effects": {
         "type": "movement_modifier",
         "splitMovement": true,
         "noOpportunityAttackOnPass": true,
-        "incompatibleWith": ["investida"]
+        "incompatibleWith": [
+          "investida"
+        ]
       },
       "evolutions": []
     },
@@ -111,7 +185,11 @@
       "category": "MANOBRA",
       "shortDescription": "Acerta TODAS as criaturas dentro do alcance CC com 1 teste.",
       "description": "Seu ataque acerta todas as criaturas dentro do alcance corpo-a-corpo. Apenas 1 teste de acerto; cada alvo tem direito a defesa normal. Funciona com armas pesadas. Fonte: Livro Básico p. 68.",
-      "prerequisites": { "combatSkills": { "cc": 8 } },
+      "prerequisites": {
+        "combatSkills": {
+          "cc": 8
+        }
+      },
       "effects": {
         "type": "manuever",
         "areaEffect": "alcance_cc",
@@ -126,15 +204,25 @@
       "category": "MANOBRA",
       "shortDescription": "Faz 2 ou 3 ataques com mesma ação padrão, dividindo o dano.",
       "description": "Faz dois ou três ataques com mesma ação padrão, dividindo todo o dano base igualmente. Se a divisão não for exata, deixa mais dano nos primeiros ataques. Bônus/reduções de dano (incluindo durezas) aplicados ANTES da divisão. Teste separado pra cada ataque; alvo tem defesa pra cada. Aptidões/técnicas defensivas (Kawarimi etc.) e defesas não-reativas só contra o primeiro. Graus de Dano, Críticos e Falhas Críticas decididos individualmente. Pode usar manobras especiais em qualquer ataque. Pode usar 1 outra aptidão de manobra (Ataque Poderoso por exemplo) em UM dos ataques. Com Ataque em Movimento: pode mover entre ataques (máx 2 movimentos). Condições prejudiciais (fintado, desprevenido) aplicadas a todos. NÃO compatível com manobras que digam ser ataque único (ex: Investida). Fonte: Livro Básico p. 68-69.",
-      "prerequisites": { "combatSkills_one_of": { "cc": 11, "cd": 11 } },
+      "prerequisites": {
+        "combatSkills_one_of": {
+          "cc": 11,
+          "cd": 11
+        }
+      },
       "effects": {
         "type": "manuever",
-        "attackCountOptions": [2, 3],
+        "attackCountOptions": [
+          2,
+          3
+        ],
         "splitDamageBeforeBonus": true,
         "defenseRules": "reactiva_a_cada_ataque",
         "supportsOtherManuevers": true,
         "supportsOneOtherAptitude": true,
-        "incompatibleWith": ["investida"]
+        "incompatibleWith": [
+          "investida"
+        ]
       },
       "evolutions": []
     },
@@ -144,7 +232,11 @@
       "category": "MANOBRA",
       "shortDescription": "-1 precisão, +1 dano. Cumulativo com aptidões sem bônus de precisão/dano.",
       "description": "Declare antes do ataque CC. -1 na precisão, +1 dano. Pode usar com qualquer outra aptidão de manobra desde que ela não conceda bônus de precisão ou dano. Fonte: Livro Básico p. 69.",
-      "prerequisites": { "combatSkills": { "cc": 7 } },
+      "prerequisites": {
+        "combatSkills": {
+          "cc": 7
+        }
+      },
       "effects": {
         "type": "manuever",
         "precisionPenalty": -1,
@@ -159,7 +251,11 @@
       "category": "MANOBRA",
       "shortDescription": "Adiciona golpes ao Ataque Múltiplo se acertar.",
       "description": "Após terminar um Ataque Múltiplo bem-sucedido, pode encaixar golpes rápidos sucessivos. Detalhes seguem regras do Livro Básico. Pré-req: Ataque Múltiplo. Fonte: Livro Básico p. 69.",
-      "prerequisites": { "aptitudes": ["ataque_multiplo"] },
+      "prerequisites": {
+        "aptitudes": [
+          "ataque_multiplo"
+        ]
+      },
       "effects": {
         "type": "manuever_modifier",
         "modifiesManuever": "ataque_multiplo",
@@ -173,12 +269,20 @@
       "category": "COMBATE",
       "shortDescription": "+dano em ataques com arcos ou armas de arremesso.",
       "description": "Escolha entre arcos ou armas simples de arremesso. Arcos: +1 dano com qualquer arco. Arremesso: +3 dano à distância com qualquer arma simples de arremesso. Bônus só afetam ataques com dano de arma. Fonte: Livro Básico p. 62.",
-      "prerequisites": { "attributes": { "des": 12 } },
+      "prerequisites": {
+        "attributes": {
+          "des": 12
+        }
+      },
       "effects": {
         "type": "damage_bonus",
         "options": {
-          "arcos": { "damageBonus": 1 },
-          "arremesso_simples": { "damageBonus": 3 }
+          "arcos": {
+            "damageBonus": 1
+          },
+          "arremesso_simples": {
+            "damageBonus": 3
+          }
         },
         "requiresWeaponDamage": true
       },
@@ -190,7 +294,11 @@
       "category": "COMBATE",
       "shortDescription": "+1 bloqueio com duas armas ou arma dupla.",
       "description": "Quando usando duas armas ou arma dupla, +1 em testes de bloqueio. Pré-req: Ambidestria. Fonte: Livro Básico p. 62.",
-      "prerequisites": { "aptitudes": ["ambidestria"] },
+      "prerequisites": {
+        "aptitudes": [
+          "ambidestria"
+        ]
+      },
       "effects": {
         "type": "skill_bonus",
         "skill": "bloqueio",
@@ -205,13 +313,19 @@
       "category": "COMBATE",
       "shortDescription": "-2 precisão CC, +3 Esquiva até próximo turno.",
       "description": "Declare antes do ataque CC ou técnica de toque. -2 na precisão do ataque, +3 bônus em Esquiva até seu próximo turno. NÃO compatível com manobras/aptidões que concedam bônus de precisão (Rasteira, Investida). Fonte: Livro Básico p. 62-63.",
-      "prerequisites": { "combatSkills": { "cc": 9 } },
+      "prerequisites": {
+        "combatSkills": {
+          "cc": 9
+        }
+      },
       "effects": {
         "type": "combat_modifier",
         "precisionPenalty": -2,
         "esquivaBonus": 3,
         "duration": "ate_proximo_turno",
-        "incompatibleWith": ["bonus_precisao_aptitudes"]
+        "incompatibleWith": [
+          "bonus_precisao_aptitudes"
+        ]
       },
       "evolutions": []
     },
@@ -222,8 +336,13 @@
       "shortDescription": "Crítico com 1 ponto a menos no dado (ex: 14-15-16 vira 13-14-15-16).",
       "description": "Escolha entre desarmado ou uma arma. Quando atacar com Golpear ou aptidão de manobra, crítico com 1 ponto a menos. Ex: arma crítico 14-15-16 → 13-14-15-16. Não acumula com outros bônus do mesmo tipo. Fonte: Livro Básico p. 62-63. Revisão GAS: aplica a TODAS armas/desarmado que tenham Especialista. Fonte: GAS p. 24.",
       "prerequisites": {
-        "aptitudes": ["especialista"],
-        "combatSkills_one_of": { "cc": 13, "cd": 13 }
+        "aptitudes": [
+          "especialista"
+        ],
+        "combatSkills_one_of": {
+          "cc": 13,
+          "cd": 13
+        }
       },
       "effects": {
         "type": "critical_range_modifier",
@@ -239,14 +358,31 @@
       "category": "COMBATE",
       "shortDescription": "+1 dano base por categoria de arma escolhida; +1 a cada 2 níveis acima de CC/CD 18.",
       "description": "Escolha categoria: desarmado, armas naturais, disparo, arremesso, leves, medianas, longas, pesadas ou especiais. +1 dano base ao atacar com a categoria. Bônus aumenta +1 a cada 2 níveis de CC ou CD acima de 18. Só afeta ataques com dano de arma. Cumulativo com Hachimon Tonkou. Pode comprar de novo pra outras categorias. Fonte: Livro Básico p. 62-63.",
-      "prerequisites": { "combatSkills_one_of": { "cc": 18, "cd": 18 } },
+      "prerequisites": {
+        "combatSkills_one_of": {
+          "cc": 18,
+          "cd": 18
+        }
+      },
       "effects": {
         "type": "damage_bonus",
-        "categoryChoice": ["desarmado", "armas_naturais", "disparo", "arremesso", "leves", "medianas", "longas", "pesadas", "especiais"],
+        "categoryChoice": [
+          "desarmado",
+          "armas_naturais",
+          "disparo",
+          "arremesso",
+          "leves",
+          "medianas",
+          "longas",
+          "pesadas",
+          "especiais"
+        ],
         "baseDamageBonus": 1,
         "scaling": "+1 a cada 2 niveis acima de 18 CC/CD",
         "requiresWeaponDamage": true,
-        "stacksWith": ["hachimon_tonkou"],
+        "stacksWith": [
+          "hachimon_tonkou"
+        ],
         "repeatable": true
       },
       "evolutions": []
@@ -282,7 +418,11 @@
         {
           "atLevel": 2,
           "name": "Diligente Nv 2",
-          "prerequisites": { "skills": { "iniciativa": 21 } },
+          "prerequisites": {
+            "skills": {
+              "iniciativa": 21
+            }
+          },
           "description": "Primeira rodada do combate: qualquer um sem turno ainda é considerado fintado em relação a você. Em rodada de surpresa: direito a TODAS suas ações (não só padrão ou movimento). Fonte: GAS p. 24."
         }
       ]
@@ -311,8 +451,13 @@
       "prerequisites": {},
       "effects": {
         "type": "permission",
-        "permits": ["criar_armadilhas", "ninpou_mecanico"],
-        "skillSubstitution": { "mecanismos_for_esp_in_ninpou": true }
+        "permits": [
+          "criar_armadilhas",
+          "ninpou_mecanico"
+        ],
+        "skillSubstitution": {
+          "mecanismos_for_esp_in_ninpou": true
+        }
       },
       "evolutions": []
     },
@@ -325,10 +470,25 @@
       "prerequisites": {},
       "effects": {
         "type": "precision_bonus",
-        "categoryChoice": ["desarmado", "armas_naturais", "disparo", "arremesso", "leves", "medianas", "longas", "pesadas", "especiais"],
+        "categoryChoice": [
+          "desarmado",
+          "armas_naturais",
+          "disparo",
+          "arremesso",
+          "leves",
+          "medianas",
+          "longas",
+          "pesadas",
+          "especiais"
+        ],
         "bonus": 1,
-        "appliesTo": ["cc", "cd"],
-        "incompatibleWith": ["maestria"]
+        "appliesTo": [
+          "cc",
+          "cd"
+        ],
+        "incompatibleWith": [
+          "maestria"
+        ]
       },
       "evolutions": []
     },
@@ -338,12 +498,22 @@
       "category": "COMBATE",
       "shortDescription": "Usa manobras especiais com armas pesadas/longas sem penalidade -2.",
       "description": "Escolha entre armas longas ou pesadas. Enquanto empunhar arma da categoria escolhida, pode usar manobras especiais de combate com sua precisão na arma e SEM a penalidade -2 (exceto agarrar, que exige mãos livres). Fonte: Livro Básico p. 63.",
-      "prerequisites": { "attributes_one_of": { "for": 10, "des": 10 } },
+      "prerequisites": {
+        "attributes_one_of": {
+          "for": 10,
+          "des": 10
+        }
+      },
       "effects": {
         "type": "manuever_permission",
-        "categoryChoice": ["longas", "pesadas"],
+        "categoryChoice": [
+          "longas",
+          "pesadas"
+        ],
         "removesPenalty": "-2_manobras_especiais",
-        "exceptions": ["agarrar"]
+        "exceptions": [
+          "agarrar"
+        ]
       },
       "evolutions": []
     },
@@ -371,8 +541,17 @@
       "effects": {
         "type": "manuever_permission",
         "removesPenalty": "-2_manobras_especiais",
-        "appliesTo": ["desarmado", "armas_naturais"],
-        "manueverList": ["agarrar", "atropelar", "derrubar", "desarmar", "empurrar"]
+        "appliesTo": [
+          "desarmado",
+          "armas_naturais"
+        ],
+        "manueverList": [
+          "agarrar",
+          "atropelar",
+          "derrubar",
+          "desarmar",
+          "empurrar"
+        ]
       },
       "evolutions": []
     },
@@ -392,7 +571,11 @@
         {
           "atLevel": 2,
           "name": "Lutar às Cegas Nv 2",
-          "prerequisites": { "skills": { "prontidao": 12 } },
+          "prerequisites": {
+            "skills": {
+              "prontidao": 12
+            }
+          },
           "description": "Pode lutar contra inimigo SEM manter contato visual olho-a-olho. Personagem que perdeu visão permanentemente não sofre mais Camuflagem Visual Total (cegueira aguça outros sentidos). Personagens normalmente visuais ainda são afetados pela condição Cego. Fonte: Livro Básico p. 64 + GAS p. 27."
         }
       ]
@@ -408,8 +591,13 @@
         "type": "precision_bonus",
         "scope": "poder_ou_tecnica_escolhida",
         "bonus": 1,
-        "appliesTo": ["cc", "cd"],
-        "incompatibleWith": ["especialista"]
+        "appliesTo": [
+          "cc",
+          "cd"
+        ],
+        "incompatibleWith": [
+          "especialista"
+        ]
       },
       "evolutions": []
     },
@@ -420,14 +608,26 @@
       "shortDescription": "Perito + Perícia Inata em Prestidigitação pra fintar técnicas. Com 14, faz selos com 1 mão.",
       "description": "Recebe Perito e Perícia Inata em Prestidigitação pra fintar usando técnicas. Com Prestidigitação 14, pode fazer selos com 1 só mão. Requer teste de Prestidigitação (Dif 9 + 2x nível do poder). Falha = perde ação de movimento adicional. Falha crítica = impedido daquela técnica naquele turno. Para técnicas à distância pode optar por -3 CD em vez do teste. Fonte: Livro Básico p. 64.",
       "prerequisites": {
-        "skills": { "prestidigitacao": 12 },
-        "aptitudes": ["ponto_cego"]
+        "skills": {
+          "prestidigitacao": 12
+        },
+        "aptitudes": [
+          "ponto_cego"
+        ]
       },
       "effects": {
         "type": "skill_grants",
-        "grants": ["perito_prestidigitacao", "pericia_inata_prestidigitacao"],
+        "grants": [
+          "perito_prestidigitacao",
+          "pericia_inata_prestidigitacao"
+        ],
         "scope": "fintar_com_tecnicas",
-        "oneHandedSeals": { "requires": "prestidigitacao_14", "difficulty": "9 + 2x nivel_poder" }
+        "oneHandedSeals": {
+          "requires": "prestidigitacao_14",
+          "difficulty": "9 + 2x nivel_poder"
+        },
+        "grantsBypassesPrereq": true,
+        "grantsBypassesPrereqNote": "Aptidão tem pré-req Prestidigitação alta. Grants perito_prestidigitacao + pericia_inata_prestidigitacao são refs parametrizadas (perito_X, pericia_inata_X) — modelo de parametrização do projeto."
       },
       "evolutions": []
     },
@@ -437,7 +637,14 @@
       "category": "COMBATE",
       "shortDescription": "Gasta movimento mirando; +1 CD contra alvo na mesma rodada.",
       "description": "Ação de movimento pra mirar alvo com arma de disparo. +1 precisão em testes de CD contra esse alvo na mesma rodada. Fonte: Livro Básico p. 64-65.",
-      "prerequisites": { "attributes": { "des": 12 }, "aptitudes": ["tiro_longo"] },
+      "prerequisites": {
+        "attributes": {
+          "des": 12
+        },
+        "aptitudes": [
+          "tiro_longo"
+        ]
+      },
       "effects": {
         "type": "aim_bonus",
         "action": "movimento",
@@ -453,7 +660,14 @@
       "category": "COMBATE",
       "shortDescription": "+3 Esquiva contra ataques oportunos provocados por movimento.",
       "description": "+3 bônus de Esquiva contra ataques oportunos provocados quando se movimenta. Revisão GAS: +2 precisão em Acrobacia 'Cambalhota' e não tem deslocamento reduzido pela metade por essa ação. Fonte: Livro Básico p. 65 + GAS p. 27-28.",
-      "prerequisites": { "attributes": { "agi": 3 }, "aptitudes": ["reflexos"] },
+      "prerequisites": {
+        "attributes": {
+          "agi": 3
+        },
+        "aptitudes": [
+          "reflexos"
+        ]
+      },
       "effects": {
         "type": "esquiva_bonus",
         "bonus": 3,
@@ -471,10 +685,19 @@
       "category": "GERAL",
       "shortDescription": "Permite cirurgias, remédios, antídotos e técnicas de cura.",
       "description": "Apto a realizar cirurgias, elaborar remédios e antídotos, e usar técnicas de cura. NÃO fica desprevenido ao curar aliado em combate. Para antídotos: usa Medicina no lugar de Venefício (parâmetros, pré-reqs, testes). Pré-req pro poder Iryou Ninjutsu. Fonte: Livro Básico p. 75.",
-      "prerequisites": { "skills": { "medicina": 7 } },
+      "prerequisites": {
+        "skills": {
+          "medicina": 7
+        }
+      },
       "effects": {
         "type": "permission",
-        "permits": ["cirurgia", "remedios", "antidotos", "tecnicas_de_cura"],
+        "permits": [
+          "cirurgia",
+          "remedios",
+          "antidotos",
+          "tecnicas_de_cura"
+        ],
         "noDesprevenidoWhileHealing": true,
         "antidotosSkillSubstitution": "medicina_for_venefico"
       },
@@ -530,7 +753,18 @@
       "category": "COMBATE",
       "shortDescription": "Realiza Finta como ação de movimento (em vez de padrão).",
       "description": "Capaz de realizar Finta como ação de movimento. Fonte: Livro Básico p. 65.",
-      "prerequisites": { "attributes_one_of": { "agi": 6 }, "skills_one_of": { "prestidigitacao": 6 } },
+      "prerequisites": {
+        "alternatives": [
+          {
+            "name": "via_agilidade",
+            "attributes": { "agi": 6 }
+          },
+          {
+            "name": "via_prestidigitacao",
+            "pericias": { "prestidigitacao": 6 }
+          }
+        ]
+      },
       "effects": {
         "type": "action_economy",
         "manuever": "fintar",
@@ -557,10 +791,16 @@
       "category": "GERAL",
       "shortDescription": "Autoriza comprar/evoluir a perícia Venefício.",
       "description": "Autoriza comprar e evoluir a perícia Venefício. Pré-req pro poder Dokujutsu. Fonte: Livro Básico p. 76.",
-      "prerequisites": { "attributes": { "int": 8 } },
+      "prerequisites": {
+        "attributes": {
+          "int": 8
+        }
+      },
       "effects": {
         "type": "permission",
-        "permits": ["comprar_venefico"]
+        "permits": [
+          "comprar_venefico"
+        ]
       },
       "evolutions": []
     },
@@ -596,7 +836,11 @@
       "category": "COMBATE",
       "shortDescription": "Sai do alcance CC do inimigo sem provocar ataque oportuno.",
       "description": "Usando ação parcial + deslocamento, NÃO provoca ataque oportuno ao fugir. Revisão GAS: 1x por cena ganha +10m de deslocamento extra ao usar Retirada Rápida. Fonte: Livro Básico p. 66 + GAS p. 28-29.",
-      "prerequisites": { "attributes": { "agi": 9 } },
+      "prerequisites": {
+        "attributes": {
+          "agi": 9
+        }
+      },
       "effects": {
         "type": "movement_modifier",
         "noOpportunityAttackOnFlee": true,
@@ -615,7 +859,10 @@
       "prerequisites": {},
       "effects": {
         "type": "fall_damage_reduction",
-        "skill": ["acrobacia", "atletismo"]
+        "skill": [
+          "acrobacia",
+          "atletismo"
+        ]
       },
       "evolutions": []
     },
@@ -647,7 +894,11 @@
       "prerequisites": {},
       "effects": {
         "type": "sensor",
-        "variants": ["olfato", "chakra", "vibracao"],
+        "variants": [
+          "olfato",
+          "chakra",
+          "vibracao"
+        ],
         "notes": "regras especificas por variante; consultar livro"
       },
       "evolutions": []
@@ -658,11 +909,17 @@
       "category": "COMBATE",
       "shortDescription": "Dobra alcance de armas de disparo.",
       "description": "Distância de acerto de qualquer arma de disparo é dobrada. Revisão GAS: também afeta armas de arremesso + pré-req cai pra Destreza 11. Fonte: Livro Básico p. 67 + GAS p. 29.",
-      "prerequisites": { "attributes": { "des": 12 } },
+      "prerequisites": {
+        "attributes": {
+          "des": 12
+        }
+      },
       "effects": {
         "type": "range_modifier",
         "rangeMultiplier": 2,
-        "weaponTypes": ["disparo"],
+        "weaponTypes": [
+          "disparo"
+        ],
         "gasReview": {
           "destrezaPrereq": 11,
           "alsoAffectsArremesso": true
@@ -676,7 +933,11 @@
       "category": "COMBATE",
       "shortDescription": "Disparo ignora cobertura/camuflagem parcial.",
       "description": "Ataques com arma de disparo ignoram cobertura parcial e camuflagem parcial. Fonte: Livro Básico p. 67.",
-      "prerequisites": { "attributes": { "des": 9 } },
+      "prerequisites": {
+        "attributes": {
+          "des": 9
+        }
+      },
       "effects": {
         "type": "ignore_cover",
         "level": "parcial"
@@ -685,7 +946,14 @@
         {
           "atLevel": 2,
           "name": "Tiro Preciso Nv 2",
-          "prerequisites": { "attributes": { "des": 13 }, "aptitudes": ["tiro_preciso"] },
+          "prerequisites": {
+            "attributes": {
+              "des": 13
+            },
+            "aptitudes": [
+              "tiro_preciso"
+            ]
+          },
           "description": "Disparos ignoram TODA camuflagem total (chance de erro 50% → 0%). Não precisa de forma alternativa de localizar alvo (mas precisa saber vagamente da existência do inimigo). Fonte: GAS p. 29."
         }
       ]
@@ -696,7 +964,11 @@
       "category": "COMBATE",
       "shortDescription": "Ataque CC extra quando abate inimigo. 1x por rodada.",
       "description": "Em CC, quando causar dano suficiente pra abater criatura (Vit 0 ou menos, matando-a, etc.), executa ataque CC extra contra criatura no alcance. 1x por rodada, só no seu turno. Fonte: Livro Básico p. 67.",
-      "prerequisites": { "combatSkills": { "cc": 7 } },
+      "prerequisites": {
+        "combatSkills": {
+          "cc": 7
+        }
+      },
       "effects": {
         "type": "extra_attack_on_kill",
         "perRound": 1,
@@ -706,7 +978,14 @@
         {
           "atLevel": 2,
           "name": "Trespassar Nv 2",
-          "prerequisites": { "combatSkills": { "cc": 9 }, "aptitudes": ["trespassar"] },
+          "prerequisites": {
+            "combatSkills": {
+              "cc": 9
+            },
+            "aptitudes": [
+              "trespassar"
+            ]
+          },
           "description": "Pode usar Trespassar quantas vezes quiser na mesma rodada. Fonte: Livro Básico p. 67."
         }
       ]
@@ -735,7 +1014,12 @@
       "category": "COMBATE",
       "shortDescription": "Permite vestir armaduras pesadas sem penalidade.",
       "description": "Permite usar armaduras pesadas. Sem esta aptidão, armadura pesada dá penalidade maior. Fonte: Livro Básico p. 67.",
-      "prerequisites": { "attributes_one_of": { "for": 10, "vig": 15 } },
+      "prerequisites": {
+        "attributes_one_of": {
+          "for": 10,
+          "vig": 15
+        }
+      },
       "effects": {
         "type": "armor_proficiency",
         "armorType": "pesada"
@@ -762,13 +1046,21 @@
       "category": "GERAL",
       "shortDescription": "Usa manobra Avaliar como movimento. +2 precisão no teste.",
       "description": "Usa manobra Avaliar (GAS p. 87) com ação de movimento. +2 precisão no teste. Recebe Perito/Perícia Inata em Concentração se for distraído durante a manobra. Opcionalmente usa Avaliar com ação padrão pra info imediata (sem esperar alvo agir). Fonte: GAS p. 24-25.",
-      "prerequisites": { "attributes_one_of": { "int": 4, "per": 4 } },
+      "prerequisites": {
+        "attributes_one_of": {
+          "int": 4,
+          "per": 4
+        }
+      },
       "effects": {
         "type": "manuever_modifier",
         "modifiesManuever": "avaliar",
         "newAction": "movimento",
         "precisionBonus": 2,
-        "concentrationGrants": ["perito_concentracao", "pericia_inata_concentracao"]
+        "concentrationGrants": [
+          "perito_concentracao",
+          "pericia_inata_concentracao"
+        ]
       },
       "evolutions": []
     },
@@ -783,7 +1075,12 @@
         "type": "escape_bonus",
         "action": "parcial",
         "bonus": 2,
-        "appliesTo": ["agarrado", "algemas", "cordas", "algemar_efeito"]
+        "appliesTo": [
+          "agarrado",
+          "algemas",
+          "cordas",
+          "algemar_efeito"
+        ]
       },
       "evolutions": []
     },
@@ -793,7 +1090,14 @@
       "category": "COMBATE",
       "shortDescription": "Reação defensiva 2d8 + Esquiva contra atacante; arriscado.",
       "description": "Nova reação defensiva. Teste resistido: 2d8 + Esquiva contra teste do atacante. Sucesso = bem-sucedido (regra teste contra teste). NÃO pode adicionar nenhum bônus de precisão à Esquiva de Risco além de Reflexos. Fonte: GAS p. 25.",
-      "prerequisites": { "aptitudes": ["reflexos"], "skills": { "esquiva": 11 } },
+      "prerequisites": {
+        "aptitudes": [
+          "reflexos"
+        ],
+        "skills": {
+          "esquiva": 11
+        }
+      },
       "effects": {
         "type": "defensive_reaction",
         "rollFormula": "2d8 + esquiva",

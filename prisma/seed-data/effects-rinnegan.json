@@ -1,0 +1,131 @@
+{
+  "_meta": {
+    "description": "Lote 7h — Effects técnicos com action/range/damage do Caminho Tendō (Repelir + Atrair). Demais técnicas dos Caminhos (Membros Adicionais, Arsenal Humano, Receptor de Chakra, Obstruir Chakra, Reanimação, Gedō Mazō, etc.) estão modeladas como subTechniques nas aptidões dos Caminhos.",
+    "sources": [
+      "Livro de Hijutsus p. 72-73 (Tendō - Shinra Tensei + Banshō Ten'in)"
+    ],
+    "extractedAt": "2026-05-14",
+    "schemaVersion": 1,
+    "appliesToTable": "effects",
+    "expectedItemCount": 2,
+    "rationaleForLimitedScope": "Apenas Shinra Tensei e Banshō Ten'in têm ação/alcance/dano explícitos com modos. Outras técnicas estão dentro das subTechniques das aptidões dos Caminhos (Receptor de Chakra, Obstruir Chakra, Reanimação, Gedō Mazō, etc.) — não justificam effect próprio."
+  },
+  "data": [
+    {
+      "code": "shinra_tensei",
+      "name": "Shinra Tensei (Repelir)",
+      "minLevel": 1,
+      "availableFor": [
+        "rinne_ninpou"
+      ],
+      "shortDescription": "Tendō. Repelir 3 modos: Reativo (LM 0 chakra, raio 1m), Defensivo (custo = técnica defendida), Ofensivo (Míssil/Onda Explosiva +4 dano sucesso auto invisível).",
+      "description": "Repelir forças via campo gravitacional. 3 modos. Reativo: defesa contra ataques básicos (armados, à distância, desarmados). Reação defensiva, LM, 0 chakra. Sucesso = campo gravitacional 1m de diâmetro repele tudo que tenta contato. Defensivo: ação movimento + chakra variável (igual ao custo da técnica defendida) — anula ataque criando força contrária de mesma intensidade. Pode afastar técnicas já no corpo (Algemar, Amaterasu). Sem testes, mantém regras. Ofensivo: usa Míssil OU Onda Explosiva do Rinne Ninpou com modificações: +4 dano + sucesso auto invisível (rolar grau de dano normal). Alvo conhecedor pode defender: Kinobori (1 chakra/dano base), técnica fixadora, Velocista+Corrida (Míssil só), acelerado/Deus do Trovão (CD vs Esquiva). Pode dissipar Nuvem/Névoa (dureza imaginária). Pré-req da aptidão Tendō. Fonte: Livro de Hijutsus p. 72.",
+      "stats": {
+        "action": "varia_por_modo",
+        "range": "varia_por_modo",
+        "damage": "varia_por_modo",
+        "duration": "INSTANTANEA",
+        "chakraCost": "varia_por_modo",
+        "selos": false
+      },
+      "rules": {
+        "type": "tecnica_tendo_rinnegan",
+        "prerequisites": {
+          "aptitudes": [
+            "tendo"
+          ]
+        },
+        "subTechniques": [
+          {
+            "code": "shinra_tensei_reativo",
+            "name": "Repelir Reativo",
+            "subType": "active_reaction",
+            "action": "reacao_defensiva",
+            "rollType": "LM",
+            "chakraCost": 0,
+            "fieldDiameter": "1m",
+            "description": "Reação defensiva contra ataques básicos (corpo-a-corpo, à distância, desarmados). LM contra teste de ataque. Campo gravitacional 1m repele tudo em contato."
+          },
+          {
+            "code": "shinra_tensei_defensivo",
+            "name": "Repelir Defensivo",
+            "subType": "active_reaction",
+            "action": "movimento",
+            "chakraCost": "igual_ao_custo_da_tecnica_defendida",
+            "description": "Reforça campo gravitacional pra anular técnicas de alto nível. Cria força contrária de mesma intensidade. Pode afastar técnicas já no corpo (Algemar, Amaterasu). Sem testes."
+          },
+          {
+            "code": "shinra_tensei_ofensivo",
+            "name": "Repelir Ofensivo",
+            "subType": "active_attack",
+            "action": "padrao",
+            "baseEffect_one_of": [
+              "missil",
+              "onda_explosiva"
+            ],
+            "damageBonus": 4,
+            "autoSuccessInvisible": true,
+            "damageGradeStillRolled": true,
+            "description": "Usa Míssil ou Onda Explosiva do Rinne Ninpou. +4 dano. Sucesso auto invisível (rola grau). Alvo conhecedor pode defender: Kinobori (1 chakra por dano base), técnica fixadora ao solo, Velocista+Corrida (Míssil só), acelerado/Deus do Trovão (CD vs Esquiva). Pode dissipar Nuvem/Névoa via dureza imaginária."
+          }
+        ],
+        "amplifiedByGedoMaior": "caminho_deva_maior_repelir_dobra_custo_e_parametros"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "bansho_tenin",
+      "name": "Banshō Ten'in (Atrair)",
+      "minLevel": 1,
+      "availableFor": [
+        "rinne_ninpou"
+      ],
+      "shortDescription": "Tendō. Atrai objetos (ação parcial) ou criaturas (ação padrão) — invisível. Alcance 10m+2m/Esp. Custo varia por tamanho. Atraído fica indefeso.",
+      "description": "Atrai objetos e criaturas na direção do corpo. Força quase impossível de resistir. Custo de chakra varia por tamanho do alvo (Peq +1, Méd +3, Gra +5, Eno +7, Ime +9). Atrair Objetos: ação parcial, alcance 10m+2m/Esp. Múltiplos objetos consideram tamanho combinado. Sem testes se objeto não está no poder de alguém. Pessoa impedindo: LM (Dif 9+CD do usuário) pra técnica OU Força (Dif 5+CD) pra força bruta. Atrair Criaturas: ação padrão, mesmo alcance. Invisível, sucesso auto. Alvo conhecedor/2ª vez: defesa via opções Kinobori/Velocista/etc. Criatura atraída fica INDEFESA até fim do turno do usuário. Fonte: Livro de Hijutsus p. 73.",
+      "stats": {
+        "action": "parcial_objetos_OR_padrao_criaturas",
+        "range": "10m+2m_por_nivel_espirito",
+        "duration": "INSTANTANEA",
+        "chakraCost": "variavel_por_tamanho",
+        "selos": false
+      },
+      "rules": {
+        "type": "tecnica_tendo_rinnegan",
+        "prerequisites": {
+          "aptitudes": [
+            "tendo"
+          ]
+        },
+        "chakraCostByTargetSize": {
+          "pequeno": 1,
+          "medio": 3,
+          "grande": 5,
+          "enorme": 7,
+          "imenso": 9
+        },
+        "atrairObjetos": {
+          "action": "parcial",
+          "multipleObjects": "considerar_tamanho_combinado",
+          "noTestIfObjectFree": true,
+          "ifPersonResisting": {
+            "viaTechnique": "LM_dif_9_mais_CD_do_usuario",
+            "viaForce": "for_dif_5_mais_CD_do_usuario"
+          }
+        },
+        "atrairCriaturas": {
+          "action": "padrao",
+          "invisible": true,
+          "autoSuccess": true,
+          "defensesIfKnown": [
+            "kinobori",
+            "tecnica_fixadora",
+            "velocista_corrida_missil_only",
+            "acelerado_ou_deus_do_trovao_CD_vs_esquiva"
+          ],
+          "indefesoUntilEndOfUserTurn": true
+        }
+      },
+      "evolutions": []
+    }
+  ]
+}

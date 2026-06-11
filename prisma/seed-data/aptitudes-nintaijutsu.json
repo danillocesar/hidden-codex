@@ -1,0 +1,112 @@
+{
+  "_meta": {
+    "description": "Lote 7j — Aptidão Armadura de Raios (Hijutsu Nintaijutsu, 3 níveis evolutivos). Resolve débito real listado em Task #11 (armadura_de_raios).",
+    "sources": [
+      "Livro de Hijutsus p. 64-65"
+    ],
+    "extractedAt": "2026-05-14",
+    "schemaVersion": 1,
+    "appliesToTable": "aptitudes",
+    "expectedItemCount": 1,
+    "resolvesDormantRefs": [
+      "armadura_de_raios"
+    ],
+    "resolvesDormantRefsNote": "Aptidão estava em effects-hachimon.json:_meta.unmodeledAptitudes (effect hell_stab referenciava). Este lote resolve."
+  },
+  "data": [
+    {
+      "code": "armadura_de_raios",
+      "name": "Armadura de Raios",
+      "category": "RESTRITA",
+      "shortDescription": "Hijutsu Nintaijutsu. Armadura elétrica. 3 níveis evolutivos. Dureza corpo + deslocamento + acelerado + Energizar Raiton em ataques.",
+      "description": "Cobre corpo com armadura elétrica que protege e estimula sistema nervoso. Cada nível compra-se separado. Nv 1 (Nintaijutsu 5 + Esp 6): 4 chakra + ação parcial. 1 dureza corpo + 5m deslocamento + acelerado. Sustentada, cumulativa com Velocista. Ataques corporais sob efeito Energizar Raiton. Dureza considerada Raiton (vantagem/desvantagem elemental). Defesa Ativa: 2 chakra + ação movimento, manobra Defender com Técnica usando CC (com Especialista). Sucesso = dureza corpo extra igual a Espírito (até fim do turno do inimigo atacante). Nv 2 (Nintaijutsu 6 + Esp 9): 6 chakra, 2 dureza corpo + 10m deslocamento + acelerado + Nintaijutsu efeitos +1 dano. Armadura passa a duração contínua. Nv 3 (Nintaijutsu 8 + Esp 14): 8 chakra, 3 dureza + 15m + acelerado + Nintaijutsu +2 dano. Defesa Ativa vira ação livre. Fonte: Livro de Hijutsus p. 64-65.",
+      "prerequisites": {
+        "powers": {
+          "nintaijutsu": 5
+        },
+        "attributes": {
+          "esp": 6
+        }
+      },
+      "effects": {
+        "type": "hijutsu_nintaijutsu_evolutiva",
+        "levels": {
+          "1": {
+            "prerequisites": {
+              "powers": {
+                "nintaijutsu": 5
+              },
+              "attributes": {
+                "esp": 6
+              }
+            },
+            "activation": {
+              "chakraCost": 4,
+              "action": "parcial"
+            },
+            "duration": "sustentada",
+            "benefits": {
+              "bodyHardness": 1,
+              "movementBonus": "+5m",
+              "acelerado": true,
+              "cumulativeWithVelocista": true,
+              "corporalAttacksEnergizadosRaiton": true,
+              "bodyHardnessConsideredRaitonElement": true
+            },
+            "defesaAtiva": {
+              "chakraCost": 2,
+              "action": "movimento",
+              "manobra": "defender_com_tecnica_usando_cc",
+              "appliesEspecialista": true,
+              "onSuccess": "dureza_corpo_extra_igual_ao_espirito_ate_fim_do_turno_do_inimigo_atacante"
+            }
+          },
+          "2": {
+            "prerequisites": {
+              "powers": {
+                "nintaijutsu": 6
+              },
+              "attributes": {
+                "esp": 9
+              }
+            },
+            "activation": {
+              "chakraCost": 6
+            },
+            "duration": "continua",
+            "benefits": {
+              "bodyHardness": 2,
+              "movementBonus": "+10m",
+              "acelerado": true,
+              "nintaijutsuDamageBonus": 1
+            }
+          },
+          "3": {
+            "prerequisites": {
+              "powers": {
+                "nintaijutsu": 8
+              },
+              "attributes": {
+                "esp": 14
+              }
+            },
+            "activation": {
+              "chakraCost": 8
+            },
+            "benefits": {
+              "bodyHardness": 3,
+              "movementBonus": "+15m",
+              "acelerado": true,
+              "nintaijutsuDamageBonus": 2
+            },
+            "defesaAtiva": {
+              "action": "livre",
+              "_note": "Defesa Ativa passa a ser ação livre (não mais ação movimento)"
+            }
+          }
+        }
+      },
+      "evolutions": []
+    }
+  ]
+}

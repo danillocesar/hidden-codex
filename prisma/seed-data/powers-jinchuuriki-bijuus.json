@@ -1,0 +1,110 @@
+{
+  "_meta": {
+    "description": "Lote 7f2b — 2 powers Hijutsu/Jinchuuriki que faltavam: Gobi Futton (Kokuō) e Rokubi Suiton (Saiken). Fontes: Livro de Hijutsus p. 41-46.",
+    "sources": [
+      "Livro de Hijutsus p. 41-43 (Gobi Futton)",
+      "Livro de Hijutsus p. 44-46 (Rokubi Suiton)"
+    ],
+    "extractedAt": "2026-05-14",
+    "schemaVersion": 1,
+    "appliesToTable": "powers",
+    "expectedItemCount": 2,
+    "phase7f2bClosure": "Powers elementais do Gobi e Rokubi modelados. Hachibi não tem power elemental separado (técnicas direto via aptidão jinchuuriki_gyuki). Nanabi idem."
+  },
+  "data": [
+    {
+      "code": "gobi_futton",
+      "name": "Gobi Futton",
+      "translation": "Elemento Vapor do Gobi",
+      "category": "RESTRITO",
+      "element": "vapor",
+      "shortDescription": "Hijutsu do Jinchuuriki Kokuō (Gobi). Manipulação de vapor de alta pressão. NÃO segue regras de Ninpou — tem regras próprias. Técnicas distribuídas via tabela do Jinchuuriki.",
+      "description": "Linhagem sanguínea avançada formada pelo uso simultâneo de Fogo e Água pra criar Vapor. Gobi Futton aumenta temperatura do chakra até ebulição, gerando vapor. Pressão amplia ataques físicos e velocidade do usuário. Força proporcional à quantidade de vapor liberada — exige Armadura a Vapor pra receber esses benefícios. NÃO segue regras do Ninpou: regras próprias. Técnicas: Ebulição (Nv 2), Aceleração-Vapor (Nv 5), Força-Vapor (Nv 5) + evoluções. Cada técnica adquirida via tabela de benefícios do Jinchuuriki Kokuō. Não pode aprender outros elementos além de Futton, Suiton e Katon. Exceto Ebulição, técnicas NÃO podem ser usadas junto com Manto/Modo/Forma Bijuu. Fonte: Livro de Hijutsus p. 41-43.",
+      "stats": {
+        "rangeFormula": {
+          "category": "varia_por_tecnica"
+        },
+        "sizeFormula": null,
+        "keyAttribute": "esp",
+        "elementAdvantage": [],
+        "elementDisadvantage": []
+      },
+      "rules": {
+        "selosDefault": true,
+        "type": "hijutsu_jinchuuriki",
+        "prerequisites": {
+          "powers": {
+            "jinchuuriki": 2
+          },
+          "narrative": "jinchuuriki_de_kokuo_gobi"
+        },
+        "isVariantOf": null,
+        "doesNotFollowNinpouRules": true,
+        "doesNotFollowNinpouRulesNote": "RAW p.42: 'Gobi Futton não segue as regras do poder Ninpou. Ele possui regras próprias.'",
+        "techniquesDistributedViaJinchuurikiTable": true,
+        "elementRestriction": [
+          "futton",
+          "suiton",
+          "katon"
+        ],
+        "elementRestrictionNote": "Personagem não pode aprender outros elementos além desses três.",
+        "techniqueUsageRestriction": {
+          "exceptEbulicao": "nao_pode_ser_usado_com_manto_modo_forma_bijuu"
+        },
+        "requiresArmaduraAVapor": [
+          "aceleracao_vapor",
+          "forca_vapor"
+        ],
+        "requiresArmaduraAVaporNote": "Aceleração-Vapor e Força-Vapor requerem o equipamento Armadura a Vapor.",
+        "associatedEffects": "ebulicao, aceleracao_vapor, forca_vapor, tsunoori (effects-jinchuuriki-bijuus.json)"
+      }
+    },
+    {
+      "code": "rokubi_suiton",
+      "name": "Rokubi Suiton",
+      "translation": "Elemento Água do Rokubi",
+      "category": "RESTRITO",
+      "element": "agua",
+      "shortDescription": "Variante de Suiton do Jinchuuriki Saiken (Rokubi). Efeitos exclusivos via Soprador de Bolhas. Técnicas de Bolhas com +1 dano/+1 Dif resist. Pode usar com Domínio da Água.",
+      "description": "Manipulação do elemento água que funciona como Suiton comum, mas com efeitos distribuídos via tabela do Jinchuuriki Saiken. Pode ser comprado separadamente pra ganhar efeitos adicionais (regras Ninpou). Aceita aptidões de técnicas cabíveis ao Suiton comum (ex: Domínio da Água). Efeitos exclusivos exigem **Soprador de Bolhas** (canudo especial). Sem necessidade de selos quando usa Soprador — não pode ser alvo de Impedir Selos mas pode ser desarmado. Técnicas de Bolhas: +1 dano + +1 Dif resistência. NÃO pode ser usado com Domínio da Água. Pode usar regra de Criação Livre e efeitos comuns de Ninpou/Suiton como Técnicas de Bolhas. Fonte: Livro de Hijutsus p. 44-46.",
+      "stats": {
+        "rangeFormula": {
+          "base": 10,
+          "perEsp": 2,
+          "category": "Médio"
+        },
+        "sizeFormula": {
+          "perEsp": 1,
+          "unit": "m"
+        },
+        "keyAttribute": "esp",
+        "elementAdvantage": [],
+        "elementDisadvantage": []
+      },
+      "rules": {
+        "selosDefault": false,
+        "selosDefaultNote": "Não requer selos quando usa Soprador de Bolhas (única forma de usar efeitos exclusivos).",
+        "type": "hijutsu_jinchuuriki",
+        "prerequisites": {
+          "powers": {
+            "jinchuuriki": 1
+          },
+          "narrative": "jinchuuriki_de_saiken_rokubi"
+        },
+        "isVariantOf": "suiton",
+        "inheritsSuitonRules": true,
+        "bubbleTechniquesViaSoprador": {
+          "requiresEquipment": "soprador_de_bolhas",
+          "bonusDamage": 1,
+          "bonusResistanceDifficulty": 1,
+          "noDominioDaAgua": true,
+          "allowsCriacaoLivre": true,
+          "allowsCommonNinpouSuitonEffectsAsBubbles": true
+        },
+        "techniquesDistributedViaJinchuurikiTable": true,
+        "allowedEffects": "todos_efeitos_de_suiton + exclusivos_rokubi (bolha_tinta, sopro_acido, bolha_sufocante, bolha_flutuante)",
+        "associatedEffects": "bolha_tinta, sopro_acido, bolha_sufocante, bolha_flutuante, corrosao_da_lesma (effects-jinchuuriki-bijuus.json)"
+      }
+    }
+  ]
+}

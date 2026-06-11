@@ -19,41 +19,103 @@
       "code": "shintenshin",
       "name": "Shintenshin no Jutsu (Técnica da Transferência da Mente)",
       "minLevel": 1,
-      "availableFor": ["shintenshin"],
+      "availableFor": [
+        "shintenshin"
+      ],
       "shortDescription": "Transfere mente do Yamanaka pro corpo do alvo. Corpo do usuário fica indefeso.",
       "description": "Técnica básica do clã. Yamanaka transfere consciência pro corpo do alvo. Corpo do Yamanaka fica indefeso enquanto fora. Alvo testa Inteligência pra resistir. Sucesso = transfere; usuário controla corpo do alvo, mas vê/sente o que o alvo vê/sente. Dano sofrido pelo corpo controlado é refletido no usuário (corpo original). Cancela se: usuário escolher voltar, corpo controlado morrer, corpo original sofrer dano grave. Fonte: Livro Básico p. 196-198.",
-      "stats": { "action": "PADRAO", "range": "curto", "target": "1 criatura", "duration": "CONCENTRACAO", "chakraCost": "1 por nível do poder" },
+      "stats": {
+        "action": "PADRAO",
+        "range": "curto",
+        "target": "1 criatura",
+        "duration": "CONCENTRACAO",
+        "chakraCost": "1 por nível do poder"
+      },
       "rules": {
         "userBodyIndefeso": true,
         "damageReflectsToUser": true,
-        "cancellation": ["voluntary", "controlled_body_dies", "user_body_dies"]
+        "cancellation": [
+          "voluntary",
+          "controlled_body_dies",
+          "user_body_dies"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "shindenshin",
+      "name": "Shindenshin no Jutsu (Técnica da Transmissão Mental)",
+      "minLevel": 3,
+      "availableFor": [
+        "shintenshin"
+      ],
+      "shortDescription": "Comunicação telepática com alvos conhecidos ou visíveis. Alvos podem se comunicar entre si através do usuário.",
+      "description": "Comunicação telepática com outras pessoas. Pode conversar com o alvo, ler ou transmitir memórias. Funciona com qualquer pessoa que o personagem conheça ou esteja dentro do campo de visão, e dentro do alcance. Número de alvos: quantidade igual ao nível do poder. Resistência: alvo que não deseje receber a comunicação tem direito a teste de Inteligência pra bloquear. Duração: por concentração, máximo 1 cena (desgaste mental). Rede de Comunicação: pode atuar como meio de comunicação entre vários alvos, fazendo com que se comuniquem entre si através dele. No nível 10: pode usar mecanismos amplificadores de ondas mentais que aumentam em 100x número de alvos e alcance. Fonte: Livro Básico p. 199.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "Médio (10m +2m por nível Int)",
+        "target": "até nível_do_poder",
+        "duration": "CONCENTRACAO (max 1 cena)",
+        "chakraCost": "nivel_usado"
+      },
+      "rules": {
+        "telepathicCommunication": true,
+        "canTransmitMemories": true,
+        "targetCount": "nivel_do_poder",
+        "resistanceTest": "inteligencia",
+        "communicationNetwork": true,
+        "amplifierMechanismsAtLevel10": true
       },
       "evolutions": []
     },
     {
       "code": "shinten_bunshin",
       "name": "Shinten Bunshin no Jutsu (Clone da Transferência)",
-      "minLevel": 4,
-      "availableFor": ["shintenshin"],
+      "minLevel": 5,
+      "availableFor": [
+        "shintenshin"
+      ],
       "shortDescription": "Transfere a múltiplos alvos. Pode controlar cadáveres/corpos inanimados.",
       "description": "Versão avançada do Shintenshin. Transfere a múltiplos alvos. Corpo do usuário fica indefeso. Pode ser usada em cadáveres ou corpos inanimados — danos refletidos no Yamanaka mesmo assim. Não pode usar técnicas que o cadáver possuía em vida. Corpos controlados têm próprias ações como parceiros, mas só um (à escolha) sofre regra de diminuição de dano. Controle de cadáveres abre uso pra coleções de inimigos derrotados ou humanoides mecânicos (Medicina/Mecanismos + aptidões médicas/engenheiro). Fonte: Livro Básico p. 199-200.",
-      "stats": { "action": "PADRAO", "range": "curto", "target": "múltiplos", "duration": "CONCENTRACAO", "chakraCost": "1 por alvo" },
-      "rules": { "multipleTargets": true, "canControlCorpses": true, "noTechniquesFromCorpse": true },
+      "stats": {
+        "action": "PADRAO",
+        "range": "curto",
+        "target": "múltiplos",
+        "duration": "CONCENTRACAO",
+        "chakraCost": "1 por alvo"
+      },
+      "rules": {
+        "multipleTargets": true,
+        "canControlCorpses": true,
+        "noTechniquesFromCorpse": true
+      },
       "evolutions": []
     },
     {
       "code": "shinranshin",
       "name": "Shinranshin no Jutsu (Desordem Mental)",
       "minLevel": 6,
-      "availableFor": ["shintenshin"],
+      "availableFor": [
+        "shintenshin"
+      ],
       "shortDescription": "Controla corpo do alvo sem transferir consciência. Sem penalidades de mente fora.",
       "description": "Envia chakra pro sistema nervoso do alvo, ganhando controle completo do corpo. Sem testes do Yamanaka. Vítima testa Inteligência imediato — falha = corpo desconectado da vontade, sob controle total do usuário. Diferenças do Shintenshin: Consciência Intacta — você controla sem transferir consciência, mantendo concentração. Penalidades de mente fora (sofrer dano durante controle, ficar indefeso) são ANULADAS. Controle: mantendo concentração, controla corpo da vítima, embora ela mantenha consciência e fala. Usa ações da vítima pra mover/pegar/atacar, mas só ataques comuns (Golpear, Disparar, Lançar) e reações básicas. Ações realizadas no fim do turno do Yamanaka. Todos testes usam precisões da vítima. Cancelamento: mesmas regras do Shintenshin. Quando cancela, vítima recupera ações consumidas naquela rodada. Fonte: Livro Básico p. 200.",
-      "stats": { "action": "PADRAO", "range": "Médio (10m +2m por nível Int)", "target": "1 criatura", "duration": "CONCENTRACAO", "chakraCost": "nivel_usado" },
+      "stats": {
+        "action": "PADRAO",
+        "range": "Médio (10m +2m por nível Int)",
+        "target": "1 criatura",
+        "duration": "CONCENTRACAO",
+        "chakraCost": "nivel_usado"
+      },
       "rules": {
         "noUserPenalties": true,
         "victimRetainsConsciousness": true,
         "victimRetainsSpeech": true,
-        "allowedActions": ["golpear", "disparar", "lancar_projetil"],
+        "allowedActions": [
+          "golpear",
+          "disparar",
+          "lancar_projetil"
+        ],
         "usesVictimPrecisions": true,
         "actionsOnUserTurnEnd": true
       },

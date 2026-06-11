@@ -39,10 +39,10 @@ const cinzel = Cinzel({
 });
 
 export const metadata: Metadata = {
-  title: 'Arcana Forge',
+  title: 'Hidden Codex',
   description: 'Fichas de personagem para o RPG Shinobi no Sho 4.1b',
-  applicationName: 'Arcana Forge',
-  authors: [{ name: 'Arcana Forge contributors' }],
+  applicationName: 'Hidden Codex',
+  authors: [{ name: 'Hidden Codex contributors' }],
 };
 
 export const viewport: Viewport = {

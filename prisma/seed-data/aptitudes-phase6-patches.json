@@ -1,0 +1,33 @@
+{
+  "_meta": {
+    "description": "Patch da Fase 6 — corrige a aptidão Usar Armaduras Pesadas, que já existia em 5a (aptitudes-common-combat.json) com categoria COMBATE mas devia ser GERAL (e seguindo o precedente do 5-patches que migrou burro_de_carga e furtividade_agil de MANOBRA pra GERAL via upsert intencional). Necessária pelas armaduras pesadas do Lote 6e (Armadura de Batalha e Reforçada referenciam essa aptidão em effects.armorPenaltyExplain).",
+    "sources": [
+      "Livro Básico p. 135-136 (Armaduras Pesadas)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "appliesToTable": "aptitudes",
+    "intentionalUpserts": ["usar_armaduras_pesadas"],
+    "intentionalUpsertsNotes": "usar_armaduras_pesadas já vinha do 5a (aptitudes-common-combat.json) como categoria COMBATE. Este arquivo sobrescreve para GERAL — fica como GERAL no banco. Mesmo mecanismo dos 2 upserts do aptitudes-patches.json (burro_de_carga, furtividade_agil).",
+    "notes": "Aplicar este JSON no MESMO seed pipeline das aptidões, não dos equipamentos. Coloca a aptidão no banco antes de aplicar os equipamentos do 6e que referenciam ela."
+  },
+  "data": [
+    {
+      "code": "usar_armaduras_pesadas",
+      "name": "Usar Armaduras Pesadas",
+      "category": "GERAL",
+      "shortDescription": "Permite usar armaduras pesadas sem penalidade aumentada.",
+      "description": "Você está treinado pra usar armaduras pesadas. Quando empunha uma armadura pesada (Armadura de Batalha, Armadura de Batalha Reforçada, Armadura de Batalha Samurai, Armadura a Vapor, etc.): aplica o valor de penalidade de armadura FORA dos parênteses (geralmente melhor). Sem essa aptidão, aplica o valor DENTRO dos parênteses (pior). Algumas armaduras especiais (Samurai, Vapor) podem ter regras próprias além desta. Fonte: Livro Básico p. 135-136.",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "vig": 15 }
+      },
+      "effects": {
+        "type": "armor_proficiency",
+        "armorType": "pesada",
+        "appliesPenaltyOutsideParens": true,
+        "alternativeName": "Pode aparecer em Hijutsus como pré-req (ex: Armadura Samurai dá esta gratuitamente)"
+      },
+      "evolutions": []
+    }
+  ]
+}

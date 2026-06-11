@@ -1,6 +1,9 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { LoginButton } from '@/components/auth/LoginButton';
+import { Section } from '@/components/ui/section';
+import { Text } from '@/components/ui/text';
 
 /**
  * Tela de login. O middleware redireciona direto pra `/dashboard` quando já há
@@ -11,17 +14,24 @@ import { LoginButton } from '@/components/auth/LoginButton';
  */
 export default function LoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center px-6 py-20">
-      <section className="relative z-10 w-full max-w-md border border-border bg-bg-card p-10 text-center shadow-hero">
-        <span className="font-display text-[10px] uppercase tracking-[0.4em] text-ice-deep">
-          Acesso
-        </span>
-        <h1 className="mt-2 font-serif text-4xl font-light text-ink">
-          Entre na <span className="italic text-ice-bright">Forja</span>
-        </h1>
-        <p className="mt-6 font-body text-sm leading-relaxed text-ink-muted">
+    <main className="flex min-h-screen flex-col items-center justify-center gap-8 px-6 py-20">
+      <Image
+        src="/brand/hidden-codex-wordmark-transparent-no-brush.svg"
+        alt="Hidden Codex"
+        width={1400}
+        height={1400}
+        className="w-64 max-w-full"
+        priority
+        unoptimized
+      />
+      <Section
+        as="div"
+        tone="default"
+        className="relative z-10 w-full max-w-md p-10 text-center shadow-hero"
+      >
+        <Text variant="muted" className="font-body leading-relaxed">
           Use sua conta Google. A sessão dura 7 dias.
-        </p>
+        </Text>
 
         <div className="mt-8">
           <Suspense fallback={null}>
@@ -35,7 +45,7 @@ export default function LoginPage() {
         >
           ← Voltar
         </Link>
-      </section>
+      </Section>
     </main>
   );
 }

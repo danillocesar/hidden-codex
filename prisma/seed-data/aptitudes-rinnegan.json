@@ -1,0 +1,734 @@
+{
+  "_meta": {
+    "description": "Lote 7h — Rinnegan + 6 Caminhos (Shuradō, Jigokudō, Ningendō, Gakidō, Chikushōdō, Tendō, Gedō). 7 aptidões. Aptidão Rinnegan = doujutsu permanente que habilita Rinne Ninpou. Caminhos têm subTechniques pros benefícios. Técnicas com ação/alcance/dano (Shinra Tensei, Banshō Ten'in) ficam em effects-rinnegan.json.",
+    "sources": [
+      "Livro de Hijutsus p. 65-75 (Rinnegan + 7 Caminhos)"
+    ],
+    "extractedAt": "2026-05-14",
+    "schemaVersion": 1,
+    "appliesToTable": "aptitudes",
+    "expectedItemCount": 8
+  },
+  "data": [
+    {
+      "code": "rinnegan",
+      "name": "Rinnegan",
+      "category": "RESTRITA",
+      "shortDescription": "Doujutsu permanente. Reduz chakra total 10%. Visão de Chakra + Medir Poder + Distinguir Chakra. Habilita Rinne Ninpou (5 elementos).",
+      "description": "Doujutsu mais poderoso. NÃO é kekkei genkai de clã — habilidade rara. Está ativo permanentemente. Doujutsu Permanente: reduz chakra total do personagem em 10%. Visão de Chakra: distingue chakra pela cor (identifica jutsu oculto, ilusões, jutsus afetando área/criatura). Medir Poder: nível aproximado da ficha do alvo. Distinguir Chakra: diferencia criatura pela assinatura. Transformações da Natureza: comprando só Ninpou (anotado como Rinne Ninpou), usa 5 elementos básicos. Pode alterar elemento ação parcial. Pré-req narrativo: Mestre decide (transplante/herança). Fonte: Livro de Hijutsus p. 65-67.",
+      "prerequisites": {
+        "narrative": "rinnegan_obtido_via_mestre_decisao_padrao_nagato_ou_transplante"
+      },
+      "effects": {
+        "type": "doujutsu_permanente",
+        "permanentlyActive": true,
+        "chakraTotalReduction": "10%",
+        "passiveBenefits": {
+          "visaoChakra": "distingue_cor_chakra + identifica_jutsus_ocultos + genjutsus + jutsus_em_area",
+          "medirPoder": "nivel_aproximado_da_ficha",
+          "distinguirChakra": "diferencia_assinaturas"
+        },
+        "grants": [
+          "rinne_ninpou_purchase_right"
+        ],
+        "grantsBypassesPrereq": true,
+        "grantsBypassesPrereqNote": "Rinnegan habilita compra do power Rinne Ninpou (variante Ninpou). Pré-req narrativo do Rinnegan já é gate suficiente.",
+        "transformacoesNatureza": {
+          "powerName": "rinne_ninpou",
+          "basicElementsAvailable": [
+            "doton",
+            "fuuton",
+            "katon",
+            "raiton",
+            "suiton"
+          ],
+          "switchAction": "parcial"
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "shurado",
+      "name": "Shuradō (Caminho Asura)",
+      "category": "RESTRITA",
+      "shortDescription": "Caminho do Rinnegan. Conjura braços mecanizados + armamentos. Membros Adicionais (4 braços, 6 chakra). Arsenal Humano (requer Rinne Ninpou 6).",
+      "description": "Permite alterar corpo pra conjurar braços mecanizados e armamentos. Membros Adicionais: ação movimento + 6 chakra, cria 4 braços adicionais por cena. Não pode ser flanqueado em Bloqueio. Ataque Múltiplo permite Agarrar em todos os divididos. Pode atacar alvo agarrado com braços livres (ação livre, único ataque, dano metade). Arsenal Humano [Rinne Ninpou 6]: substitui Espírito por Mecanismos. Sem selos. Imune Impedir Selos. Imune drenagem de chakra (exceto canhão). Fonte: Livro de Hijutsus p. 67.",
+      "prerequisites": {
+        "aptitudes": [
+          "rinnegan"
+        ],
+        "skills": {
+          "ocultismo": 12,
+          "mecanismos": 12
+        }
+      },
+      "effects": {
+        "type": "caminho_rinnegan",
+        "subTechniques": [
+          {
+            "code": "shurado_membros_adicionais",
+            "name": "Membros Adicionais",
+            "subType": "active_ability",
+            "action": "movimento",
+            "chakraCost": 6,
+            "duration": "cena",
+            "description": "Cria 4 braços adicionais. Não pode ser flanqueado em Bloqueio. Ataque Múltiplo permite Agarrar em todos. Ataque livre contra alvo agarrado com dano metade."
+          },
+          {
+            "code": "shurado_arsenal_humano",
+            "name": "Arsenal Humano",
+            "subType": "passive_buff",
+            "prerequisites": {
+              "powers": {
+                "rinne_ninpou": 6
+              }
+            },
+            "description": "Lâminas, serras, mísseis, canhão de chakra dentro do corpo. Substitui Espírito por Mecanismos no Rinne Ninpou. Sem selos. Imune Impedir Selos. Imune drenagem de chakra (exceto canhão). Canhão simulado por Sopro Destrutivo/Míssil."
+          }
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "jigokudo",
+      "name": "Jigokudō (Caminho Naraka)",
+      "category": "RESTRITA",
+      "shortDescription": "Caminho do Rinnegan. Invoca Rei do Inferno (6 chakra). Interroga indefesos — Vigor Dif 9 ou morte. Rei pode reparar corpos via Caminho Gedō Maior.",
+      "description": "Invocar: ação movimento + 6 chakra. Invoca Rei do Inferno. Interrogar: ação padrão tocando vítima indefesa. Rei expele braços roxos que extraem língua-energia-vital. Mentir/recusar: vítima testa Vigor (Dif 9). Falha = Rei come a língua, morte. Sucesso/verdade = poupada com exausto. Mesmo passando, usuário sabe se mentiu. Capangas falham auto. Rei também repara corpos via Caminho Naraka Maior (parte do Gedō). Fonte: Livro de Hijutsus p. 67-68.",
+      "prerequisites": {
+        "aptitudes": [
+          "rinnegan"
+        ],
+        "skills": {
+          "ocultismo": 12
+        },
+        "attributes": {
+          "esp": 12
+        }
+      },
+      "effects": {
+        "type": "caminho_rinnegan",
+        "subTechniques": [
+          {
+            "code": "jigokudo_invocar_rei_do_inferno",
+            "name": "Invocar Rei do Inferno",
+            "subType": "active_ability",
+            "action": "movimento",
+            "chakraCost": 6,
+            "description": "Invoca Rei do Inferno (criatura). Sem custo de ações pra mantê-lo. Necessário pra Interrogar e pra Caminho Naraka Maior (Gedō)."
+          },
+          {
+            "code": "jigokudo_interrogar",
+            "name": "Interrogar",
+            "subType": "active_attack",
+            "action": "padrao",
+            "requires": "alvo_indefeso",
+            "description": "Toca vítima indefesa, fazendo perguntas livres. Rei do Inferno expele braços roxos que extraem língua-energia-vital. Vítima mente/recusa = testa Vigor (Dif 9), falha = MORTE. Sucesso = exausto. Mesmo passando, usuário sabe da mentira. Capangas falham auto."
+          }
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "ningendo",
+      "name": "Ningendō (Caminho Humano)",
+      "category": "RESTRITA",
+      "shortDescription": "Caminho do Rinnegan. Lê mente do alvo indefeso, puxa alma → morte. Ação completa, 7 chakra. Testes Esp Dif 9+Conc. 4º turno Vigor Dif 9 ou morte.",
+      "description": "Ação completa, 7 chakra, duração concentração. Toca cabeça/tórax de alvo INDEFESO. Lê mente extraindo informações. Puxa alma do alvo → morte (sempre — ação inevitavelmente letal). Turno de uso + cada turno seguinte: alvo testa Espírito (Dif 9 + Concentração do usuário). Cada falha = 1 fato aleatório recente revelado. 4º turno: teste adicional Vigor (Dif 9). Falha = morte + 1 info específica de escolha do usuário. Capangas falham auto. Dano por turno = nível Concentração do usuário. Fonte: Livro de Hijutsus p. 68.",
+      "prerequisites": {
+        "aptitudes": [
+          "rinnegan"
+        ],
+        "skills": {
+          "ocultismo": 14,
+          "concentracao": 12
+        }
+      },
+      "effects": {
+        "type": "caminho_rinnegan",
+        "subTechniques": [
+          {
+            "code": "ningendo_ler_mente",
+            "name": "Ler Mente / Extrair Alma",
+            "subType": "active_attack",
+            "action": "completa",
+            "chakraCost": 7,
+            "duration": "concentracao",
+            "requires": "alvo_indefeso",
+            "description": "Toca cabeça/tórax. Lê mente extraindo info. INEVITAVELMENTE puxa alma → morte. Testes Esp Dif 9+Conc do usuário cada turno (1 fato/falha). 4º turno: Vigor Dif 9 (falha = morte + info específica). Capangas falham auto.",
+            "damagePerTurn": "nivel_concentracao_do_usuario_fixo"
+          }
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "gakido",
+      "name": "Gakidō (Caminho Preta)",
+      "category": "RESTRITA",
+      "shortDescription": "Caminho do Rinnegan. Absorve todas formas de chakra. NÃO recebe os pontos. Fūjutsu Kyūin (barreira defensiva) + Absorver Chakra (alvo indefeso) + Cura Ferimentos.",
+      "description": "Absorve chakra. Usar não custa chakra mas TAMBÉM não recebe os pontos absorvidos. Fūjutsu Kyūin: barreira luminosa ao redor. Reação defensiva LM. Absorve técnica direcionada com custo ≤ metade do Espírito. Absorvida = desfeita. Absorver Chakra: alvo INDEFESO. Ação padrão, concentração. Absorve metade Esp por turno. Cura de Ferimentos: ao absorver via qualquer uso, cura ferimentos permanentes (lesões musculares, articulações — NÃO membros perdidos). Risco Senjutsu: absorver chakra de técnica/alvo sob Senjutsu sem ter o poder = vira pedra. Fonte: Livro de Hijutsus p. 68-69.",
+      "prerequisites": {
+        "aptitudes": [
+          "rinnegan"
+        ],
+        "skills": {
+          "ocultismo": 14
+        },
+        "attributes": {
+          "esp": 14
+        }
+      },
+      "effects": {
+        "type": "caminho_rinnegan",
+        "doesNotGainAbsorbedChakra": true,
+        "subTechniques": [
+          {
+            "code": "gakido_fujutsu_kyuin",
+            "name": "Fūjutsu Kyūin (Absorver Técnica)",
+            "subType": "active_reaction",
+            "rollType": "LM",
+            "chakraCost": 0,
+            "description": "Barreira luminosa absorve chakra direcionado. Custo ≤ metade do Espírito. Reação defensiva via LM contra teste de ataque. Técnica absorvida é DESFEITA."
+          },
+          {
+            "code": "gakido_absorver_chakra",
+            "name": "Absorver Chakra",
+            "subType": "active_attack",
+            "action": "padrao",
+            "duration": "concentracao",
+            "requires": "alvo_indefeso",
+            "description": "Absorve chakra diretamente de ser vivo INDEFESO. Metade Esp por turno."
+          },
+          {
+            "code": "gakido_cura_ferimentos",
+            "name": "Cura de Ferimentos",
+            "subType": "passive_buff",
+            "description": "Quando absorve chakra (qualquer uso), cura ferimentos permanentes (lesões musculares/articulações). NÃO recupera membros perdidos."
+          }
+        ],
+        "senjutsuRisk": {
+          "ifAbsorbsSenjutsuChakraWithoutSenjutsu": "corpo_vira_pedra_instantaneamente"
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "chikushodo",
+      "name": "Chikushōdō (Caminho Animal)",
+      "category": "RESTRITA",
+      "shortDescription": "Caminho do Rinnegan. Recebe Kuchiyose grátis (nível = Rinne Ninpou). 8 criaturas únicas. Invocação Numerosa (todas 8, capangas).",
+      "description": "Recebe Kuchiyose grátis (nível sempre = Rinne Ninpou). Invocação Animal: criaturas sem inteligência elevada, comandadas apenas pelo usuário, obedecem até a morte. Segue regras Kuchiyose Comum + regras exclusivas. 8 criaturas únicas (não pode invocar 2 do mesmo tipo simultâneo): Pássaro Bico-de-Broca, Cachorro Quimera, Camaleão Quimera, Panda, Touro, Rinocerante, Crustáceo, Centopeia. Tamanho mínimo Enorme. Invocação Numerosa: pode invocar TODAS as 8 ao mesmo tempo no nível mais alto permitido, mas viram capangas (falham em testes de Habilidade de Combate vs não-capangas). Fonte: Livro de Hijutsus p. 69-71.",
+      "prerequisites": {
+        "aptitudes": [
+          "rinnegan"
+        ],
+        "skills": {
+          "ocultismo": 16
+        },
+        "powers": {
+          "rinne_ninpou": 7
+        }
+      },
+      "effects": {
+        "type": "caminho_rinnegan",
+        "grants": [
+          "kuchiyose"
+        ],
+        "grantsBypassesPrereq": true,
+        "grantsBypassesPrereqNote": "Aptidão Chikushōdō concede Kuchiyose grátis (nível = Rinne Ninpou). Pré-req do Caminho (Rinnegan + Ocultismo 16 + Rinne Ninpou 7) é gate suficiente.",
+        "kuchiyoseLevelEquals": "nivel_rinne_ninpou",
+        "creatureUniquePerSummon": true,
+        "minimumCreatureSize": "Enorme",
+        "creatures": [
+          {
+            "code": "passaro_bico_de_broca",
+            "name": "Pássaro Bico-de-Broca",
+            "attributes": [
+              "agi",
+              "per"
+            ],
+            "skills": [
+              "acrobacia",
+              "voo",
+              "prontidao",
+              "rastrear"
+            ],
+            "aptitudes": [
+              "ataque_em_movimento",
+              "especialista",
+              "reflexos",
+              "intuicao",
+              "velocista",
+              "perito",
+              "pericia_inata"
+            ],
+            "attacks": [
+              {
+                "type": "garras",
+                "damageType": "corte"
+              },
+              {
+                "type": "bico",
+                "damageType": "perfuracao"
+              }
+            ]
+          },
+          {
+            "code": "cachorro_quimera",
+            "name": "Cachorro Quimera",
+            "attributes": [
+              "agi",
+              "per"
+            ],
+            "skills": [
+              "acrobacia",
+              "atletismo",
+              "escapar",
+              "furtividade",
+              "procurar",
+              "prontidao",
+              "rastrear"
+            ],
+            "aptitudes": [
+              "acuidade",
+              "ataque_em_movimento",
+              "especialista",
+              "intuicao",
+              "reflexos",
+              "velocista",
+              "perito",
+              "pericia_inata",
+              "lutador",
+              "lutar_as_cegas",
+              "ponto_cego",
+              "ataque_atordoante",
+              "ataque_poderoso",
+              "derrubar_agressivo",
+              "de_pe",
+              "desarme_agressivo",
+              "rasteira"
+            ],
+            "attacks": [
+              {
+                "type": "mordida",
+                "damageType": "perfuracao"
+              }
+            ],
+            "specialRule": "Divisão Animal: Vit zero divide em 2 cópias menores (1 categoria a menos). Repete até categoria Médio. Vit zero em médio = morte definitiva."
+          },
+          {
+            "code": "camaleao_quimera",
+            "name": "Camaleão Quimera",
+            "attributes": [
+              "agi",
+              "per"
+            ],
+            "skills": [
+              "acrobacia",
+              "atletismo",
+              "escapar",
+              "furtividade",
+              "procurar",
+              "prontidao",
+              "rastrear"
+            ],
+            "aptitudes": [
+              "acuidade",
+              "ataque_em_movimento",
+              "especialista",
+              "intuicao",
+              "reflexos",
+              "velocista",
+              "perito",
+              "pericia_inata",
+              "lutar_as_cegas",
+              "ponto_cego",
+              "sensor_continuo"
+            ],
+            "attacks": [
+              {
+                "type": "mordida",
+                "damageType": "perfuracao"
+              }
+            ],
+            "techniques": [
+              "camuflagem"
+            ],
+            "specialRule": "Camuflagem: Camuflagem Total (mas rastreável por técnicas oculares ou rastreio de chakra). Precisa ficar imóvel."
+          },
+          {
+            "code": "panda_quimera",
+            "name": "Panda",
+            "attributes": [
+              "for",
+              "vig"
+            ],
+            "skills": [
+              "escapar",
+              "procurar",
+              "prontidao",
+              "rastrear"
+            ],
+            "aptitudes": [
+              "perito",
+              "pericia_inata",
+              "lutador",
+              "lutar_as_cegas",
+              "ponto_cego",
+              "ataque_atordoante",
+              "ataque_poderoso",
+              "derrubar_agressivo",
+              "de_pe",
+              "rasteira"
+            ],
+            "attacks": [
+              {
+                "type": "garras",
+                "damageType": "corte"
+              },
+              {
+                "type": "mordida",
+                "damageType": "perfuracao"
+              }
+            ]
+          },
+          {
+            "code": "touro_quimera",
+            "name": "Touro",
+            "attributes": [
+              "for",
+              "vig"
+            ],
+            "skills": [
+              "escapar",
+              "procurar",
+              "prontidao",
+              "rastrear"
+            ],
+            "aptitudes": [
+              "perito",
+              "pericia_inata",
+              "lutador",
+              "lutar_as_cegas",
+              "ponto_cego",
+              "ataque_atordoante",
+              "ataque_poderoso",
+              "derrubar_agressivo",
+              "de_pe",
+              "rasteira"
+            ],
+            "attacks": [
+              {
+                "type": "chifres",
+                "damageType": "perfuracao"
+              }
+            ]
+          },
+          {
+            "code": "rinocerante_quimera",
+            "name": "Rinocerante",
+            "attributes": [
+              "for",
+              "vig"
+            ],
+            "skills": [
+              "escapar",
+              "procurar",
+              "prontidao",
+              "rastrear"
+            ],
+            "aptitudes": [
+              "perito",
+              "pericia_inata",
+              "lutador",
+              "lutar_as_cegas",
+              "ponto_cego",
+              "ataque_atordoante",
+              "ataque_poderoso",
+              "derrubar_agressivo",
+              "de_pe",
+              "rasteira"
+            ],
+            "attacks": [
+              {
+                "type": "chifres",
+                "damageType": "perfuracao"
+              }
+            ],
+            "specialRule": "Asas pequenas sem capacidade de voo."
+          },
+          {
+            "code": "crustaceo_quimera",
+            "name": "Crustáceo",
+            "attributes": [
+              "esp",
+              "vig"
+            ],
+            "skills": [
+              "atletismo",
+              "escapar",
+              "furtividade",
+              "procurar",
+              "prontidao"
+            ],
+            "powers": {
+              "suiton": "?"
+            },
+            "aptitudes": [
+              "acuidade",
+              "ataque_em_movimento",
+              "intuicao",
+              "reflexos",
+              "perito",
+              "pericia_inata",
+              "maestria",
+              "resistencia_maior_vigor",
+              "duro_de_matar"
+            ],
+            "attacks": [
+              {
+                "type": "batida_de_corpo",
+                "damageType": "esmagamento"
+              },
+              {
+                "type": "acido_sopro_destrutivo_nv3",
+                "damage": "nivel_da_criatura_+_metade_espirito"
+              }
+            ]
+          },
+          {
+            "code": "centopeia_quimera",
+            "name": "Centopeia",
+            "attributes": [
+              "for",
+              "agi",
+              "per"
+            ],
+            "skills": [
+              "acrobacia",
+              "atletismo",
+              "furtividade",
+              "prontidao"
+            ],
+            "aptitudes": [
+              "ataque_em_movimento",
+              "especialista",
+              "reflexos",
+              "velocista",
+              "perito",
+              "pericia_inata",
+              "lutador",
+              "ponto_cego",
+              "arremessar",
+              "ataque_atordoante",
+              "ataque_poderoso",
+              "derrubar_agressivo"
+            ],
+            "attacks": [
+              {
+                "type": "mordida",
+                "damageType": "perfuracao"
+              }
+            ],
+            "techniques": [
+              "kinobori"
+            ]
+          }
+        ],
+        "invocacaoNumerosa": {
+          "description": "Invoca TODAS as 8 criaturas simultaneamente no nível mais alto. Viram capangas — falham em testes de Habilidade de Combate vs não-capangas."
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "tendo",
+      "name": "Tendō (Caminho Deva)",
+      "category": "RESTRITA",
+      "shortDescription": "Caminho do Rinnegan. Manipulação de atração/repulsão. Levitar, Acelerar, Shinra Tensei (Repelir 3 modos), Banshō Ten'in (Atrair). Tempo de Descanso 1 turno/5 chakra.",
+      "description": "Manipula forças atrativas e repulsivas. Tempo de Descanso: cada 5 chakra consumidos = 1 turno de espera pra reusar técnicas deste Caminho. Levitar: 1 chakra, 1m/Esp vertical (não horizontal), ação movimento. Acelerar: corrida + 1 chakra (ação livre) = acelerado. Shinra Tensei (Repelir): Reativo (LM, 0 chakra, raio 1m), Defensivo (custo = técnica defendida), Ofensivo (Míssil/Onda Explosiva +4 dano sucesso auto invisível; alvo conhecedor pode usar Kinobori/Velocista/etc.). Banshō Ten'in (Atrair): 10m+2m/Esp. Custo por tamanho. Pessoas resistem com LM (Dif 9+CD) ou Força (Dif 5+CD). Atraída fica indefesa. Fonte: Livro de Hijutsus p. 71-73.",
+      "prerequisites": {
+        "aptitudes": [
+          "rinnegan"
+        ],
+        "skills": {
+          "ocultismo": 16
+        },
+        "powers": {
+          "rinne_ninpou": 8
+        }
+      },
+      "effects": {
+        "type": "caminho_rinnegan",
+        "tempoDeDescanso": {
+          "formula": "1_turno_por_cada_5_chakra_consumidos",
+          "appliesToAllCaminhoDevaTecnicas": true
+        },
+        "subTechniques": [
+          {
+            "code": "tendo_levitar",
+            "name": "Levitar",
+            "subType": "active_ability",
+            "action": "movimento",
+            "chakraCost": 1,
+            "description": "1m por nível de Espírito, vertical apenas (cima/baixo). Desfazer = ação livre."
+          },
+          {
+            "code": "tendo_acelerar",
+            "name": "Acelerar",
+            "subType": "active_ability",
+            "action": "livre",
+            "chakraCost": 1,
+            "requires": "manobra_corrida_atletismo",
+            "description": "Combinado com corrida (Atletismo): força de repulsão deslizando no chão. Fica acelerado."
+          },
+          {
+            "code": "tendo_shinra_tensei",
+            "name": "Shinra Tensei (Repelir) — ver effects-rinnegan.json",
+            "subType": "active_ability",
+            "description": "Três modos: Reativo, Defensivo, Ofensivo. Modelado como effect próprio em effects-rinnegan.json (tem ação/alcance/dano)."
+          },
+          {
+            "code": "tendo_bansho_tenin",
+            "name": "Banshō Ten'in (Atrair) — ver effects-rinnegan.json",
+            "subType": "active_ability",
+            "description": "Atrai objetos ou criaturas. Modelado como effect próprio."
+          }
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "gedo",
+      "name": "Gedō (Caminho Externo)",
+      "category": "RESTRITA",
+      "shortDescription": "Caminho do Rinnegan. Controla vida/morte. Receptor de Chakra + Obstruir Chakra + Reanimação (6 cadáveres como extensão). Amplia outros Caminhos via Caminho X Maior.",
+      "description": "Controla vida e morte; amplia capacidades dos demais Caminhos. Receptor de Chakra: ação parcial + 1 chakra, haste perfurante (arma simples leve, dano 2, crit 15-16, dureza 1/Esp). Obstruir Chakra: ação padrão + 8 chakra, vítima perfurada vira paralisada. Vigor Dif 9+Esp retira haste (somente 1 haste). Reanimação: até 6 cadáveres como extensão do usuário (mesma ficha, -3 precisão, sem poderes originais, mas pode copiar 1 das 6 outras aptidões de Caminho). Usuário fica indefeso enquanto controla, max 30km. Caminho Animal/Naraka/Deva Maior + Caminho da Vida + Gedō Mazō (Estátua Demoníaca). Fonte: Livro de Hijutsus p. 73-75.",
+      "prerequisites": {
+        "aptitudes": [
+          "rinnegan"
+        ],
+        "skills": {
+          "ocultismo": 18
+        },
+        "attributes": {
+          "esp": 18
+        }
+      },
+      "effects": {
+        "type": "caminho_rinnegan",
+        "subTechniques": [
+          {
+            "code": "gedo_receptor_chakra",
+            "name": "Receptor de Chakra",
+            "subType": "weapon_creation",
+            "action": "parcial",
+            "chakraCost": 1,
+            "weaponStats": {
+              "category": "arma_simples_leve",
+              "damage": 2,
+              "critRange": "15-16",
+              "hardness": "1_por_nivel_espirito"
+            },
+            "description": "Cria haste perfurante da mão. Funciona como receptor de sinais de chakra alta frequência — permite enviar chakra pra alvo perfurado."
+          },
+          {
+            "code": "gedo_obstruir_chakra",
+            "name": "Obstruir Chakra",
+            "subType": "active_attack",
+            "action": "padrao",
+            "chakraCost": 8,
+            "description": "Envia chakra pra vítima perfurada pelo receptor. Vítima fica PARALISADA enquanto tiver receptor no corpo. Sem testes. Perfurar requer acerto crítico (sucesso auto se já tem 1 haste). Vítima retira haste: ação completa + Vigor Dif 9+Esp. NÃO permitido se múltiplas hastes. Aliado retira: ação padrão sem teste."
+          },
+          {
+            "code": "gedo_reanimacao",
+            "name": "Reanimação",
+            "subType": "active_ability",
+            "maxCadavers": 6,
+            "description": "Coloca receptores de chakra em cadáveres pra controlar até 6 corpos como extensão. Aparência de vivos. Sem consciência própria. Mesma ficha em vida + -3 precisão + sem poderes/aptidões originais + pode copiar 1 das 6 outras aptidões de Caminho (Shuradō/Jigokudō/Ningendō/Gakidō/Chikushōdō/Tendō) + power necessário pra usar. Iniciativa = usuário. Ações/chakra consumidos pelo corpo reanimado (não Parceiro). Não evoluem ficha — pra melhorar, substitui cadáver. Não pode curar/reviver (exceto Caminho Naraka Maior). Substituídos quando Vit zero. Usuário fica indefeso concentrado e imóvel. Max 30km. Sensor perfurado pode rastrear chakra do usuário.",
+            "userConsequences": [
+              "indefeso",
+              "imovel",
+              "concentracao"
+            ]
+          },
+          {
+            "code": "gedo_transmissao_visual",
+            "name": "Transmissão Visual",
+            "subType": "passive_buff",
+            "description": "Corpos reanimados + invocações Naraka/Animal têm Rinnegan nos olhos, visão compartilhada com usuário. Se pelo menos 1 vê origem do ataque: usuário/invocações/corpos sem ataque surpresa, sem flanqueio, sem finta (exceto super-acelerada)."
+          },
+          {
+            "code": "gedo_caminho_animal_maior",
+            "name": "Caminho Animal Maior",
+            "subType": "active_ability",
+            "description": "Corpo reanimado do Caminho Animal pode invocar os demais corpos reanimados."
+          },
+          {
+            "code": "gedo_caminho_deva_maior_repelir",
+            "name": "Caminho Deva Maior — Repelir Aumentado",
+            "subType": "active_attack",
+            "action": "completa",
+            "description": "Shinra Tensei Ofensivo com custo de chakra DUPLICADO + parâmetros DOBRADOS (dano base, alcance, área)."
+          },
+          {
+            "code": "gedo_chibaku_tensei",
+            "name": "Caminho Deva Maior — Chibaku Tensei",
+            "subType": "active_attack",
+            "action": "completa",
+            "chakraCost": 10,
+            "description": "Bola escura de gravidade levada a 75m de altura. Ativa atração 100m. A cada turno aumenta categoria (pequeno→incrível). Concentração. Sem testes do usuário. Resistir = teste defensiva Dif 11+CD. Sem Esquiva/Antecipar/Bloqueio. Falha = preso indefeso. Quando atinge incrível: planetoide com sufocamento. Absorção zerada = liberta presos + dano 40 fixo em quem está embaixo (Agi/Pro Dif 27)."
+          },
+          {
+            "code": "gedo_caminho_naraka_maior",
+            "name": "Caminho Naraka Maior",
+            "subType": "active_ability",
+            "action": "completa",
+            "prerequisites": {
+              "skills": {
+                "ocultismo": 20
+              },
+              "attributes": {
+                "esp": 20
+              }
+            },
+            "description": "Rei do Inferno solta língua, engole corpo reanimado e cura instantaneamente. 1 chakra = 3 Vit (max = Espírito). Pode manter por concentração pra aplicar a cada turno."
+          },
+          {
+            "code": "gedo_caminho_da_vida",
+            "name": "Caminho da Vida",
+            "subType": "active_ability",
+            "action": "completa",
+            "prerequisites": {
+              "skills": {
+                "ocultismo": 20
+              },
+              "attributes": {
+                "esp": 20
+              }
+            },
+            "description": "Devolve à vida todos os mortos recentes pelo usuário OU 1 alvo específico. Custa a PRÓPRIA VIDA do usuário. Min 1 chakra. Sem testes."
+          },
+          {
+            "code": "gedo_mazo_estatua_demoniaca",
+            "name": "Gedō Mazō — Estátua Demoníaca",
+            "subType": "active_attack",
+            "action": "completa",
+            "chakraCost": 10,
+            "prerequisites": {
+              "skills": {
+                "ocultismo": 20
+              },
+              "attributes": {
+                "esp": 20
+              }
+            },
+            "description": "Sela almas e bijuus. Estátua tamanho incrível, dureza 0, 200 absorção. Concentração. Varre almas 100m, MORTE INSTANTÂNEA sucesso auto. Causa debilitação permanente ao usuário (indefeso) até tratamento médico. Reusar antes de tratamento = falha auto + morte."
+          }
+        ]
+      },
+      "evolutions": []
+    }
+  ]
+}

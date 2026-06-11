@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" role="img" aria-label="Capa padrao talentos">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2=".8">
+      <stop offset="0" stop-color="#050908"/>
+      <stop offset=".5" stop-color="#132421"/>
+      <stop offset="1" stop-color="#07090c"/>
+    </linearGradient>
+    <radialGradient id="mist" cx="34%" cy="38%" r="62%">
+      <stop offset="0" stop-color="#d7f0ff" stop-opacity=".32"/>
+      <stop offset=".48" stop-color="#77a9bf" stop-opacity=".12"/>
+      <stop offset="1" stop-color="#050908" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="120" height="120" patternUnits="userSpaceOnUse">
+      <path d="M0 0H120V120" fill="none" stroke="#d7f0ff" stroke-opacity=".055" stroke-width="2"/>
+      <circle cx="0" cy="0" r="3" fill="#d7f0ff" fill-opacity=".12"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="700" fill="url(#bg)"/>
+  <rect width="1600" height="700" fill="url(#mist)"/>
+  <rect width="1600" height="700" fill="url(#grid)"/>
+  <path d="M120 468c172-126 334-154 486-84 212 98 418 70 618-84 82-63 170-96 264-98v498H120Z" fill="#071018" opacity=".72"/>
+  <path d="M220 190c198 96 372 100 522 12s316-86 498 6" fill="none" stroke="#badff5" stroke-opacity=".18" stroke-width="5"/>
+  <path d="M220 238c198 96 372 100 522 12s316-86 498 6" fill="none" stroke="#badff5" stroke-opacity=".09" stroke-width="3"/>
+</svg>

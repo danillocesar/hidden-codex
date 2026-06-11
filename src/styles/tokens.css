@@ -8,27 +8,39 @@
  * Cores hardcoded em components são code smell — sempre referencie estas vars.
  */
 
+/**
+ * Cores em formato `R G B` (sem `rgb()` wrapper) pra que o Tailwind possa
+ * aplicar alpha modifier dinamicamente: `bg-danger/25` → `rgb(168 48 42 / 0.25)`.
+ *
+ * Pra usar a cor SOLIDA em CSS puro, envolva: `color: rgb(var(--danger))`.
+ * Pra alpha em CSS puro: `color: rgb(var(--danger) / 0.5)`.
+ */
 :root {
   /* ── Surfaces ───────────────────────────────────────── */
-  --bg-deep: #0a0b0e;
-  --bg-paper: #14161c;
-  --bg-card: #1a1d25;
-  --bg-card-2: #1f2330;
+  --bg-deep: 10 11 14;       /* #0a0b0e */
+  --bg-paper: 20 22 28;      /* #14161c */
+  --bg-card: 26 29 37;       /* #1a1d25 */
+  --bg-card-2: 31 35 48;     /* #1f2330 */
 
   /* ── Ink (text) ─────────────────────────────────────── */
-  --ink: #e8e4dc;
-  --ink-muted: #8a8b94;
-  --ink-faint: #4a4d57;
+  --ink: 232 228 220;        /* #e8e4dc */
+  --ink-muted: 138 139 148;  /* #8a8b94 */
+  --ink-faint: 74 77 87;     /* #4a4d57 */
 
   /* ── Ice accents ────────────────────────────────────── */
-  --ice: #9bb8d1;
-  --ice-bright: #c8dcea;
-  --ice-deep: #5b7a96;
+  --ice: 155 184 209;        /* #9bb8d1 */
+  --ice-bright: 200 220 234; /* #c8dcea */
+  --ice-deep: 91 122 150;    /* #5b7a96 */
 
   /* ── Chromatic touch (selo 忍) ──────────────────────── */
-  --seal: #8a1f1f;
+  --seal: 138 31 31;         /* #8a1f1f */
 
-  /* ── Borders ────────────────────────────────────────── */
+  /* ── Semantic ───────────────────────────────────────── */
+  --success: 110 196 92;     /* #6ec45c */
+  --warning: 212 160 76;     /* #d4a04c */
+  --danger: 168 48 42;       /* #a8302a */
+
+  /* ── Borders (alpha hardcoded — overlays pre-mixados sobre bg-deep) ── */
   --border: rgba(155, 184, 209, 0.15);
   --border-strong: rgba(155, 184, 209, 0.4);
 

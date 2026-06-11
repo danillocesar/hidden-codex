@@ -1,0 +1,667 @@
+{
+  "_meta": {
+    "description": "Lote 7f2a — 9 aptidões Restritas marcadoras de Bijuu (Ichibi-Kyuubi). Cada uma carrega tabela específica de benefícios por nível do power Jinchuuriki + diferenças específicas da Forma Bijuu + lista de técnicas/efeitos exclusivos. Pré-req narrativo: ser selado com a Bijuu (decisão de Mestre na criação). Aptidão é marcador — motor de regras usa a tabela embutida pra liberar effects nos níveis corretos.",
+    "sources": [
+      "Livro de Hijutsus p. 29-52 (capítulo Bijuus completo)"
+    ],
+    "extractedAt": "2026-05-14",
+    "schemaVersion": 1,
+    "appliesToTable": "aptitudes",
+    "expectedItemCount": 9,
+    "unmodeledAptitudes": [],
+    "unmodeledPowers": [],
+    "phase7f2aClosure": "9 aptidões marcadoras. Próximo passo: effects técnicos (7f2c) + equipamentos (7f2d).",
+    "schemaPattern": "marker_aptitude_with_embedded_table",
+    "schemaPatternNote": "Aptidão é marcador narrativo. effects.bijuuTable é Record<nivel,string[]> mapeando o que é desbloqueado a cada nível do power Jinchuuriki. Motor consulta esta tabela quando jogador sobe nível pra liberar effects + bônus por cauda + Modo/Forma Bijuu em níveis específicos por Bijuu."
+  },
+  "data": [
+    {
+      "code": "jinchuuriki_shukaku",
+      "name": "Jinchuuriki do Shukaku (Ichibi)",
+      "category": "RESTRITA",
+      "shortDescription": "Jinchuuriki da Bijuu #1 (Shukaku). Tabela específica de benefícios por nível do power Jinchuuriki.",
+      "description": "Aptidão narrativa que marca o personagem como Jinchuuriki do Shukaku. Concede tabela específica de benefícios do power Jinchuuriki + integração com poder elemental embutido (sabaku_hijutsu). Forma Bijuu tem regras específicas listadas em effects.formaBijuuDifferences. Compra obrigatória pra acessar o power Jinchuuriki com esta Bijuu. Fonte: Livro de Hijutsus p. 30-31.",
+      "prerequisites": {
+        "narrative": "selado_com_shukaku",
+        "powers": {
+          "jinchuuriki": 1
+        }
+      },
+      "effects": {
+        "type": "jinchuuriki_bijuu_marker",
+        "bijuuNumber": 1,
+        "bijuuName": "Shukaku",
+        "embeddedElementalPower": "sabaku_hijutsu",
+        "bijuuTable": {
+          "1": [
+            "chakra_bijuu",
+            "sabaku_hijutsu_canhao"
+          ],
+          "2": [
+            "presenca_bijuu",
+            "sabaku_nv2"
+          ],
+          "3": [
+            "manto_bijuu",
+            "onda_de_chakra",
+            "bonus_por_1_cauda",
+            "sabaku_nv3"
+          ],
+          "4": [
+            "modo_bijuu",
+            "braco_de_chakra"
+          ],
+          "5": [
+            "forma_bijuu",
+            "controle_total",
+            "disparo_de_chakra"
+          ],
+          "6": [
+            "sabaku_nv6"
+          ],
+          "7": [
+            "bijuudama",
+            "sabaku_nv7"
+          ],
+          "8": [
+            "sabaku_nv8"
+          ],
+          "9": [
+            "sabaku_nv9"
+          ],
+          "10": [
+            "sabaku_nv10"
+          ]
+        },
+        "formaBijuuDifferences": {
+          "mantoModoFormaSandInsteadOfChakra": true,
+          "extraBodyHardness": 1,
+          "noAgiBonusNoAcelerado": true,
+          "bracoDeChakraIsSandToo": true,
+          "bracoDeChakraExtraHardness": true,
+          "formaBijuuSabakuWithoutSelos": true,
+          "bijuudamaAndDisparoBecomeFuuton": true
+        },
+        "additionalTechniques": []
+      },
+      "evolutions": []
+    },
+    {
+      "code": "jinchuuriki_matatabi",
+      "name": "Jinchuuriki do Matatabi (Nibi)",
+      "category": "RESTRITA",
+      "shortDescription": "Jinchuuriki da Bijuu #2 (Matatabi). Tabela específica de benefícios por nível do power Jinchuuriki.",
+      "description": "Aptidão narrativa que marca o personagem como Jinchuuriki do Matatabi. Concede tabela específica de benefícios do power Jinchuuriki + integração com poder elemental embutido (aoi_katon). Forma Bijuu tem regras específicas listadas em effects.formaBijuuDifferences. Compra obrigatória pra acessar o power Jinchuuriki com esta Bijuu. Fonte: Livro de Hijutsus p. 35-36.",
+      "prerequisites": {
+        "narrative": "selado_com_matatabi",
+        "powers": {
+          "jinchuuriki": 1
+        }
+      },
+      "effects": {
+        "type": "jinchuuriki_bijuu_marker",
+        "bijuuNumber": 2,
+        "bijuuName": "Matatabi",
+        "embeddedElementalPower": "aoi_katon",
+        "bijuuTable": {
+          "1": [
+            "chakra_bijuu",
+            "aoi_katon_canhao"
+          ],
+          "2": [
+            "presenca_bijuu",
+            "aoi_katon_nv2"
+          ],
+          "3": [
+            "manto_bijuu",
+            "onda_de_chakra",
+            "bonus_por_1-2_caudas"
+          ],
+          "4": [
+            "modo_bijuu",
+            "braco_de_chakra",
+            "nekozume"
+          ],
+          "5": [
+            "forma_bijuu",
+            "controle_total",
+            "disparo_de_chakra"
+          ],
+          "6": [
+            "aoi_katon_nv6"
+          ],
+          "7": [
+            "bijuudama",
+            "aoi_katon_nv7"
+          ],
+          "8": [
+            "aoi_katon_nv8"
+          ],
+          "9": [
+            "aoi_katon_nv9"
+          ],
+          "10": [
+            "aoi_katon_nv10"
+          ]
+        },
+        "formaBijuuDifferences": {
+          "keepsAcelaradoAndAgiBonus": true,
+          "aoiKatonAsNaturalAttackThroughMouth": true,
+          "bijuudamaAndDisparoBecomeAoiKaton": true
+        },
+        "additionalTechniques": [
+          "nekozume"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "jinchuuriki_isobu",
+      "name": "Jinchuuriki do Isobu (Sanbi)",
+      "category": "RESTRITA",
+      "shortDescription": "Jinchuuriki da Bijuu #3 (Isobu). Tabela específica de benefícios por nível do power Jinchuuriki.",
+      "description": "Aptidão narrativa que marca o personagem como Jinchuuriki do Isobu. Concede tabela específica de benefícios do power Jinchuuriki + integração com poder elemental embutido (sanbi_suiton). Forma Bijuu tem regras específicas listadas em effects.formaBijuuDifferences. Compra obrigatória pra acessar o power Jinchuuriki com esta Bijuu. Fonte: Livro de Hijutsus p. 36-38.",
+      "prerequisites": {
+        "narrative": "selado_com_isobu",
+        "powers": {
+          "jinchuuriki": 1
+        }
+      },
+      "effects": {
+        "type": "jinchuuriki_bijuu_marker",
+        "bijuuNumber": 3,
+        "bijuuName": "Isobu",
+        "embeddedElementalPower": "sanbi_suiton",
+        "bijuuTable": {
+          "1": [
+            "chakra_bijuu",
+            "sanbi_suiton_canhao"
+          ],
+          "2": [
+            "presenca_bijuu",
+            "sanbi_nv2"
+          ],
+          "3": [
+            "manto_bijuu",
+            "onda_de_chakra",
+            "bonus_por_1-2_caudas"
+          ],
+          "4": [
+            "bonus_por_3_caudas",
+            "modo_bijuu",
+            "braco_de_chakra",
+            "sangosho"
+          ],
+          "5": [
+            "forma_bijuu",
+            "controle_total",
+            "disparo_de_chakra",
+            "kagenade"
+          ],
+          "6": [
+            "sangosho_nv2",
+            "sanbi_nv6"
+          ],
+          "7": [
+            "bijuudama",
+            "sanbi_nv7"
+          ],
+          "8": [
+            "sanbi_nv8"
+          ],
+          "9": [
+            "sanbi_nv9"
+          ],
+          "10": [
+            "sangosho_nv3",
+            "sanbi_nv10"
+          ]
+        },
+        "formaBijuuDifferences": {
+          "extraBodyHardness": 1,
+          "sanbiSuitonAsNaturalAttackThroughMouth": true
+        },
+        "additionalTechniques": [
+          "sangosho",
+          "kagenade"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "jinchuuriki_son_goku",
+      "name": "Jinchuuriki do Son Goku (Yonbi)",
+      "category": "RESTRITA",
+      "shortDescription": "Jinchuuriki da Bijuu #4 (Son Goku). Tabela específica de benefícios por nível do power Jinchuuriki.",
+      "description": "Aptidão narrativa que marca o personagem como Jinchuuriki do Son Goku. Concede tabela específica de benefícios do power Jinchuuriki + integração com poder elemental embutido (yonbi_youton). Forma Bijuu tem regras específicas listadas em effects.formaBijuuDifferences. Compra obrigatória pra acessar o power Jinchuuriki com esta Bijuu. Fonte: Livro de Hijutsus p. 38-40.",
+      "prerequisites": {
+        "narrative": "selado_com_son_goku",
+        "powers": {
+          "jinchuuriki": 1
+        }
+      },
+      "effects": {
+        "type": "jinchuuriki_bijuu_marker",
+        "bijuuNumber": 4,
+        "bijuuName": "Son Goku",
+        "embeddedElementalPower": "yonbi_youton",
+        "bijuuTable": {
+          "1": [
+            "chakra_bijuu",
+            "yonbi_canhao"
+          ],
+          "2": [
+            "presenca_bijuu",
+            "yonbi_nv2"
+          ],
+          "3": [
+            "manto_bijuu",
+            "onda_de_chakra",
+            "bonus_por_1-2_caudas"
+          ],
+          "4": [
+            "bonus_por_3_caudas",
+            "modo_bijuu",
+            "braco_de_chakra"
+          ],
+          "5": [
+            "bonus_por_4_caudas",
+            "forma_bijuu",
+            "controle_total",
+            "disparo_de_chakra"
+          ],
+          "6": [
+            "yonbi_nv6"
+          ],
+          "7": [
+            "bijuudama",
+            "yonbi_nv7"
+          ],
+          "8": [
+            "yonbi_nv8"
+          ],
+          "9": [
+            "yonbi_nv9"
+          ],
+          "10": [
+            "yonbi_nv10"
+          ]
+        },
+        "formaBijuuDifferences": {
+          "yonbiYoutonAsNaturalAttackThroughMouth": true,
+          "bijuudamaAndDisparoBecomeKaton": true,
+          "bijuudamaDisparoFireColor": "verde"
+        },
+        "additionalTechniques": []
+      },
+      "evolutions": []
+    },
+    {
+      "code": "jinchuuriki_kokuo",
+      "name": "Jinchuuriki do Kokuō (Gobi)",
+      "category": "RESTRITA",
+      "shortDescription": "Jinchuuriki da Bijuu #5 (Kokuō). Tabela específica de benefícios por nível do power Jinchuuriki.",
+      "description": "Aptidão narrativa que marca o personagem como Jinchuuriki do Kokuō. Concede tabela específica de benefícios do power Jinchuuriki + integração com poder elemental embutido (gobi_futton). Forma Bijuu tem regras específicas listadas em effects.formaBijuuDifferences. Compra obrigatória pra acessar o power Jinchuuriki com esta Bijuu. Fonte: Livro de Hijutsus p. 41-43.",
+      "prerequisites": {
+        "narrative": "selado_com_kokuō",
+        "powers": {
+          "jinchuuriki": 1
+        }
+      },
+      "effects": {
+        "type": "jinchuuriki_bijuu_marker",
+        "bijuuNumber": 5,
+        "bijuuName": "Kokuō",
+        "embeddedElementalPower": "gobi_futton",
+        "bijuuTable": {
+          "1": [
+            "chakra_bijuu"
+          ],
+          "2": [
+            "presenca_bijuu",
+            "ebulicao"
+          ],
+          "3": [
+            "manto_bijuu",
+            "onda_de_chakra",
+            "bonus_por_1-2_caudas"
+          ],
+          "4": [
+            "braco_de_chakra",
+            "ebulicao_nv2",
+            "bonus_por_3_caudas"
+          ],
+          "5": [
+            "bonus_por_4_caudas",
+            "modo_bijuu",
+            "disparo_de_chakra",
+            "aceleracao_vapor",
+            "forca_vapor",
+            "bonus_por_5_caudas"
+          ],
+          "6": [
+            "controle_total",
+            "forma_bijuu",
+            "bijuudama"
+          ],
+          "7": [
+            "forca_vapor_nv2",
+            "aceleracao_vapor_nv2"
+          ],
+          "8": [
+            "tsunoori"
+          ],
+          "9": [
+            "forca_vapor_nv3"
+          ],
+          "10": [
+            "forca_vapor_nv4"
+          ]
+        },
+        "formaBijuuDifferences": {
+          "ebulicaoAsNaturalAttackThroughMouthInForma": true,
+          "noSelosInFormaForEbulicao": true
+        },
+        "additionalTechniques": [
+          "ebulicao",
+          "aceleracao_vapor",
+          "forca_vapor",
+          "tsunoori"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "jinchuuriki_saiken",
+      "name": "Jinchuuriki do Saiken (Rokubi)",
+      "category": "RESTRITA",
+      "shortDescription": "Jinchuuriki da Bijuu #6 (Saiken). Tabela específica de benefícios por nível do power Jinchuuriki.",
+      "description": "Aptidão narrativa que marca o personagem como Jinchuuriki do Saiken. Concede tabela específica de benefícios do power Jinchuuriki + integração com poder elemental embutido (rokubi_suiton). Forma Bijuu tem regras específicas listadas em effects.formaBijuuDifferences. Compra obrigatória pra acessar o power Jinchuuriki com esta Bijuu. Fonte: Livro de Hijutsus p. 43-46.",
+      "prerequisites": {
+        "narrative": "selado_com_saiken",
+        "powers": {
+          "jinchuuriki": 1
+        }
+      },
+      "effects": {
+        "type": "jinchuuriki_bijuu_marker",
+        "bijuuNumber": 6,
+        "bijuuName": "Saiken",
+        "embeddedElementalPower": "rokubi_suiton",
+        "bijuuTable": {
+          "1": [
+            "chakra_bijuu",
+            "rokubi_canhao"
+          ],
+          "2": [
+            "presenca_bijuu",
+            "rokubi_nv2"
+          ],
+          "3": [
+            "manto_bijuu",
+            "onda_de_chakra",
+            "bonus_por_1-2_caudas"
+          ],
+          "4": [
+            "bonus_por_3_caudas",
+            "braco_de_chakra"
+          ],
+          "5": [
+            "bonus_por_4_caudas",
+            "modo_bijuu",
+            "disparo_de_chakra"
+          ],
+          "6": [
+            "bonus_por_5_caudas",
+            "rokubi_nv6",
+            "bonus_por_6_caudas"
+          ],
+          "7": [
+            "controle_total",
+            "forma_bijuu",
+            "bijuudama",
+            "corrosao_da_lesma"
+          ],
+          "8": [
+            "rokubi_nv8"
+          ],
+          "9": [
+            "rokubi_nv9"
+          ],
+          "10": [
+            "rokubi_nv10"
+          ]
+        },
+        "formaBijuuDifferences": {
+          "rokubiSuitonAsNaturalAttackThroughMouth": true,
+          "canUseCorrosaoDaLesma": true
+        },
+        "additionalTechniques": [
+          "corrosao_da_lesma",
+          "bolha_tinta",
+          "sopro_acido",
+          "bolha_sufocante",
+          "bolha_flutuante"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "jinchuuriki_chomei",
+      "name": "Jinchuuriki do Chōmei (Nanabi)",
+      "category": "RESTRITA",
+      "shortDescription": "Jinchuuriki da Bijuu #7 (Chōmei). Tabela específica de benefícios por nível do power Jinchuuriki.",
+      "description": "Aptidão narrativa que marca o personagem como Jinchuuriki do Chōmei. Concede tabela específica de benefícios do power Jinchuuriki + integração com poder elemental embutido (nenhum). Forma Bijuu tem regras específicas listadas em effects.formaBijuuDifferences. Compra obrigatória pra acessar o power Jinchuuriki com esta Bijuu. Fonte: Livro de Hijutsus p. 46-48.",
+      "prerequisites": {
+        "narrative": "selado_com_chōmei",
+        "powers": {
+          "jinchuuriki": 1
+        }
+      },
+      "effects": {
+        "type": "jinchuuriki_bijuu_marker",
+        "bijuuNumber": 7,
+        "bijuuName": "Chōmei",
+        "embeddedElementalPower": null,
+        "bijuuTable": {
+          "1": [
+            "chakra_bijuu"
+          ],
+          "2": [
+            "presenca_bijuu",
+            "po_de_prata"
+          ],
+          "3": [
+            "manto_bijuu",
+            "onda_de_chakra",
+            "bonus_por_1-2_caudas"
+          ],
+          "4": [
+            "bonus_por_3_caudas",
+            "braco_de_chakra"
+          ],
+          "5": [
+            "bonus_por_4_caudas",
+            "modo_bijuu",
+            "disparo_de_chakra"
+          ],
+          "6": [
+            "bonus_por_5_caudas",
+            "rede_de_fios"
+          ],
+          "7": [
+            "bijuudama",
+            "bonus_por_6_caudas",
+            "bonus_por_7_caudas"
+          ],
+          "8": [
+            "controle_total",
+            "forma_bijuu",
+            "rede_de_fios_nv2"
+          ],
+          "9": [
+            "casulo_de_fios"
+          ],
+          "10": [
+            "po_de_prata_nv2"
+          ]
+        },
+        "formaBijuuDifferences": {
+          "hasWingsCanFly": true,
+          "flightPericiaVooEqualAgilidade": true,
+          "transformacaoParcialAllowsWingsOnBack": true,
+          "poDePrataViaWingsInForma": true,
+          "redeDeFiosAsNaturalAttackInForma": true
+        },
+        "additionalTechniques": [
+          "po_de_prata",
+          "rede_de_fios",
+          "casulo_de_fios"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "jinchuuriki_gyuki",
+      "name": "Jinchuuriki do Gyuki (Hachibi)",
+      "category": "RESTRITA",
+      "shortDescription": "Jinchuuriki da Bijuu #8 (Gyuki). Tabela específica de benefícios por nível do power Jinchuuriki.",
+      "description": "Aptidão narrativa que marca o personagem como Jinchuuriki do Gyuki. Concede tabela específica de benefícios do power Jinchuuriki + integração com poder elemental embutido (nenhum). Forma Bijuu tem regras específicas listadas em effects.formaBijuuDifferences. Compra obrigatória pra acessar o power Jinchuuriki com esta Bijuu. Fonte: Livro de Hijutsus p. 48-50.",
+      "prerequisites": {
+        "narrative": "selado_com_gyuki",
+        "powers": {
+          "jinchuuriki": 1
+        }
+      },
+      "effects": {
+        "type": "jinchuuriki_bijuu_marker",
+        "bijuuNumber": 8,
+        "bijuuName": "Gyuki",
+        "embeddedElementalPower": null,
+        "bijuuTable": {
+          "1": [
+            "chakra_bijuu"
+          ],
+          "2": [
+            "presenca_bijuu",
+            "tinta_do_polvo"
+          ],
+          "3": [
+            "manto_bijuu",
+            "onda_de_chakra",
+            "bonus_por_1-2_caudas"
+          ],
+          "4": [
+            "braco_de_chakra",
+            "bonus_por_3_caudas"
+          ],
+          "5": [
+            "modo_bijuu",
+            "disparo_de_chakra",
+            "bonus_por_4_caudas"
+          ],
+          "6": [
+            "bonus_por_5_caudas"
+          ],
+          "7": [
+            "bijuudama",
+            "bonus_por_6_caudas"
+          ],
+          "8": [
+            "bonus_por_7_caudas"
+          ],
+          "9": [
+            "bonus_por_8_caudas",
+            "controle_total",
+            "forma_bijuu",
+            "cauda_morta"
+          ],
+          "10": [
+            "tornado_do_polvo",
+            "selamento_do_polvo"
+          ]
+        },
+        "formaBijuuDifferences": {
+          "noSpecificFormaDifferences": true
+        },
+        "additionalTechniques": [
+          "tinta_do_polvo",
+          "cauda_morta",
+          "tornado_do_polvo",
+          "selamento_do_polvo"
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "jinchuuriki_kurama",
+      "name": "Jinchuuriki da Kurama (Kyuubi)",
+      "category": "RESTRITA",
+      "shortDescription": "Jinchuuriki da Bijuu #9 (Kurama). Tabela específica de benefícios por nível do power Jinchuuriki.",
+      "description": "Aptidão narrativa que marca o personagem como Jinchuuriki do Kurama. Concede tabela específica de benefícios do power Jinchuuriki + integração com poder elemental embutido (nenhum). Forma Bijuu tem regras específicas listadas em effects.formaBijuuDifferences. Compra obrigatória pra acessar o power Jinchuuriki com esta Bijuu. Fonte: Livro de Hijutsus p. 50-52.",
+      "prerequisites": {
+        "narrative": "selado_com_kurama",
+        "powers": {
+          "jinchuuriki": 1
+        }
+      },
+      "effects": {
+        "type": "jinchuuriki_bijuu_marker",
+        "bijuuNumber": 9,
+        "bijuuName": "Kurama",
+        "embeddedElementalPower": null,
+        "bijuuTable": {
+          "1": [
+            "chakra_bijuu"
+          ],
+          "2": [
+            "presenca_bijuu",
+            "cura_da_raposa"
+          ],
+          "3": [
+            "manto_bijuu",
+            "onda_de_chakra",
+            "bonus_por_1-2_caudas"
+          ],
+          "4": [
+            "braco_de_chakra",
+            "bonus_por_3_caudas"
+          ],
+          "5": [
+            "modo_bijuu",
+            "disparo_de_chakra",
+            "bonus_por_4_caudas"
+          ],
+          "6": [
+            "bonus_por_5_caudas"
+          ],
+          "7": [
+            "bijuudama"
+          ],
+          "8": [
+            "bonus_por_7_caudas"
+          ],
+          "9": [
+            "bonus_por_8_caudas"
+          ],
+          "10": [
+            "bonus_por_9_caudas",
+            "controle_total",
+            "modo_kurama"
+          ]
+        },
+        "formaBijuuDifferences": {
+          "hasTwoFormas": true,
+          "formaBijuuPadrao": "regras_comuns_uso_em_teste_dominio_falho",
+          "formaBijuuExclusiva": "modo_kurama",
+          "modoKuramaIsExclusiveTransform": true
+        },
+        "additionalTechniques": [
+          "cura_da_raposa",
+          "modo_kurama"
+        ]
+      },
+      "evolutions": []
+    }
+  ]
+}

@@ -1,0 +1,553 @@
+{
+  "_meta": {
+    "description": "Lote 6b — Armas Especiais do Livro de Hijutsus 1. Contém as 7 Espadas da Névoa (Kubikiribōchō, Samehada, Nuibari, Shibuki, Hiramekarei, Kabutowari, Kiba) + Gunbai (Uchiha) + Kusanagi. Total: 9 armas únicas. Cada arma tem múltiplas habilidades especiais modeladas em effects.specialAbilities (estrutura nomeada de skills com action/cost/effect).",
+    "sources": [
+      "Livro de Hijutsus 1 p. 82-92 (Armas Especiais — capítulo dedicado)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "schemaNotes": "Usa mesmo model Equipment do 6a, com kind=WEAPON, subtype='especial'. Habilidades das armas modeladas em effects.specialAbilities como array de objetos { name, action, chakraCost?, effect }. Limite de uso (ex: Hiramekarei 3/dia) em effects.usageLimits. Adicionado VARIAVEL ao enum WeaponCategory via migration aditiva (Kusanagi).",
+    "expectedItemCount": 9,
+    "unmodeledAptitudes": [
+      "usar_arma_kubikiribocho",
+      "usar_arma_samehada",
+      "usar_arma_nuibari",
+      "usar_arma_shibuki",
+      "usar_arma_hiramekarei",
+      "usar_arma_kabutowari",
+      "usar_arma_kiba",
+      "usar_arma_kusanagi",
+      "usar_arma_gunbai"
+    ],
+    "unmodeledAptitudesNotes": "9 variantes parametrizadas de 'usar_arma' (5a) — uma por arma especial. Mesma pendência arquitetural acumulada do Lote 5/6a. Motor resolve via CharacterAptitude.parameter."
+  },
+  "data": [
+    {
+      "code": "kubikiribocho",
+      "name": "Kubikiribōchō",
+      "kind": "WEAPON",
+      "subtype": "especial",
+      "category": "PESADA",
+      "price": null,
+      "damage": "+6",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 2 },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes": { "for": 12 },
+        "aptitudes": ["usar_arma_kubikiribocho"]
+      },
+      "effects": {
+        "isSpecial": true,
+        "isOneOfSevenSwordsOfMist": true,
+        "specialAbilities": [
+          {
+            "name": "Decapitar",
+            "type": "passive",
+            "effect": "Grau de Dano dos ataques aumentado em +0,5. Decimal arredondado pra cima. NÃO cumulativo com Técnica Poderosa."
+          },
+          {
+            "name": "Arma Rústica",
+            "type": "passive",
+            "effect": "Usar Arma: Kubikiribōchō também concede uso da Espada Grande sem precisar Usar Arma separada."
+          },
+          {
+            "name": "Fragilidade",
+            "type": "passive",
+            "effect": "Dureza 15 (não diminui a cada ataque pelas regras normais). Absorção 50. Pode ser danificada."
+          },
+          {
+            "name": "Absorção de Sangue",
+            "type": "passive",
+            "effect": "Quando danificada, regenera. Cada ataque Grau 3+ ou capanga abatido: +10 Absorção. Decapitar só volta quando Absorção totalmente restaurada."
+          },
+          {
+            "name": "Quebra de Lâmina",
+            "type": "passive",
+            "effect": "Bloqueio com dano superior à dureza: dano restante vai pra Absorção. Absorção zerada: lâmina parte ao meio, dano cai pra +3, perde Decapitar."
+          }
+        ],
+        "durability": { "dureza": 15, "absorption": 50 }
+      },
+      "shortDescription": "Sete Espadas. Espada Separadora. Decapitar (+0,5 Grau). Regenera com sangue.",
+      "description": "Conhecida como Dantō (Espada Separadora). Significa 'Faca Entalhadora de Decapitação'. Espada gigante com aparência de faca de açougueiro e círculo aberto próximo da extremidade. Enorme poder ofensivo + habilidade de se regenerar quando danificada usando o ferro absorvido pelo sangue. Fonte: Livro de Hijutsus 1 p. 87-88."
+    },
+    {
+      "code": "samehada",
+      "name": "Samehada",
+      "kind": "WEAPON",
+      "subtype": "especial",
+      "category": "PESADA",
+      "price": null,
+      "damage": "+3",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 2 },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes": { "esp": 12 },
+        "aptitudes": ["usar_arma_samehada", "chakra_expandido"]
+      },
+      "effects": {
+        "isSpecial": true,
+        "isOneOfSevenSwordsOfMist": true,
+        "isLivingWeapon": true,
+        "specialAbilities": [
+          {
+            "name": "Gosto pelo Chakra",
+            "type": "passive",
+            "effect": "Só aceita portadores com grande chakra. Quem não cumprir pré-req: -6 Vit e é forçado a soltar."
+          },
+          {
+            "name": "Fome de Chakra",
+            "type": "passive",
+            "effect": "Enquanto a possuir, perde benefícios do Chakra Expandido."
+          },
+          {
+            "name": "Raspar o Chakra",
+            "type": "passive",
+            "effect": "Ao contato com fonte de chakra (jutsu/aura): absorve = ½ Espírito do usuário. Apaga aura, divide jutsu ao meio ou reduz força. Cada contato/turno em contato."
+          },
+          {
+            "name": "Dano por Raspagem",
+            "type": "passive",
+            "effect": "Lâmina de escamas inflige dano por retalhamento/raspagem, não corte. Dano menor que espada de mesmo tamanho."
+          },
+          {
+            "name": "Fusão com a Samehada",
+            "type": "active",
+            "action": "completa",
+            "effect": "Fundir com a Samehada. Cheiro do Chakra como Sensor pra todos com chakra (não só Chakra Expandido). Pode esconder dentro da espada (apaga presença pra sensores). Mas: garras/barbatanas impedem selos de mão."
+          }
+        ]
+      },
+      "shortDescription": "Sete Espadas. Espada-viva. Raspa chakra ao contato. Fusão dá Sensor.",
+      "description": "Pele de Tubarão. 'A mais terrível das Sete Espadas da Névoa', também Daitō (Grande Espada). Grande espada feita inteiramente de escamas. Espada-viva e sensível a chakra: pode negar portador, alimenta-se de chakra, cresce quando satura. Quando em repouso, fica em ataduras. Fonte: Livro de Hijutsus 1 p. 90-92."
+    },
+    {
+      "code": "nuibari",
+      "name": "Nuibari",
+      "kind": "WEAPON",
+      "subtype": "especial",
+      "category": "MEDIANA",
+      "price": null,
+      "damage": "+3",
+      "range": "15m",
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "perfuracao",
+      "prerequisites": {
+        "attributes": { "des": 12 },
+        "aptitudes": ["usar_arma_nuibari", "ataque_em_movimento"]
+      },
+      "effects": {
+        "isSpecial": true,
+        "isOneOfSevenSwordsOfMist": true,
+        "specialAbilities": [
+          {
+            "name": "Ponta de Agulha",
+            "type": "passive",
+            "effect": "Ataques perfurantes ignoram qualquer dureza (exceto dureza do Jinchuuriki). Só a ponta tem essa capacidade — bloqueio com armas comuns pela lateral ainda funciona."
+          },
+          {
+            "name": "Lançar Agulha",
+            "type": "active",
+            "action": "padrao",
+            "effect": "Ataque perfurante à distância, alcance 15m. Pode atacar usando CD ou CC (cálculo de dano ainda por Força). Ação livre: puxa de volta pelo fio. Com Trespassar Nv 1: atinge múltiplos capangas em linha."
+          },
+          {
+            "name": "Fatiou, Passou",
+            "type": "active",
+            "action": "padrao",
+            "effect": "Manobra única — perfura múltiplos alvos enfileirados; quem está atrás vira ponto de apanhamento."
+          },
+          {
+            "name": "Costura de Fios",
+            "type": "active",
+            "action": "livre",
+            "effect": "Após 'Fatiou, Passou' bem-sucedido: dá um nó no fio. Inimigo fica impedido. Pode enrolar em ponto fixo. Capanga médio ou menor: fica indefeso."
+          },
+          {
+            "name": "Luta com Fios",
+            "type": "passive",
+            "effect": "Pode lutar com os fios como se fosse um Kousen (regras dessa arma)."
+          },
+          {
+            "name": "Fio Infinito",
+            "type": "passive",
+            "effect": "Fio considerado infinito, mas não permite ataques além de 15m. Manobras podem ser repetidas sem se preocupar com quantidade."
+          }
+        ],
+        "compatibleAptitudes": ["acuidade"]
+      },
+      "shortDescription": "Sete Espadas. Agulha de Costura. Ignora dureza, perfura múltiplos, costura inimigos.",
+      "description": "Agulha de Costura. Lâmina forma de espada longa muito fina, semelhante a uma grande agulha. Cabo com fio fino, longo e altamente resistente. Capaz de perfurar qualquer inimigo e unir tudo que perfura através de seus fios, podendo penetrar múltiplos alvos em um único golpe e depois costura-los juntos. Acuidade se aplica. Fonte: Livro de Hijutsus 1 p. 89-90."
+    },
+    {
+      "code": "shibuki",
+      "name": "Shibuki",
+      "kind": "WEAPON",
+      "subtype": "especial",
+      "category": "MEDIANA",
+      "price": null,
+      "damage": "+4",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 2 },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes": { "esp": 10 },
+        "aptitudes": ["usar_arma_shibuki"]
+      },
+      "effects": {
+        "isSpecial": true,
+        "isOneOfSevenSwordsOfMist": true,
+        "specialAbilities": [
+          {
+            "name": "Espada Explosiva",
+            "type": "active",
+            "action": "movimento",
+            "trigger": "apos_ataque_bem_sucedido_ou_bloqueado",
+            "effect": "Pergaminho desenrola e ativa explosão.",
+            "areaOfEffect": "1m a 10m diâmetro, à escolha. Dispersa a partir do usuário (não afeta o usuário).",
+            "saveDifficulty": "7 + Espírito",
+            "saveType": "agilidade_ou_prontidao",
+            "damage": "igual a um ataque corporal do personagem (substitui Força por Espírito)",
+            "chakraCost": 0,
+            "cooldown": "1 turno inteiro entre usos",
+            "usesPerScene": "ilimitado (respeitando cooldown)"
+          },
+          {
+            "name": "Pergaminho da Espada",
+            "type": "active",
+            "action": "padrao",
+            "effect": "Desenrolar todo o pergaminho pra explodir área mais distante. Estende pergaminho até 15m e ativa Espada Explosiva como ação livre. Recolher = ação livre."
+          }
+        ]
+      },
+      "shortDescription": "Sete Espadas. Bakutou (Espada Explosiva). Pergaminho com tarjas explode em área.",
+      "description": "Respingo. Espada pesada com formato exótico, construída ao redor de um pergaminho. Dois gumes: um estreito tipo espada comum; outro no formato de plataforma onde o pergaminho se desenrola. Quando se desenrola, mostra tarjas explosivas que explodem pela vontade do espadachim. Conhecida como Bakutou (Espada Explosiva). Fonte: Livro de Hijutsus 1 p. 92."
+    },
+    {
+      "code": "hiramekarei",
+      "name": "Hiramekarei",
+      "kind": "WEAPON",
+      "subtype": "especial",
+      "category": "PESADA",
+      "price": null,
+      "damage": "+3/+3",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 2, "compartments": 2 },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes_one_of": { "for": 12, "des": 12 },
+        "attributes_and": { "esp": 9 },
+        "aptitudes": ["usar_arma_hiramekarei"]
+      },
+      "effects": {
+        "isSpecial": true,
+        "isOneOfSevenSwordsOfMist": true,
+        "isPair": true,
+        "twoGripModes": ["pesada_unida", "dupla_separada"],
+        "specialAbilities": [
+          {
+            "name": "Empunhadura Pesada",
+            "type": "passive",
+            "effect": "Lâminas unidas: arma pesada, duas mãos. Dano somado = +6. Pode usar aptidões/efeitos de armas pesadas (Guerreiro, Especialista Pesadas)."
+          },
+          {
+            "name": "Empunhadura Dupla",
+            "type": "passive",
+            "effect": "Lâminas separadas: arma em par. Pra somar danos precisa Ambidestria."
+          },
+          {
+            "name": "Troca de Empunhadura",
+            "type": "active",
+            "action": "sacar_arma",
+            "effect": "Unir/separar = ação de sacar arma. Afetada por Saque Rápido."
+          },
+          {
+            "name": "Reserva de Chakra",
+            "type": "passive",
+            "effect": "Absorve chakra do portador lentamente. Após 1 dia de contato direto, pode expelir o chakra armazenado."
+          },
+          {
+            "name": "Arma Gigante",
+            "type": "active",
+            "action": "parcial",
+            "grip": "pesada",
+            "effect": "Expele chakra → arma gigante de qualquer formato. Dano base = Espírito + ½ Força.",
+            "usageLimit": "3 por dia"
+          },
+          {
+            "name": "Arma Extensa",
+            "type": "active",
+            "action": "parcial",
+            "grip": "pesada",
+            "effect": "Arma muito longa, varre inimigos ao redor com 1 ataque. Alcance CC aumentado pra 2 + ½ Força (em metros). Dano base = ½ × (Espírito + Força).",
+            "usageLimit": "3 por dia"
+          },
+          {
+            "name": "Espadas Gêmeas",
+            "type": "active",
+            "action": "parcial",
+            "grip": "dupla",
+            "effect": "Camada de energia sobre as lâminas. Requer Ambidestria. 2 ataques na mesma ação padrão: um com dano ½ Espírito, outro com ½ Força. Usa regras de Ataque Múltiplo (sem precisar da aptidão).",
+            "usageLimit": "ilimitado se ainda tiver 1 uso disponível em Gigante ou Extensa"
+          },
+          {
+            "name": "Restrição de Bônus",
+            "type": "passive",
+            "effect": "Arma Gigante, Extensa e Gêmeas NÃO recebem qualquer bônus de dano."
+          }
+        ],
+        "usageLimits": {
+          "arma_gigante": "3/dia",
+          "arma_extensa": "3/dia",
+          "espadas_gemeas": "ilimitada se restar uso em gigante OU extensa",
+          "recharge": "1 dia inteiro pra recuperar tudo"
+        }
+      },
+      "shortDescription": "Sete Espadas. Sōtō (Espada Gêmea). Reserva chakra. 3 modos: Gigante/Extensa/Gêmeas.",
+      "description": "Composta de duas espadas unidas pelas laterais. Lâminas largas, planas, duas reentrâncias curvas perto da base. Quando não está em uso, envolta em bandagens. Sōtō (Espada Gêmea). Armazena chakra do usuário e emite no ataque. Chakra moldado em qualquer formato (martelo gigante, espada longa de chakra). Fonte: Livro de Hijutsus 1 p. 84-85."
+    },
+    {
+      "code": "kabutowari",
+      "name": "Kabutowari",
+      "kind": "WEAPON",
+      "subtype": "especial",
+      "category": "PESADA",
+      "price": null,
+      "damage": "+3/+3",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 2, "compartments": 2 },
+      "damageType": "corte_esmagamento",
+      "prerequisites": {
+        "attributes": { "for": 12 },
+        "aptitudes": ["usar_arma_kabutowari", "ambidestria"]
+      },
+      "effects": {
+        "isSpecial": true,
+        "isOneOfSevenSwordsOfMist": true,
+        "isPair": true,
+        "alsoKnownAs": "Dontō (Espada Brusca)",
+        "specialAbilities": [
+          {
+            "name": "Onda de Choque",
+            "type": "active",
+            "action": "padrao",
+            "effect": "Bate o martelo no chão → onda de choque. Círculo 1m de raio por nível de Força. Dano base = ataque corporal seu com o martelo. Vigor (Dif 7+Força) ou empurrado até limite da área + caído."
+          },
+          {
+            "name": "Cortar e Esmagar (Ambidestria)",
+            "type": "passive",
+            "requires": "uso simultâneo do machado e martelo via Ambidestria",
+            "effect": "Habilita as 3 destruições abaixo."
+          },
+          {
+            "name": "Destruir Dureza",
+            "type": "passive",
+            "requires": "Cortar e Esmagar",
+            "effect": "Ignora qualquer dureza (exceto Jinchuuriki). Arma comum que bloqueie é DESTRUÍDA — seu ataque vira Sucesso Automático. Se dureza diminuiria dano base: soma a dureza ignorada AO dano como bônus."
+          },
+          {
+            "name": "Destruir Absorção",
+            "type": "passive",
+            "requires": "Cortar e Esmagar",
+            "effect": "Ignora qualquer Absorção (exceto Parceiros como Golem do Mokuton). Metade da absorção ignorada vira dano fixo adicional."
+          },
+          {
+            "name": "Destruir Defesa",
+            "type": "passive",
+            "requires": "Cortar e Esmagar",
+            "effect": "Tentar bloquear com arma comum = falha automática + arma destruída."
+          }
+        ]
+      },
+      "shortDescription": "Sete Espadas. Rachadora de Elmos. Machado + Martelo em par. Ignora tudo de dureza/absorção.",
+      "description": "Rachadora de Elmos. Espada que consiste de um machado e um martelo grande, ligados por uma corda fina de couro. Capaz de superar qualquer defesa, também conhecida como Dontō (Espada Brusca). Corda permite uso separado, mas força real aparece quando usados juntos. Fonte: Livro de Hijutsus 1 p. 85-86."
+    },
+    {
+      "code": "kiba",
+      "name": "Kiba",
+      "kind": "WEAPON",
+      "subtype": "especial",
+      "category": "MEDIANA",
+      "price": null,
+      "damage": "+2/+2",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 2, "compartments": 2 },
+      "damageType": "corte",
+      "prerequisites": {
+        "aptitudes": ["usar_arma_kiba", "ambidestria"],
+        "powers": { "raiton": 5 }
+      },
+      "effects": {
+        "isSpecial": true,
+        "isOneOfSevenSwordsOfMist": true,
+        "isPair": true,
+        "specialAbilities": [
+          {
+            "name": "Dependência Gêmea",
+            "type": "passive",
+            "effect": "A menos que use as 2 espadas em conjunto, perdem todos os efeitos."
+          },
+          {
+            "name": "Espada de Raios",
+            "type": "passive",
+            "effect": "Empunhando as espadas, pode usar efeitos Energizar (Ninpou), Descarga (Raiton) e Meteoros (Katon) pra seu Raiton mesmo sem comprar esses efeitos. Ainda precisa nível requisitado (Meteoros = Raiton 9)."
+          },
+          {
+            "name": "Raio Natural",
+            "type": "passive",
+            "effect": "Todo efeito Raiton através das espadas: +1 bônus de dano (inclusive Energizar)."
+          },
+          {
+            "name": "Combate Próximo Sem Concentração",
+            "type": "passive",
+            "effect": "Não precisa teste de Concentração pra efeitos à distância em combate próximo."
+          },
+          {
+            "name": "Arma Energizável",
+            "type": "passive",
+            "effect": "Pode aplicar Energizar."
+          },
+          {
+            "name": "Arma Acurada",
+            "type": "passive",
+            "effect": "Acuidade se aplica."
+          }
+        ],
+        "compatibleAptitudes": ["acuidade", "ambidestria"]
+      },
+      "shortDescription": "Sete Espadas. Presas. Par com Raiton imbuído. Energizar/Descarga/Meteoros grátis.",
+      "description": "Presas. Par de espadas medianas com duas pequenas lâminas salientes (extremidade e base). Imbuídas de eletricidade, dão grande poder de corte + controle superior em Raiton. Mesmo sem usar raios, são perigosas em combate ambidestro com movimentos de rotação ágeis. Fonte: Livro de Hijutsus 1 p. 86-87."
+    },
+    {
+      "code": "kusanagi",
+      "name": "Kusanagi",
+      "kind": "WEAPON",
+      "subtype": "especial",
+      "category": "VARIAVEL",
+      "price": null,
+      "damage": "variavel",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 1 },
+      "damageType": "corte",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "des": 10 },
+        "aptitudes": ["usar_arma_kusanagi"]
+      },
+      "effects": {
+        "isSpecial": true,
+        "shapeShifting": true,
+        "specialAbilities": [
+          {
+            "name": "Lâmina Perfeita",
+            "type": "passive",
+            "effect": "Reage ao chakra do portador, altera forma. Escolha livre de espada leve ou mediana da Tabela de Armas — UMA VEZ, no momento de adquirir. Pode usar como arma comum (propriedades passivas) se tiver Usar Arma do modelo. Pra habilidades ativas, ainda precisa Usar Arma: Kusanagi."
+          },
+          {
+            "name": "Dano",
+            "type": "passive",
+            "effect": "Dano = modelo de arma escolhido. Opcionalmente: substituir cálculo padrão por For-2 ou Esp-2 se usar Energizar (mas sem bônus de dano/For/Ambidestria/etc)."
+          },
+          {
+            "name": "Corte Perfeito",
+            "type": "passive",
+            "effect": "Ignora qualquer dureza (exceto Jinchuuriki). Causa dano DOBRADO em Absorção de objetos/armaduras. Arma comum bloqueando ou sendo bloqueada = destruída + Sucesso Automático."
+          },
+          {
+            "name": "Ligação Telecinética",
+            "type": "passive",
+            "requires": "portar a arma 1 dia inteiro",
+            "effect": "Ativa ligação permanente, a menos que perca posse por 1 semana ou mais."
+          },
+          {
+            "name": "Expansão de Lâmina",
+            "type": "active",
+            "action": "padrao",
+            "effect": "Lâmina se alonga. Teste de CD pra atacar alvo a 5m + 1m por nível de Inteligência. Retrair = ação livre. Precisa começar no tamanho normal."
+          },
+          {
+            "name": "Replicação",
+            "type": "active",
+            "duration": "1 dia",
+            "limit": "1 vez por portador",
+            "effect": "Cria cópia com todas propriedades passivas + pode assumir novo formato (ex: Wakizashi pra formar par com Katana original). Novo portador usando: cópia antiga deixa de existir."
+          },
+          {
+            "name": "Arma Energizável",
+            "type": "passive",
+            "effect": "Pode aplicar Energizar."
+          },
+          {
+            "name": "Arma Acurada",
+            "type": "passive",
+            "effect": "Acuidade se aplica."
+          }
+        ]
+      },
+      "shortDescription": "Lâmina mais afiada que existe. Forma escolhida na aquisição. Ignora dureza, dobra absorção.",
+      "description": "Espada Kusanagi: a lâmina mais afiada que existe. Melhor fio cortante com resistência inquebrável. Estende e retrai à vontade. Formato alterado pra modelo mais adequado. Controlável por telecinesia. Fonte: Livro de Hijutsus 1 p. 88-89."
+    },
+    {
+      "code": "gunbai",
+      "name": "Gunbai",
+      "kind": "WEAPON",
+      "subtype": "especial",
+      "category": "LONGA",
+      "price": null,
+      "damage": "+3",
+      "range": null,
+      "critRange": "15-16",
+      "slots": { "items": 1, "compartments": 2 },
+      "damageType": "esmagamento",
+      "prerequisites": {
+        "attributes_one_of": { "for": 10, "des": 10 },
+        "aptitudes": ["usar_arma_gunbai"]
+      },
+      "effects": {
+        "isSpecial": true,
+        "uchihaArtifact": true,
+        "specialAbilities": [
+          {
+            "name": "Leque-Mangual",
+            "type": "active",
+            "effect": "Com corrente no cabo: atinge inimigos a até 4m. Teste de acerto CC ou CD (escolha). Atacando com CD: NÃO usa manobras de CC nem ataca adjacentes. Dano com CD ainda calculado por Força."
+          },
+          {
+            "name": "Escudo do Leque",
+            "type": "passive",
+            "effect": "Dureza e absorção infinitas + absorve chakra de ataques. Pode bloquear qualquer técnica (Kyoudo Kyouka, efeito Raio Ninpou/elementos, ataques em área). Bloquear área não impede efeito pelos lados. Efeitos secundários dependentes de acerto são anulados."
+          },
+          {
+            "name": "Rebatida do Leque",
+            "type": "active",
+            "action": "padrao",
+            "chakraCost": 4,
+            "trigger": "apos_bloqueio_bem_sucedido_contra_ataque_com_chakra",
+            "effect": "Absorve chakra do ataque, converte em Fuuton, dispara contra inimigo. Executa Sopro Destrutivo Nv 4 pra Fuuton mesmo sem ter o poder. Dano base = dano base do ataque bloqueado. NÃO sofre penalidade -3 de combate próximo. NÃO pode ser alvo de Impedir Selos. Pode receber Maestria (Fuuton)."
+          },
+          {
+            "name": "Arma Energizável",
+            "type": "passive",
+            "effect": "Pode aplicar Energizar."
+          },
+          {
+            "name": "Arma Acurada",
+            "type": "passive",
+            "effect": "Acuidade se aplica."
+          }
+        ]
+      },
+      "shortDescription": "Leque Uchiha. Dureza infinita. Bloqueia qualquer coisa. Rebate como Fuuton.",
+      "description": "Grande leque não-dobrável, transmitido entre os líderes do Clã Uchiha por gerações. Tamanho permite uso como arma de esmagamento (maça/mangual) ou como escudo, bloqueando desde ataques comuns até técnicas. Absorve chakra de ataques, converte em Fuuton, devolve como explosão de ventos. Fonte: Livro de Hijutsus 1 p. 83-84."
+    }
+  ]
+}

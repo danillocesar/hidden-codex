@@ -1,0 +1,220 @@
+{
+  "_meta": {
+    "description": "Lote 5-patches — CORREÇÕES e aptidões esquecidas dos lotes 5a/5b/5c. (1) Corrige categoria de Burro de Carga e Furtividade Ágil que estavam no 5c como MANOBRA mas são GERAL; sobrescreve os registros existentes. (2) Adiciona aptidões esquecidas: Envenenar Arma, Utilitarista Rápido, Usar Pólvora, Mira Vital, Alcance Estendido, Armamento Pesado, Atirador Ágil, Ataque Oportuno à Distância. (3) Detalha Burro de Carga e Furtividade Ágil que estavam só com needsDeepResearch.",
+    "sources": [
+      "Guia Avançado do Shinobi p. 15-16 (aptidões de armas de fogo)",
+      "Guia Avançado do Shinobi p. 28-30 (revisões + Utilitarista Rápido)",
+      "Guia Avançado do Shinobi p. 40-41 (Burro de Carga, Furtividade Ágil, Envenenar Arma)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "purpose": "Aplicar via UPSERT — entradas já existentes com mesmo 'code' são atualizadas (corrige categoria), novas são adicionadas. Seed script já faz isso por padrão.",
+    "corrections": [
+      "burro_de_carga: 5c MANOBRA needsDeepResearch → GERAL com descrição completa",
+      "furtividade_agil: 5c MANOBRA needsDeepResearch → GERAL com descrição (parcial — needs deep research mantida)"
+    ],
+    "intentionalUpserts": [
+      "burro_de_carga",
+      "furtividade_agil"
+    ],
+    "additions": [
+      "envenenar_arma (GAS p. 40, GERAL)",
+      "utilitarista_rapido (GAS p. 30, HABILIDADE — referenciado em Imobilização do 5c)",
+      "usar_polvora (GAS, GERAL — armas de fogo)",
+      "mira_vital (GAS, COMBATE — armas de fogo)",
+      "alcance_estendido (GAS, COMBATE — armas de fogo)",
+      "armamento_pesado (GAS, COMBATE — armas de fogo customizadas)",
+      "atirador_agil (GAS, COMBATE — Retirada Rápida com armas de fogo)",
+      "ataque_oportuno_a_distancia (GAS, COMBATE — Oportunista à distância)"
+    ],
+    "unmodeledAptitudes": [
+      "especialista_armas_de_fogo",
+      "especialista_armas_disparo_ou_arremesso"
+    ],
+    "unmodeledAptitudesNotes": "Variantes parametrizadas de 'especialista' (5a, categoryChoice por tipo de arma). 'armamento_pesado' requer especialista_armas_de_fogo, 'ataque_oportuno_a_distancia' requer especialista_armas_disparo_ou_arremesso. Mesmo padrão de guerreiro_pesadas / especialista_armas_longas / etc — motor resolve via CharacterAptitude.parameter quando essa modelagem chegar."
+  },
+  "data": [
+    {
+      "code": "burro_de_carga",
+      "name": "Burro de Carga",
+      "category": "GERAL",
+      "shortDescription": "Limite de compartimentos sem penalidade: For 4→4, For 8→5, For 12→6.",
+      "description": "Treinado em carregar mais equipamentos shinobi. Limite de compartimentos sem penalidade: 4 compartimentos com For 4, 5 com For 8, 6 com For 12. Fonte: GAS p. 40.",
+      "prerequisites": {
+        "attributes": { "for": 4 }
+      },
+      "effects": {
+        "type": "encumbrance_modifier",
+        "tiers": {
+          "for_4": 4,
+          "for_8": 5,
+          "for_12": 6
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "furtividade_agil",
+      "name": "Furtividade Ágil",
+      "category": "GERAL",
+      "shortDescription": "Rápido E furtivo simultaneamente. Detalhes completos seguem GAS p. 41.",
+      "description": "Permite ser rápido E furtivo simultaneamente. Detalhes mecânicos completos seguem GAS p. 41 (texto não totalmente capturado nas pesquisas). Aparece em quase TODAS as listas de invocações do GAS. Fonte: GAS p. 41.",
+      "prerequisites": {},
+      "effects": {
+        "type": "stealth_movement",
+        "needsDeepResearch": true,
+        "notes": "Consultar GAS p. 41 pra mecânica completa. Aptidão GERAL, não MANOBRA — sobrescreve entrada anterior do Lote 5c."
+      },
+      "evolutions": []
+    },
+    {
+      "code": "envenenar_arma",
+      "name": "Envenenar Arma",
+      "category": "GERAL",
+      "shortDescription": "Prepara armas com veneno em ação padrão. 1 dose = 3 armas ou 30 projéteis.",
+      "description": "Preparar armas com veneno passa a ser ação padrão (6 segundos pra estimativa fora de combate). Cada dose envenena até 3 armas ou 30 projéteis (3x mais eficiente). Fonte: GAS p. 40.",
+      "prerequisites": {
+        "skills": { "venefico": 9 },
+        "aptitudes": ["saque_rapido"]
+      },
+      "effects": {
+        "type": "action_economy",
+        "action": "padrao",
+        "outOfCombatTimeEstimate": "6_segundos",
+        "weaponsPerDose": 3,
+        "projectilesPerDose": 30
+      },
+      "evolutions": []
+    },
+    {
+      "code": "utilitarista_rapido",
+      "name": "Utilitarista Rápido",
+      "category": "HABILIDADE",
+      "shortDescription": "Ferramenta Shinobi Utilitária (bombas, redes etc.) com ação de movimento.",
+      "description": "Permite usar Ferramenta Shinobi Utilitária (Bomba de Fumaça, Marcação, Luminosa, Som de Trovão, Boleadeira, Estrepes, Kousen — Amarrar apenas, Rede, Tarja Explosiva) com ação de movimento em vez de padrão. Se usar este benefício, NÃO pode usar habilidade especial 'Dragão de Fogo' (Livro Básico p. 102). Fonte: GAS p. 30.",
+      "prerequisites": {
+        "attributes": { "des": 11, "int": 6 },
+        "aptitudes": ["saque_rapido"]
+      },
+      "effects": {
+        "type": "action_economy",
+        "appliesTo": "ferramenta_shinobi_utilitaria",
+        "actionUpgrade": "padrao_para_movimento",
+        "incompatibleWith": ["dragao_de_fogo"]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "usar_polvora",
+      "name": "Usar Pólvora",
+      "category": "GERAL",
+      "shortDescription": "Proficiência em Armas de Fogo. Permite manutenção via Mecanismo.",
+      "description": "Proficiência na categoria Armas de Fogo (pode usar sem penalidades). Permite manutenção desse tipo de armamento via teste de Mecanismo pra retirar condição Danificada de arma de fogo. Fonte: GAS p. 30.",
+      "prerequisites": {
+        "skills": { "mecanismo": 2 },
+        "attributes": { "des": 2 }
+      },
+      "effects": {
+        "type": "weapon_proficiency",
+        "weaponCategory": "armas_de_fogo",
+        "permits": "manutencao_via_mecanismo"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "mira_vital",
+      "name": "Mira Vital",
+      "category": "COMBATE",
+      "shortDescription": "Mira Apurada SEM manobras CD = +0,5 Grau de Dano.",
+      "description": "Quando usa Mira Apurada e NÃO usa manobras 'Desarme à Distância' nem 'Flechada no Joelho', disparo recebe +0,5 Grau de Dano. Fonte: GAS p. 15.",
+      "prerequisites": {
+        "attributes": { "des": 12 },
+        "aptitudes": ["mira_apurada"]
+      },
+      "effects": {
+        "type": "damage_grade_bonus",
+        "bonus": 0.5,
+        "requires": "mira_apurada_active",
+        "incompatibleWith": ["desarme_a_distancia", "flechada_no_joelho"]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "alcance_estendido",
+      "name": "Alcance Estendido",
+      "category": "COMBATE",
+      "shortDescription": "+10m alcance em Armas de Fogo. Não combina com Tiro Longo.",
+      "description": "Compensa queda do projétil pra atingir inimigos mais longe. Armas de Fogo recebem +10m de Alcance. NÃO é aumentado por Tiro Longo. Fonte: GAS p. 15.",
+      "prerequisites": {
+        "attributes": { "per": 12 },
+        "aptitudes": ["tiro_longo"]
+      },
+      "effects": {
+        "type": "range_modifier",
+        "weaponCategory": "armas_de_fogo",
+        "extraRange": "+10m",
+        "notMultipliedByTiroLongo": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "armamento_pesado",
+      "name": "Armamento Pesado",
+      "category": "COMBATE",
+      "shortDescription": "Armas de Fogo customizadas: +1 dano arma, mas só você usa.",
+      "description": "8 horas de trabalho modificando armas de fogo. Recebe +1 Dano de Arma, mas SÓ VOCÊ tem proficiência. Outros usuários sofrem -3 precisão. Fonte: GAS p. 15.",
+      "prerequisites": {
+        "skills": { "mecanismo": 12 },
+        "aptitudes": ["especialista_armas_de_fogo"]
+      },
+      "effects": {
+        "type": "weapon_customization",
+        "preparationTime": "8_horas",
+        "damageBonus": 1,
+        "exclusiveToUser": true,
+        "othersPenalty": -3
+      },
+      "evolutions": []
+    },
+    {
+      "code": "atirador_agil",
+      "name": "Atirador Ágil",
+      "category": "COMBATE",
+      "shortDescription": "Empunhando Arma de Fogo: Retirada Rápida só com movimento (mantém parcial).",
+      "description": "Enquanto empunhando Arma de Fogo, pode usar Retirada Rápida usando APENAS ação de movimento, mantendo ação parcial. Fonte: GAS p. 16.",
+      "prerequisites": {
+        "attributes": { "agi": 12 },
+        "aptitudes": ["retirada_rapida"]
+      },
+      "effects": {
+        "type": "action_economy",
+        "weaponCategory": "armas_de_fogo",
+        "modifies": "retirada_rapida",
+        "actionDowngrade": "parcial_para_movimento",
+        "preservesParcial": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "ataque_oportuno_a_distancia",
+      "name": "Ataque Oportuno à Distância",
+      "category": "COMBATE",
+      "shortDescription": "Ataque oportuno até 10m com arma de disparo/arremesso empunhada.",
+      "description": "Quando oponente se move dentro de 10m, pode realizar Ataque Oportuno com arma de disparo/arremesso, desde que já tenha arma empunhada. Com Saque Rápido: pode sacar arma/munição durante o ataque (NÃO pode usar Criar Arma). Ataque NÃO impede movimentação do alvo. NÃO usa manobras especiais. Fuuma Shurikens Gigantes acertando: alvo tem sucesso automático no teste pra evitar derrubar. Bloqueado por: Passo Seguro, Recuar, Cambalhota, Acelerado. Regras de Disparar/Lançar Projétil aplicam normalmente. Fonte: GAS p. 28.",
+      "prerequisites": {
+        "aptitudes": ["oportunista", "especialista_armas_disparo_ou_arremesso"],
+        "attributes": { "des": 13 }
+      },
+      "effects": {
+        "type": "opportunity_attack_ranged",
+        "range": "10m",
+        "weaponRequirement": "empunhada",
+        "saqueRapidoIntegration": "saca_arma_durante_ataque",
+        "blocksTargetMovement": false,
+        "noSpecialManuevers": true,
+        "blockedBy": ["passo_seguro", "recuar", "cambalhota_acrobacia", "acelerado"]
+      },
+      "evolutions": []
+    }
+  ]
+}

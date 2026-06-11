@@ -1,0 +1,86 @@
+{
+  "_meta": {
+    "description": "Lote 7i — Aptidão Shikigami no Mai (Hijutsu Kami Ninpou, 2 níveis evolutivos).",
+    "sources": [
+      "Livro de Hijutsus p. 60-61 (Shikigami no Mai)"
+    ],
+    "extractedAt": "2026-05-14",
+    "schemaVersion": 1,
+    "appliesToTable": "aptitudes",
+    "expectedItemCount": 1
+  },
+  "data": [
+    {
+      "code": "shikigami_no_mai",
+      "name": "Shikigami no Mai (Dança dos Espíritos de Papel)",
+      "category": "RESTRITA",
+      "shortDescription": "Hijutsu Kami Ninpou. Transforma corpo em papéis. Pontos Kami (3x Esp/Arte). Imunidade física (exceto Katon/Suiton dobrado).",
+      "description": "Transforma corpo inteiro e roupas em milhares de folhas de papel. Cada nível compra-se separado. Nv 1: Pontos Kami (PK = 3x Esp ou 3x Arte) absorvem dano antes de Vit (Katon dobra). Permanente enquanto tiver chakra ou PK. Pode desativar (perde todos PK). Kami Ninpou melhorado: efeitos novos permitidos (Algemar, Orbe, Barreira, Prisão de Água Suiton) + +1 dano + +1 Dif. Revitalização: 1 chakra = 3 PK (ação padrão). Intocável: ação padrão escapa de prisões físicas. Nv 2: sem desvantagem elemental Katon, dano fogo não dobrado. Papéis Sensores: aptidão Sensor (Limitado). Imunidade do Anjo: ação padrão + concentração, transforma-se em papel imediatamente antes de receber ataque físico, imune (exceto Katon/Suiton). Afastar Seguro: 4 PK + ação livre, desloca sem ataque oportuno. Fonte: Livro de Hijutsus p. 60-61.",
+      "prerequisites": {
+        "powers": {
+          "kami_ninpou": 4
+        },
+        "attributes_one_of": {
+          "esp": 9,
+          "arte_skill": 9
+        }
+      },
+      "effects": {
+        "type": "hijutsu_kami_ninpou",
+        "levels": {
+          "1": {
+            "pontosKami": {
+              "formula": "3x_espirito_OR_3x_arte",
+              "absorbsDamage": true,
+              "katonDoubled": true
+            },
+            "duration": "permanente_enquanto_tiver_chakra_ou_PK",
+            "canDeactivate": "acao_livre_perde_todos_PK",
+            "kamiNinpouMelhorado": {
+              "newEffects": [
+                "algemar",
+                "orbe",
+                "barreira",
+                "prisao_de_agua"
+              ],
+              "bonusDamage": 1,
+              "bonusDifficulty": 1,
+              "cumulative": true
+            },
+            "revitalizacao": {
+              "action": "padrao",
+              "chakraToPK": "1_chakra_=_3_PK"
+            },
+            "intocavel": {
+              "action": "padrao",
+              "escapa_de_prisoes_fisicas": true
+            }
+          },
+          "2": {
+            "prerequisites": {
+              "powers": {
+                "kami_ninpou": 6
+              }
+            },
+            "interacaoElementalMelhorada": "sem_desvantagem_katon + katon_nao_dobra",
+            "papeisSensores": "aptidao_sensor_limitado_via_papeis",
+            "imunidadeAnjo": {
+              "action": "padrao",
+              "duration": "concentracao",
+              "immuneToPhysicalAttacks": true,
+              "exceptKatonSuiton": true,
+              "ifHitByKatonSuiton": "concentracao_cancelada + lento_ate_fim_proximo_turno"
+            },
+            "afastarSeguro": {
+              "action": "livre",
+              "PKcost": 4,
+              "movesWithoutAttackOpportunity": true
+            }
+          }
+        },
+        "noTechnicaAcelerada": true
+      },
+      "evolutions": []
+    }
+  ]
+}

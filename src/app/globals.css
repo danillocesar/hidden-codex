@@ -1,14 +1,27 @@
 @import '../styles/tokens.css';
+@import 'driver.js/dist/driver.css';
+@import '../styles/driver-theme.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  /**
+   * Root font-size 17px (base padrao do navegador e 16px). Todas as classes
+   * Tailwind em rem (text-sm, text-base, paddings, gaps) escalam +6.25% — as
+   * fontes serifadas Cormorant/EB Garamond ficam mais legiveis sem inflar a
+   * UI inteira. Pixels arbitrarios (`text-[10px]` em eyebrows/badges) seguem
+   * fixos por escolha — labels CINZEL devem permanecer compactos.
+   */
+  html {
+    font-size: 17px;
+  }
+
   html,
   body {
-    background-color: var(--bg-deep);
-    color: var(--ink);
+    background-color: rgb(var(--bg-deep));
+    color: rgb(var(--ink));
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -20,14 +33,47 @@
 
   /* Selecionado em alto contraste, mas dentro da paleta */
   ::selection {
-    background-color: var(--ice-deep);
-    color: var(--ink);
+    background-color: rgb(var(--ice-deep));
+    color: rgb(var(--ink));
   }
 
   /* Foco visível mas sutil — usa accent ice */
   :focus-visible {
-    outline: 1px solid var(--ice);
+    outline: 1px solid rgb(var(--ice));
     outline-offset: 2px;
+  }
+
+  /* ── Scrollbar dark+ice ─────────────────────────────────────────────── */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--ice-deep)) rgb(var(--bg-paper));
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgb(var(--bg-paper));
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: rgb(var(--ice-deep));
+    border: 2px solid rgb(var(--bg-paper));
+    border-radius: 6px;
+    min-height: 30px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(var(--ice));
+  }
+  ::-webkit-scrollbar-corner {
+    background: rgb(var(--bg-paper));
+  }
+
+  @media (pointer: coarse) {
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
   }
 }
 

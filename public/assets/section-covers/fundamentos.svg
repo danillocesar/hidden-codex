@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" role="img" aria-label="Capa padrao fundamentos">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071018"/>
+      <stop offset="0.46" stop-color="#102536"/>
+      <stop offset="1" stop-color="#020507"/>
+    </linearGradient>
+    <radialGradient id="ice" cx="64%" cy="42%" r="56%">
+      <stop offset="0" stop-color="#a8d8ff" stop-opacity=".42"/>
+      <stop offset=".42" stop-color="#5b8eae" stop-opacity=".14"/>
+      <stop offset="1" stop-color="#020507" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="lines" width="90" height="90" patternUnits="userSpaceOnUse" patternTransform="rotate(-18)">
+      <path d="M0 45H90" stroke="#d7f0ff" stroke-opacity=".08" stroke-width="2"/>
+      <path d="M0 58H90" stroke="#89b7d2" stroke-opacity=".06" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="700" fill="url(#bg)"/>
+  <rect width="1600" height="700" fill="url(#ice)"/>
+  <rect width="1600" height="700" fill="url(#lines)"/>
+  <path d="M-80 520C210 400 330 430 560 330c260-113 430-260 760-190 164 35 266 24 360-18v648H-80Z" fill="#08121a" opacity=".68"/>
+  <path d="M160 520 460 270l180 118 240-224 180 138 250-185" fill="none" stroke="#d5ecff" stroke-opacity=".18" stroke-width="4"/>
+  <path d="M270 78h1060" stroke="#d5ecff" stroke-opacity=".16" stroke-width="2"/>
+  <path d="M270 622h1060" stroke="#d5ecff" stroke-opacity=".12" stroke-width="2"/>
+</svg>

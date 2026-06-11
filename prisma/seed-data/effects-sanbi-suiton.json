@@ -17,53 +17,16 @@
     },
     "unmodeledPowers": [
       "sanbi_suiton"
+    ],
+    "audit": [
+      {
+        "date": "2026-05-14",
+        "phase": "7f2c-correction",
+        "change": "REMOVIDO 'sangosho' deste arquivo. RAW Hijutsus p.37: técnica do Jinchuuriki Isobu (Modo Bijuu obrigatório), não do power Sanbi Suiton. Movido pra effects-jinchuuriki-bijuus.json. Mesmo padrão do Nekozume (Matatabi)."
+      }
     ]
   },
   "data": [
-    {
-      "code": "sangosho",
-      "name": "Sangoshō (Soco do Coral)",
-      "minLevel": 4,
-      "availableFor": [
-        "sanbi_suiton"
-      ],
-      "shortDescription": "Soco corpo-a-corpo que contamina com corais. Sem dano direto, mas vítima lenta e debilitada.",
-      "description": "Realiza ataque corpo-a-corpo desarmado no oponente. Não causa dano, mas contamina com corais que solidificam e crescem rapidamente pelo corpo, limitando movimentos. Alvo atingido fica lento e debilitado pelo restante da cena. A partir do segundo turno, no início de cada turno, vítima tem direito a teste de Força (Dif 9 + 2x Nível do Poder). Sucesso = quebra corais e se liberta. Pode atacar os corais pra quebrá-los: Absorção 1, dureza igual a 2x nível de Sanbi Suiton. Fonte: Guia Avançado p. 94-95.",
-      "stats": {
-        "action": "PADRAO",
-        "range": "toque",
-        "damage": "nenhum_direto",
-        "duration": "INSTANTANEA (efeito persiste pela cena)",
-        "rollType": "CC"
-      },
-      "rules": {
-        "appliesConditions": [
-          "lento",
-          "debilitado"
-        ],
-        "escapeTest": {
-          "skill": "for",
-          "difficulty": "9 + 2x nível do poder",
-          "fromTurn": 2
-        },
-        "coraisStats": {
-          "absorption": 1,
-          "hardness": "2x nível Sanbi Suiton"
-        }
-      },
-      "evolutions": [
-        {
-          "atLevel": 6,
-          "name": "Sangoshō Nv 6",
-          "description": "Corais espalham mais rapidamente, atingindo tronco e pernas. Vítima fica impedida pela duração da técnica."
-        },
-        {
-          "atLevel": 10,
-          "name": "Sangoshō Nv 10",
-          "description": "Se vítima não se livrar até o fim do 2º turno, corais espalham ainda mais rápido. Vítima fica indefesa pela duração."
-        }
-      ]
-    },
     {
       "code": "espelho_dagua",
       "name": "Espelho D'Água",

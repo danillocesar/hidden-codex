@@ -8,16 +8,23 @@ Plataforma open source de fichas de personagem para o RPG **Shinobi no Sho 4.1b*
 
 ## Estado atual
 
-**Fase F0 — Bootstrap (em andamento).** Repositório vivo localmente:
+**MVP local em construção.** Guia operacional atualizado em `ROADMAP-ESTRUTURADO.md`.
 
-- Next.js 14 + TypeScript estrito + App Router
-- Tailwind 3.4 + tema dark+ice (`src/styles/tokens.css`)
-- Prisma + Postgres local (Docker) com schema completo aplicado
-- Firebase Auth client+admin configurados (OAuth real liga em F1)
-- Motor de regras completo em `src/domain/rules/` com 180 testes (95%+ cobertura)
-- Storage local em `public/uploads/` (Supabase Storage fica para uma fase futura)
+Já funciona localmente:
 
-Sem deploy Vercel, sem GitHub Actions, sem auth funcional ainda — tudo isso entra em fases posteriores.
+- Next.js 14 + TypeScript estrito + App Router + Tailwind 3.4 (tema dark+ice)
+- Prisma + Postgres local (Docker) — schema completo + migrations aplicadas
+- **Firebase Auth real** (login Google, sessão HTTP-only, middleware)
+- **Motor de regras** completo em `src/domain/rules/` (495 testes verdes)
+- **Seed de catálogos** populado (aptidões, poderes, efeitos, equipamentos, clãs, vilas, KGs)
+- **Wizard de criação** (`/characters/new`) — 8 passos incluindo inventário
+- **Ficha read-only** (`/characters/[id]`) — hero, energias/combate/sociais, combate rápido, perícias, aptidões, poderes/efeitos, técnicas (jutsus) e inventário
+- **Dashboard** (`/dashboard`) — lista, busca, filtros (NC/origem) e soft delete
+- **Uso em mesa** — calculadora de dano, usar jutsu (gasta chakra), tomar dano/curar/restaurar, com toasts e skeletons
+- Storage local em `public/uploads/` (cloud fica para fase futura)
+
+Próximas frentes (ver roadmap): **editor da ficha** (F3) e **compartilhamento público** (F6).
+Sem deploy/CI ainda — tudo localhost até o MVP amadurecer.
 
 ---
 
@@ -69,7 +76,7 @@ App em `http://localhost:3000`.
 | `pnpm format` | Prettier escreve nos arquivos |
 | `pnpm db:studio` | Prisma Studio (UI visual do banco) |
 | `pnpm db:migrate` | Cria nova migration em desenvolvimento |
-| `pnpm db:seed` | Roda `prisma/seed.ts` (no-op até F2.3 entregar os catálogos) |
+| `pnpm db:seed` | Roda `prisma/seed.ts` (popula os catálogos do livro) |
 
 ---
 
@@ -92,8 +99,15 @@ A especificação técnica completa está em `arcana-forge-spec/` (00 a 08). Com
 
 ## Licença
 
-MIT (a confirmar — pode mudar para AGPL antes do primeiro release público).
+Código próprio sob **MIT**. **Atenção:** o editor de diário usa
+`@blocknote/xl-multi-column` (colunas estilo Notion), distribuído sob
+**GPL-3.0** (ou licença comercial do BlockNote). Como é copyleft, o **app
+distribuído como um todo** passa a ficar sob termos GPL-3.0: é preciso manter o
+código-fonte aberto e incluir o aviso GPL. O núcleo continua MIT, mas o conjunto
+não pode ser fechado enquanto essa dependência estiver presente. Para voltar a
+MIT puro, remova `@blocknote/xl-multi-column` e a integração de colunas em
+`src/components/character/diary/`.
 
 ---
 
-*Próxima fase: F1 — Autenticação e Base.*
+*Guia operacional e próximas fases: `ROADMAP-ESTRUTURADO.md`.*

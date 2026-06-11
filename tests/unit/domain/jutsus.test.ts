@@ -4,7 +4,29 @@ import {
   calculateChakraCost,
   calculateNinpouBaseDamage,
   calculateRange,
+  commonPowerRange,
+  commonPowerDifficulty,
+  commonPowerSize,
 } from '@/domain/rules/jutsus';
+
+describe('jutsus — comum do poder', () => {
+  it('alcance Médio = 10 + 2×Esp (Esp 1 → 12m)', () => {
+    expect(commonPowerRange(1)).toBe(12);
+    expect(commonPowerRange(3)).toBe(16);
+    expect(commonPowerRange(0)).toBe(10);
+  });
+
+  it('dificuldade = 9 + nível + ⌈Esp/2⌉', () => {
+    // Esp 3, nível 2: 9 + (2 + 2) = 13
+    expect(commonPowerDifficulty(3, 2)).toBe(13);
+    // Esp 1, nível 1: 9 + (1 + 1) = 11
+    expect(commonPowerDifficulty(1, 1)).toBe(11);
+  });
+
+  it('tamanho (Escala Grande) = 1m por nível de Espírito', () => {
+    expect(commonPowerSize(4)).toBe(4);
+  });
+});
 
 describe('jutsus — calculateChakraCost', () => {
   it('Canhão Hyouton nv 3: base 1 + perLevel 1 → 4', () => {

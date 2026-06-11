@@ -1,0 +1,175 @@
+{
+  "_meta": {
+    "description": "Lote 7e2 — 4 efeitos exclusivos do Suiton concedidos pela aptidão Suika (Hozuki). Braço de Água, Afogar, Monstro de Água, Clone de Óleo. Pré-req cruzado pela aptidão suika. Pistola D'Água NÃO está aqui — modelada como variants.suika no efeito canhao (effects-ninpou-universal.json).",
+    "sources": [
+      "Livro de Hijutsus p. 12-13 (Suiton: Efeitos Suika)"
+    ],
+    "extractedAt": "2026-05-14",
+    "schemaVersion": 1,
+    "appliesToTable": "effects",
+    "expectedItemCount": 4,
+    "unmodeledPowers": [],
+    "unmodeledAptitudes": [],
+    "phase7e2Closure": "Suika expandido — todos efeitos canônicos da p.12-13 do Hijutsus modelados. Pistola D'Água em variants.suika do canhao.",
+    "userNarrativeRectification": "Sessão anterior do Claude disse 'Suika expandido é narrativa sem base'. Estava errado. RAW (p.12-13) lista 4 efeitos exclusivos + Pistola D'Água. Item #12 da lista de próximos lotes tinha base factual."
+  },
+  "data": [
+    {
+      "code": "braco_de_agua",
+      "name": "Braço de Água",
+      "minLevel": 5,
+      "availableFor": [
+        "suiton"
+      ],
+      "shortDescription": "Braço maior+forte. Espírito substitui Força em CC (testes/dif/dano). Acuidade pra qualquer arma pesada inclusive especiais.",
+      "description": "Liquefaz parte do corpo e manipula como braço maior e mais forte. Espírito substitui Força em testes de CC, dificuldades, cálculo de dano de ataques corporais E pré-requisitos de Força em aptidões/poderes/uso de armas. Permite Acuidade para qualquer arma pesada (inclusive armas especiais). Combina com aptidões de manobra. Fonte: Livro de Hijutsus p. 12.",
+      "stats": {
+        "action": "PARCIAL",
+        "range": "pessoal",
+        "damage": "ver_descricao",
+        "duration": "CONTINUA",
+        "chakraCost": 1,
+        "selos": true
+      },
+      "rules": {
+        "prerequisites": {
+          "aptitudes": [
+            "suika"
+          ]
+        },
+        "spiritReplacesStrength": {
+          "in": [
+            "testes_cc",
+            "dificuldades_cc",
+            "calculo_dano_ataques_corporais",
+            "pre_reqs_de_forca_em_aptidoes_e_armas"
+          ]
+        },
+        "acuidadeAvailableForAnyHeavyWeapon": true,
+        "acuidadeIncludesSpecialWeapons": true,
+        "stacksWithManobras": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "afogar",
+      "name": "Afogar",
+      "minLevel": 6,
+      "availableFor": [
+        "suiton"
+      ],
+      "shortDescription": "Cerca cabeça do alvo agarrado com bolha d'água, separa do corpo. Sufocamento contínuo. Bolha tem absorção 1.",
+      "description": "Depois de liquefazer parte do corpo, manipula a água pra cercar a cabeça do alvo agarrado, criando bolha que depois é separada do corpo (mantém efeito sem precisar manter o agarrar). Alvo sofre sufocamento com dano fixo = dano base comum do poder. Pra se libertar, vítima precisa causar qualquer dano à bolha. Bolha: absorção 1, dureza comum do poder + vantagens/desvantagens da Imunidade Fluida da Suika (meio dano Katon, dobro Raiton, imune Suiton). Forma alternativa: ação preparada após bloqueio desarmado bem-sucedido — após contato com alvo, separa parte do corpo criando a bolha. Fonte: Livro de Hijutsus p. 12-13.",
+      "stats": {
+        "action": "MOVIMENTO",
+        "range": "toque",
+        "damage": "fixo_igual_dano_base_comum_do_poder_por_turno_sufocamento",
+        "duration": "CONTINUA",
+        "selos": true,
+        "rollType": "agarrar"
+      },
+      "rules": {
+        "prerequisites": {
+          "aptitudes": [
+            "suika"
+          ]
+        },
+        "requiresTargetAgarrado": true,
+        "alternativeUse": "acao_preparada_apos_bloqueio_desarmado_bem_sucedido",
+        "bubbleStats": {
+          "absorption": 1,
+          "duroza": "comum_do_poder",
+          "elementalInheritance": "imunidade_fluida_do_suika (meio_katon dobro_raiton imune_suiton)"
+        },
+        "victimEscape": "causar_qualquer_dano_a_bolha",
+        "damageType": "sufocamento_fixo_por_turno"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "monstro_de_agua",
+      "name": "Monstro de Água",
+      "minLevel": 7,
+      "availableFor": [
+        "suiton"
+      ],
+      "shortDescription": "Funde-se com grande quantidade de água, vira esfera tamanho Enorme. Ataques corporais com Braço de Água +3 Espírito.",
+      "description": "Funde-se com grande quantidade de água existente e transforma-se num monstro gigante esférico. Categoria de tamanho alterada para Enorme. Todos ataques corporais recebem benefícios do Braço de Água com +3 de bônus em Espírito na substituição dos testes de Força e cálculo de dano. Fonte: Livro de Hijutsus p. 13.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "pessoal",
+        "duration": "SUSTENTADA",
+        "selos": true
+      },
+      "rules": {
+        "prerequisites": {
+          "aptitudes": [
+            "suika"
+          ],
+          "effects": [
+            "braco_de_agua"
+          ]
+        },
+        "sizeChangedTo": "Enorme",
+        "requiresLargeWaterSource": true,
+        "corporalAttackBonus": {
+          "appliesBracoDeAgua": true,
+          "additionalSpiritBonus": 3,
+          "appliesIn": [
+            "substituicao_de_for_em_testes",
+            "calculo_de_dano"
+          ]
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "clone_de_oleo",
+      "name": "Clone de Óleo",
+      "minLevel": 8,
+      "availableFor": [
+        "suiton"
+      ],
+      "shortDescription": "Clone chibi de óleo+água que cresce, explode em vapor (esfera tamanho do poder, dano comum +2), e ressuscita pelo granizo. Acelerado. Ataca com machado +5.",
+      "description": "Técnica de explosão cíclica infinita. Cria clone (versão chibi de si mesmo) feito de água e óleo: camada externa de óleo fino, interior repleto de água. Crescimento: enquanto se move, óleo esquenta e evapora água interna; ao se deslocar na rodada, no início do próximo turno aumenta 1 categoria de tamanho. Aquecimento: ao atingir Imenso, vapor explode. Explosão: esfera de tamanho comum do poder, atingidos sofrem dano comum +2; usuário imune via Suika. Resfriamento: vapor sobe, vira granizo, cai no clone, volta ao tamanho original, recomeça ciclo. Demais regras do Mizu Bunshin. Considerado acelerado. Ataca CC com machado grande (dano de arma +5) que se desdobra do braço. Se tem Braço de Água ou Energizar Suiton, usa Espírito no dano CC. Fonte: Livro de Hijutsus p. 13.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "pessoal",
+        "duration": "CONCENTRACAO",
+        "selos": true
+      },
+      "rules": {
+        "prerequisites": {
+          "aptitudes": [
+            "suika",
+            "clone"
+          ],
+          "cloneType": "mizu_bunshin"
+        },
+        "cyclePhases": [
+          "crescimento",
+          "aquecimento",
+          "explosao",
+          "resfriamento_e_reciclo"
+        ],
+        "growth": {
+          "trigger": "deslocamento_na_rodada",
+          "growthRate": "1_categoria_de_tamanho_por_turno",
+          "explodesAt": "Imenso"
+        },
+        "explosion": {
+          "shape": "esfera",
+          "size": "comum_do_poder",
+          "damage": "comum_+2",
+          "userImmuneViaSuika": true
+        },
+        "regenerationViaGranizo": true,
+        "isAcelerado": true,
+        "weapon": "machado_grande_dano_arma_+5",
+        "spiritDamageIfBracoOuEnergizar": true,
+        "inheritsMizuBunshinRules": true
+      },
+      "evolutions": []
+    }
+  ]
+}

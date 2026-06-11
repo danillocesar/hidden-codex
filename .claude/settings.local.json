@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm test *)",
+      "Bash(pnpm typecheck *)",
+      "Bash(pnpm lint *)",
+      "Bash(ls D:\\\\Claude\\\\arcanaforge\\\\tests\\\\integration *)",
+      "Bash(node *)",
+      "Bash(pnpm test:coverage)",
+      "Bash(Get-ChildItem -Path \"D:\\\\Claude\\\\arcanaforge\\\\books\" -Filter \"*.pdf\")",
+      "Bash(Select-Object FullName)",
+      "PowerShell($pdf = Get-Item -Path \"D:\\\\Claude\\\\arcanaforge\\\\books\\\\Naruto ''Shinobi no Sho'' - Guia Avançado do Shinobi Final - 4.1b.pdf\" -ErrorAction SilentlyContinue; if \\($pdf\\) { Write-Output \"Arquivo encontrado: $\\($pdf.FullName\\) - Tamanho: $\\($pdf.Length\\) bytes\" } else { Write-Output \"Arquivo não encontrado\" })",
+      "Bash(grep -nA 3 -i \"imagem\\\\|portrait\\\\|retrato\\\\|upload\" arcana-forge-spec/03-DATA-MODEL.md)",
+      "Bash(pnpm prisma *)",
+      "Bash(tasklist)",
+      "Bash(xargs grep -l \"InfoDrawer\")",
+      "Bash(where pdftoppm *)",
+      "Bash(where pdftotext *)",
+      "Bash(pdftotext -layout \"books/Naruto ''Shinobi no Sho'' - Livro Básico - 4.1.b.pdf\" books/_basico.txt)",
+      "Bash(pdftotext -layout \"books/Naruto ''Shinobi no Sho'' - Guia Avançado do Shinobi Final - 4.1b.pdf\" books/_guia.txt)"
+    ]
+  }
+}

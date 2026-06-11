@@ -1,0 +1,178 @@
+{
+  "_meta": {
+    "description": "Lote 7i — 3 effects exclusivos do Kami Ninpou: Anjo de Papel (Nv 5), Julgamento (Nv 6), Emissário Divino (Nv 10). Todos requerem aptidão Shikigami no Mai.",
+    "sources": [
+      "Livro de Hijutsus p. 59-60 (efeitos Kami Ninpou)"
+    ],
+    "extractedAt": "2026-05-14",
+    "schemaVersion": 1,
+    "appliesToTable": "effects",
+    "expectedItemCount": 3,
+    "noRefinementForSumiKumoHebi": "Powers Sumi/Kumo/Hebi Ninpou são variantes temáticas de Ninpou. Buscas no RAW (Básico, Hijutsus, GAS) mostram apenas citações em listas de availableFor de efeitos universais — sem seções detalhadas com effects exclusivos próprios. Pular refino até encontrar fonte canônica."
+  },
+  "data": [
+    {
+      "code": "anjo_de_papel",
+      "name": "Anjo de Papel",
+      "minLevel": 5,
+      "availableFor": [
+        "kami_ninpou"
+      ],
+      "shortDescription": "Kami Ninpou Nv 5. Requer Shikigami no Mai. Cria asas de papel (Voo = Esp/Arte). Voo Rápido + Flechas Nv 3 grátis.",
+      "description": "Manipula papéis do corpo pra criar asas (geralmente da parte inferior, 'destrói' as pernas). Voar: 2 PK + ação parcial, cria asas, Voo Nv = Esp/Arte. Voo Rápido: 1 PK, manobra corrida substituindo Atletismo por Esp/Arte. Flechas: pode usar efeito Flechas Nv 3 grátis enquanto está com asas. Fonte: Livro de Hijutsus p. 59.",
+      "stats": {
+        "action": "PARCIAL_voar",
+        "range": "pessoal",
+        "duration": "SUSTENTADA",
+        "chakraCost": "Pontos_Kami_variavel"
+      },
+      "rules": {
+        "type": "tecnica_kami_ninpou",
+        "prerequisites": {
+          "aptitudes": [
+            "shikigami_no_mai"
+          ],
+          "powers": {
+            "kami_ninpou": 5
+          }
+        },
+        "subTechniques": [
+          {
+            "code": "anjo_voar",
+            "name": "Voar",
+            "subType": "active_ability",
+            "PKcost": 2,
+            "action": "parcial",
+            "grants": "voo_nv_igual_esp_ou_arte"
+          },
+          {
+            "code": "anjo_voo_rapido",
+            "name": "Voo Rápido",
+            "subType": "active_ability",
+            "PKcost": 1,
+            "description": "Manobra corrida substituindo Atletismo por Esp/Arte"
+          },
+          {
+            "code": "anjo_flechas",
+            "name": "Flechas Nv 3 grátis",
+            "subType": "passive_buff",
+            "description": "Pode usar Flechas Nv 3 enquanto está com asas"
+          }
+        ]
+      },
+      "evolutions": []
+    },
+    {
+      "code": "julgamento",
+      "name": "Julgamento",
+      "minLevel": 6,
+      "availableFor": [
+        "kami_ninpou"
+      ],
+      "shortDescription": "Kami Ninpou Nv 6. Requer Anjo de Papel + Shikigami no Mai Nv 2. Envolve alvo em papéis. Indefeso + sufocamento. Vulnerável a Katon/Suiton.",
+      "description": "Desfaz corpo em papéis e envolve TODO o corpo de um alvo. Alvo fica INDEFESO e sofre sufocamento (dano fixo = dano base comum do poder). Apenas alvo médio ou menor capanga/indefeso/impedido. Vítima pode escapar com ação padrão + Força (Dif comum do poder). Tudo do usuário vira papel exceto cabeça — recebe Imunidade do Anjo. Se vítima for alvo de Katon/Suiton, usuário sofre dano Grau 2 e efeito cancela. Evolução Nv 9: pode usar em mais alvos (1 por 2 níveis) OU alvo não-capanga mesmo sem indefeso. Fonte: Livro de Hijutsus p. 59.",
+      "stats": {
+        "action": "COMPLETA",
+        "range": "comum_do_poder",
+        "target": "1_criatura_medio_ou_menor_capanga_indefeso_ou_impedido",
+        "damage": "sufocamento_dano_base_comum_do_poder",
+        "duration": "CONCENTRACAO"
+      },
+      "rules": {
+        "type": "tecnica_kami_ninpou",
+        "prerequisites": {
+          "powers": {
+            "kami_ninpou": 6
+          },
+          "aptitudes": [
+            "shikigami_no_mai"
+          ],
+          "effects": [
+            "anjo_de_papel"
+          ]
+        },
+        "victimEffects": [
+          "indefeso",
+          "sufocamento"
+        ],
+        "victimEscape": {
+          "action": "padrao",
+          "test": {
+            "attribute": "for",
+            "difficulty": "comum_do_poder"
+          }
+        },
+        "userHasImunidadeAnjo": true,
+        "vulnerableToKatonSuitonAttacksOnVictim": "usuario_sofre_grau_2 + efeito_cancela"
+      },
+      "evolutions": [
+        {
+          "atLevel": 9,
+          "requires": "kami_ninpou_9",
+          "name": "Julgamento Nv 9",
+          "description": "Pode usar em múltiplos alvos (1 por 2 níveis do poder) OU alvo não-capanga mesmo sem indefeso."
+        }
+      ]
+    },
+    {
+      "code": "emissario_divino",
+      "name": "Emissário Divino",
+      "minLevel": 10,
+      "availableFor": [
+        "kami_ninpou"
+      ],
+      "shortDescription": "Kami Ninpou Nv 10. Requer Fuuinjutsu 8 + Anjo de Papel + Shikigami no Mai Nv 2. Transforma ambiente em papéis explosivos. Dano 2/nível. Usuário também sofre.",
+      "description": "Transforma ambiente em bilhões de papéis e cria selo explosivo em cada. Faca de dois gumes: causa danos severos ao usuário também. Primeiro Estágio: ação completa, manipula ambiente em papéis. Concentração. Custo 10 Pontos Kami. Se interrompido até conclusão do segundo estágio, técnica desfaz. Segundo Estágio: ação completa, cria selo explosivo. Sustentada. Custo 12 PK. Explosão Final: ação padrão, ativa efeito. Pressão tão grande que TODOS no raio = indefesos. Dano = Golpe de Misericórdia. Usuário automaticamente pego, sofre Grau 3. Explosões ignoram qualquer dureza. Fonte: Livro de Hijutsus p. 59-60.",
+      "stats": {
+        "action": "COMPLETA_OR_PADRAO_3_estagios",
+        "range": "comum_do_poder",
+        "areaOfEffect": "circulo_triplo_do_tamanho_comum_do_poder_ao_redor_do_usuario",
+        "damage": "2_por_nivel_do_poder_golpe_de_misericordia",
+        "duration": "INSTANTANEA_final"
+      },
+      "rules": {
+        "type": "tecnica_kami_ninpou_kinjutsu",
+        "prerequisites": {
+          "powers": {
+            "kami_ninpou": 10,
+            "fuuinjutsu": 8
+          },
+          "aptitudes": [
+            "shikigami_no_mai"
+          ],
+          "effects": [
+            "anjo_de_papel"
+          ]
+        },
+        "stages": [
+          {
+            "stage": 1,
+            "action": "completa",
+            "PKcost": 10,
+            "duration": "concentracao",
+            "ifInterrupted": "tecnica_desfaz"
+          },
+          {
+            "stage": 2,
+            "action": "completa",
+            "PKcost": 12,
+            "duration": "sustentada"
+          },
+          {
+            "stage": "final",
+            "action": "padrao",
+            "description": "Ativa explosão"
+          }
+        ],
+        "explosionEffects": {
+          "allInRadiusBecomeIndefeso": true,
+          "damageAs": "golpe_de_misericordia",
+          "ignoresAllDureza": true,
+          "userAlsoTakesDamage": true,
+          "userDamageGrade": 3
+        }
+      },
+      "evolutions": []
+    }
+  ]
+}

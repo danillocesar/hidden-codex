@@ -1,0 +1,585 @@
+{
+  "_meta": {
+    "description": "Lote 7f — 11 effects do power Jinchuuriki: 5 modos (Presença/Manto/Modo/Forma Bijuu + Transformação Parcial) + 6 técnicas gerais (Chakra Bijuu, Potência da Besta, Onda de Chakra, Braço de Chakra, Disparo de Chakra, Bijuudama). Cadeia de modos: Presença → Manto → Modo → Forma. Cada Bijuu específica desbloqueia Modo/Forma em níveis distintos via tabela própria.",
+    "sources": [
+      "Livro de Hijutsus p. 22-30 (Jinchuuriki — regras gerais, modos, técnicas)",
+      "Livro Básico p. 213 (resumo)"
+    ],
+    "extractedAt": "2026-05-14",
+    "schemaVersion": 1,
+    "appliesToTable": "effects",
+    "expectedItemCount": 11,
+    "unmodeledPowers": [],
+    "unmodeledAptitudes": [],
+    "phase7fClosure": "Jinchuuriki base — modos + técnicas gerais. Tabelas específicas por Bijuu (Ichibi-Kyuubi) vêm em 7f2-7f3.",
+    "schemaDeviation": {
+      "effectsAsModes": true,
+      "effectsAsModesNote": "5 dos 11 effects são MODOS (estados ativados), não técnicas que produzem dano direto. Padrão estabelecido em Hachimon Tonkou (cada portão é effect). Modos têm action/duration/vitCost — comportam-se como técnicas pra UI/motor."
+    }
+  },
+  "data": [
+    {
+      "code": "presenca_bijuu",
+      "name": "Presença Bijuu",
+      "minLevel": 2,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Modo Nv 2. Ação livre. Força +1, ataques desarmados letais. Acesso à Potência da Besta. Sem dano Vit.",
+      "description": "Modo de poder mais básico. Força da bijuu começa a aparecer: pequenas mudanças na aparência (íris muda pra estilo/cor da bijuu) + suave mudança comportamental (animalesco). Ação livre. Sem custo de chakra, sem dano em Vit. Benefícios: Força +1, ataques desarmados causam dano letal, ganha acesso à Potência da Besta. Após duração segura expirar, passa a causar dano Vit como os outros modos. Fonte: Livro de Hijutsus p. 24.",
+      "stats": {
+        "action": "LIVRE",
+        "range": "pessoal",
+        "duration": "CONTINUA",
+        "chakraCost": 0,
+        "vitDamage": 0,
+        "selos": false
+      },
+      "rules": {
+        "type": "modo_do_poder",
+        "prerequisites": {
+          "powers": {
+            "jinchuuriki": 2
+          }
+        },
+        "passiveBenefits": {
+          "strBonus": 1,
+          "unarmedDamageLetal": true,
+          "unlocksTecnica": "potencia_da_besta"
+        },
+        "noVitDamageDuringSafeDuration": true,
+        "afterSafeDurationExpires": "passa_a_causar_dano_vit_igual_aos_outros_modos"
+      },
+      "evolutions": []
+    },
+    {
+      "code": "manto_bijuu",
+      "name": "Manto Bijuu",
+      "minLevel": 3,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Modo Nv 3. Ação parcial (requer Presença Bijuu). Dureza 1, bloqueia projéteis, acelerado, bônus Força por cauda. Pode usar em Nv 2 com 1 cauda.",
+      "description": "Manto Bijuu: chakra da bijuu aparece como aura ao redor com formato semelhante à bijuu. 1 cauda no formato padrão, mais conforme aumenta o nível usado. Ação parcial, exige Presença Bijuu já ativa (cadeia natural: Presença → Manto). Benefícios: ataques desarmados letais (mantém Presença), dureza de corpo 1, bloqueia técnicas projétil, fica acelerado, bônus de Força por cauda (não cumulativo). Pode ser usado em Nv 2 do poder pra receber benefício de 1 cauda. Causa dano Vit igual ao nível usado, na ativação + início de cada turno. Fonte: Livro de Hijutsus p. 24.",
+      "stats": {
+        "action": "PARCIAL",
+        "range": "pessoal",
+        "duration": "CONTINUA",
+        "chakraCost": 0,
+        "vitDamage": "nivel_usado_do_poder",
+        "selos": false
+      },
+      "rules": {
+        "type": "modo_do_poder",
+        "prerequisites": {
+          "powers": {
+            "jinchuuriki": 3
+          },
+          "effects": [
+            "presenca_bijuu"
+          ]
+        },
+        "canUseAtLevel2": true,
+        "canUseAtLevel2Note": "Pode usar Manto Bijuu em Nv 2 do poder pra receber benefício de 1 cauda.",
+        "passiveBenefits": {
+          "unarmedDamageLetal": true,
+          "bodyHardness": 1,
+          "blocksProjectiles": true,
+          "acelerado": true,
+          "strBonusByTailsTable": {
+            "nv2_cauda1_str": 1,
+            "nv3_cauda2_str": 3,
+            "nv4_cauda3_str": 3,
+            "nv5_cauda4_str": 3,
+            "nv6_cauda5_str": 4,
+            "nv7_cauda6_str": 5,
+            "nv8_cauda7_str": 6,
+            "nv9_cauda8_str": 7,
+            "nv10_cauda9_str": 8
+          },
+          "strBonusNonCumulative": true
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "modo_bijuu",
+      "name": "Modo Bijuu",
+      "minLevel": 4,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Modo intermediário. Ação parcial (requer Manto Bijuu). Mantém Manto + Agi +2 + dureza +1 (total 2). NÃO pode usar selos. Limitado a técnicas gerais do poder.",
+      "description": "Limite entre aparência humanoide e feral. Manto fica modificado (sangue dos ferimentos misturado ao chakra = vermelho rubro opaco). Comportamento mais bestial. Ação parcial, exige Manto Bijuu já ativo. Mantém todos benefícios do Manto + Agilidade +2 + dureza de corpo +1 (total 2). Restrição: incapaz de realizar selos de mão. Incapaz de usar qualquer poder ou técnica que não seja técnica geral do Jinchuuriki (ou técnica especial/poder permitido pelas regras da Bijuu específica). Dano Vit por turno. Nível de desbloqueio varia por Bijuu — Shukaku desbloqueia Nv 4. Fonte: Livro de Hijutsus p. 25.",
+      "stats": {
+        "action": "PARCIAL",
+        "range": "pessoal",
+        "duration": "CONTINUA",
+        "chakraCost": 0,
+        "vitDamage": "nivel_usado_do_poder",
+        "selos": false
+      },
+      "rules": {
+        "type": "modo_do_poder",
+        "prerequisites": {
+          "powers": {
+            "jinchuuriki": 4
+          },
+          "effects": [
+            "manto_bijuu"
+          ]
+        },
+        "unlockLevelVariableByBijuu": true,
+        "unlockLevelVariableNote": "Nível de desbloqueio varia por Bijuu via tabela específica. Shukaku desbloqueia Nv 4.",
+        "passiveBenefits": {
+          "inheritsMantoBijuu": true,
+          "agiBonus": 2,
+          "extraBodyHardness": 1,
+          "totalBodyHardness": 2
+        },
+        "restrictions": {
+          "blocksSelosMao": true,
+          "blocksTechniquesNotJinchuurikiOrBijuuSpecific": true
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "forma_bijuu",
+      "name": "Forma Bijuu",
+      "minLevel": 5,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Apice do controle. Transforma-se totalmente. Requer Controle Total. Tamanho Enorme/Imenso/Colossal por nível. Dureza 3. Sem acelerado, sem Braço de Chakra.",
+      "description": "Apice do controle: jinchuuriki transforma-se totalmente na sua besta — chakra condensa e envolve o usuário, que aumenta enormemente e ganha forma completa da Bijuu. Tamanho: Enorme (Nv 5-7), Imenso (Nv 8-9), Colossal (Nv 10). Mantém benefícios do Manto e Modo Bijuu + dureza +1 (total 3). PERDE bônus Agi e condição acelerado (devido ao tamanho). Não pode usar Braço de Chakra (energia condensada vira forma física). Sem dano Vit (sem transformação forçada). Onda de Chakra, Disparo de Chakra e Bijuudama recebem +2 dano + benefícios de Técnica Poderosa. Disparo em cilindro da Bijuudama +10m diâmetro. Dano remanescente da Bijuudama vira grau 2 (se ataque teve grau 2+). Fica incapaz de usar técnicas que não sejam gerais do Jinchuuriki ou permitidas pela Bijuu. Fonte: Livro de Hijutsus p. 25-26.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "pessoal",
+        "duration": "SUSTENTADA",
+        "chakraCost": 0,
+        "vitDamage": 0,
+        "selos": false
+      },
+      "rules": {
+        "type": "modo_do_poder",
+        "prerequisites": {
+          "powers": {
+            "jinchuuriki": 5
+          },
+          "effects": [
+            "modo_bijuu"
+          ],
+          "narrative": "controle_total_atingido"
+        },
+        "unlockLevelVariableByBijuu": true,
+        "requiresControleTotal": true,
+        "sizeBecomes": {
+          "nv5_to_7": "Enorme",
+          "nv8_to_9": "Imenso",
+          "nv10": "Colossal"
+        },
+        "passiveBenefits": {
+          "inheritsMantoModo": true,
+          "extraBodyHardness": 1,
+          "totalBodyHardness": 3,
+          "techniqueBonusOndaDisparoBijuudama": {
+            "damageBonus": 2,
+            "tecnicaPoderosaApplied": true,
+            "bijuudamaCylinderRadiusBonus": "+10m",
+            "bijuudamaRemainingDamageGrade2IfAttackGrade2plus": true
+          }
+        },
+        "lossesFromSizeIncrease": {
+          "agiBonus": "perdido",
+          "acelerado": "perdido",
+          "bracoDeChakra": "bloqueado_chakra_passa_a_ser_fisico"
+        },
+        "restrictions": {
+          "blocksSelosMao": true,
+          "blocksTechniquesNotJinchuurikiOrBijuuSpecific": true
+        },
+        "noVitDamageUnlessForcedTransformation": true
+      },
+      "evolutions": []
+    },
+    {
+      "code": "transformacao_parcial",
+      "name": "Transformação Parcial",
+      "minLevel": 5,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Requer Forma Bijuu + Controle Total + Presença Bijuu ativa. Braço/cauda parcial. Custo: ½ nível do poder em chakra. Não cumula com outros modos.",
+      "description": "Jinchuuriki com controle total pode realizar transformações parciais — fazer surgir braço único ou cauda da Bijuu sem assumir forma completa. Deve ser usado com Presença Bijuu ativa, NÃO pode ser usado com outros modos. Funciona pelas regras do Braço de Chakra com diferenças: alcance menor (apenas 5m), custo é SEMPRE chakra (nunca Vit), não pode usar manobras Perseguir, Puxar, Aumento de Número e Aumento de Tamanho. Fonte: Livro de Hijutsus p. 26.",
+      "stats": {
+        "action": "LIVRE",
+        "range": "5m",
+        "duration": "SUSTENTADA",
+        "chakraCost": "metade_do_nivel_do_poder",
+        "selos": false
+      },
+      "rules": {
+        "type": "modo_especial",
+        "prerequisites": {
+          "powers": {
+            "jinchuuriki": 5
+          },
+          "effects": [
+            "forma_bijuu"
+          ],
+          "narrative": "controle_total + presenca_bijuu_ativa"
+        },
+        "exclusiveWithOtherModes": true,
+        "exclusiveWithOtherModesNote": "Não pode ser usado com Manto/Modo/Forma Bijuu — somente com Presença Bijuu ativa.",
+        "inheritsBracoDeChakraRules": true,
+        "differencesFromBracoDeChakra": {
+          "rangeM": 5,
+          "costAlwaysChakraNeverVit": true,
+          "blockedManobras": [
+            "perseguir",
+            "puxar",
+            "aumento_de_numero",
+            "aumento_de_tamanho"
+          ]
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "chakra_bijuu",
+      "name": "Chakra Bijuu",
+      "minLevel": 1,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Passive Nv 1. Ganha Chakra Expandido grátis. Reserva separada — não pode ser drenado/selado. Drenagem inimiga sofre dano fixo = nível do poder.",
+      "description": "Você ganha gratuitamente os benefícios da aptidão Chakra Expandido (clã Uzumaki: +50% chakra total). Este chakra é reserva separada dentro do corpo — chakra da bijuu não passa pela mesma circulação. Significa: o benefício de Chakra Expandido não pode ser drenado nem selado pelo inimigo. Chakra só pode ser drenado quando fora do corpo via Manto Bijuu ou Modo Bijuu. Em qualquer caso, criatura viva que drene o chakra bijuu (qualquer quantidade) sofre dano fixo igual ao nível do poder. Fonte: Livro de Hijutsus p. 26.",
+      "stats": {
+        "action": "NENHUMA",
+        "range": "pessoal",
+        "duration": "PERMANENTE",
+        "chakraCost": 0,
+        "selos": false
+      },
+      "rules": {
+        "type": "passive",
+        "prerequisites": {
+          "powers": {
+            "jinchuuriki": 1
+          }
+        },
+        "grants": [
+          "chakra_expandido"
+        ],
+        "grantsBypassesPrereq": true,
+        "grantsBypassesPrereqNote": "Pai é o poder Jinchuuriki Nv 1 (Hijutsu Kinjutsu). Bijuu já provê o chakra extra — concessão direta da aptidão Uzumaki sem revalidar requisitos do clã.",
+        "chakraBijuuReserve": {
+          "cannotBeDrainedWhileInside": true,
+          "cannotBeSealedWhileInside": true,
+          "drainableOnlyViaMantoOrModoBijuu": true,
+          "damageOnDrain": "nivel_do_poder_fixo_em_quem_drena"
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "potencia_da_besta",
+      "name": "Potência da Besta",
+      "minLevel": 2,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Passive Nv 2 (requer modo ativo). Espírito substitui Força em CC. Dano base: (Esp÷2) + dano de arma (Nv4=2, Nv5=3, Nv6+=4 max).",
+      "description": "Em vez de usar Força pra atacar, jinchuuriki pode usar chakra bijuu em seus golpes. Atacar com Potência da Besta causa dano letal e tem cálculo diferenciado usando obrigatoriamente Espírito. Dano base: (Espírito ÷ 2) + (dano de arma da Potência). Dano de arma evolui automaticamente com nível do poder: Nv 4 = 2, Nv 5 = 3, Nv 6+ = 4 (máximo). Bônus/penalidades de dano aplicam normalmente. Pode ser usado com aptidões de manobra e recebe benefícios de Especialista ou Maestria. Pré-req: qualquer modo do poder ativo. Fonte: Livro de Hijutsus p. 26.",
+      "stats": {
+        "action": "NENHUMA",
+        "range": "pessoal",
+        "duration": "CONTINUA",
+        "chakraCost": 0,
+        "selos": false
+      },
+      "rules": {
+        "type": "passive_combat_modifier",
+        "prerequisites": {
+          "powers": {
+            "jinchuuriki": 2
+          },
+          "narrative": "qualquer_modo_do_poder_ativo (presenca/manto/modo/forma)"
+        },
+        "spiritReplacesStrengthIn": [
+          "cc"
+        ],
+        "damageBase": {
+          "formula": "(espirito_dividido_2) + dano_de_arma",
+          "damageType": "letal",
+          "weaponDamageByLevel": {
+            "nv4": 2,
+            "nv5": 3,
+            "nv6_or_more": 4,
+            "max": 4
+          }
+        },
+        "compatibility": {
+          "manobraAptitudes": true,
+          "especialista": true,
+          "maestria": true
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "onda_de_chakra",
+      "name": "Onda de Chakra",
+      "minLevel": 3,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Nv 3, requer Manto Bijuu+. Meia-esfera 2m/nível. Dano 2x nível. Vigor (Dif 7+2x nível) ou empurrado. Nv 8+: também caído.",
+      "description": "Pra usar, deve estar com Manto Bijuu, Modo Bijuu ou Forma Bijuu ativa. Jinchuuriki usa seu chakra pra projetar poderosa onda de choque ao redor em formato de meia-esfera ou círculo com centro em si próprio. Atingidos sofrem dano base 2x nível usado + teste de Vigor (Dif 7 + 2x nível) ou empurrados até limite da área. Nv 8+: além de empurrada, vítima fica caída. Custa chakra OR vit = nível do poder. Fonte: Livro de Hijutsus p. 26-27.",
+      "stats": {
+        "action": "PADRAO",
+        "range": "meia_esfera_2m_diametro_por_nivel_do_poder",
+        "damage": "2x_nivel_do_poder",
+        "duration": "INSTANTANEA",
+        "chakraCost": "nivel_do_poder",
+        "vitCostAlternative": true,
+        "selos": false
+      },
+      "rules": {
+        "type": "ninjutsu_kinjutsu_controle_de_chakra",
+        "prerequisites": {
+          "powers": {
+            "jinchuuriki": 3
+          },
+          "effects": [
+            "manto_bijuu"
+          ],
+          "narrative": "manto/modo/forma_bijuu_ativo"
+        },
+        "damage": "2x_nivel_usado",
+        "secondaryEffect": {
+          "test": {
+            "attribute": "vig",
+            "difficulty": "7 + 2x nivel do poder"
+          },
+          "onFailure": "empurrado_ate_limite_da_area"
+        },
+        "level8Plus": "alem_de_empurrado_alvo_fica_caido"
+      },
+      "evolutions": [
+        {
+          "atLevel": 8,
+          "name": "Onda Derrubadora",
+          "description": "Vítimas que falham no teste de Vigor também ficam caídas."
+        }
+      ]
+    },
+    {
+      "code": "braco_de_chakra",
+      "name": "Braço de Chakra",
+      "minLevel": 4,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Nv 4, requer Manto+. Cria braço-extensão. Atacar/agarrar/perseguir/puxar/aumento número-tamanho. Dureza 3x nível. Alcance 10m+4m/nível.",
+      "description": "Pra usar, deve estar com Manto Bijuu ou Modo Bijuu ativo (NÃO em Forma Bijuu). Jinchuuriki cria braço de energia como extensão do manto. Aparência de garra gigante. Capaz de qualquer formato, curvas, viajar pela terra. Ação parcial pra criar 1 braço (recolhe com ação livre, recupera chakra — se pagou em Vit, NÃO recupera). Pode atacar, bloquear, segurar, agarrar — tudo via CC. Dano: ataque desarmado do personagem (com ou sem Potência da Besta). Dureza: 3x nível. Bloqueio defensivo permitido contra armas + projéteis. Ataque à distância 10m + 4m/nível. Acuidade aplica. Manobras: fintar, agarrar, derrubar, empurrar sem penalidade. NÃO usa aptidões de manobra (como Arremessar). Manter agarrado requer concentração. Apertar (ação livre) é teste de Força vs Vigor da vítima — sucesso = 2x nível dano fixo. Perseguir: reroll de ataque malsucedido contra alvo 5m+ distância ignorando coberturas. Puxar: ação movimento, puxa alvo agarrado ou se puxa pra objeto fixo. Aumento de Número: ação completa, custo dobrado, até nível do poder em braços (sem manobras especiais). Aumento de Tamanho: +2 chakra, braço fica Enorme. Pode usar impedido/indefeso/paralisado se já ativo antes. Fonte: Livro de Hijutsus p. 27-28.",
+      "stats": {
+        "action": "PARCIAL",
+        "range": "10m + 4m_por_nivel_do_poder_se_estendido",
+        "damage": "ataque_desarmado_do_personagem (com ou sem Potencia da Besta)",
+        "duration": "SUSTENTADA",
+        "chakraCost": "nivel_do_poder",
+        "vitCostAlternative": true,
+        "vitCostNotRecoverable": true,
+        "selos": false
+      },
+      "rules": {
+        "type": "ninjutsu_kinjutsu_controle_de_chakra",
+        "prerequisites": {
+          "powers": {
+            "jinchuuriki": 4
+          },
+          "effects": [
+            "manto_bijuu"
+          ],
+          "narrative": "manto_ou_modo_bijuu_ativo_nao_forma"
+        },
+        "exclusiveWith": [
+          "forma_bijuu"
+        ],
+        "creation": {
+          "action": "parcial",
+          "recoveryAction": "livre",
+          "chakraRecoveredOnRecoveryIfPaidInChakra": true,
+          "vitNotRecovered": true
+        },
+        "blocking": {
+          "againstWeapons": true,
+          "againstProjectileTechniques": true
+        },
+        "noWieldWeapons": true,
+        "noExecuteTechniques": true,
+        "usableWhileImpedidoIndefesoParalisado": "se_ja_ativo_antes_da_condicao_e_consciente",
+        "rangedAttack": {
+          "extendAction": "livre",
+          "rangeM": "10 + 4 * nivel",
+          "rollType": "CC",
+          "retractsIfNotMaintainingAgarrar": true
+        },
+        "damage": "ataque_desarmado_do_personagem",
+        "acuidadeApplies": true,
+        "tests": {
+          "attribute_skill_test_precision": "2x_nivel_do_poder"
+        },
+        "manobras": {
+          "fintar": "sem_penalidade_precisao",
+          "agarrar": "sem_penalidade_precisao_requer_concentracao",
+          "derrubar": "sem_penalidade_precisao",
+          "empurrar": "sem_penalidade_precisao",
+          "apertar_corpo_agarrado": {
+            "action": "livre",
+            "test": "for_vs_vig_vitima",
+            "damageOnSuccess": "2x_nivel_do_poder_fixo"
+          },
+          "noAptitudeManobras": true
+        },
+        "hardness": "3x_nivel_do_poder",
+        "perseguir": {
+          "minRangeM": 5,
+          "rerollFailedAttack": true,
+          "ignoresCoberturas": true
+        },
+        "puxar": {
+          "action": "movimento",
+          "resistedByForVsFor": true,
+          "canPullUserToFixedObject": true
+        },
+        "aumentoNumero": {
+          "action": "completa",
+          "chakraDoubled": true,
+          "maxArms": "nivel_do_poder",
+          "noManobrasEspeciais": true,
+          "differentTargetsRequired": true
+        },
+        "aumentoTamanho": {
+          "extraChakra": 2,
+          "sizeBecomes": "Enorme"
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "disparo_de_chakra",
+      "name": "Disparo de Chakra",
+      "minLevel": 5,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Nv 5, requer Modo Bijuu+. Tiro Único (esfera 2m/nível) ou Rajada (completa +3 chakra, +2 dano por nível par sucesso).",
+      "description": "Pra usar, deve estar com Modo Bijuu ou Forma Bijuu ativa. Esfera de chakra puro que explode em contato. Usa chakra da bijuu (mesmo que constitui Modo Bijuu). Dois usos. Tiro Único (padrão): dispara 1 tiro. Explosão esfera 2m diâmetro/nível usado. Atingidos + alvo direto = dano base 2x nível usado. Tiro em Rajada (completa, +3 chakra): metralhadora em linha reta contra 1 alvo. Inicialmente mesmo dano do Tiro Único. Se acerto, novo teste pra cada 2 níveis do poder, +2 dano por sucesso. Grau de dano = primeiro ataque. Alcance Longo 15m+6m/nível. Custo: nível do poder. Fonte: Livro de Hijutsus p. 28-29.",
+      "stats": {
+        "action": "PADRAO_OU_COMPLETA",
+        "range": "longo_15m+6m_por_nivel",
+        "damage": "2x_nivel_usado_do_poder",
+        "duration": "INSTANTANEA",
+        "chakraCost": "nivel_do_poder",
+        "vitCostAlternative": true,
+        "selos": false,
+        "rollType": "CD"
+      },
+      "rules": {
+        "type": "ninjutsu_kinjutsu_controle_de_chakra",
+        "prerequisites": {
+          "powers": {
+            "jinchuuriki": 5
+          },
+          "effects": [
+            "modo_bijuu"
+          ],
+          "narrative": "modo_ou_forma_bijuu_ativo"
+        },
+        "modes": {
+          "tiro_unico": {
+            "action": "padrao",
+            "explosionSphere": "2m_diametro_por_nivel_do_poder",
+            "damage": "2x_nivel_usado_atingidos_e_alvo_direto"
+          },
+          "tiro_rajada": {
+            "action": "completa",
+            "extraChakra": 3,
+            "initialDamage": "igual_tiro_unico",
+            "additionalRolls": "1_por_cada_2_niveis_do_poder",
+            "damagePerSuccessfulRoll": 2,
+            "damageGrade": "do_primeiro_ataque"
+          }
+        }
+      },
+      "evolutions": []
+    },
+    {
+      "code": "bijuudama",
+      "name": "Bijuudama",
+      "minLevel": 7,
+      "availableFor": [
+        "jinchuuriki"
+      ],
+      "shortDescription": "Nv 7, requer Modo Bijuu+. Esfera massiva chakra negativo+positivo 8:2. Disparo Esfera ou Cilindro 5m. Dano 3x nível. Custo = ½ dano. Requer 5m de inimigo.",
+      "description": "Pra usar, precisa estar no Modo Bijuu ou Forma Bijuu. Esfera de chakra negro positivo + chakra branco positivo (proporção 8:2). Usuário balanceia e molda em esfera. Dois usos. Disparo em Esfera: esfera percorre todo alcance, explode no alvo (explosão prematura contra obstáculos de grande dureza; ignora obstáculos pequenos). Disparo em Cilindro: rajada percorre todo alcance, 5m de diâmetro, danifica qualquer obstáculo, vence dureza prossegue até alcance máximo atingindo todos na linha. Zona de Disparo: precisa 5m de distância de qualquer inimigo (se não, concentração perdida, ação/custos não recuperados). Dano: 3x nível usado. Custo: ½ do dano base (bônus de dano desconsiderados pro custo). Esquiva/Antecipar bem-sucedido: teste Agi (Dif 9 + 2x nível) — falha = grau 1 dano remanescente. Acelerados sucesso auto. Alcance Longo 15m+6m/nível. Esfera 6m diâmetro/nível. Fonte: Livro de Hijutsus p. 29.",
+      "stats": {
+        "action": "COMPLETA",
+        "range": "longo_15m+6m_por_nivel",
+        "areaOfEffect": "esfera_6m_diametro_por_nivel OR cilindro_5m_diametro",
+        "damage": "3x_nivel_usado_do_poder",
+        "duration": "INSTANTANEA",
+        "chakraCost": "metade_do_dano_base",
+        "vitCostAlternative": true,
+        "selos": false
+      },
+      "rules": {
+        "type": "ninjutsu_kinjutsu_controle_de_chakra",
+        "prerequisites": {
+          "powers": {
+            "jinchuuriki": 7
+          },
+          "effects": [
+            "modo_bijuu"
+          ],
+          "narrative": "modo_ou_forma_bijuu_ativo"
+        },
+        "composition": "chakra_negro_positivo_e_chakra_branco_positivo_proporcao_8_2",
+        "modes": {
+          "disparo_esfera": {
+            "explodesAtTarget": true,
+            "prematureExplosionVsHighDuroza": true,
+            "ignoresSmallObstacles": true
+          },
+          "disparo_cilindro": {
+            "rangeFromOrigin": "alcance_maximo",
+            "diameter": "5m",
+            "damagesAllObstacles": true,
+            "continuesIfBreaksDureza": true,
+            "hitsAllInLine": true
+          }
+        },
+        "zonaDeDisparo": {
+          "minDistanceFromAnyEnemyM": 5,
+          "failureIfNotRespected": "perde_concentracao_acao_e_custos_nao_recuperados"
+        },
+        "damage": "3x_nivel_usado",
+        "chakraCostFormula": "metade_do_dano_base (bonus_dano_desconsiderados)",
+        "defenseRules": {
+          "esquivaOrAntecipar": {
+            "additionalTest": {
+              "attribute": "agi",
+              "difficulty": "9 + 2x nivel do poder"
+            },
+            "onFailure": "dano_remanescente_grau_1",
+            "aceleradosAutoSuccess": true
+          }
+        }
+      },
+      "evolutions": []
+    }
+  ]
+}

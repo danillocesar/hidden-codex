@@ -174,9 +174,56 @@ pnpm lint && pnpm typecheck && pnpm test
 
 ### CSS
 - **Sem CSS-in-JS.** Tailwind + CSS vars apenas.
-- **Tokens em `src/styles/tokens.css`** referenciados via `var(--...)`.
+- **Tokens em `src/styles/tokens.css`** em formato `R G B` (suportam alpha modifier do Tailwind: `bg-danger/25`).
 - **Classes Tailwind organizadas:** layout → spacing → typography → color → state. ESLint plugin `prettier-plugin-tailwindcss` ordena.
 - **`cn()` utility** (de `src/lib/utils/cn.ts`) para condicionalmente compor classes.
+
+### Design system — `src/components/ui/` (REGRA OBRIGATÓRIA)
+
+**Sempre que precisar de um container, tipografia, layout, alerta, badge, formulário, modal ou primitive visual:** PRIMEIRO procure em `src/components/ui/`. Use o que já existe. NÃO crie variações da mesma coisa.
+
+**Documentação completa em `src/components/ui/README.md`.** Galeria visual em `/components` (autenticada).
+
+| Precisa de... | Use |
+|---|---|
+| Card grande (seção de step, painel) | `<Section tone="default \| accent \| paper">` |
+| Tile menor (card aninhado) | `<Surface tone="default \| elevated \| sunken">` |
+| Título de página/seção | `<Heading level={1\|2\|3\|4} italic? accent?>` |
+| Label CINZEL uppercase | `<Eyebrow tone="...">` (NUNCA digite `font-display text-[10px] uppercase tracking-[0.3em]` à mão) |
+| Texto corrido / hint / mono | `<Text variant="body\|muted\|help\|mono\|accent\|strong">` |
+| Coluna vertical | `<Stack gap="...">` |
+| Linha horizontal com wrap | `<Cluster gap="..." align="..." justify="...">` |
+| Inline baseline | `<Inline gap="...">` |
+| Alerta (erro/warn/info/sucesso) | `<Alert tone="danger\|warning\|info\|success">` |
+| Chip pequeno (origem, grátis, treinada, contador) | `<Badge tone="..." variant="...">` |
+| Tooltip no hover | `<Tooltip content="...">` |
+| Lista vazia | `<EmptyState title description action?>` |
+| Modal centralizado | `<Modal open onClose title>` |
+| Drawer lateral | `<InfoDrawer>` (em `character/wizard/` — promover pra `ui/Drawer` quando aparecer 2º caso) |
+| Botão | `<Button variant="default\|outline\|ghost\|seal" size>` |
+| Input / Select / Textarea | `<Input>` `<Select>` `<Textarea>` + envolver em `<Field label htmlFor required error>` |
+| Combobox (creatable) | `<Combobox options value onChange>` |
+| Checkbox | `<Checkbox checked onChange label>` |
+| Erros de form touched-on-blur | `useFormErrors()` hook |
+
+**Quando criar um primitive novo:**
+1. Mesmo padrão se repetiu ≥ 3 vezes, OU você se pegou copiando classes Tailwind entre arquivos
+2. Coloque em `src/components/ui/<nome>.tsx`
+3. Use `cva` (class-variance-authority) pra variants — padrão dos outros primitives
+4. Crie showcase em `src/app/(app)/components/<Nome>Playground.tsx` + plugue na galeria
+5. Atualize `src/components/ui/README.md` com exemplo
+6. NUNCA mexa numa tela existente pra adicionar um padrão visual novo sem antes criar o primitive em `ui/`
+
+**Hierarquia de imports:**
+- `ui/*` é "burro" — sem regra de RPG, sem fetch, sem state global. Só tokens semânticos + variants
+- Domain components (`character/wizard/`, `character/ficha/`) podem importar `ui/*` — **nunca o contrário**
+
+**Code smell — pare e reflita:**
+- Digitar `rounded border bg-bg-card` direto numa tela → falta `<Section>` ou `<Surface>`
+- Digitar `font-display text-[10px] uppercase tracking-[0.3em]` direto → falta `<Eyebrow>`
+- Digitar `text-sm text-ink-muted` solto repetido → use `<Text variant="muted">`
+- Criar 2º componente similar (ex: `BackButton` específico) quando o genérico cobre → use `<Button>` com variant existente
+- Reinventar visual de chip/badge → use `<Badge>`
 
 ### Server Actions
 - **Sempre `'use server'`** no topo do arquivo (não da função).
@@ -207,7 +254,7 @@ Coisas que parecem candidatas a "será que deveria ser diferente?" mas **já est
 5. **Firebase Auth real, não mock.** Free tier aguenta. Setup já feito.
 6. **Postgres local via Docker.** Não SQLite, não cloud — Postgres mesmo (igual prod futura).
 7. **Tema dark+ice é a identidade do produto.** Não tem light mode, não tem outras paletas no MVP.
-8. **Open Source MIT.** Repositório público.
+8. **Open Source — código próprio MIT, mas o conjunto distribuído é GPL-3.0.** Repositório público. O editor de diário usa `@blocknote/xl-multi-column` (GPL-3.0), então o app como um todo carrega termos GPL-3.0 (decisão consciente do owner em jun/2026, aprovada para ter colunas estilo Notion). Manter o código aberto. Para reverter a MIT puro, remover essa dependência e a integração de colunas em `src/components/character/diary/`.
 9. **Sistema é Shinobi no Sho 4.1b apenas no MVP.** D&D, Tormenta e outros são v3+, não interferem em decisões atuais.
 10. **Server Actions sobre REST.** REST apenas em casos específicos (upload, webhooks, ficha pública).
 

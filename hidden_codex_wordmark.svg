@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Hidden Codex Wordmark Logo</title>
+  <desc id="desc">Editorial serif wordmark for Hidden Codex with a subtle horizontal sumi-e brushstroke and a red hanko seal.</desc>
+
+  <defs>
+    <style>
+      .bg { fill: #0a0b0e; }
+      .cream { fill: #e8e4dc; }
+      .cream-stroke { stroke: #e8e4dc; stroke-width: 2; stroke-linecap: square; fill: none; }
+      .brush { fill: #121316; }
+      .seal { fill: #8a1f1f; }
+      .seal-stroke { stroke: #8a1f1f; stroke-width: 6; fill: none; stroke-linejoin: miter; }
+      .hidden-text {
+        font-family: Cinzel, Trajan Pro, Trajan, "Times New Roman", serif;
+        font-size: 76px;
+        letter-spacing: 0.42em;
+        font-weight: 400;
+      }
+      .codex-text {
+        font-family: "Cormorant Garamond", Trajan Pro, Trajan, Garamond, "Times New Roman", serif;
+        font-size: 250px;
+        letter-spacing: 0.025em;
+        font-weight: 400;
+      }
+      .seal-kanji {
+        font-family: "Shippori Mincho", "Noto Serif CJK JP", "Yu Mincho", serif;
+        font-size: 64px;
+        font-weight: 700;
+      }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect class="bg" width="1600" height="900"/>
+
+  <!-- One subtle horizontal sumi-e brushstroke behind the wordmark -->
+  <g opacity="0.72">
+    <path class="brush" d="M144 388 C230 360 342 360 468 370 C574 378 659 356 758 363 C887 372 988 352 1107 360 C1236 368 1342 356 1462 384 L1407 421 C1288 411 1170 430 1058 421 C945 412 829 438 712 428 C604 419 508 437 393 423 C282 409 205 429 118 414 Z"/>
+    <path class="brush" d="M91 454 C219 429 344 450 478 438 C601 426 728 442 861 432 C990 422 1122 437 1246 426 C1369 415 1461 431 1532 450 L1481 486 C1354 474 1251 496 1125 487 C1009 479 897 501 777 491 C660 481 536 497 421 487 C298 476 196 492 76 476 Z"/>
+    <path class="brush" d="M178 521 C301 503 435 522 560 513 C694 503 808 529 941 516 C1068 503 1188 520 1321 509 C1401 503 1464 514 1516 526 L1471 550 C1332 542 1206 566 1084 553 C963 540 832 565 704 550 C583 536 454 561 329 547 C246 538 168 547 95 537 Z"/>
+    <path class="brush" d="M218 349 C353 335 474 350 602 341 C731 333 860 349 985 339 C1118 328 1280 335 1412 354 L1370 372 C1246 363 1120 378 995 369 C863 360 739 377 609 368 C492 360 362 376 238 364 Z"/>
+  </g>
+
+  <!-- HIDDEN -->
+  <text class="cream hidden-text" x="800" y="296" text-anchor="middle">HIDDEN</text>
+
+  <!-- Divider -->
+  <line class="cream-stroke" x1="520" y1="350" x2="770" y2="350"/>
+  <polygon class="cream" points="800,333 815,350 800,367 785,350"/>
+  <line class="cream-stroke" x1="830" y1="350" x2="1080" y2="350"/>
+
+  <!-- CODEX -->
+  <text class="cream codex-text" x="800" y="590" text-anchor="middle">CODEX</text>
+
+  <!-- Hanko seal, bottom-right of CODEX -->
+  <g transform="translate(1287 548)">
+    <rect class="seal-stroke" x="0" y="0" width="82" height="82"/>
+    <text class="seal seal-kanji" x="41" y="62" text-anchor="middle">秘</text>
+  </g>
+</svg>

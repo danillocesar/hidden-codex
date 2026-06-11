@@ -38,6 +38,31 @@ describe('powers — calculateAptitudeCost', () => {
       ]),
     ).toBe(0);
   });
+
+  it('FREE_STARTING_APTITUDES (3) desconta as N primeiras pagas — Satsuki sai grátis', () => {
+    // Satsuki tem 2 pagas. Com freeStartingCount=3, ambas viram grátis.
+    expect(calculateAptitudeCost(satsukiNc6.aptitudes, 3)).toBe(0);
+  });
+
+  it('freeStartingCount=3 com 5 pagas: 2 viram billable = 4 pts', () => {
+    const apts = Array.from({ length: 5 }, (_, i) => ({
+      code: `apt_${i}`,
+      isFreeFromOrigin: false,
+    }));
+    expect(calculateAptitudeCost(apts, 3)).toBe(4);
+  });
+
+  it('freeStartingCount NAO consome aptidões de origem', () => {
+    // 3 de origem + 2 pagas, freeStartingCount=3 → as 2 pagas viram grátis (0 pts)
+    const apts = [
+      { code: 'a', isFreeFromOrigin: true },
+      { code: 'b', isFreeFromOrigin: true },
+      { code: 'c', isFreeFromOrigin: true },
+      { code: 'd', isFreeFromOrigin: false },
+      { code: 'e', isFreeFromOrigin: false },
+    ];
+    expect(calculateAptitudeCost(apts, 3)).toBe(0);
+  });
 });
 
 describe('powers — validatePowersAndAptitudes', () => {
@@ -107,9 +132,9 @@ describe('helpers — getFreeAptitudesFromOrigin', () => {
     const { getFreeAptitudesFromOrigin } = await import('@/domain/rules/helpers');
     expect(
       getFreeAptitudesFromOrigin({
-        clan: { code: 'yuki', freeAptitudes: ['acuidade', 'especialista_katana'] },
+        clan: { code: 'yuki', freeAptitudes: ['acuidade', 'especialista_medianas'] },
       }),
-    ).toEqual(['acuidade', 'especialista_katana']);
+    ).toEqual(['acuidade', 'especialista_medianas']);
   });
 
   it('sem clã retorna lista vazia', async () => {

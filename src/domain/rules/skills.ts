@@ -38,10 +38,36 @@ export function calculatePericiaLevelByCode(
   }
   if (!isPrimaryAttribute(def.attribute)) {
     throw new Error(
-      `Perícia "${code}" usa atributo social ("${def.attribute}"). Cálculo social ainda não implementado.`,
+      `Perícia "${code}" usa atributo social ("${def.attribute}"). Use calculateSocialPericiaLevel.`,
     );
   }
   return calculatePericiaLevel(pointsInvested, attributes[def.attribute], def.trained);
+}
+
+/**
+ * Nível de uma perícia/teste social: atributo social (Carisma ou Manipulação) +
+ * metade do atributo requerido, arredondando pra cima (Livro Básico p. 53).
+ *
+ * Ex.: Obter Informação = Carisma + ½ Inteligência. Não usa pontos investidos —
+ * o valor é derivado direto dos atributos sociais + o requerido do catálogo.
+ */
+export function calculateSocialPericiaLevel(
+  code: string,
+  attributes: Attributes,
+  social: { carisma: number; manipulacao: number },
+): number {
+  const def = getPericiaByCode(code);
+  if (!def) {
+    throw new Error(`Perícia desconhecida: ${code}`);
+  }
+  if (isPrimaryAttribute(def.attribute)) {
+    throw new Error(`Perícia "${code}" não é social. Use calculatePericiaLevelByCode.`);
+  }
+  if (!def.socialRequiredAttribute) {
+    throw new Error(`Perícia social "${code}" sem atributo requerido no catálogo.`);
+  }
+  const socialValue = def.attribute === 'car' ? social.carisma : social.manipulacao;
+  return socialValue + roundUp(attributes[def.socialRequiredAttribute] / 2);
 }
 
 /**

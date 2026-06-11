@@ -61,6 +61,25 @@
       "evolutions": []
     },
     {
+      "code": "garouga",
+      "name": "Garouga (Presa do Lobo)",
+      "minLevel": 6,
+      "availableFor": ["shikakyu"],
+      "shortDescription": "Tsuuga dentro do Soutourou. Maior tamanho/alcance, +6 de bônus de dano.",
+      "description": "Consiste em usar o Tsuuga dentro da forma Soutourou. Graças ao maior tamanho do usuário, o ataque ganha maior força destrutiva e alcance. Garouga usa todas as regras do Tsuuga (Gatsuuga), porém com modificadores pra tamanho Enorme e com +6 de bônus de dano. Fonte: Livro Básico p. 167.",
+      "stats": { "action": "COMPLETA", "range": "comum_do_poder", "duration": "INSTANTANEA", "chakraCost": 2 },
+      "rules": {
+        "prerequisites": {
+          "effects": ["soutourou"]
+        },
+        "requiresSoutourou": true,
+        "sizeModifier": "enorme",
+        "damageBonus": 6,
+        "usesTsuugaRules": true
+      },
+      "evolutions": []
+    },
+    {
       "code": "santorou",
       "name": "Santorou (Lobo de Três Cabeças)",
       "minLevel": 7,

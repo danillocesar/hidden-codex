@@ -1,0 +1,60 @@
+{
+  "_meta": {
+    "description": "Lote 7a (parte equipamento) — Armadura de Batalha Samurai. Equipamento exclusivo do Hijutsu Samurai, prometido no _meta de equipment-armor.json (6e) e ainda não materializado. Requer a aptidão armadura_samurai (introduzida em aptitudes-samurai.json deste mesmo lote 7a) para uso sem penalidade.",
+    "sources": [
+      "Livro de Hijutsus 4.1b p. 78-79 (tabela e descrição da Armadura de Batalha Samurai)"
+    ],
+    "extractedAt": "2026-05-13",
+    "schemaVersion": 1,
+    "appliesToTable": "equipments",
+    "expectedItemCount": 1,
+    "dependsOnAptitude": "armadura_samurai (aptitudes-samurai.json, mesmo lote)",
+    "patchOf": "Fecha a promessa do _meta do equipment-armor.json (lote 6e): 'NÃO inclui armaduras exclusivas de hijutsu (Armadura de Batalha Samurai e Armadura a Vapor) — essas vão pro 6i'. O 6i acabou patcheando só usar_armaduras_pesadas; a armadura em si ficou pendente.",
+    "schemaNotes": "armorPenalty='0(-5)': 0 COM aptidão armadura_samurai (que grants usar_armaduras_pesadas); -5 SEM ela. Campos novos vs 6e: bodyHardnessBonus (+2 do Vigor de corpo) e specialFeatures (4 bainhas grátis para 2 leves + 2 medianas + capacete/máscara/rádio +3 resistência veneno)."
+  },
+  "data": [
+    {
+      "code": "armadura_de_batalha_samurai",
+      "name": "Armadura de Batalha Samurai",
+      "kind": "ARMOR",
+      "subtype": "armadura_pesada_hijutsu",
+      "category": null,
+      "price": 600,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {
+        "aptitudes": ["armadura_samurai"]
+      },
+      "effects": {
+        "armorType": "pesada",
+        "absorptionBonus": 20,
+        "bodyHardnessBonus": 2,
+        "armorPenalty": "0(-5)",
+        "armorPenaltyAppliesOn": ["esquiva", "agilidade", "acrobacia", "atletismo", "escapar", "furtividade"],
+        "armorPenaltyExplain": "0 com aptidão armadura_samurai (que grants usar_armaduras_pesadas); -5 sem ela",
+        "compartmentModifier": -3,
+        "donTime": "5_minutos",
+        "specialFeatures": {
+          "extraSwordSheaths": {
+            "count": 4,
+            "categories": { "leves": 2, "medianas": 2 },
+            "noEncumbrancePenalty": true,
+            "noMovementPenalty": true,
+            "description": "Bainhas montadas diretamente na armadura. Não recebe penalidade de armadura ou de locomoção por carregar essas espadas."
+          },
+          "helmet": {
+            "includes": "mascara_com_radio_embutido",
+            "respiratorBonus": "+3 precisão em testes de resistência a veneno",
+            "removableEffect": "Deixar de usar o capacete NÃO altera a dureza ou absorção geral da armadura."
+          },
+          "bodyHardnessAfterAbsorptionZeroed": "Se a absorção da armadura for zerada, a dureza de corpo (+2) continua, mas somente para proteger contra ataques armados e desarmados (comuns ou com o efeito Energizar)."
+        }
+      },
+      "shortDescription": "Armadura pesada exclusiva do Hijutsu Samurai. +20 absorção, +2 dureza de corpo, -3 compartimentos. 4 bainhas grátis + capacete-respirador (+3 vs veneno). Penalidade -5 sem aptidão.",
+      "description": "Armadura pesada e segmentada que cobre ombros, peito, estômago, região lombar, parte superior das costas, lados inferiores e coxas. Possui manoplas, caneleiras e capacete. Samurais de alta patente adornam capacetes com chifres. Os samurais conseguem carregar consigo até quatro espadas (duas leves e duas medianas), cujas bainhas são montadas diretamente na armadura — sem penalidade de armadura ou locomoção por carregá-las. O capacete possui máscara com rádio embutido e funciona como respirador para combater venenos usados por ninjas (+3 precisão em testes de resistência). Deixar de usar o capacete não altera dureza ou absorção. Se absorção zerada: dureza de corpo continua mas só protege contra ataques armados e desarmados (comuns ou com Energizar). Sem aptidão Armadura Samurai: penalidade de armadura -5. Fonte: Livro de Hijutsus p. 78-79."
+    }
+  ]
+}

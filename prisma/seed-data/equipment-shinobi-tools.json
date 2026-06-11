@@ -1,0 +1,290 @@
+{
+  "_meta": {
+    "description": "Lote 6f — Ferramentas Shinobi Utilitárias. 9 itens novos (Kousen já modelado no 6a como LEVE_COMPLEMENTAR; aqui não duplica). Categoria explícita: 'Ferramenta Shinobi Utilitária' do GAS — qualifica pra benefícios da aptidão Utilitarista Rápido (5-patches). Inclui Tarja Explosiva com 3 modos de uso modelados em effects.usageModes. Bomba de Fumaça e Bomba Luminosa têm versão expandida no GAS — usa as do GAS.",
+    "sources": [
+      "Livro Básico p. 130-131 (Bomba de Fumaça, Bomba Luminosa, Tarja Explosiva)",
+      "Livro Básico p. 134-135 (Tarja Explosiva detalhada)",
+      "GAS p. 59-63 (Ferramentas Shinobi Utilitárias completo)"
+    ],
+    "extractedAt": "2026-05-12",
+    "schemaVersion": 1,
+    "expectedItemCount": 9,
+    "schemaNotes": "Schema: kind=TOOL, subtype='ferramenta_shinobi_utilitaria'. Bombas têm effects.areaOfEffect (objeto com shape/diameter), effects.saveDifficulty, effects.saveType, effects.condition (efeito aplicado na falha). Tarja Explosiva tem effects.usageModes como array de modos.",
+    "relatedAptitudes": [
+      "utilitarista_rapido (5-patches) — permite usar essas ferramentas com ação de movimento em vez de padrão",
+      "engenheiro (5a) — permite usar como armadilhas via Mecanismos",
+      "saque_rapido (5a) — para sacar tampões de ouvido como ação livre"
+    ]
+  },
+  "data": [
+    {
+      "code": "boleadeira",
+      "name": "Boleadeira",
+      "kind": "TOOL",
+      "subtype": "ferramenta_shinobi_utilitaria",
+      "category": "ARREMESSO",
+      "price": 10,
+      "damage": "0",
+      "range": "6m",
+      "critRange": null,
+      "slots": { "items": 6, "compartments": 1 },
+      "damageType": null,
+      "prerequisites": {
+        "attributes": { "des": 10 }
+      },
+      "effects": {
+        "isShinobiUtilityTool": true,
+        "action": "padrao",
+        "attackType": "cd",
+        "throwsOnePerAction": "Só pode arremessar 1 bola por vez",
+        "condition": "caido",
+        "conditionDescription": "Alvo fica Caído. NÃO existe dificuldade pra levantar.",
+        "isProjectile": true
+      },
+      "shortDescription": "GAS. 2 bolas + corda. Ataque CD pra Caído (sem teste pra levantar). Des 10.",
+      "description": "GAS. Duas bolas interligadas por uma corda, feita pra ser arremessada e emaranhar pernas dos oponentes pra que caiam. Usar = ação padrão; ataque à distância contra o alvo pra deixá-lo Caído (NÃO existe dificuldade pra levantar). Só arremessa 1 por vez. Alcance 6m. Considerada projétil. Fonte: GAS p. 60-61."
+    },
+    {
+      "code": "bomba_de_marcacao",
+      "name": "Bomba de Marcação",
+      "kind": "TOOL",
+      "subtype": "ferramenta_shinobi_utilitaria",
+      "category": "EXPLOSIVO",
+      "price": 10,
+      "damage": "0",
+      "range": "6m",
+      "critRange": null,
+      "slots": { "items": 6, "compartments": 1 },
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "isShinobiUtilityTool": true,
+        "action": "padrao",
+        "maxBombsPerAction": 2,
+        "areaOfEffect": { "shape": "circulo", "diameter": "10m" },
+        "saveDifficulty": "9 + int_do_usuario",
+        "saveType": "agilidade_ou_prontidao",
+        "condition": "marcado",
+        "conditionDescription": "Tinta de cor forte + cheiro característico. +3 precisão para quem usa Prontidão/Procurar/Rastrear contra o alvo marcado. Sucesso automático se usar sensor por olfato.",
+        "removalMethod": "Lavar ou mascarar o cheiro — 15 a 30 minutos"
+      },
+      "shortDescription": "GAS. Tinta colorida + cheiro. 10m diâm. +3 detecção. Lavar = 15-30min.",
+      "description": "GAS. Bomba de tinta e cheiro. Ao serem jogadas, estouram arremessando tinta de cor forte com cheiro característico — torna mais fácil a localização do oponente. Raio: 10m diâmetro circular. Quem falhar em Agilidade/Prontidão (Dif 9 + Int do usuário): fica marcado. Quem usar Prontidão/Procurar/Rastrear contra marcado recebe +3 precisão. Sensor olfativo: sucesso automático. Lavar ou mascarar = 15-30 minutos. Max 2 bombas por ação. Fonte: GAS p. 60."
+    },
+    {
+      "code": "bomba_de_fumaca",
+      "name": "Bomba de Fumaça",
+      "kind": "TOOL",
+      "subtype": "ferramenta_shinobi_utilitaria",
+      "category": "EXPLOSIVO",
+      "price": 10,
+      "damage": "0",
+      "range": "6m",
+      "critRange": null,
+      "slots": { "items": 6, "compartments": 1 },
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "isShinobiUtilityTool": true,
+        "action": "padrao",
+        "areaOfEffect": { "shape": "meia_esfera", "diameter": "10m" },
+        "areaProperties": "Camuflagem parcial. Dureza zero.",
+        "duration": "3_turnos_do_usuario",
+        "defensiveOptions": "Alvos dentro têm direito a manobra Evadir ou outra defesa pra sair (vs teste de CD)",
+        "stacking": "Usar mais de uma soma as áreas"
+      },
+      "shortDescription": "Esfera de fumaça. Meia-esfera 10m. Camuflagem parcial 3 turnos.",
+      "description": "Pequenas esferas que ao serem jogadas contra o chão criam cortina de fumaça, ideal pra ações furtivas ou distrair. Cria área de camuflagem parcial, meia-esfera 10m diâmetro, dureza zero, por 3 turnos do usuário. Pode ser jogada a até 6m. Usar qualquer quantidade = ação padrão. Mais de uma: soma áreas. Alvos dentro têm direito a Evadir ou outra defesa pra sair (vs CD). Fonte: Livro Básico p. 130-131."
+    },
+    {
+      "code": "bomba_luminosa",
+      "name": "Bomba Luminosa",
+      "kind": "TOOL",
+      "subtype": "ferramenta_shinobi_utilitaria",
+      "category": "EXPLOSIVO",
+      "price": 10,
+      "damage": "0",
+      "range": "6m",
+      "critRange": null,
+      "slots": { "items": 6, "compartments": 1 },
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "isShinobiUtilityTool": true,
+        "action": "padrao",
+        "maxBombsPerAction": 2,
+        "areaOfEffect": { "shape": "meia_esfera", "diameter": "10m" },
+        "saveDifficulty": "9 + int_do_usuario",
+        "saveType": "prontidao_ou_agilidade",
+        "saveResult": "evita_ofuscado",
+        "condition": "ofuscado",
+        "duration": "3_turnos",
+        "_gasReview": true
+      },
+      "shortDescription": "GAS revisão. Brilho ofusca 3 turnos. Testa Prontidão/Agi (Dif 9+Int).",
+      "description": "GAS REVISÃO. Pequenas esferas que ao serem jogadas criam brilho forte. Meia-esfera 10m diâmetro. Quem falhar em Prontidão/Agilidade (Dif 9 + Int do usuário): fica Ofuscado por 3 turnos. Max 2 bombas por ação. Fonte: GAS p. 60-61."
+    },
+    {
+      "code": "bomba_som_de_trovao",
+      "name": "Bomba Som de Trovão",
+      "kind": "TOOL",
+      "subtype": "ferramenta_shinobi_utilitaria",
+      "category": "EXPLOSIVO",
+      "price": 10,
+      "damage": "0",
+      "range": "6m",
+      "critRange": null,
+      "slots": { "items": 6, "compartments": 1 },
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "isShinobiUtilityTool": true,
+        "action": "padrao",
+        "areaOfEffect": { "shape": "esfera", "diameter": "100m" },
+        "saveDifficulty": 18,
+        "saveType": "vigor",
+        "saveResult": "evita_surdo",
+        "condition": "surdo",
+        "duration": "10_turnos_1_minuto",
+        "protectedBy": ["tampoes_de_ouvido", "cobertura_grossa"],
+        "audibleDistance": "1km",
+        "noIntentionalFail": "NÃO é possível falhar intencionalmente no teste",
+        "tacticalUse": "Mascara sons de ações durante chuva/tempestade"
+      },
+      "shortDescription": "GAS. 100m diâm. Surdo 10 turnos (Vigor Dif 18). Som ouvido 1km.",
+      "description": "GAS. Pequena bomba que explode fazendo som extremamente alto de trovão, feita pra ensurdecer todos, mas também mascarar sons de suas ações durante chuva/tempestade. Esfera 100m diâmetro. Teste de Vigor Dif 18 ou Surdos por 10 turnos (1 minuto). Tampões de ouvido ou cobertura grossa o suficiente: imune. Som ouvido até 1km de distância. NÃO é possível falhar intencionalmente. Fonte: GAS p. 61."
+    },
+    {
+      "code": "estrepes",
+      "name": "Estrepes",
+      "kind": "TOOL",
+      "subtype": "ferramenta_shinobi_utilitaria",
+      "category": "AREA",
+      "price": 10,
+      "damage": "1",
+      "range": "6m",
+      "critRange": null,
+      "slots": { "items": 2, "compartments": 1 },
+      "damageType": "perfuracao",
+      "prerequisites": {},
+      "effects": {
+        "isShinobiUtilityTool": true,
+        "action": "padrao",
+        "areaOfEffect": { "shape": "circulo", "diameter": "5m", "centeredAt": "ponto_de_arremesso" },
+        "condition": "lento_em_atletismo_saltar",
+        "specialRules": [
+          "Quem pisar na área fica Lento ao usar Atletismo Saltar (mantém deslocamento normal)",
+          "Tentar entrar com corrida/disparada: movimento cessado forçadamente ao pisar",
+          "Atravessar a pé: 1 dano por metro percorrido",
+          "Se deslocar sem pisar: ignora dano"
+        ],
+        "twoHandsThrow": "Pode arremessar 2 estrepes (uma em cada mão) = 2 áreas",
+        "noStackingBenefit": "Sobrepor área não dá benefício extra"
+      },
+      "shortDescription": "GAS. Pregos no chão. Área 5m, 1 dano/metro. Lento. Cessa corrida.",
+      "description": "GAS. Pregos de metal entrelaçados feitos pra serem jogados no chão e dificultar mobilidade. Cada 'unidade' = 1 pacote. Ao jogar: área circular 5m diâmetro centrada no ponto de arremesso. Quem pisa: Lento ao usar Atletismo Saltar (mantém deslocamento normal). Tentar entrar com corrida/disparada: movimento cessado ao pisar. Atravessar a pé: 1 dano por metro. Deslocar sem pisar: ignora dano. Pode arremessar 2 (uma em cada mão) = 2 áreas. Sobrepor área não dá benefício extra. Ação padrão. Alcance 6m. Fonte: GAS p. 63-64."
+    },
+    {
+      "code": "rede",
+      "name": "Rede",
+      "kind": "TOOL",
+      "subtype": "ferramenta_shinobi_utilitaria",
+      "category": "ARREMESSO",
+      "price": 10,
+      "damage": "0",
+      "range": "6m",
+      "critRange": null,
+      "slots": { "items": 2, "compartments": 1 },
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "isShinobiUtilityTool": true,
+        "needsDeepResearch": true,
+        "_partial": "Texto completo da Rede não capturado nas pesquisas. Estrutura básica modelada a partir da tabela GAS p. 71."
+      },
+      "shortDescription": "GAS. Rede arremessada pra prender alvos. Alcance 6m. [precisa detalhamento]",
+      "description": "GAS. Rede arremessável pra prender oponentes. Alcance 6m. Compartimentos: 2 itens/1 comp. **NOTA**: texto descritivo completo da Rede não capturado nas pesquisas — modelo arquitetural confirmado pela tabela GAS p. 71 mas mecânica detalhada precisa consulta direta ao livro. Provavelmente aplica condição Impedido ou Indefeso ao alvo. Fonte: GAS p. 71."
+    },
+    {
+      "code": "tampoes_de_ouvido",
+      "name": "Tampões de Ouvido",
+      "kind": "TOOL",
+      "subtype": "ferramenta_shinobi_utilitaria",
+      "category": "EQUIPAMENTO",
+      "price": 1,
+      "damage": null,
+      "range": null,
+      "critRange": null,
+      "slots": null,
+      "damageType": null,
+      "prerequisites": {},
+      "effects": {
+        "isShinobiUtilityTool": true,
+        "donAction": "movimento",
+        "donActionWithSaqueRapido": "livre",
+        "whileWearing": "Surdo enquanto usar",
+        "protectsAgainst": ["bomba_som_de_trovao", "efeitos_sonoros"],
+        "negligibleWeight": true
+      },
+      "shortDescription": "GAS. Tampões. Sacar = movimento (livre com Saque Rápido). Surdo enquanto usa.",
+      "description": "GAS. Tampões de ouvido pra evitar de ser afetado por efeitos sonoros. Ação de movimento pra 'sacar' e colocar (livre com Saque Rápido). Fica Surdo enquanto estiver usando. Sem compartimentos (peso desprezível). Fonte: GAS p. 68-69."
+    },
+    {
+      "code": "tarja_explosiva",
+      "name": "Tarja Explosiva",
+      "kind": "TOOL",
+      "subtype": "ferramenta_shinobi_utilitaria",
+      "category": "EXPLOSIVO",
+      "price": 10,
+      "damage": "4",
+      "range": null,
+      "critRange": null,
+      "slots": { "items": 6, "compartments": 1 },
+      "damageType": "fogo",
+      "prerequisites": {},
+      "effects": {
+        "isShinobiUtilityTool": true,
+        "japaneseName": "Kibaku Fuda",
+        "areaOfEffect": { "shape": "esfera", "diameter": "5m" },
+        "baseDamage": 4,
+        "saveDifficulty": "7 + int_do_usuario",
+        "saveType": "agilidade_ou_prontidao",
+        "saveResult": "escapar_ou_notar_e_fugir",
+        "noSaveIfImpedido": "Alvo Impedido ou condição que impeça deslocamento: SEM teste",
+        "usageModes": [
+          {
+            "name": "Ativação Remota",
+            "action": "padrao_prepara_ate_2_tarjas",
+            "fuse": "3_turnos_do_usuario",
+            "remoteActivation": "ação livre, até 15m de distância, qualquer quantidade preparada",
+            "gradoDano": "rolar_2_dados"
+          },
+          {
+            "name": "Lançar com Kunai",
+            "action": "movimento_prepara_1_tarja_em_kunai",
+            "additionalAction": "alem_de_sacar_a_kunai",
+            "trigger": "kunai_atinge_alvo_ou_objeto_proximo",
+            "attackType": "cd_lancar_projetil",
+            "gradoDano": "do_teste_de_acerto",
+            "damageIgnoresProjectile": "Ignora dano da kunai, só explosão conta",
+            "preLoadable": "Kunais já preparadas com tarjas ocupam 3 unidades por compartimento"
+          },
+          {
+            "name": "Colar em Inimigo",
+            "action": "varias",
+            "requirements": "Teste de Prestidigitação resistido por Prontidão + teste de CC vs defesa do alvo",
+            "remoteActivation": "ação livre sem teste do alvo (não pode esquivar)",
+            "gradoDano": "rolar_2_dados"
+          }
+        ],
+        "additionalTarjasRules": {
+          "perAdditionalTarja": "+1m diâmetro, +1 Dif testes",
+          "damageBonus": "Apenas a partir da 5ª tarja: 5 tarjas = 5 dano base, 6 = 6, etc. (1 dano por tarja)"
+        },
+        "trapUse": "Usadas em armadilhas via perícia Mecanismos (ver pág. 43 do Livro Básico)"
+      },
+      "shortDescription": "Folhas explosivas. 4 dano, esfera 5m. 3 modos: Remota, Kunai, Colar.",
+      "description": "Folhas de papel que explodem por contato ou ativação remota (Kibaku Fuda: Kassei). Usadas em armadilhas, distrações, ou contra inimigos. **3 modos**: (1) Ativação Remota: ação padrão prepara até 2 tarjas, fuse 3 turnos, ativação livre até 15m; (2) Lançar com Kunai: movimento prepara 1 tarja em kunai, lança como projétil, explode no impacto; (3) Colar em Inimigo: teste Prestidigitação vs Prontidão + CC vs defesa, depois ativa remoto sem teste do alvo. Esfera 5m diâmetro, 4 dano base. Save: Agilidade ou Prontidão (Dif 7 + Int). Tarjas adicionais: +1m diâmetro, +1 Dif por tarja; dano só aumenta da 5ª em diante (1 dano por tarja a partir daí). Pode ser usada como armadilha via Mecanismos. Fonte: Livro Básico p. 134-135."
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "_meta": {
+    "description": "Lote 7g — Power Senninka (Hijutsu KG instintiva). Sistema Primeiro/Segundo Estágio + 2 effects exclusivos. INCOMPATÍVEL com Senjutsu (RAW p.79).",
+    "sources": [
+      "Livro de Hijutsus p. 79-82 (Senninka)"
+    ],
+    "extractedAt": "2026-05-14",
+    "schemaVersion": 1,
+    "appliesToTable": "powers",
+    "expectedItemCount": 1
+  },
+  "data": [
+    {
+      "code": "senninka",
+      "name": "Senninka",
+      "translation": "Transformação Eremita",
+      "category": "RESTRITO",
+      "element": null,
+      "shortDescription": "Hijutsu KG instintivo. Absorve energia da natureza sem treino Senjutsu. Primeiro Estágio (Nv 1) + Segundo Estágio (Nv 5). Surto Homicida narrativo.",
+      "description": "Kekkei Genkai instintiva que permite absorver e usar energia da natureza sem nenhum treinamento em Senjutsu. Modo diferenciado do Senjutsu mas com regras próprias. INCOMPATÍVEL com Senjutsu. Surto Homicida: instabilidade mental — impulsos súbitos e incontroláveis de matar em combate (não para nem foge até inimigos mortos). Jaula do Homicida: aliado que serve de freio (NPC ou outro PJ). Primeiro Estágio (Nv 1): manchas escuras, bônus selecionáveis com 25% por nível. Segundo Estágio (Nv 5): transformação maior + 2 benefícios adicionais (Acelerado + Chakra +3 por nível 1x cena). Efeitos exclusivos: Corrente (Nv 3) + Transferência Celular (Nv 6). Lista de efeitos permitidos: Canhão, Criar Arma, Orbe, Raio, Flechas, Energizar, Sopro Destrutivo, Míssil. Dano comum dos efeitos é 2x nível usado do poder (não dano padrão de Ninpou). Fonte: Livro de Hijutsus p. 79-82.",
+      "stats": {
+        "rangeFormula": {
+          "category": "Pessoal_para_estagios",
+          "varia_por_efeito": true
+        },
+        "sizeFormula": null,
+        "keyAttribute": "esp",
+        "elementAdvantage": [],
+        "elementDisadvantage": []
+      },
+      "rules": {
+        "selosDefault": false,
+        "selosDefaultNote": "Efeitos NÃO requerem selos de mão (mas requerem braços livres, exceto Canhão).",
+        "type": "ninjutsu_kekkei_genkai",
+        "prerequisites": {
+          "narrative": "kekkei_genkai_senninka_obtida_por_nascimento"
+        },
+        "incompatibleWith": [
+          "senjutsu"
+        ],
+        "surtoHomicida": {
+          "narrative": true,
+          "description": "Instabilidade mental — impulsos súbitos de matar em combate. Não para nem foge até inimigos mortos. Mestre decide outros gatilhos."
+        },
+        "jaulaDoHomicida": {
+          "narrative": true,
+          "description": "Personagens gentis tendem a procurar aliado (PJ ou PdM) que sirva de freio aos instintos."
+        },
+        "primeiroEstagio": {
+          "unlockLevel": 1,
+          "activation": "ate_metade_do_nivel_acao_parcial_acima_acao_movimento",
+          "duration": "continua",
+          "chakraCost": "1_por_nivel_liberado + 1_por_bonus_recebido",
+          "percentagePerLevel": "25%",
+          "fullActivationAtLevel": 4,
+          "bonusOptions": [
+            "for_+4_nao_cumulativo_com_dano_base_+2",
+            "dano_base_+2_para_ataque_senninka_incluindo_energizar",
+            "precisao_ataque_+1_cc_ou_tecnica_senninka",
+            "precisao_defesa_+1",
+            "dificuldades_tecnicas_+1_senninka",
+            "dureza_corpo_+1"
+          ],
+          "maxBonusesPerTurn": "1_por_nivel_do_poder_max_4",
+          "bonusActionCost": "livre",
+          "bonusChakraDuration": "1_cena",
+          "otherBenefitsDuration": "ate_inicio_do_turno_seguinte"
+        },
+        "segundoEstagio": {
+          "unlockLevel": 5,
+          "activation": "parcial_apos_primeiro_estagio_completo",
+          "chakraCost": "2_apos_primeiro_estagio",
+          "duration": "continua",
+          "benefits": {
+            "pickOneBonusFromPrimeiroEstagio": "ativacao_inclui_um_bonus_continuo",
+            "continueOtherBonuses": "ate_4_bonus_por_turno_regras_primeiro_estagio",
+            "additionalBonusesAvailable": [
+              "acelerado",
+              "chakra_+3_por_nivel_1x_cena"
+            ]
+          }
+        },
+        "effectsRules": {
+          "damageCommon": "2x_nivel_usado_do_poder",
+          "noSelosMao": true,
+          "requiresArmsAvailable": true,
+          "canhaoFromAnyTorso": true,
+          "allowedEffectsCommon": [
+            "canhao",
+            "criar_arma",
+            "orbe",
+            "raio",
+            "flechas",
+            "energizar",
+            "sopro_destrutivo",
+            "missil"
+          ],
+          "allowedEffectsExclusive": [
+            "corrente",
+            "transferencia_celular"
+          ]
+        },
+        "associatedEffects": "corrente, transferencia_celular (effects-senninka.json)"
+      }
+    }
+  ]
+}

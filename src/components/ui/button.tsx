@@ -13,11 +13,14 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        // Primario sobrio: fundo ice-deep/30 + borda ice-deep + texto
+        // ice-bright. Aprovado em /components (variante "A5").
         default:
-          'border border-ice-deep/60 bg-bg-card text-ink hover:border-ice hover:bg-bg-card-2',
+          'border border-ice-deep bg-ice-deep/30 text-ice-bright hover:border-ice hover:bg-ice-deep/45',
+        // Acao secundaria (ex: "Voltar"). Sem borda nem fundo — so texto
+        // sutil que clareia no hover. Aprovado em /components (variante "A").
         ghost: 'text-ink-muted hover:text-ice',
-        outline:
-          'border border-border text-ink hover:border-border-strong hover:bg-bg-card-2',
+        outline: 'text-ink-muted hover:text-ice',
         seal: 'border border-seal/80 bg-seal/15 text-ink hover:bg-seal/25',
       },
       size: {

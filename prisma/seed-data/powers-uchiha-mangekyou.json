@@ -1,0 +1,92 @@
+{
+  "_meta": {
+    "description": "Lote 7e1 — Power virtual mangekyou_sharingan. Hospeda as 6 técnicas Nv 10 fixas: Tsukuyomi, Amaterasu, Kagutsuchi, Kamui Curto, Kamui Longo, Susanoo. Power NÃO tem progressão de níveis: cada effect é técnica independente Nv 10 pra dificuldade. Player escolhe 1 par + Susanoo fixo. Custo de Visão é parâmetro novo, integral a este power.",
+    "sources": [
+      "Livro Básico p. 183-193 (Mangekyou Sharingan, Amaterasu, Kagutsuchi, Kamui, Tsukuyomi, Susanoo)"
+    ],
+    "extractedAt": "2026-05-14",
+    "schemaVersion": 1,
+    "appliesToTable": "powers",
+    "expectedItemCount": 1,
+    "unmodeledPowers": [],
+    "unmodeledAptitudes": [],
+    "schemaDeviation": {
+      "noLevelProgression": true,
+      "reason": "Mangekyou Sharingan não evolui por níveis. Todas técnicas Nv 10 fixo (RAW p.183). Power é gateway de effects, não barometro de poder.",
+      "fixedTechniqueLevel": 10
+    }
+  },
+  "data": [
+    {
+      "code": "mangekyou_sharingan",
+      "name": "Mangekyou Sharingan",
+      "translation": "Olho Copiador Giratório Caleidoscópico",
+      "category": "HIJUTSU",
+      "element": null,
+      "shortDescription": "Power virtual gateway das 6 técnicas Nv 10 do Mangekyou. Sem progressão de nível.",
+      "description": "Power virtual que hospeda as técnicas concedidas pela aptidão Mangekyou Sharingan. Não tem progressão de níveis: todas técnicas são consideradas Nv 10 pra dificuldade (RAW p.183). Player escolhe 1 par de técnicas + Susanoo (fixa). Pares válidos: (Tsukuyomi, Amaterasu), (Kagutsuchi, Amaterasu), (Kamui Curto, Kamui Longo). Kagutsuchi tem pré-req Amaterasu. Custo de Visão (10 PV totais) é parâmetro próprio deste power. Não pode usar meta-aptidões nem Técnica Acelerada com nenhuma técnica. Fonte: Livro Básico p. 183-193.",
+      "stats": {
+        "rangeFormula": null,
+        "sizeFormula": null,
+        "keyAttribute": "esp",
+        "elementAdvantage": [],
+        "elementDisadvantage": [],
+        "fixedLevelForDifficulty": 10,
+        "noLevelProgression": true
+      },
+      "rules": {
+        "selosDefault": false,
+        "prerequisites": {
+          "aptitudes": [
+            "mangekyou_sharingan"
+          ]
+        },
+        "isVirtualPower": true,
+        "techniquePairs": [
+          {
+            "name": "tsukuyomi_amaterasu",
+            "effects": [
+              "tsukuyomi",
+              "amaterasu"
+            ],
+            "kagutsuchiOptional": true,
+            "kagutsuchiPrereqEffect": "amaterasu"
+          },
+          {
+            "name": "kagutsuchi_amaterasu",
+            "effects": [
+              "kagutsuchi",
+              "amaterasu"
+            ]
+          },
+          {
+            "name": "kamui",
+            "effects": [
+              "kamui_curto",
+              "kamui_longo"
+            ]
+          }
+        ],
+        "mutuallyExclusivePairs": true,
+        "fixedAddon": "susanoo",
+        "fixedAddonNote": "Susanoo é a 3ª técnica fixa, desbloqueada após dominar o par escolhido. RAW p.183.",
+        "visionPoints": {
+          "total": 10,
+          "sharedBetweenBothEyes": true,
+          "ofuscadoStackPer3PV": true,
+          "firstZeroPenalty": "desativacao_forcada (atordoado + desprevenido 1 turno + sangramento + cego ate descansar)",
+          "restRule": "24h sem uso = recupera ate 5 PV (mantem ofuscado -3)",
+          "secondZeroPenalty": "cegueira_permanente",
+          "lossIrreversible": true,
+          "exceptForEien": true
+        },
+        "restrictions": {
+          "noMetaAptitudes": true,
+          "noTecnicaAcelerada": true,
+          "fixedLevelForAllTechniques": 10
+        },
+        "associatedEffects": "tsukuyomi, amaterasu, kagutsuchi, kamui_curto, kamui_longo, susanoo (effects-mangekyou-sharingan.json)"
+      }
+    }
+  ]
+}

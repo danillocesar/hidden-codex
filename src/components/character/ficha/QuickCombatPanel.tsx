@@ -26,6 +26,7 @@ type ActiveModal =
  */
 export function QuickCombatPanel({
   weapons,
+  weaponAccuracyById,
   jutsus,
   cc,
   cd,
@@ -37,6 +38,12 @@ export function QuickCombatPanel({
   abilities,
 }: {
   weapons: ReadonlyArray<FichaInventoryItem>;
+  /**
+   * Acerto pré-calculado por arma (id → valor + rótulo), já com o +1 de
+   * Especialista da categoria e a Acuidade própria da arma. Sem entrada, a arma
+   * cai no CC/CD genérico da ficha.
+   */
+  weaponAccuracyById: ReadonlyMap<string, { value: number; label: string }>;
   jutsus: ReadonlyArray<FichaJutsu>;
   /** Acertos do personagem, reusados conforme o tipo de cada arma/jutsu. */
   cc: number;
@@ -116,6 +123,10 @@ export function QuickCombatPanel({
         <Column label="Armas" empty={weapons.length === 0 ? 'Nenhuma arma.' : null}>
           {weapons.map((w) => {
             const ranged = w.category ? RANGED_CATEGORIES.has(w.category) : false;
+            const acc = weaponAccuracyById.get(w.id) ?? {
+              value: ranged ? cd : cc,
+              label: ranged ? 'CD' : 'CC',
+            };
             return (
               <CombatCard
                 key={w.id}
@@ -124,7 +135,7 @@ export function QuickCombatPanel({
                   <span className="font-serif text-[15px] font-medium text-ink">{w.name}</span>
                 }
               >
-                <Stat label="Acerto" value={String(ranged ? cd : cc)} tag={ranged ? 'CD' : 'CC'} />
+                <Stat label="Acerto" value={String(acc.value)} tag={acc.label} />
                 <Stat label="Dano" value={w.damage ?? '—'} />
               </CombatCard>
             );
@@ -165,10 +176,12 @@ export function QuickCombatPanel({
           onClose={() => setActive(null)}
           weapon={active.item}
           attributes={{ for: attributes.for, des: attributes.des }}
-          accuracy={{
-            value: active.item.attackKind === 'cd_thrown' ? cd : cc,
-            label: active.item.attackKind === 'cd_thrown' ? 'CD' : 'CC',
-          }}
+          accuracy={
+            weaponAccuracyById.get(active.item.id) ?? {
+              value: active.item.attackKind === 'cd_thrown' ? cd : cc,
+              label: active.item.attackKind === 'cd_thrown' ? 'CD' : 'CC',
+            }
+          }
           hasAtaquePoderoso={abilities.ataquePoderoso}
           hasAtaqueMultiplo={abilities.ataqueMultiplo}
           hasAcuidadeHomebrew={abilities.acuidadeHomebrew}

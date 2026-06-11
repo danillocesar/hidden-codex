@@ -114,6 +114,26 @@ export function FichaView({
   ];
   const maxVitality = calculateMaxVitality(core.attributes.vig, core.campaignLevel);
   const maxChakra = calculateMaxChakra(core.attributes.esp);
+  // Acerto por arma: cada arma recalcula seu CC/CD com a categoria de
+  // Especialista (+1 se o personagem tem a aptidão na categoria) e a
+  // elegibilidade de Acuidade própria. Armas sem bônus caem no CC/CD da ficha.
+  const weaponAccuracyById = new Map<string, { value: number; label: string }>(
+    display.equippedWeapons.map((w) => [
+      w.id,
+      w.attackKind === 'cd_thrown'
+        ? {
+            value: calculateCD(combatInput, { especialistaCategory: w.especialistaCategory }),
+            label: 'CD',
+          }
+        : {
+            value: calculateCC(combatInput, {
+              especialistaCategory: w.especialistaCategory,
+              acceptsAcuidade: w.acceptsAcuidade,
+            }),
+            label: 'CC',
+          },
+    ]),
+  );
   // Todas as pericias aparecem: as nao-treinadas tem base do atributo mesmo com
   // 0 pontos (igual a referencia). Treinadas sem pontos ficam "sem treino" (sem
   // base usavel) e sao ocultadas. Ordenadas por nivel desc.
@@ -246,6 +266,7 @@ export function FichaView({
               </div>
               <QuickCombatPanel
                 weapons={display.equippedWeapons}
+                weaponAccuracyById={weaponAccuracyById}
                 jutsus={display.jutsus}
                 cc={combatStats.find((s) => s.code === 'cc')?.value ?? 0}
                 cd={combatStats.find((s) => s.code === 'cd')?.value ?? 0}

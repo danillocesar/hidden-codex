@@ -3,7 +3,13 @@
 import { useMemo, useState } from 'react';
 import { Field, Input, Select } from '@/components/ui/field';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
 import { checkAptitudePrerequisites } from '@/domain/rules/aptitudes';
+import {
+  ESPECIALISTA_CATEGORIES,
+  ESPECIALISTA_CATEGORY_LABELS,
+} from '@/domain/rules/especialista';
+import { cn } from '@/lib/utils/cn';
 import type { CharacterCore } from '@/domain/types';
 import type { WizardAptitudeOption } from '@/server/queries/wizardCatalogs';
 import type { CreateCharacterInput } from '@/schemas/character/create';
@@ -125,6 +131,27 @@ export function AptitudePicker({
     }
   };
 
+  // Especialista é parametrizada por CATEGORIA e repetível (N compras, uma
+  // categoria cada). Em vez do toggle simples, o card mostra as 9 categorias —
+  // cada marcada vira uma instância `{ code: 'especialista', parameter: cat }`.
+  const especialistaCategories = useMemo(
+    () =>
+      new Set(
+        selected
+          .filter((a) => a.code === 'especialista' && a.parameter)
+          .map((a) => a.parameter as string),
+      ),
+    [selected],
+  );
+
+  const toggleEspecialistaCategory = (category: string) => {
+    if (especialistaCategories.has(category)) {
+      onChange(selected.filter((a) => !(a.code === 'especialista' && a.parameter === category)));
+    } else {
+      onChange([...selected, { code: 'especialista', parameter: category }]);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <div className="space-y-3">
@@ -176,6 +203,21 @@ export function AptitudePicker({
           const isFree = freeSet.has(apt.code);
           const isFreeStarting = !isFree && freeStartingSet.has(apt.code);
           const checks = checksByCode.get(apt.code)!;
+          if (apt.code === 'especialista') {
+            return (
+              <li key={apt.code}>
+                <EspecialistaCard
+                  name={apt.name}
+                  category={apt.category}
+                  costPoints={apt.costPoints}
+                  shortDescription={apt.shortDescription}
+                  selectedCategories={especialistaCategories}
+                  onToggleCategory={toggleEspecialistaCategory}
+                  onInfo={() => setDrawerCode(apt.code)}
+                />
+              </li>
+            );
+          }
           return (
             <li key={apt.code}>
               <SelectableCard
@@ -225,5 +267,98 @@ export function AptitudePicker({
         ) : null}
       </InfoDrawer>
     </div>
+  );
+}
+
+/**
+ * Card especial da aptidao Especialista: multi-selecao das 9 categorias de arma.
+ * Cada categoria marcada conta como uma compra (1 aptidao). O +1 de precisao
+ * entra no CC/CD da arma correspondente na ficha.
+ */
+function EspecialistaCard({
+  name,
+  category,
+  costPoints,
+  shortDescription,
+  selectedCategories,
+  onToggleCategory,
+  onInfo,
+}: {
+  name: string;
+  category: string;
+  costPoints: number;
+  shortDescription: string | null;
+  selectedCategories: ReadonlySet<string>;
+  onToggleCategory: (category: string) => void;
+  onInfo: () => void;
+}) {
+  const count = selectedCategories.size;
+  return (
+    <div
+      className={cn(
+        'rounded border bg-bg-card-2 p-3 transition-colors',
+        count > 0 ? 'border-ice-deep bg-bg-card' : 'border-border',
+      )}
+    >
+      <div className="flex flex-wrap items-baseline gap-2">
+        <p className="font-body text-sm text-ink">{name}</p>
+        <span className="font-display text-[9px] uppercase tracking-[0.3em] text-ice-deep">
+          {category}
+        </span>
+        <span className="font-display text-[9px] uppercase tracking-[0.3em] text-ink-muted">
+          {costPoints} pt por categoria
+        </span>
+        <InfoButton ariaLabel={`Ver descricao de ${name}`} onClick={onInfo} />
+        {count > 0 ? (
+          <Badge tone="accent" size="xs" className="ml-auto">
+            {count} selecionada{count > 1 ? 's' : ''}
+          </Badge>
+        ) : null}
+      </div>
+
+      {shortDescription ? (
+        <p className="mt-1 text-sm text-ink-muted">{shortDescription}</p>
+      ) : null}
+
+      <p className="mt-2 font-display text-[9px] uppercase tracking-[0.3em] text-ink-muted">
+        Escolha as categorias (uma compra cada)
+      </p>
+      <div className="mt-1.5 flex flex-wrap gap-1.5">
+        {ESPECIALISTA_CATEGORIES.map((cat) => (
+          <CategoryChip
+            key={cat}
+            label={ESPECIALISTA_CATEGORY_LABELS[cat]}
+            active={selectedCategories.has(cat)}
+            onClick={() => onToggleCategory(cat)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CategoryChip({
+  label,
+  active,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={cn(
+        'h-7 rounded border px-2.5 font-display text-[10px] uppercase tracking-[0.15em] transition-colors',
+        active
+          ? 'border-ice bg-ice-deep/40 text-ice-bright'
+          : 'border-border text-ink-muted hover:border-ice-deep hover:text-ice',
+      )}
+    >
+      {label}
+    </button>
   );
 }

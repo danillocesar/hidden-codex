@@ -23,6 +23,10 @@ import {
   commonPowerRange,
 } from '@/domain/rules/jutsus';
 import { getElementDamageBonus } from '@/domain/rules/elements';
+import {
+  especialistaCategoryForWeapon,
+  type EspecialistaCategory,
+} from '@/domain/rules/especialista';
 import { applyOriginBenefits } from './applyOriginBenefits';
 import {
   resolveFichaBackground,
@@ -76,6 +80,12 @@ export type FichaInventoryItem = {
   attackKind: 'cc' | 'cd_thrown' | null;
   /** Arma aceita a aptidão Acuidade (leve ou marcada em `compatibleAptitudes`). */
   acceptsAcuidade: boolean;
+  /**
+   * Categoria de Especialista da arma (`leves`, `medianas`, …) pra somar +1 de
+   * precisão quando o personagem tem a aptidão na categoria. null = não-arma ou
+   * categoria sem Especialista.
+   */
+  especialistaCategory: EspecialistaCategory | null;
   /** Quantos itens cabem em 1 compartimento (`slots.items`). Default 1. */
   itemsPerCompartment: number;
   /** Compartimentos por unidade (`slots.compartments`); 0 = não ocupa (armazenamento/desprezível). */
@@ -276,6 +286,9 @@ export function mapPrismaToCore(
       weaponDamageValue: isWeapon ? parseWeaponDamage(eq?.damage ?? null) : null,
       attackKind: weaponAttackKind(eq?.category ?? null, isWeapon),
       acceptsAcuidade: isWeapon && weaponAcceptsAcuidade(eq?.category ?? null, eq?.effects),
+      especialistaCategory: isWeapon
+        ? especialistaCategoryForWeapon(eq?.category ?? null, eq?.subtype ?? null)
+        : null,
       ...compartment,
       compartmentRef: item.compartmentRef ?? null,
       mixable:

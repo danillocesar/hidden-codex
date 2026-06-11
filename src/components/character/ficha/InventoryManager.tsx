@@ -560,6 +560,7 @@ function optimisticItem(code: string, cat: EquipmentPickerItem | undefined): Fic
     weaponDamageValue: null,
     attackKind: null,
     acceptsAcuidade: false,
+    especialistaCategory: null,
     itemsPerCompartment: 1,
     compartmentsPerStack: 1,
     compartmentBonus: 0,

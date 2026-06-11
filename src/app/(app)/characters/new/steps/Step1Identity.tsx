@@ -10,6 +10,7 @@ import { PortraitUpload } from '@/components/character/ficha/PortraitUpload';
 import type {
   WizardClanOption,
   WizardKekkeiGenkaiOption,
+  WizardPowerOption,
   WizardVillageOption,
 } from '@/server/queries/wizardCatalogs';
 import type { CreateCharacterIdentity } from '@/schemas/character/create';
@@ -38,6 +39,7 @@ export function Step1Identity({
     clans: ReadonlyArray<WizardClanOption>;
     villages: ReadonlyArray<WizardVillageOption>;
     kekkeiGenkais: ReadonlyArray<WizardKekkeiGenkaiOption>;
+    powers: ReadonlyArray<WizardPowerOption>;
   };
   errors: Record<string, string | null>;
   onBlurField: (field: string) => void;
@@ -53,6 +55,19 @@ export function Step1Identity({
     () =>
       catalogs.kekkeiGenkais.find((k) => k.code === identity.kekkeiGenkaiCode) ?? null,
     [catalogs.kekkeiGenkais, identity.kekkeiGenkaiCode],
+  );
+
+  // Hijutsus sao poderes (category HIJUTSU). No campo combinado "Linhagem /
+  // Hijutsu" eles funcionam como atalho: selecionar adiciona o poder em
+  // state.powers (nivel 1) — depois e comprado/ajustado normalmente no Step 5.
+  const hijutsus = useMemo(
+    () => catalogs.powers.filter((p) => p.category === 'HIJUTSU'),
+    [catalogs.powers],
+  );
+  const hijutsuByCode = useMemo(() => new Map(hijutsus.map((p) => [p.code, p])), [hijutsus]);
+  const selectedHijutsus = useMemo(
+    () => state.powers.filter((p) => hijutsuByCode.has(p.code)),
+    [state.powers, hijutsuByCode],
   );
 
   // Helpers pra converter o par (canonicalCode, customName) em ComboboxValue
@@ -102,6 +117,29 @@ export function Step1Identity({
     } else {
       patch({ clanCode: null, customClanName: v.value });
     }
+  };
+
+  // Campo combinado: value vem marcado (`kg:<code>` / `hj:<code>` / '') pra
+  // distinguir Kekkei Genkai (FK em kekkeiGenkaiCode) de Hijutsu (poder). KG e
+  // single; hijutsu e acao de adicionar (vira chip). Nunca remove hijutsu ao
+  // trocar o KG — so o "x" do chip remove.
+  const onLineageChange = (raw: string) => {
+    if (!raw) {
+      patch({ kekkeiGenkaiCode: null });
+      return;
+    }
+    const [kind, code] = raw.split(/:(.+)/);
+    if (kind === 'kg') {
+      patch({ kekkeiGenkaiCode: code ?? null });
+    } else if (kind === 'hj' && code) {
+      if (!state.powers.some((p) => p.code === code)) {
+        dispatch({ type: 'setPowers', powers: [...state.powers, { code, level: 1 }] });
+      }
+    }
+  };
+
+  const removeHijutsu = (code: string) => {
+    dispatch({ type: 'setPowers', powers: state.powers.filter((p) => p.code !== code) });
   };
 
   return (
@@ -172,7 +210,7 @@ export function Step1Identity({
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2" data-tour="identity-origin">
-          <Field label="Vila">
+          <Field label={<span className="flex h-4 items-center">Vila</span>}>
             <Combobox
               id="char-village"
               placeholder="Selecione ou digite uma vila"
@@ -189,7 +227,7 @@ export function Step1Identity({
 
           <Field
             label={
-              <span className="inline-flex items-baseline gap-2">
+              <span className="flex h-4 items-center gap-2">
                 Cla
                 <InfoButton
                   ariaLabel="Ver descricao do cla selecionado"
@@ -214,22 +252,57 @@ export function Step1Identity({
           </Field>
         </div>
 
-        <Field label="Kekkei Genkai" htmlFor="char-kg">
+        <Field label="Linhagem / Hijutsu" htmlFor="char-lineage">
           <Select
-            id="char-kg"
-            value={identity.kekkeiGenkaiCode ?? ''}
-            onChange={(e) => patch({ kekkeiGenkaiCode: e.target.value || null })}
+            id="char-lineage"
+            value={identity.kekkeiGenkaiCode ? `kg:${identity.kekkeiGenkaiCode}` : ''}
+            onChange={(e) => onLineageChange(e.target.value)}
           >
             <option value="">— Nenhuma —</option>
-            {catalogs.kekkeiGenkais.map((k) => (
-              <option key={k.code} value={k.code}>
-                {k.translation ? `${k.name} — ${k.translation}` : k.name}
-              </option>
-            ))}
+            <optgroup label="Kekkei Genkai (linhagem)">
+              {catalogs.kekkeiGenkais.map((k) => (
+                <option key={k.code} value={`kg:${k.code}`}>
+                  {k.translation ? `${k.name} — ${k.translation}` : k.name}
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label="Hijutsu (técnica secreta)">
+              {hijutsus.map((p) => (
+                <option key={p.code} value={`hj:${p.code}`}>
+                  {p.translation ? `${p.name} — ${p.translation}` : p.name}
+                </option>
+              ))}
+            </optgroup>
           </Select>
           {selectedKg?.shortDescription ? (
             <p className="mt-1 text-sm text-ink-muted">{selectedKg.shortDescription}</p>
           ) : null}
+          {selectedHijutsus.length > 0 ? (
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {selectedHijutsus.map((p) => {
+                const def = hijutsuByCode.get(p.code);
+                return (
+                  <span
+                    key={p.code}
+                    className="inline-flex items-center gap-1 rounded border border-ice-deep bg-bg-card px-2 py-0.5 text-xs text-ink"
+                  >
+                    {def?.name ?? p.code}
+                    <button
+                      type="button"
+                      onClick={() => removeHijutsu(p.code)}
+                      aria-label={`Remover ${def?.name ?? p.code}`}
+                      className="text-ink-muted transition-colors hover:text-danger"
+                    >
+                      ×
+                    </button>
+                  </span>
+                );
+              })}
+            </div>
+          ) : null}
+          <p className="mt-1 text-xs text-ink-faint">
+            Hijutsus são poderes normais — custam pontos e o nível é ajustado na etapa Poderes.
+          </p>
         </Field>
       </div>
 

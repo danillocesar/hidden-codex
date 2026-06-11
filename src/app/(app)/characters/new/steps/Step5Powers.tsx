@@ -88,6 +88,11 @@ export function Step5Powers({
     () =>
       catalogs.powers.filter((p) => {
         if (p.category === 'COMUM') return true;
+        // Hijutsus sao compraveis como poder normal, sem exigir cla/KG — o
+        // gate real e o pre-requisito proprio do poder (bloqueia o card quando
+        // nao cumprido). Tambem selecionaveis pelo atalho "Linhagem / Hijutsu"
+        // no Step 1.
+        if (p.category === 'HIJUTSU') return true;
         if (
           p.category === 'KEKKEI_GENKAI' &&
           p.associatedKekkeiGenkai === origin.effectiveKekkeiGenkaiCode

@@ -6,7 +6,10 @@ import type { CharacterCore } from '@/domain/types';
  * Satsuki Yuki NC 6 — caso real validado contra o Livro Básico:
  *   Vitalidade  : 10 + 3×5 + 5×6 = 55
  *   Chakra      : 10 + 3×3      = 19
- *   CC c/ katana: 5 + 6 (Acuidade) + 1 (Especialista) = 12
+ *   CC c/ katana: 5 + 6 (Acuidade) + 1 (Especialista medianas) = 12
+ *
+ * Especialista é por CATEGORIA (RAW): a katana é mediana, então a Satsuki
+ * compra Especialista (medianas) — `especialista_medianas` quando achatado.
  *
  * Spec: arcana-forge-spec/04-RULES-ENGINE.md §"Testes do motor".
  */
@@ -25,7 +28,7 @@ export const satsukiNc6: CharacterCore = {
     rastrear: 2,
   },
   aptitudes: [
-    { code: 'especialista_katana', isFreeFromOrigin: true },
+    { code: 'especialista', parameter: 'medianas', isFreeFromOrigin: true },
     { code: 'acuidade', isFreeFromOrigin: true },
     { code: 'ataque_poderoso', isFreeFromOrigin: true },
     { code: 'velocista', isFreeFromOrigin: false },

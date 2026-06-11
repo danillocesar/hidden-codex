@@ -132,9 +132,9 @@ describe('helpers — getFreeAptitudesFromOrigin', () => {
     const { getFreeAptitudesFromOrigin } = await import('@/domain/rules/helpers');
     expect(
       getFreeAptitudesFromOrigin({
-        clan: { code: 'yuki', freeAptitudes: ['acuidade', 'especialista_katana'] },
+        clan: { code: 'yuki', freeAptitudes: ['acuidade', 'especialista_medianas'] },
       }),
-    ).toEqual(['acuidade', 'especialista_katana']);
+    ).toEqual(['acuidade', 'especialista_medianas']);
   });
 
   it('sem clã retorna lista vazia', async () => {

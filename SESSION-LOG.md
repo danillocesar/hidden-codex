@@ -1,5 +1,55 @@
 # Session Log — F0 Bootstrap + Seed Leva 1
 
+---
+
+## 2026-06-06 — Especialista por CATEGORIA (RAW) + bônus por arma na ficha
+
+**Pedido do owner:** Especialista precisa entrar no motor de CC/CD de cada arma da
+ficha (+1 ao atacar com a arma certa) e o wizard precisa permitir escolher a
+aptidão N vezes, uma escolha por compra.
+
+**Decisão de modelagem (confirmada com o owner):** Especialista é por **CATEGORIA**
+(RAW, Livro Básico p. 63 — texto colado pelo owner): escolhe entre desarmado,
+armas naturais, disparo, arremesso, leves, medianas, longas, pesadas ou especiais,
+e ganha +1 em CC/CD com qualquer arma da categoria. Repetível (1 categoria por
+compra). NÃO cumulativo com Maestria.
+
+**Mudança vs. estado anterior:** o projeto modelava Especialista por arma específica
+(`especialista_katana`) + regra **Daisho** (Especialista Katana valia na Wakizashi).
+O owner aprovou **migrar pra categoria** e dispensar a Daisho como caso especial
+(katana=mediana, wakizashi=leve são categorias distintas; quem quiser cobrir as duas
+compra Especialista nas duas categorias). Esta era a divergência RAW pendente
+registrada em sessões anteriores (`especialista_armas_<X>` dormentes).
+
+**Implementação:**
+- Novo `src/domain/rules/especialista.ts`: `ESPECIALISTA_CATEGORIES` (9), labels pt-BR,
+  `especialistaCategoryForWeapon(category, subtype)` (mapeia `WeaponCategory` do
+  equipment → categoria; subtype `especial` → `especiais`; utilitárias/variável → null)
+  e `especialistaBonus(aptitudeCodes, category)`.
+- `derivedStats.ts`: `calculateCC(input, { especialistaCategory?, acceptsAcuidade? })`
+  e `calculateCD(input, { especialistaCategory? })`. Removidos `weaponKind`,
+  `ACUIDADE_NAMED_WEAPONS`, `WeaponCategory` (singular) e a Daisho. Acuidade agora
+  é um booleano por arma (`acceptsAcuidade`, default true) em vez de set nominal —
+  a fonte de verdade é `equipment.effects.compatibleAptitudes` (via mapper).
+- `mapPrismaToCore.ts`: `FichaInventoryItem.especialistaCategory`.
+- `FichaView` + `QuickCombatPanel` + `WeaponAttackModal`: acerto recalculado **por
+  arma** (CC/CD com +1 de Especialista e Acuidade própria); cada card/modal usa o
+  valor da arma, não o CC/CD genérico.
+- `AptitudePicker`: card especial da Especialista com multi-seleção das 9 categorias;
+  cada chip marcado vira `{ code: 'especialista', parameter: <cat> }`. Persistência
+  (`CharacterAptitude` com `@@unique([characterId, aptitudeId, parameter])`) e budget
+  (cada categoria = 1 aptidão paga) já suportavam N instâncias.
+- Tests/fixtures: Satsuki migrada pra `especialista` + `parameter: 'medianas'`; suite
+  de `derivedStats` reescrita pro novo contrato; novo `especialista.test.ts`.
+  `pnpm typecheck` + `pnpm lint` limpos; **552 testes** passam.
+
+**Pendência menor:** refs dormentes `especialista_armas_de_fogo` /
+`especialista_armas_disparo_ou_arremesso` / `especialista_armas_longas` etc. nos
+JSONs de seed usam nomes de categoria fora do vocabulário canônico (`arremesso`,
+`longas`, ...). Nunca foram cabeadas; quando virarem prereqs reais, normalizar.
+
+---
+
 **Início:** 2026-05-12 01:09 (horário local)
 **Modo:** Sessão autônoma noturna (sem revisor disponível) + revisão humana matinal
 **Objetivo:** Implementar Fase F0 do roadmap em ambiente local (sem Vercel, sem Supabase cloud) e popular o banco com a primeira leva de catálogos.

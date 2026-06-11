@@ -31,7 +31,7 @@ const validSatsukiInput = {
     { code: 'fuuton', level: 1 },
   ],
   aptitudes: [
-    { code: 'especialista_katana' },
+    { code: 'especialista', parameter: 'medianas' },
     { code: 'acuidade' },
     { code: 'ataque_poderoso' },
     { code: 'velocista' },

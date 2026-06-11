@@ -30,9 +30,14 @@ const CATEGORY_LABELS: Record<string, string> = {
   COMUM: 'Comum',
   RESTRITO: 'Restrito',
   RESTRITO_CLA: 'Restrito (cla)',
-  KEKKEI_GENKAI: 'Kekkei Genkai',
+  KEKKEI_GENKAI: 'Hijutsu',
   HIJUTSU: 'Hijutsu',
 };
+
+// Linhagens (ex-"Kekkei Genkai") e tecnicas secretas de cla sao exibidas
+// como uma unica categoria "Hijutsu" pro jogador, embora internamente
+// continuem sendo categorias distintas (KEKKEI_GENKAI / HIJUTSU).
+const HIJUTSU_CATEGORIES = ['KEKKEI_GENKAI', 'HIJUTSU'];
 
 /**
  * Step 5 — Poderes (vem DEPOIS de Aptidoes pra que efeitos com prereq de
@@ -88,10 +93,10 @@ export function Step5Powers({
     () =>
       catalogs.powers.filter((p) => {
         if (p.category === 'COMUM') return true;
-        // Hijutsus sao compraveis como poder normal, sem exigir cla/KG — o
-        // gate real e o pre-requisito proprio do poder (bloqueia o card quando
-        // nao cumprido). Tambem selecionaveis pelo atalho "Linhagem / Hijutsu"
-        // no Step 1.
+        // Hijutsus (categoria HIJUTSU) sao compraveis como poder normal, sem
+        // exigir cla/KG — o gate real e o pre-requisito proprio do poder
+        // (bloqueia o card quando nao cumprido). Tambem selecionaveis pelo
+        // atalho "Hijutsu" no Step 1.
         if (p.category === 'HIJUTSU') return true;
         if (
           p.category === 'KEKKEI_GENKAI' &&
@@ -107,10 +112,13 @@ export function Step5Powers({
     [catalogs.powers, clan, origin.effectiveKekkeiGenkaiCode],
   );
 
-  // Categorias presentes na lista disponivel.
+  // Categorias presentes na lista disponivel. KEKKEI_GENKAI e HIJUTSU sao
+  // agrupadas em uma unica opcao "Hijutsu" no filtro.
   const categoriesPresent = useMemo(() => {
     const set = new Set<string>();
-    for (const p of availablePowers) set.add(p.category);
+    for (const p of availablePowers) {
+      set.add(HIJUTSU_CATEGORIES.includes(p.category) ? 'HIJUTSU' : p.category);
+    }
     return Array.from(set);
   }, [availablePowers]);
 
@@ -122,7 +130,13 @@ export function Step5Powers({
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     return availablePowers.filter((p) => {
-      if (category !== 'ALL' && p.category !== category) return false;
+      if (category !== 'ALL') {
+        const matchesCategory =
+          category === 'HIJUTSU'
+            ? HIJUTSU_CATEGORIES.includes(p.category)
+            : p.category === category;
+        if (!matchesCategory) return false;
+      }
       if (q) {
         const blob = `${p.name} ${p.translation ?? ''} ${p.code}`.toLowerCase();
         if (!blob.includes(q)) return false;

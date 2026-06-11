@@ -410,8 +410,8 @@ Se você não souber como prosseguir, siga essa ordem:
 | **Poder** | Categoria de técnicas (Hyouton, Suiton, Fuuton, Katon, Raiton, Doton, Ninpou, etc.). |
 | **Efeito** | Sub-técnica de um poder (Canhão, Névoa, Criar Arma, Energizar, etc.). |
 | **Aptidão** | Habilidade especial comprada com pontos de poder. |
-| **Kekkei Genkai (KG)** | Linhagem sanguínea (Hyouton, Sharingan, etc.). |
-| **Hijutsu** | Técnica secreta de clã (Jinchuuriki, Senjutsu, etc.). |
+| **Hijutsu** | Termo exibido na UI para linhagens sanguíneas (Hyouton, Sharingan, etc. — internamente ainda `KekkeiGenkai`/`KEKKEI_GENKAI` no schema/código) e técnicas secretas de clã (Jinchuuriki, Senjutsu, etc. — `PowerCategory.HIJUTSU`). É só uma unificação de rótulo visível ao jogador; os dois continuam sendo entidades/categorias distintas no banco e no código. |
+| **KG** | Abreviação legada de "Kekkei Genkai", ainda usada em nomes internos (`kekkeiGenkaiCode`, model `KekkeiGenkai`). Na tela, esse conceito agora aparece como "Hijutsu". |
 | **RAW** | "Rules as Written" — fielmente como o livro escreveu. |
 | **Ryos** | Moeda do sistema. |
 | **Daisho** | Par katana + wakizashi empunhadas juntas. |

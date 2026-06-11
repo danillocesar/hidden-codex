@@ -252,21 +252,21 @@ export function Step1Identity({
           </Field>
         </div>
 
-        <Field label="Linhagem / Hijutsu" htmlFor="char-lineage">
+        <Field label="Hijutsu" htmlFor="char-lineage">
           <Select
             id="char-lineage"
             value={identity.kekkeiGenkaiCode ? `kg:${identity.kekkeiGenkaiCode}` : ''}
             onChange={(e) => onLineageChange(e.target.value)}
           >
-            <option value="">— Nenhuma —</option>
-            <optgroup label="Kekkei Genkai (linhagem)">
+            <option value="">— Nenhum —</option>
+            <optgroup label="Linhagem">
               {catalogs.kekkeiGenkais.map((k) => (
                 <option key={k.code} value={`kg:${k.code}`}>
                   {k.translation ? `${k.name} — ${k.translation}` : k.name}
                 </option>
               ))}
             </optgroup>
-            <optgroup label="Hijutsu (técnica secreta)">
+            <optgroup label="Técnica secreta">
               {hijutsus.map((p) => (
                 <option key={p.code} value={`hj:${p.code}`}>
                   {p.translation ? `${p.name} — ${p.translation}` : p.name}

@@ -208,7 +208,7 @@ Esta é **a tela principal do produto**. Reusa todo o trabalho de design feito a
 │ Clã · 雪 Yuki    │   FICHA DE PERSONAGEM   │ Vila · Nami       │
 ├────────────────────────────────────────────────────────────────┤
 │ HERO                                                           │
-│ ┌──────────┐  Kekkei Genkai · Hyouton                          │
+│ ┌──────────┐  Hijutsu · Hyouton                                │
 │ │          │  Satsuki Yuki                                     │
 │ │ [imagem] │  A Lâmina do Gelo                                 │
 │ │  hero    │              Idade 14 | Genin | NC 6 | Neutra     │

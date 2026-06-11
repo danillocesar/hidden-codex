@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { ATTRIBUTE_KEYS, COMBAT_SKILL_KEYS } from '@/domain/types';
 import { PERICIAS } from '@/domain/catalog/pericias';
+import { isUploadedUrlUnder } from '@/lib/storage/publicUrl';
 
 /**
  * Schema canonico do input do wizard de criacao de personagem (P0.2).
@@ -132,7 +133,12 @@ const identitySchema = z.object({
    * URL relativa do retrato (`/uploads/portraits/...`). Setada pelo upload
    * via `POST /api/upload/character-portrait` antes do submit do wizard.
    */
-  portraitUrl: z.string().startsWith('/uploads/portraits/').max(200).nullable().optional(),
+  portraitUrl: z
+    .string()
+    .max(200)
+    .refine((u) => isUploadedUrlUnder(u, 'portraits'), 'Imagem inválida.')
+    .nullable()
+    .optional(),
 });
 
 export const createCharacterInputSchema = z

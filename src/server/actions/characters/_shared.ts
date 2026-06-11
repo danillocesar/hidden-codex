@@ -85,7 +85,7 @@ export async function resolveAndValidateCharacterInput(
   if (input.identity.kekkeiGenkaiCode && !kekkeiGenkai) {
     return {
       ok: false,
-      error: `Kekkei Genkai "${input.identity.kekkeiGenkaiCode}" nao encontrada.`,
+      error: `Hijutsu "${input.identity.kekkeiGenkaiCode}" nao encontrado.`,
     };
   }
   if (input.identity.villageCode && !village) {

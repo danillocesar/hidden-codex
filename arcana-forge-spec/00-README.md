@@ -56,7 +56,7 @@ Esta spec foi escrita assumindo que você (Claude Code, ou outro agente de imple
 
 ## 📐 Convenções desta documentação
 
-- **Termos do sistema RPG** (Shinobi no Sho) aparecem em *itálico* quando introduzidos: *kekkei genkai*, *jutsu*, *chakra*.
+- **Termos do sistema RPG** (Shinobi no Sho) aparecem em *itálico* quando introduzidos: *hijutsu*, *jutsu*, *chakra*.
 - **Identificadores técnicos** (tabelas, campos, tipos) aparecem em `code`: `Character`, `attribute_str`, `JSONB`.
 - **Decisões com trade-off** aparecem em blocos destacados — leia com atenção, são pontos onde há alternativa válida.
 - **TODOs e questões abertas** aparecem como `> 🔶 ABERTO:` — não bloqueiam implementação mas precisam ser decididos antes da feature relevante.

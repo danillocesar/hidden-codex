@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { getCurrentUser } from '@/lib/auth/session';
 import { prisma } from '@/lib/prisma';
 import { isEffectScaling, parseLearnedEffects } from '@/lib/character/mapPrismaToCore';
+import { isUploadedImageUrl } from '@/lib/storage/publicUrl';
 
 export type JutsuActionResult = { ok: true; id?: string } | { ok: false; error: string };
 
@@ -19,7 +20,12 @@ const createJutsuInput = z.object({
   powerCode: z.string().min(1).max(60),
   effectCode: z.string().min(1).max(80),
   levels: z.array(z.number().int().min(1).max(30)).min(1, 'Escolha ao menos um nível.').max(30),
-  imageUrl: z.string().startsWith('/uploads/').max(300).nullable().optional(),
+  imageUrl: z
+    .string()
+    .max(300)
+    .refine(isUploadedImageUrl, 'Imagem inválida.')
+    .nullable()
+    .optional(),
   description: z.string().trim().max(500).nullable().optional(),
 });
 

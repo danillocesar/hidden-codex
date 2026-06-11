@@ -132,7 +132,7 @@ export function makeHumanizer(catalogs: HumanizeCatalogs) {
         if (check.code) return `Efeito: ${prettifyCode(check.code)}`;
         break;
       case 'kekkei':
-        if (check.code) return `Kekkei Genkai: ${kgName(check.code)}`;
+        if (check.code) return `Hijutsu: ${kgName(check.code)}`;
         break;
       case 'clan':
         if (check.code) return `Cla: ${clanName(check.code)}`;
